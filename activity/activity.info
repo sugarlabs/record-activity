@@ -1,0 +1,8 @@
+[Activity]
+name = Camera
+activity_version = 3
+host_version = 1
+icon = activity-capture
+service_name = org.laptop.CameraActivity
+exec = sugar-activity-factory CameraActivity.CameraActivity
+show_launcher = 1
