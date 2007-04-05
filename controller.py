@@ -17,6 +17,7 @@ import random
 import _sugar
 import time
 from sugar import profile
+from sugar.activity import activity
 
 from color import Color
 from polygon import Polygon
@@ -25,7 +26,8 @@ class Controller:
 
 	def __init__(self, w, h):
 		#our dirs
-		self._basepath = os.path.dirname(os.path.abspath(__file__))
+		#self._basepath = os.path.dirname(os.path.abspath(__file__))
+		self._basepath = activity.get_bundle_path()
 		pic_path = sugar.env.get_profile_path()
 		self.pic_path = os.path.join(os.path.dirname(pic_path), 'camera_stuff')
 		if (not os.path.exists( self.pic_path )):

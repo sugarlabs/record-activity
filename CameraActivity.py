@@ -3,17 +3,17 @@
 import gtk
 import gobject
 
-from sugar.activity.Activity import Activity
+from sugar.activity import activity
 
 from glive import LiveVideoSlot
 from image_display import Image_Display
 from controller import Controller
 from thumbnails import Thumbnails
 
+class CameraActivity(activity.Activity):
+	def __init__(self, handle):
+		activity.Activity.__init__(self, handle)
 
-class CameraActivity(Activity):
-	def __init__(self):
-		Activity.__init__(self)
 		self.set_title( "Camera Activity" )
 
 		#wait a moment so that our debug console capture mistakes
