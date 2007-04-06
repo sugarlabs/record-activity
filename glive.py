@@ -161,7 +161,6 @@ class LiveVideoSlot(gtk.EventBox):
 
 	def set_sink(self, sink):
 		if (self.imagesink != None):
-			assert self.window.xid
 			self.imagesink = None
 			del self.imagesink
 

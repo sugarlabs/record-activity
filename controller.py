@@ -80,6 +80,10 @@ class Controller:
 		closeSvg_d = closeSvg_f.read()
 		self.closeSvg = self.loadSvg( closeSvg_d, "#515151", fill )
 		closeSvg_f.close()
+		
+		modWaitF = os.path.join(self._basepath, 'mode_wait.png')
+		modWaitPB = gtk.gdk.pixbuf_new_from_file(modWaitF)
+		self.waitImg = _sugar.cairo_surface_from_gdk_pixbuf(modWaitPB)
 
 
 	def loadSvg( self, data, stroke, fill ):

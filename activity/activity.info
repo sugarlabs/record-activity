@@ -1,8 +1,8 @@
 [Activity]
 name = Camera
-activity_version = 5
+activity_version = 6
 host_version = 1
-icon = activity-capture
+icon = activity-camera
 service_name = org.laptop.CameraActivity
 class = CameraActivity.CameraActivity
 show_launcher = 1
