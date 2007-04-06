@@ -3,17 +3,13 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
 	<!ENTITY ns_svg "http://www.w3.org/2000/svg">
 	<!ENTITY ns_xlink "http://www.w3.org/1999/xlink">
-	<!ENTITY fill_color "#123456">
-	<!ENTITY stroke_color "#515151">
+	<!ENTITY fill_color "#000000">
+	<!ENTITY stroke_color "#FFFFFF">
 ]>
 <svg  version="1.1" id="Layer_1" xmlns="&ns_svg;" xmlns:xlink="&ns_xlink;" width="24.5" height="24.5" viewBox="0 0 24.5 24.5"
 	 overflow="visible" enable-background="new 0 0 24.5 24.5" xml:space="preserve">
-<g>
 
-			<path fill="#FFFFFF" stroke="&stroke_color;" d="M12.8,0.5C6,0.5,0.5,6,0.5,12.8C0.5,19.5,6,25,12.8,25C19.5,25,25,19.5,25,12.8C25,6,19.5,0.5,12.8,0.5z"/>
-			<path fill="&fill_color;" stroke="&stroke_color;" d="M18.4,15.9c0.7,0.7,0.7,1.8,0,2.5c-0.7,0.7-1.8,0.7-2.5,0l-3.1-3.1l-3.1,3.1c-0.7,0.7-1.8,0.7-2.5,0
-				c-0.7-0.7-0.7-1.8,0-2.5l3.1-3.1L7.2,9.7C6.5,9,6.5,7.9,7.2,7.2c0.7-0.7,1.8-0.7,2.5,0l3.1,3.1l3.1-3.1c0.7-0.7,1.8-0.7,2.5,0
-				c0.7,0.7,0.7,1.8,0,2.5l-3.1,3.1L18.4,15.9z"/>
+	<path fill="#fill_color" stroke="&stroke_color;" d="M12.8,0.5C6,0.5,0.5,6,0.5,12.8C0.5,19.5,6,25,12.8,25C19.5,25,25,19.5,25,12.8C25,6,19.5,0.5,12.8,0.5z"/>
+	<path fill="&fill_color;" stroke="&stroke_color;" d="M18.4,15.9c0.7,0.7,0.7,1.8,0,2.5c-0.7,0.7-1.8,0.7-2.5,0l-3.1-3.1l-3.1,3.1c-0.7,0.7-1.8,0.7-2.5,0 c-0.7-0.7-0.7-1.8,0-2.5l3.1-3.1L7.2,9.7C6.5,9,6.5,7.9,7.2,7.2c0.7-0.7,1.8-0.7,2.5,0l3.1,3.1l3.1-3.1c0.7-0.7,1.8-0.7,2.5,0 c0.7,0.7,0.7,1.8,0,2.5l-3.1,3.1L18.4,15.9z"/>
 
-</g>
 </svg>

@@ -23,9 +23,7 @@ class Image_Display(P5Button):
 		self.c._id = self
 		self.noloop()
 		self.ac_shutter = "shutter"
-
 		self.firstTime = True
-
 
 	def draw(self, ctx, w, h):
 		P5Button.draw(self, ctx, w, h )
@@ -39,15 +37,20 @@ class Image_Display(P5Button):
 		ctx.set_antialias( cairo.ANTIALIAS_NONE )
 		ctx.identity_matrix( )
 
+
 		ctx.set_antialias( cairo.ANTIALIAS_SUBPIXEL )
-		sx = (self._w/2)-(self.c.camSvg.props.width/2)
+		sx = (self._w/2) - (self.c.camSvg.props.width/2)
 		sy = ((self._h/2)-(self.c.polSvg.props.height/2)) + polMargin + 480 + polMargin
 		ctx.translate( sx, sy)
-		if (not self.isImg()):
-			self.c.camSvg.render_cairo(ctx)
-		else:
+		if (self.c.SHOW == self.c.SHOW_LIVE):
+			if (not self.c.DONE):
+				self.c.camSvg.render_cairo(ctx)
+		elif (self.c.SHOW == self.c.SHOW_STILL):
 			self.c.camInvSvg.render_cairo(ctx)
-		ctx.set_antialias( cairo.ANTIALIAS_NONE )
+		elif (self.c.SHOW == self.c.SHOW_PLAY):
+			self.c.camInvSvg.render_cairo(ctx)
+		elif (self.c.SHOW == self.c.SHOW_RECORD):
+			self.c.camRecSvg.render_cairo(ctx)
 		ctx.identity_matrix( )
 
 		if (self.firstTime):
@@ -57,9 +60,7 @@ class Image_Display(P5Button):
 		if (self.isImg()):
 			self.drawImage( ctx )
 
-
-
-	def makeShutterButton( self, sx, sy ):
+	def makeShutterButton(self,sx,sy):
 		xs = []
 		ys = []
 		xs.append( 0 )
@@ -76,27 +77,28 @@ class Image_Display(P5Button):
 		button.addActionListener( self )
 		self._butts.append( button )
 
-
-	def drawImage( self, ctx ):
-		ix = ((self._w/2)-(self.c.polSvg.props.width/2)) + 15 + 1
+	def drawImage(self, ctx):
+		ix = ((self._w/2)-(self.c.polSvg.props.width/2)) + 15 + 2
 		iy = ((self._h/2)-(self.c.polSvg.props.height/2)) + 15
 		ctx.translate( ix, iy )
 		ctx.set_source_surface( self.c._img, 0, 0 )
 		ctx.paint( )
 		ctx.identity_matrix( )
 
-
-	def isImg( self ):
+	def isImg(self):
 		return (not self.c._img == None)
 
-
 	def fireButton(self, actionCommand):
-		if (actionCommand == self.ac_shutter):
-			if (self.c._img == None):
-				self.c.takeSnapshot( )
-			else:
-				#actually, you never get called since gplay is in your head
-				#so we handle your click over there
-				#todo: how to pass clicks down
-				self.c.showVid( )
+		if (self.c.UPDATING):
+			return
 
+		if (actionCommand == self.ac_shutter):
+			if (self.c.SHOW == self.c.SHOW_LIVE):
+				if (not self.c.DONE):
+					self.c.openShutter()
+			elif (self.c.SHOW == self.c.SHOW_STILL):
+				self.c.showLive()
+			elif (self.c.SHOW == self.c.SHOW_PLAY):
+				self.c.showLive()
+			elif (self.c.SHOW == self.c.SHOW_RECORD):
+				self.c.stopRecordingVideo()
