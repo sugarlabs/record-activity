@@ -35,14 +35,9 @@ class Controller:
 	def __init__(self):
 		#our dirs
 		self._basepath = activity.get_bundle_path()
-		#pic_path = sugar.env.get_profile_path()
-		#pic_path = os.path.join(os.path.dirname(pic_path), 'camera_stuff')
-		#if (not os.path.exists( pic_path )):
-		#	os.mkdir(pic_path)
-		self.journalPath = os.path.dirname('/home/olpc/Journal/camera/')
+		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", "camera")
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
-		#self.journalPath = pic_path
 
 		self.photoHash = []
 		self.movieHash = []
@@ -96,15 +91,6 @@ class Controller:
 		v_mn = max(v_mx-self._thuVid.numButts, 0)
 		gobject.idle_add(self.setupThumbs, self.movieHash, self._thuVid, v_mn, v_mx)
 
-	#def cameraButton(self):
-	#	if (self.MODE == self.MODE_PHOTO):
-	#		self.openShutter()
-	#	elif (self.MODE == self.MODE_VIDEO):
-	#		if (self.SHOW == self.SHOW_LIVE):
-	#			self.startRecordingVideo()
-	#		elif (self.SHOW ==self.SHOW_RECORD):
-	#			self.stopRecordingVideo()
-
 	def inFocus(self, widget, event):
 		if (self.SHOW == self.SHOW_LIVE):
 			self._livevideo.playa.play()
@@ -149,9 +135,6 @@ class Controller:
 
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
-
-#	def getBasePath( self ):
-#		return self._basepath
 
 	def getJournalPath( self ):
 		return self.journalPath
@@ -284,7 +267,7 @@ class Controller:
 				img = _sugar.cairo_surface_from_gdk_pixbuf(pb)
 				self._thuPho.addThumb(img, imgPath_s)
 
-		#todo: only show this if you've delete the pic you're looking at!
+		#todo: only show this if you've deleted the pic you're looking at!
 		if (self.MODE == self.MODE_PHOTO):
 			self.SHOW = self.SHOW_STILL
 			self._img = self.modPhoImg
