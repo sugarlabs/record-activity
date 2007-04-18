@@ -32,7 +32,7 @@ from polygon import Polygon
 
 class Controller:
 
-	def __init__(self):
+	def __init__( self ):
 		#our dirs
 		self._basepath = activity.get_bundle_path()
 		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", "camera")
@@ -91,13 +91,13 @@ class Controller:
 		v_mn = max(v_mx-self._thuVid.numButts, 0)
 		gobject.idle_add(self.setupThumbs, self.movieHash, self._thuVid, v_mn, v_mx)
 
-	def inFocus(self, widget, event):
+	def inFocus( self, widget, event ):
 		if (self.SHOW == self.SHOW_LIVE):
 			self._livevideo.playa.play()
 		if (self.SHOW == self.SHOW_PLAY):
 			self._playvideo.playa.play()
 
-	def outFocus(self, widget, event):
+	def outFocus( self, widget, event ):
 		if (self.SHOW == self.SHOW_LIVE):
 			self._livevideo.playa.stop()
 		if (self.SHOW == self.SHOW_PLAY):
@@ -163,6 +163,7 @@ class Controller:
 
 		self._id.redraw()
 
+	#todo: hide the video widget here by moving it offscreen until recording begins
 	def startRecordingVideo( self ):
 		self.UPDATING = True
 		self._frame.setWaitCursor()
@@ -182,7 +183,7 @@ class Controller:
 		self._id.redraw()
 		self._livevideo.playa.stopRecordingVideo()
 
-	def stoppedRecordingVideo(self):
+	def stoppedRecordingVideo( self ):
 		self.DONE = True
 
 		if (self.DONE):
@@ -202,7 +203,7 @@ class Controller:
 		self._frame.setWaitCursor()
 		self._livevideo.playa.takePic()
 
-	def setPic(self, pixbuf):
+	def setPic( self, pixbuf ):
 		nowtime = int(time.time())
 		nowtime_s = str(nowtime)
 		nowtime_fn = nowtime_s + ".jpg"
@@ -221,7 +222,7 @@ class Controller:
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
 
-	def generateThumbnail(self, pixbuf, scale):
+	def generateThumbnail( self, pixbuf, scale ):
 		#need to generate thumbnail version here
 		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self._thuPho.tw, self._thuPho.th)
 		tctx = cairo.Context(thumbImg)
@@ -276,7 +277,7 @@ class Controller:
 			self._img = self.modVidImg
 		self._id.redraw()
 
-	def getThumbPath(self, hash, path):
+	def getThumbPath( self, hash, path ):
 		pathSplit = os.path.split(path)
 		for each in hash:
 			if (each[2] == pathSplit[1]):
@@ -360,7 +361,7 @@ class Controller:
 		album.writexml(f)
 		f.close()
 
-	def setVid(self, pixbuf, tempPath):
+	def setVid( self, pixbuf, tempPath ):
 		nowtime = str(int(time.time()))
 		thumbFn = nowtime + "_thumbnail.png"
 		movieFn = nowtime + ".ogg"
@@ -379,7 +380,7 @@ class Controller:
 
 	#if we're not at the end, move to the end...
 	#otherwise, just append to the end
-	def thumbAdded(self, thuPanel, hash, thumbImg, path):
+	def thumbAdded( self, thuPanel, hash, thumbImg, path ):
 		thuStart = 0
 		if (hash == self.photoHash):
 			thuStart = self.thuPhoStart
@@ -403,7 +404,7 @@ class Controller:
 
 		#thuPanel.addThumb(thumbImg, path)
 
-	def showImg(self, imgPath):
+	def showImg( self, imgPath ):
 		self.SHOW = self.SHOW_STILL
 
 		if (self._img == None):
@@ -414,7 +415,7 @@ class Controller:
 		self._img = _sugar.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self._id.redraw()
 
-	def showVid(self, vidPath = None):
+	def showVid( self, vidPath = None ):
 		if (vidPath != None):
 			self.DONE = True
 			self.UPDATING = True
@@ -432,7 +433,7 @@ class Controller:
 			self._frame.setDefaultCursor()
 			self.UPDATING = False
 
-	def doVideoMode(self):
+	def doVideoMode( self ):
 		if (self.MODE == self.MODE_VIDEO):
 			return
 
@@ -472,10 +473,10 @@ class Controller:
 
 		self.MODE = self.MODE_PHOTO
 
-	def isVideoMode(self):
+	def isVideoMode( self ):
 		return self.MODE == self.MODE_VIDEO
 
-	def isPhotoMode(self):
+	def isPhotoMode( self ):
 		return self.MODE == self.MODE_PHOTO
 
 	def loadGfx( self ):
