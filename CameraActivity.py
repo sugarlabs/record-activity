@@ -40,6 +40,11 @@ class CameraActivity(activity.Activity):
 		#menubar
 		MenuBar( self.c )
 		self.c._mb.set_size_request( self.c._w, self.menuBarHt )
+
+		#self._toolbar = XbookToolbar(self._view)
+		#self._toolbar.connect('open-document', self._open_document_cb)
+		#self._toolbar.connect('open-document', self._open_document_cb)
+
 		#photos
 		Image_Display( self.c )
 		self.c._id.set_size_request( self.c._w, imgDisHt )
