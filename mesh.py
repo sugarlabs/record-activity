@@ -14,8 +14,8 @@ class Server:
 	def shutdown( self ):
 		pass
 
-	def newPicNotice( self, arg1 ):
-		print "Request got " + str(arg1)
+	def newPicNotice( self, arg1, arg2 ):
+		print "Request got " + str(arg1) + ", " + str(arg2)
 		return "success"
 
 

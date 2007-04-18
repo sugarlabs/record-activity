@@ -29,6 +29,8 @@ from sugar.activity import activity
 
 from color import Color
 from polygon import Polygon
+from mesh import Client
+from mesh import Server
 
 class Controller:
 
@@ -77,13 +79,14 @@ class Controller:
 		self._thuPho = None
 		self._thuVid = None
 
-		self._w = gtk.gdk.screen_width( )
-		self._h = gtk.gdk.screen_height( )
+		self._w = gtk.gdk.screen_width()
+		self._h = gtk.gdk.screen_height()
 		self.loadColors()
 		self.loadGfx()
 		self.setConstants()
 
-		myMesh = Mesh(self);
+		meshClient = Client(self);
+		meshServer = Server(self);
 
 	def setup( self ):
 		p_mx = len(self.photoHash)
