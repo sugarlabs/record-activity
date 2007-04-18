@@ -83,6 +83,8 @@ class Controller:
 		self.loadGfx()
 		self.setConstants()
 
+		myMesh = Mesh(self);
+
 	def setup( self ):
 		p_mx = len(self.photoHash)
 		p_mn = max(p_mx-self._thuPho.numButts, 0)
