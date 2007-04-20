@@ -29,13 +29,12 @@ from sugar.activity import activity
 
 from color import Color
 from polygon import Polygon
-from mesh import Client
-from mesh import Server
+#from mesh import Client
+#from mesh import Server
 
 class Controller:
 
 	def __init__( self ):
-		#our dirs
 		self._basepath = activity.get_bundle_path()
 		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", "camera")
 		if (not os.path.exists(self.journalPath)):
@@ -85,8 +84,8 @@ class Controller:
 		self.loadGfx()
 		self.setConstants()
 
-		meshClient = Client(self);
-		meshServer = Server(self);
+		#meshClient = Client(self);
+		#meshServer = Server(self);
 
 	def setup( self ):
 		p_mx = len(self.photoHash)
@@ -238,7 +237,7 @@ class Controller:
 		tctx.paint()
 		return thumbImg
 
-	def deleteThumb( self, path, hash ):
+	def thumbDeleted( self, path, hash, thuPanel ):
 		pathName = os.path.split(path)
 		deleteMe = None
 		for each in hash:
@@ -249,7 +248,8 @@ class Controller:
 
 		if (os.path.isfile(path)):
 			os.remove(path)
-		thumbPath = getThumbPath(hash,path)
+
+		thumbPath = self.getThumbPath(hash,path)
 		if (thumbPath != None):
 			if (os.path.isfile(thumbPath)):
 				os.remove(thumbPath)
@@ -257,21 +257,15 @@ class Controller:
 		hash.remove(deleteMe)
 		self.updatePhotoIndex()
 
-		start = self.thuPhoStart
-		thumbs = self._thuPho
-		if (self.MODE == self.MODE_VIDEO):
-			start = self.vidPhoStart
-			thumbs = self._thuVid
+		#start = self.thuPhoStart
+		#thumbs = self._thuPho
+		#if (self.MODE == self.MODE_VIDEO):
+		#	start = self.vidPhoStart
+		#	thumbs = self._thuVid
 
-		#if not at the end..., then slide down
-		if ( (start+thumbs) < len(hash) ):
-			each = hash[start+thumbs.numButts]
-			imgPath = os.path.join(self.journalPath, each[2])
-			imgPath_s = os.path.abspath(imgPath)
-			if (os.path.isfile(imgPath_s)):
-				pb = gtk.gdk.pixbuf_new_from_file(imgPath_s)
-				img = _sugar.cairo_surface_from_gdk_pixbuf(pb)
-				self._thuPho.addThumb(img, imgPath_s)
+		mx = len(hash)
+		mn = max(mx-thuPanel.numButts, 0)
+		self.setupThumbs(hash, thuPanel, mn, mx)
 
 		#todo: only show this if you've deleted the pic you're looking at!
 		if (self.MODE == self.MODE_PHOTO):

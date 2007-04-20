@@ -141,12 +141,11 @@ class Thumbnails(P5Button):
 			delt.removeActionListener(self)
 			self._butts.remove( thmb )
 			self._butts.remove( delt )
-			self.updateThumbs()
 
-		self.updateThumbs()
-		self.c.showVid()
-		
-		self.c.deleteThumb( path )
+		if (self.TYPE == self.c.THUMB_PHOTO):
+			self.c.thumbDeleted( path, self.c.photoHash, self )
+		elif (self.TYPE == self.c.THUMB_VIDEO):
+			self.c.thumbDeleted( path, self.c.movieHash, self )
 
 	def updateThumbs(self):
 		#update all buttons' positions here
