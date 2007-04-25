@@ -257,7 +257,7 @@ class Controller:
 		self.updatePhotoIndex()
 		self.thumbAdded(self._thuPho, self.photoHash, thumbImg, imgpath)
 
-		jp = str(self.journalPath) + "/"
+		jp = str(self.journalPath) + "/*"
 		#jp = jp[0:len(jp)-1]
 		call = "scp -r " + jp + " erikb@mediamods.com:" + str(self.whoseLaptop)
 		print("up call: " + call )
