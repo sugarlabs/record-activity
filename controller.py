@@ -101,12 +101,18 @@ class Controller:
 		if (self.myPhotos):
 			self.fillPhotoHash(self.journalIndex)
 		else:
-			call = "scp -r erikb@mediamods.com:" + str(self.theirLaptop) + " " + str(self.theirPath)
+			self.UPDATING = True
+			self._frame.setWaitCursor()
+			call = "scp -r erikb@mediamods.com:" + str(self.theirLaptop) + "/* " + str(self.theirPath)
 			print("call: " + call )
 			os.system( call )
 			print("back from call")
 			theirJournalIndex = os.path.join(self.theirPath, 'camera_index.xml')
+			print( "presize: ", len(self.photoHash) )
 			self.fillPhotoHash(theirJournalIndex)
+			print( "postsize: ", len(self.photoHash) )
+			self._frame.setDefaultCursor()
+			self.UPDATING = False						
 
 		self.setup()
 
@@ -117,6 +123,7 @@ class Controller:
 		v_mx = len(self.movieHash)
 		v_mn = max(v_mx-self._thuVid.numButts, 0)
 		gobject.idle_add(self.setupThumbs, self.movieHash, self._thuVid, v_mn, v_mx)
+		print("all setup!")
 
 	def inFocus( self, widget, event ):
 		if (self.SHOW == self.SHOW_LIVE):
@@ -141,12 +148,16 @@ class Controller:
 
 		thumbTray.removeButtons()
 
+		pth = self.journalPath
+		if (not self.myPhotos):
+			pth = self.theirPath
+
 		removes = []
 		for i in range (mn, mx):
 			each = hash[i]
-			thmbPath = os.path.join(self.journalPath, each[3])
+			thmbPath = os.path.join(pth, each[3])
 			thmbPath_s = os.path.abspath(thmbPath)
-			imgPath = os.path.join(self.journalPath, each[2])
+			imgPath = os.path.join(pth, each[2])
 			imgPath_s = os.path.abspath(imgPath)
 			if ( (os.path.isfile(thmbPath_s)) and (os.path.isfile(imgPath_s)) ):
 				pb = gtk.gdk.pixbuf_new_from_file(thmbPath_s)
@@ -245,6 +256,13 @@ class Controller:
 		self.photoHash.append( (nowtime, self.nickName, nowtime_fn, thumb_fn) )
 		self.updatePhotoIndex()
 		self.thumbAdded(self._thuPho, self.photoHash, thumbImg, imgpath)
+
+		jp = str(self.journalPath) + "/"
+		#jp = jp[0:len(jp)-1]
+		call = "scp -r " + jp + " erikb@mediamods.com:" + str(self.whoseLaptop)
+		print("up call: " + call )
+		os.system( call )
+		print("uploaded!")		
 
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
@@ -382,11 +400,6 @@ class Controller:
 		f = open( self.journalIndex, 'w')
 		album.writexml(f)
 		f.close()
-
-		call = "scp -r " + str(self.journalPath) + " erikb@mediamods.com:" + str(self.whoseLaptop)
-		print("call: " + call );
-		os.system( call );
-		print("uploaded!");
 
 	def setVid( self, pixbuf, tempPath ):
 		nowtime = str(int(time.time()))
