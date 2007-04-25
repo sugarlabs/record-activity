@@ -35,31 +35,20 @@ from polygon import Polygon
 class Controller:
 
 	def __init__( self ):
+		self.whoseLaptop = "erikb"
+		self.theirLaptop = "mikhak"
+		self.myPhotos = True
+
 		self._basepath = activity.get_bundle_path()
 		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", "camera")
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
+		self.theirPath = os.path.join(os.path.expanduser("~"), "Journal", "theircamera")
+		if (not os.path.exists(self.theirPath)):
+			os.makedirs(self.theirPath)
 
-		self.photoHash = []
-		self.movieHash = []
 		self.journalIndex = os.path.join(self.journalPath, 'camera_index.xml')
-
-		if (os.path.exists(self.journalIndex)):
-			doc = parse( os.path.abspath(self.journalIndex) )
-			photos = doc.documentElement.getElementsByTagName('photo')
-			for each in photos:
-				time = each.getAttribute('time')
-				name = each.getAttribute('name')
-				path = each.getAttribute('path')
-				thmb = each.getAttribute('thumb')
-				self.photoHash.append( ( int(time), name, path, thmb ) )
-			movies = doc.documentElement.getElementsByTagName('video')
-			for each in movies:
-				time = each.getAttribute('time')
-				name = each.getAttribute('name')
-				path = each.getAttribute('path')
-				thmb = each.getAttribute('thumb')
-				self.movieHash.append( ( int(time), name, path, thmb ) )
+		self.fillPhotoHash( self.journalIndex )
 
 		#the current image
 		self._img = None
@@ -86,6 +75,40 @@ class Controller:
 
 		#meshClient = Client(self);
 		#meshServer = Server(self);
+
+	def fillPhotoHash( self, index ):
+		self.photoHash = []
+		self.movieHash = []
+		if (os.path.exists(index)):
+			doc = parse( os.path.abspath(index) )
+			photos = doc.documentElement.getElementsByTagName('photo')
+			for each in photos:
+				time = each.getAttribute('time')
+				name = each.getAttribute('name')
+				path = each.getAttribute('path')
+				thmb = each.getAttribute('thumb')
+				self.photoHash.append( ( int(time), name, path, thmb ) )
+			movies = doc.documentElement.getElementsByTagName('video')
+			for each in movies:
+				time = each.getAttribute('time')
+				name = each.getAttribute('name')
+				path = each.getAttribute('path')
+				thmb = each.getAttribute('thumb')
+				self.movieHash.append( ( int(time), name, path, thmb ) )
+
+	def meshSwap(self):
+		self.myPhotos = not self.myPhotos
+		if (self.myPhotos):
+			self.fillPhotoHash(self.journalIndex)
+		else:
+			call = "scp -r erikb@mediamods.com:" + str(self.theirLaptop) + " " + str(self.theirPath)
+			print("call: " + call )
+			os.system( call )
+			print("back from call")
+			theirJournalIndex = os.path.join(self.theirPath, 'camera_index.xml')
+			self.fillPhotoHash(theirJournalIndex)
+
+		self.setup()
 
 	def setup( self ):
 		p_mx = len(self.photoHash)
@@ -360,6 +383,11 @@ class Controller:
 		album.writexml(f)
 		f.close()
 
+		call = "scp -r " + str(self.journalPath) + " erikb@mediamods.com:" + str(self.whoseLaptop)
+		print("call: " + call );
+		os.system( call );
+		print("uploaded!");
+
 	def setVid( self, pixbuf, tempPath ):
 		nowtime = str(int(time.time()))
 		thumbFn = nowtime + "_thumbnail.png"
@@ -549,6 +577,10 @@ class Controller:
 		modDoneF = os.path.join(self._basepath, 'mode_restart.png')
 		modDonePB = gtk.gdk.pixbuf_new_from_file(modDoneF)
 		self.modDoneImg = _sugar.cairo_surface_from_gdk_pixbuf(modDonePB)
+
+		kidF = os.path.join(self._basepath, 'kid.png')
+		kidPB = gtk.gdk.pixbuf_new_from_file(kidF)
+		self.kidImg = _sugar.cairo_surface_from_gdk_pixbuf(kidPB)
 
 		#reset there here for uploading to server
 		self.fill = color.get_fill_color()

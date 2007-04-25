@@ -53,9 +53,16 @@ class Image_Display(P5Button):
 			self.c.camRecSvg.render_cairo(ctx)
 		ctx.identity_matrix( )
 
+		#draw the kid
+		ctx.translate( self._w-100, self._h-100 )
+		ctx.set_source_surface( self.c.kidImg, 0, 0 )
+		ctx.paint( )
+		ctx.identity_matrix( )
+
 		if (self.firstTime):
 			self.firstTime = False
 			self.makeShutterButton( sx, sy )
+			self.makeMeshButton( )
 
 		if (self.isImg()):
 			self.drawImage( ctx )
@@ -74,6 +81,23 @@ class Image_Display(P5Button):
 		poly = Polygon( xs, ys )
 		button = Button( poly, sx, sy )
 		button.setActionCommand(self.ac_shutter)
+		button.addActionListener( self )
+		self._butts.append( button )
+
+	def makeMeshButton(self):
+		xs = []
+		ys = []
+		xs.append( 0 )
+		ys.append( 0 )
+		xs.append( 100 )
+		ys.append( 0 )
+		xs.append( 100 )
+		ys.append( 100 )
+		xs.append( 0 )
+		ys.append( 100 )
+		poly = Polygon( xs, ys )
+		button = Button( poly, self._w-100, self._h-100 )
+		button.setActionCommand("mesh")
 		button.addActionListener( self )
 		self._butts.append( button )
 
@@ -102,3 +126,7 @@ class Image_Display(P5Button):
 				self.c.showLive()
 			elif (self.c.SHOW == self.c.SHOW_RECORD):
 				self.c.stopRecordingVideo()
+
+		if (actionCommand == "mesh"):
+			print("mesh")
+			self.c.meshSwap()
