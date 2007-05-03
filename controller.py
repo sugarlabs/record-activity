@@ -35,17 +35,10 @@ from polygon import Polygon
 class Controller:
 
 	def __init__( self ):
-		self.whoseLaptop = "erikb"
-		self.theirLaptop = "mikhak"
-		self.myPhotos = True
-
 		self._basepath = activity.get_bundle_path()
 		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", "camera")
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
-		self.theirPath = os.path.join(os.path.expanduser("~"), "Journal", "theircamera")
-		if (not os.path.exists(self.theirPath)):
-			os.makedirs(self.theirPath)
 
 		self.journalIndex = os.path.join(self.journalPath, 'camera_index.xml')
 		self.fillPhotoHash( self.journalIndex )
@@ -96,26 +89,6 @@ class Controller:
 				thmb = each.getAttribute('thumb')
 				self.movieHash.append( ( int(time), name, path, thmb ) )
 
-	def meshSwap(self):
-		self.myPhotos = not self.myPhotos
-		if (self.myPhotos):
-			self.fillPhotoHash(self.journalIndex)
-		else:
-			self.UPDATING = True
-			self._frame.setWaitCursor()
-			call = "scp -r erikb@mediamods.com:" + str(self.theirLaptop) + "/* " + str(self.theirPath)
-			print("call: " + call )
-			os.system( call )
-			print("back from call")
-			theirJournalIndex = os.path.join(self.theirPath, 'camera_index.xml')
-			print( "presize: ", len(self.photoHash) )
-			self.fillPhotoHash(theirJournalIndex)
-			print( "postsize: ", len(self.photoHash) )
-			self._frame.setDefaultCursor()
-			self.UPDATING = False						
-
-		self.setup()
-
 	def setup( self ):
 		p_mx = len(self.photoHash)
 		p_mn = max(p_mx-self._thuPho.numButts, 0)
@@ -123,7 +96,6 @@ class Controller:
 		v_mx = len(self.movieHash)
 		v_mn = max(v_mx-self._thuVid.numButts, 0)
 		gobject.idle_add(self.setupThumbs, self.movieHash, self._thuVid, v_mn, v_mx)
-		print("all setup!")
 
 	def inFocus( self, widget, event ):
 		if (self.SHOW == self.SHOW_LIVE):
@@ -147,10 +119,6 @@ class Controller:
 			self.thuVidStart = mn
 
 		thumbTray.removeButtons()
-
-		pth = self.journalPath
-		if (not self.myPhotos):
-			pth = self.theirPath
 
 		removes = []
 		for i in range (mn, mx):
@@ -256,13 +224,6 @@ class Controller:
 		self.photoHash.append( (nowtime, self.nickName, nowtime_fn, thumb_fn) )
 		self.updatePhotoIndex()
 		self.thumbAdded(self._thuPho, self.photoHash, thumbImg, imgpath)
-
-		jp = str(self.journalPath) + "/*"
-		#jp = jp[0:len(jp)-1]
-		call = "scp -r " + jp + " erikb@mediamods.com:" + str(self.whoseLaptop)
-		print("up call: " + call )
-		os.system( call )
-		print("uploaded!")		
 
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
@@ -590,10 +551,6 @@ class Controller:
 		modDoneF = os.path.join(self._basepath, 'mode_restart.png')
 		modDonePB = gtk.gdk.pixbuf_new_from_file(modDoneF)
 		self.modDoneImg = _sugar.cairo_surface_from_gdk_pixbuf(modDonePB)
-
-		kidF = os.path.join(self._basepath, 'kid.png')
-		kidPB = gtk.gdk.pixbuf_new_from_file(kidF)
-		self.kidImg = _sugar.cairo_surface_from_gdk_pixbuf(kidPB)
 
 		#reset there here for uploading to server
 		self.fill = color.get_fill_color()
