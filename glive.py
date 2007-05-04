@@ -130,8 +130,8 @@ class Glive:
 		self.nextPipe()
 
 		if ( len(self.thumbPipes) > 0 ):
-			thumbline = self.thumbpipes[self.thumbpipes.length-1]
-			n = str(len(self.thumbPipes))
+			thumbline = self.thumbPipes[len(self.thumbPipes)-1]
+			n = str(len(self.thumbPipes)-1)
 			thumbline.get_by_name( "thumbFakesink_"+n ).disconnect( self.THUMB_HANDOFF )
 
 		n = str(len(self.thumbPipes))
