@@ -43,8 +43,7 @@ class Image_Display(P5Button):
 		sy = ((self._h/2)-(self.c.polSvg.props.height/2)) + polMargin + 480 + polMargin
 		ctx.translate( sx, sy)
 		if (self.c.SHOW == self.c.SHOW_LIVE):
-			if (not self.c.DONE):
-				self.c.camSvg.render_cairo(ctx)
+			self.c.camSvg.render_cairo(ctx)
 		elif (self.c.SHOW == self.c.SHOW_STILL):
 			self.c.camInvSvg.render_cairo(ctx)
 		elif (self.c.SHOW == self.c.SHOW_PLAY):
@@ -53,11 +52,6 @@ class Image_Display(P5Button):
 			self.c.camRecSvg.render_cairo(ctx)
 		ctx.identity_matrix( )
 
-		#draw the kid
-		ctx.translate( self._w-100, self._h-100 )
-		ctx.set_source_surface( self.c.kidImg, 0, 0 )
-		ctx.paint( )
-		ctx.identity_matrix( )
 
 		if (self.firstTime):
 			self.firstTime = False
@@ -100,8 +94,7 @@ class Image_Display(P5Button):
 
 		if (actionCommand == self.ac_shutter):
 			if (self.c.SHOW == self.c.SHOW_LIVE):
-				if (not self.c.DONE):
-					self.c.openShutter()
+				self.c.openShutter()
 			elif (self.c.SHOW == self.c.SHOW_STILL):
 				self.c.showLive()
 			elif (self.c.SHOW == self.c.SHOW_PLAY):

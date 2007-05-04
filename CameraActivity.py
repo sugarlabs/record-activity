@@ -71,7 +71,7 @@ class CameraActivity(activity.Activity):
 		#turn on the live camera
 		self.c._livevideo.playa.play()
 		self.c.setup()
-		
+
 		self.connect("destroy", self.destroy)
 		#self.connect("focus-in-event", self.c.inFocus)
 		#self.connect("focus-out-event", self.c.outFocus)
@@ -98,7 +98,7 @@ class CameraActivity(activity.Activity):
 	#		return False
 
 	def destroy( self, *args ):
-		self.c.outFocus()
+		#self.c.outFocus()
 		gtk.main_quit()
 
 	def setWaitCursor( self ):

@@ -123,9 +123,9 @@ class Controller:
 		removes = []
 		for i in range (mn, mx):
 			each = hash[i]
-			thmbPath = os.path.join(pth, each[3])
+			thmbPath = os.path.join(self.journalPath, each[3])
 			thmbPath_s = os.path.abspath(thmbPath)
-			imgPath = os.path.join(pth, each[2])
+			imgPath = os.path.join(self.journalPath, each[2])
 			imgPath_s = os.path.abspath(imgPath)
 			if ( (os.path.isfile(thmbPath_s)) and (os.path.isfile(imgPath_s)) ):
 				pb = gtk.gdk.pixbuf_new_from_file(thmbPath_s)
@@ -153,19 +153,12 @@ class Controller:
 
 	def showLive( self ):
 		self._img = None
-		if (self.DONE):
-			self._img = self.modDoneImg
 
 		self.SHOW = self.SHOW_LIVE
 
 		#if you were playin' anything, time to stop
 		self._playvideo.playa.stop()
 		self._playvideo.hide()
-
-		if not (self.DONE):
-			self._livevideo.show()
-			self._livevideo.playa.play()
-			pass
 
 		self._id.redraw()
 
@@ -190,13 +183,8 @@ class Controller:
 		self._livevideo.playa.stopRecordingVideo()
 
 	def stoppedRecordingVideo( self ):
-		self.DONE = True
-
-		if (self.DONE):
-			self._img = self.modDoneImg
-		else:
-			self._livevideo.show()
-			self._livevideo.playa.play()
+		self._livevideo.show()
+		self._livevideo.playa.play()
 
 		self.SHOW = self.SHOW_LIVE
 		self._id.redraw()
@@ -418,7 +406,6 @@ class Controller:
 
 	def showVid( self, vidPath = None ):
 		if (vidPath != None):
-			self.DONE = True
 			self.UPDATING = True
 			self._frame.setWaitCursor()
 
@@ -602,5 +589,3 @@ class Controller:
 		self.thuVidStart = 0
 
 		self.UPDATING = True
-
-		self.DONE = False
