@@ -26,6 +26,8 @@ class CameraActivity(activity.Activity):
 		#sizing
 		self.c = Controller()
 		self.c._frame = self
+		self.c.initMesh()
+
 		self.menuBarHt = 75
 		self.thumbTrayHt = 150
 		imgDisHt = self.c._h-(self.thumbTrayHt+self.menuBarHt)

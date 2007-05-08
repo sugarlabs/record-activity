@@ -15,7 +15,6 @@ import math
 import gtk.gdk
 import sugar.env
 import random
-import _sugar
 import time
 import shutil
 import time
@@ -27,10 +26,13 @@ from sugar import profile
 from sugar import util
 from sugar.activity import activity
 
+import _camera
+
 from color import Color
 from polygon import Polygon
-#from mesh import Client
-#from mesh import Server
+
+from mesh import MeshClient
+from mesh import MeshXMLRPCServer
 
 class Controller:
 
@@ -66,8 +68,9 @@ class Controller:
 		self.loadGfx()
 		self.setConstants()
 
-		#meshClient = Client(self);
-		#meshServer = Server(self);
+	def initMesh( self ):
+		meshClient = MeshClient(self)
+		meshXMLRPCServer = MeshXMLRPCServer(self);
 
 	def fillPhotoHash( self, index ):
 		self.photoHash = []
@@ -129,7 +132,7 @@ class Controller:
 			imgPath_s = os.path.abspath(imgPath)
 			if ( (os.path.isfile(thmbPath_s)) and (os.path.isfile(imgPath_s)) ):
 				pb = gtk.gdk.pixbuf_new_from_file(thmbPath_s)
-				img = _sugar.cairo_surface_from_gdk_pixbuf(pb)
+				img = _camera.cairo_surface_from_gdk_pixbuf(pb)
 				thumbTray.addThumb(img, imgPath_s)
 			else:
 				removes.append(each)
@@ -203,11 +206,13 @@ class Controller:
 		nowtime_fn = nowtime_s + ".jpg"
 		imgpath = os.path.join(self.journalPath, nowtime_fn)
 		pixbuf.save( imgpath, "jpeg" )
-		thumb_fn = nowtime_s + "_thumb.png"
+		thumb_fn = nowtime_s + "_thumb.jpg"
 		thumbpath = os.path.join(self.journalPath, thumb_fn)
 
-		thumbImg = self.generateThumbnail(pixbuf, self._thuPho.tscale)
-		thumbImg.write_to_png(thumbpath)
+		#thumbImg = self.generateThumbnail(pixbuf, self._thuPho.tscale)
+		#thumbImg.write_to_png(thumbpath)
+		thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
+		thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
 		self.photoHash.append( (nowtime, self.nickName, nowtime_fn, thumb_fn) )
 		self.updatePhotoIndex()
@@ -216,16 +221,17 @@ class Controller:
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
 
-	def generateThumbnail( self, pixbuf, scale ):
+	#outdated?
+	#def generateThumbnail( self, pixbuf, scale ):
 		#need to generate thumbnail version here
-		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self._thuPho.tw, self._thuPho.th)
-		tctx = cairo.Context(thumbImg)
-		img = _sugar.cairo_surface_from_gdk_pixbuf(pixbuf)
+		#thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self._thuPho.tw, self._thuPho.th)
+		#tctx = cairo.Context(thumbImg)
+		#img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 
-		tctx.scale(scale, scale)
-		tctx.set_source_surface(img, 0, 0)
-		tctx.paint()
-		return thumbImg
+		#tctx.scale(scale, scale)
+		#tctx.set_source_surface(img, 0, 0)
+		#tctx.paint()
+		#return thumbImg
 
 	def thumbDeleted( self, path, hash, thuPanel ):
 		pathName = os.path.split(path)
@@ -357,10 +363,10 @@ class Controller:
 		thumbPath = os.path.join(self.journalPath, thumbFn)
 		oggPath = os.path.join(self.journalPath, movieFn)
 
-		thumbImg = self.generateThumbnail(pixbuf, float(.66875) )
-		thumbImg.write_to_png(thumbPath)
-		#pixbuf.save(imgpath, "jpeg")
-
+		#thumbImg = self.generateThumbnail(pixbuf, float(.66875) )
+		#thumbImg.write_to_png(thumbPath)
+		thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
+		thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 		shutil.move(tempPath, oggPath)
 
 		self.movieHash.append( (nowtime, self.nickName, movieFn, thumbFn) )
@@ -401,7 +407,7 @@ class Controller:
 			self._playvideo.hide()
 
 		pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
-		self._img = _sugar.cairo_surface_from_gdk_pixbuf(pixbuf)
+		self._img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self._id.redraw()
 
 	def showVid( self, vidPath = None ):
@@ -525,19 +531,19 @@ class Controller:
 
 		modVidF = os.path.join(self._basepath, 'mode_video.png')
 		modVidPB = gtk.gdk.pixbuf_new_from_file(modVidF)
-		self.modVidImg = _sugar.cairo_surface_from_gdk_pixbuf(modVidPB)
+		self.modVidImg = _camera.cairo_surface_from_gdk_pixbuf(modVidPB)
 
 		modPhoF = os.path.join(self._basepath, 'mode_photo.png')
 		modPhoPB = gtk.gdk.pixbuf_new_from_file(modPhoF)
-		self.modPhoImg = _sugar.cairo_surface_from_gdk_pixbuf(modPhoPB)
+		self.modPhoImg = _camera.cairo_surface_from_gdk_pixbuf(modPhoPB)
 
 		modWaitF = os.path.join(self._basepath, 'mode_wait.png')
 		modWaitPB = gtk.gdk.pixbuf_new_from_file(modWaitF)
-		self.modWaitImg = _sugar.cairo_surface_from_gdk_pixbuf(modWaitPB)
+		self.modWaitImg = _camera.cairo_surface_from_gdk_pixbuf(modWaitPB)
 
 		modDoneF = os.path.join(self._basepath, 'mode_restart.png')
 		modDonePB = gtk.gdk.pixbuf_new_from_file(modDoneF)
-		self.modDoneImg = _sugar.cairo_surface_from_gdk_pixbuf(modDonePB)
+		self.modDoneImg = _camera.cairo_surface_from_gdk_pixbuf(modDonePB)
 
 		#reset there here for uploading to server
 		self.fill = color.get_fill_color()

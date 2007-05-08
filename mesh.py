@@ -4,7 +4,7 @@ from sugar.presence import presenceservice
 xmlRpcPort = 8888
 httpPort = 8889
 
-class XMLRPCServer:
+class MeshXMLRPCServer:
 	def __init__( self, pc ):
 		self.c = pc
 
@@ -52,7 +52,9 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		return fileToSend
 
 
-class Client:
+
+
+class MeshClient:
 
 	def __init__( self, pc ):
 		self.c = pc
