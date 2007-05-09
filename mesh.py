@@ -18,7 +18,7 @@ class MeshXMLRPCServer:
 
 	def newPicNotice( self, arg1, arg2=None ):
 		print "Request got " + str(arg1) + ", " + str(arg2)
-		return "success"
+		return "successios"
 
 
 class HttpServer(network.GlibTCPServer):
@@ -32,11 +32,17 @@ class HttpServer(network.GlibTCPServer):
 class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 	#path is url to the path to the file being requested
 	def translate_path(self, path):
-		path = urlparse.urlparse(path)[2]
-		path = posixpath.normpath(urllib.unquote(path))
-		words = path.split('/')
-		words = filter(None, words)
-		print( "words: ", words )
+		print( "a: ", path )
+
+		url = urlparse.urlparse(path)[2]
+		params = urlparse.urlparse(path)[4]
+		print( "url:", url )
+		print( "params:", params )
+
+		urlPath = posixpath.normpath(urllib.unquote(url))
+		urlPathAy = path.split('/')
+		urlPathAy = filter(None, words)
+		print( "urlPathAy: ", urlPathAy )
 
 		#do some logic here to figure out what to do next
 
@@ -62,6 +68,9 @@ class MeshClient:
 
 		#stay alert!  buddies might show up at any time!
 		self.my_acty = self.c._frame._shared_activity  #_pservice.get_activity(self.c.activity_id)
+		self.my_acty_id = self.c._frame.activity_id
+		print( "uid:", self.my_acty_id )
+
 		self.my_acty.connect('buddy-joined', self.buddy_joined_cb)
 		self.my_acty.connect('buddy-left', self.buddy_left_cb)
 
@@ -72,7 +81,9 @@ class MeshClient:
 			print buddy.props.owner #me boolean
 
 	def buddy_joined_cb( self, activity, buddy ):
-		pass
+		print buddy.props.nick
+		print buddy.props.ip4_address
+		print buddy.props.owner #me boolean
 
 	def buddy_left_cb( self, activity, buddy ):
 		pass
