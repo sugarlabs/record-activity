@@ -17,6 +17,7 @@ class CameraActivity(activity.Activity):
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
 		self.set_title( "Camera" )
+		
 
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
@@ -26,7 +27,6 @@ class CameraActivity(activity.Activity):
 		#sizing
 		self.c = Controller()
 		self.c._frame = self
-		self.c.initMesh()
 
 		self.menuBarHt = 0
 		self.thumbTrayHt = 150
@@ -36,7 +36,7 @@ class CameraActivity(activity.Activity):
 		self.set_default_size( self.c._w, self.c._h )
 
 		#add a callback here
-		self.connect( "shared", self.iAmShared_cb )
+		self.connect( "shared", self._shared_cb )
 
 		#this includes the default sharing tab
 		toolbox = activity.ActivityToolbox(self)
@@ -85,13 +85,30 @@ class CameraActivity(activity.Activity):
 		self.connect("destroy", self.destroy)
 		#self.connect("focus-in-event", self.c.inFocus)
 		#self.connect("focus-out-event", self.c.outFocus)
-		
+
+		#handle sharing...
+		#if the prsc knows about an act with my id on the network...
+		if self._shared_activity:
+			#have you joined or shared this activity yourself?
+			if self.get_shared():
+				self._joined_cb()
+			else:
+				# Wait until you're at the door of the party...
+				self.connect("joined", self._joined_cb)
+
 		#wrapped up and heading off to play ball
 		return False
 
-	def iAmShared_cb( self, activity ):
+	def _shared_cb( self, activity ):
 		print("i am shared")
-		print("start some sharing here")
+		self.startMesh()
+
+	def _joined_cb( self, activity ):
+		print("i am joined")
+		self.startMesh()
+
+	def startMesh( self ):
+		self.c.initMesh()
 
 	def newGlive( self, record, sound ):
 			LiveVideoSlot(self.c)

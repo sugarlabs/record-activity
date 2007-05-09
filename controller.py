@@ -33,6 +33,7 @@ from polygon import Polygon
 
 from mesh import MeshClient
 from mesh import MeshXMLRPCServer
+from mesh import HttpServer
 
 class Controller:
 
@@ -69,6 +70,7 @@ class Controller:
 		self.setConstants()
 
 	def initMesh( self ):
+		httpSvr = HttpServer(self)
 		meshClient = MeshClient(self)
 		meshXMLRPCServer = MeshXMLRPCServer(self);
 

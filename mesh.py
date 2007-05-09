@@ -13,18 +13,16 @@ class MeshXMLRPCServer:
 		self.server = network.GlibXMLRPCServer(("", xmlRpcPort))
 		self.server.register_instance(self) #anything witout an _ is callable by all the hos and joes out there
 
-		#turn on http server here (to be moved elsewhere soon):
-		hs = HttpServer( ("", httpPort), self.c.journalPath, self.c )
-
 	def newPicNotice( self, arg1, arg2=None ):
 		print "Request got " + str(arg1) + ", " + str(arg2)
 		return "success"
 
 
 class HttpServer(network.GlibTCPServer):
-	def __init__(self, server_address, rootpath, pc):
-		self.rootpath = rootpath
+	def __init__(self, pc):
 		self.c = pc
+		self.rootpath = self.c.journalPath
+		server_address = ("", httpPort)
 		network.GlibTCPServer.__init__(self, server_address, HttpReqHandler);
 
 
@@ -60,15 +58,15 @@ class MeshClient:
 		self.c = pc
 
 		#stay alert!  buddies might show up at any time!
-		#self.my_acty = self.c._frame._shared_activity  #_pservice.get_activity(self.c.activity_id)
-		#self.my_acty.connect('buddy-joined', self.buddy_joined_cb)
-		#self.my_acty.connect('buddy-left', self.buddy_left_cb)
+		self.my_acty = self.c._frame._shared_activity  #_pservice.get_activity(self.c.activity_id)
+		self.my_acty.connect('buddy-joined', self.buddy_joined_cb)
+		self.my_acty.connect('buddy-left', self.buddy_left_cb)
 
 		#if you've just arrived at the playground, take a peruse around
-		#for buddy in self.my_acty.get_joined_buddies():
-			#print buddy.props.nick
-			#print buddy.props.ip4_address
-			#print buddy.props.owner #me boolean
+		for buddy in self.my_acty.get_joined_buddies():
+			print buddy.props.nick
+			print buddy.props.ip4_address
+			print buddy.props.owner #me boolean
 
 	def buddy_joined_cb( self, activity, buddy ):
 		pass
