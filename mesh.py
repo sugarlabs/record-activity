@@ -60,15 +60,15 @@ class MeshClient:
 		self.c = pc
 
 		#stay alert!  buddies might show up at any time!
-		self.my_acty = self.c._frame._shared_activity  #_pservice.get_activity(self.c.activity_id)
-		self.my_acty.connect('buddy-joined', self.buddy_joined_cb)
-		self.my_acty.connect('buddy-left', self.buddy_left_cb)
+		#self.my_acty = self.c._frame._shared_activity  #_pservice.get_activity(self.c.activity_id)
+		#self.my_acty.connect('buddy-joined', self.buddy_joined_cb)
+		#self.my_acty.connect('buddy-left', self.buddy_left_cb)
 
 		#if you've just arrived at the playground, take a peruse around
-		for buddy in self.my_acty.get_joined_buddies():
-			print buddy.props.nick
-			print buddy.props.ip4_address
-			print buddy.props.owner #me boolean
+		#for buddy in self.my_acty.get_joined_buddies():
+			#print buddy.props.nick
+			#print buddy.props.ip4_address
+			#print buddy.props.owner #me boolean
 
 	def buddy_joined_cb( self, activity, buddy ):
 		pass

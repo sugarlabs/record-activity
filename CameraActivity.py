@@ -28,20 +28,27 @@ class CameraActivity(activity.Activity):
 		self.c._frame = self
 		self.c.initMesh()
 
-		self.menuBarHt = 75
+		self.menuBarHt = 0
 		self.thumbTrayHt = 150
 		imgDisHt = self.c._h-(self.thumbTrayHt+self.menuBarHt)
 		self.vidX = ((self.c._w/2)-(self.c.polSvg.props.width/2)) + 15 + 2
 		self.vidY = self.menuBarHt + ( (imgDisHt/2) - (self.c.polSvg.props.height/2) ) + 15
 		self.set_default_size( self.c._w, self.c._h )
 
+		#add a callback here
+		self.connect( "shared", self.iAmShared_cb )
+
+		#this includes the default sharing tab
+		toolbox = activity.ActivityToolbox(self)
+		self.set_toolbox(toolbox)
+		toolbox.show()
+
 		#layout
 		self.fix = gtk.Fixed( )
-		self.add( self.fix )
 
-		#menubar
+		#menubar... still here to keep everything from breaking apart
 		MenuBar( self.c )
-		self.c._mb.set_size_request( self.c._w, self.menuBarHt )
+		#self.c._mb.set_size_request( self.c._w, self.menuBarHt )
 
 		#self._toolbar = XbookToolbar(self._view)
 		#self._toolbar.connect('open-document', self._open_document_cb)
@@ -65,6 +72,7 @@ class CameraActivity(activity.Activity):
 		self.newGlive(False, False)
 		self.newGplay()
 
+		self.set_canvas(self.fix);
 		self.show_all()
 		self.c._thuVid.hide()
 		self.c._thuPho.show()
@@ -81,10 +89,14 @@ class CameraActivity(activity.Activity):
 		#wrapped up and heading off to play ball
 		return False
 
+	def iAmShared_cb( self, activity ):
+		print("i am shared")
+		print("start some sharing here")
+
 	def newGlive( self, record, sound ):
-		LiveVideoSlot(self.c)
-		self.c._livevideo.set_size_request(640, 480)
-		self.fix.put(self.c._livevideo, self.vidX, self.vidY)
+			LiveVideoSlot(self.c)
+			self.c._livevideo.set_size_request(640, 480)
+			self.fix.put(self.c._livevideo, self.vidX, self.vidY)
 
 	def newGplay( self ):
 		PlayVideoSlot(self.c)
