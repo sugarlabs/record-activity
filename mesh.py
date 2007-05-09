@@ -1,5 +1,8 @@
 from sugar.p2p import network
 from sugar.presence import presenceservice
+import urlparse
+import urllib
+import posixpath
 
 xmlRpcPort = 8888
 httpPort = 8889
@@ -33,20 +36,20 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		path = posixpath.normpath(urllib.unquote(path))
 		words = path.split('/')
 		words = filter(None, words)
-		print( words )
+		print( "words: ", words )
 
 		#do some logic here to figure out what to do next
 
 		#take a looksee at this coolness from our superclass (which is persistant mofo above..
 		#who is always here whenever i wake up)
-		print( self.server.rootpath )
+		print( "rootpath: ", self.server.rootpath )
 
 		self.send_response(200)
 		#self.send_header("Content-type", "jpeg/jpg")
 		#self.send_header("Content-Disposition", 'attachment; filename="' + str(self.server.c.modFile) )
 
 		#should be abs path... check it 1st
-		fileToSend = self.server.c.modFile
+		fileToSend = self.server.c.modVidF
 		return fileToSend
 
 

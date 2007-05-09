@@ -531,8 +531,8 @@ class Controller:
 		self.menubarVideo = self.loadSvg( menubarVideo_d, self._colWhite._hex, self._colMenuBar._hex)
 		menubarVideo_f.close()
 
-		modVidF = os.path.join(self._basepath, 'mode_video.png')
-		modVidPB = gtk.gdk.pixbuf_new_from_file(modVidF)
+		self.modVidF = os.path.join(self._basepath, 'mode_video.png')
+		modVidPB = gtk.gdk.pixbuf_new_from_file(self.modVidF)
 		self.modVidImg = _camera.cairo_surface_from_gdk_pixbuf(modVidPB)
 
 		modPhoF = os.path.join(self._basepath, 'mode_photo.png')
