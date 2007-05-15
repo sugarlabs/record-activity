@@ -36,23 +36,20 @@ class CameraActivity(activity.Activity):
 		self.set_default_size( self.c._w, self.c._h )
 
 		#add a callback here
-		self.connect( "shared", self._shared_cb )
+		#self.connect( "shared", self._shared_cb )
 
 		#this includes the default sharing tab
-		toolbox = activity.ActivityToolbox(self)
-		self.set_toolbox(toolbox)
-		toolbox.show()
+		#toolbox = activity.ActivityToolbox(self)
+		#self.set_toolbox(toolbox)
+		#toolbox.show()
 
 		#layout
 		self.fix = gtk.Fixed( )
+		self.add( self.fix )
 
 		#menubar... still here to keep everything from breaking apart
 		MenuBar( self.c )
-		#self.c._mb.set_size_request( self.c._w, self.menuBarHt )
-
-		#self._toolbar = XbookToolbar(self._view)
-		#self._toolbar.connect('open-document', self._open_document_cb)
-		#self._toolbar.connect('open-document', self._open_document_cb)
+		self.c._mb.set_size_request( self.c._w, self.menuBarHt )
 
 		#photos
 		Image_Display( self.c )
@@ -72,7 +69,7 @@ class CameraActivity(activity.Activity):
 		self.newGlive(False, False)
 		self.newGplay()
 
-		self.set_canvas(self.fix);
+		#self.set_canvas(self.fix);
 		self.show_all()
 		self.c._thuVid.hide()
 		self.c._thuPho.show()
@@ -88,32 +85,32 @@ class CameraActivity(activity.Activity):
 
 		#handle sharing...
 		#if the prsc knows about an act with my id on the network...
-		if self._shared_activity:
+		#if self._shared_activity:
 			#have you joined or shared this activity yourself?
-			if self.get_shared():
-				self._joined_cb()
-			else:
+			#if self.get_shared():
+				#self._joined_cb()
+			#else:
 				# Wait until you're at the door of the party...
-				self.connect("joined", self._joined_cb)
+				#self.connect("joined", self._joined_cb)
 
 		#wrapped up and heading off to play ball
-		return False
+		#return False
 
-	def _shared_cb( self, activity ):
-		print("i am shared")
-		self.startMesh()
+	#def _shared_cb( self, activity ):
+		#print("i am shared")
+		#self.startMesh()
 
-	def _joined_cb( self, activity ):
-		print("i am joined")
-		self.startMesh()
+	#def _joined_cb( self, activity ):
+		#print("i am joined")
+		#self.startMesh()
 
-	def startMesh( self ):
-		self.c.initMesh()
+	#def startMesh( self ):
+		#self.c.initMesh()
 
 	def newGlive( self, record, sound ):
-			LiveVideoSlot(self.c)
-			self.c._livevideo.set_size_request(640, 480)
-			self.fix.put(self.c._livevideo, self.vidX, self.vidY)
+		LiveVideoSlot(self.c)
+		self.c._livevideo.set_size_request(640, 480)
+		self.fix.put(self.c._livevideo, self.vidX, self.vidY)
 
 	def newGplay( self ):
 		PlayVideoSlot(self.c)

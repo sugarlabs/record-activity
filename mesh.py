@@ -41,7 +41,7 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 
 		urlPath = posixpath.normpath(urllib.unquote(url))
 		urlPathAy = path.split('/')
-		urlPathAy = filter(None, words)
+		urlPathAy = filter(None, urlPathAy)
 		print( "urlPathAy: ", urlPathAy )
 
 		#do some logic here to figure out what to do next

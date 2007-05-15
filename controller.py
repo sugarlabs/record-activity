@@ -31,9 +31,9 @@ import _camera
 from color import Color
 from polygon import Polygon
 
-from mesh import MeshClient
-from mesh import MeshXMLRPCServer
-from mesh import HttpServer
+#from mesh import MeshClient
+#from mesh import MeshXMLRPCServer
+#from mesh import HttpServer
 
 class Controller:
 
@@ -69,10 +69,10 @@ class Controller:
 		self.loadGfx()
 		self.setConstants()
 
-	def initMesh( self ):
-		httpSvr = HttpServer(self)
-		meshClient = MeshClient(self)
-		meshXMLRPCServer = MeshXMLRPCServer(self);
+	#def initMesh( self ):
+		#httpSvr = HttpServer(self)
+		#meshClient = MeshClient(self)
+		#meshXMLRPCServer = MeshXMLRPCServer(self);
 
 	def fillPhotoHash( self, index ):
 		self.photoHash = []
@@ -211,10 +211,10 @@ class Controller:
 		thumb_fn = nowtime_s + "_thumb.jpg"
 		thumbpath = os.path.join(self.journalPath, thumb_fn)
 
-		#thumbImg = self.generateThumbnail(pixbuf, self._thuPho.tscale)
-		#thumbImg.write_to_png(thumbpath)
-		thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
-		thumb.save( thumbpath, "jpeg", {"quality":"85"} )
+		thumbImg = self.generateThumbnail(pixbuf, self._thuPho.tscale)
+		thumbImg.write_to_png(thumbpath)
+		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
+		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
 		self.photoHash.append( (nowtime, self.nickName, nowtime_fn, thumb_fn) )
 		self.updatePhotoIndex()
@@ -224,16 +224,16 @@ class Controller:
 		self.UPDATING = False
 
 	#outdated?
-	#def generateThumbnail( self, pixbuf, scale ):
+	def generateThumbnail( self, pixbuf, scale ):
 		#need to generate thumbnail version here
-		#thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self._thuPho.tw, self._thuPho.th)
-		#tctx = cairo.Context(thumbImg)
-		#img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self._thuPho.tw, self._thuPho.th)
+		tctx = cairo.Context(thumbImg)
+		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 
-		#tctx.scale(scale, scale)
-		#tctx.set_source_surface(img, 0, 0)
-		#tctx.paint()
-		#return thumbImg
+		tctx.scale(scale, scale)
+		tctx.set_source_surface(img, 0, 0)
+		tctx.paint()
+		return thumbImg
 
 	def thumbDeleted( self, path, hash, thuPanel ):
 		pathName = os.path.split(path)
