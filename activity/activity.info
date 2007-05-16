@@ -1,6 +1,6 @@
 [Activity]
 name = Camera
-activity_version = 9
+activity_version = 11
 host_version = 1
 icon = activity-camera
 service_name = org.laptop.CameraActivity

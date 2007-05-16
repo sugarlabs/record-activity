@@ -64,7 +64,8 @@ class Controller:
 		self._thuVid = None
 
 		self._w = gtk.gdk.screen_width()
-		self._h = gtk.gdk.screen_height()
+		self._h = gtk.gdk.screen_height()-75
+		print( self._w, self._h )
 		self.loadColors()
 		self.loadGfx()
 		self.setConstants()
@@ -164,6 +165,9 @@ class Controller:
 		#if you were playin' anything, time to stop
 		self._playvideo.playa.stop()
 		self._playvideo.hide()
+
+		self._livevideo.show()
+		self._livevideo.playa.play()
 
 		self._id.redraw()
 
@@ -365,10 +369,10 @@ class Controller:
 		thumbPath = os.path.join(self.journalPath, thumbFn)
 		oggPath = os.path.join(self.journalPath, movieFn)
 
-		#thumbImg = self.generateThumbnail(pixbuf, float(.66875) )
-		#thumbImg.write_to_png(thumbPath)
-		thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
-		thumb.save( thumbpath, "jpeg", {"quality":"85"} )
+		thumbImg = self.generateThumbnail(pixbuf, float(.66875) )
+		thumbImg.write_to_png(thumbPath)
+		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
+		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 		shutil.move(tempPath, oggPath)
 
 		self.movieHash.append( (nowtime, self.nickName, movieFn, thumbFn) )

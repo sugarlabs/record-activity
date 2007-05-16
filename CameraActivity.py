@@ -12,6 +12,7 @@ from controller import Controller
 from thumbnails import Thumbnails
 from menubar import MenuBar
 
+from sugar.graphics.toolbutton import ToolButton
 
 class CameraActivity(activity.Activity):
 	def __init__(self, handle):
@@ -39,17 +40,18 @@ class CameraActivity(activity.Activity):
 		#self.connect( "shared", self._shared_cb )
 
 		#this includes the default sharing tab
-		#toolbox = activity.ActivityToolbox(self)
-		#self.set_toolbox(toolbox)
-		#toolbox.show()
+		toolbox = activity.ActivityToolbox(self)
+		self.set_toolbox(toolbox)
+		toolbar = CToolbar(self.c)
+		toolbox.add_toolbar( ('Camera'), toolbar)
+		toolbox.show()
 
 		#layout
 		self.fix = gtk.Fixed( )
-		self.add( self.fix )
 
 		#menubar... still here to keep everything from breaking apart
 		MenuBar( self.c )
-		self.c._mb.set_size_request( self.c._w, self.menuBarHt )
+		#self.c._mb.set_size_request( self.c._w, self.menuBarHt )
 
 		#photos
 		Image_Display( self.c )
@@ -69,7 +71,7 @@ class CameraActivity(activity.Activity):
 		self.newGlive(False, False)
 		self.newGplay()
 
-		#self.set_canvas(self.fix);
+		self.set_canvas(self.fix);
 		self.show_all()
 		self.c._thuVid.hide()
 		self.c._thuPho.show()
@@ -134,3 +136,26 @@ class CameraActivity(activity.Activity):
 
 	def setDefaultCursor( self ):
 		self.window.set_cursor( None )
+
+class CToolbar(gtk.Toolbar):
+	def __init__(self, pc):
+		gtk.Toolbar.__init__(self)
+		self.c = pc
+
+		picButt = ToolButton('go-next')
+		picButt.props.sensitive = True
+		picButt.connect('clicked', self._mode_pic_cb)
+		self.insert(picButt, -1)
+		picButt.show()
+
+		vidButt = ToolButton('go-previous')
+		vidButt.props.sensitive = True
+		vidButt.connect('clicked', self._mode_vid_cb)
+		self.insert(vidButt, -1)
+		vidButt.show()
+
+	def _mode_vid_cb(self, button):
+		self.c.doVideoMode()
+
+	def _mode_pic_cb(self, button):
+		self.c.doPhotoMode()
