@@ -36,8 +36,8 @@ class CameraActivity(activity.Activity):
 		self.vidY = self.menuBarHt + ( (imgDisHt/2) - (self.c.polSvg.props.height/2) ) + 15
 		self.set_default_size( self.c._w, self.c._h )
 
-		#add a callback here
-		#self.connect( "shared", self._shared_cb )
+		#listen for meshins
+		self.connect( "shared", self._shared_cb )
 
 		#this includes the default sharing tab
 		toolbox = activity.ActivityToolbox(self)
@@ -87,27 +87,27 @@ class CameraActivity(activity.Activity):
 
 		#handle sharing...
 		#if the prsc knows about an act with my id on the network...
-		#if self._shared_activity:
+		if self._shared_activity:
 			#have you joined or shared this activity yourself?
-			#if self.get_shared():
-				#self._joined_cb()
-			#else:
+			if self.get_shared():
+				self._joined_cb()
+			else:
 				# Wait until you're at the door of the party...
-				#self.connect("joined", self._joined_cb)
+				self.connect("joined", self._joined_cb)
 
 		#wrapped up and heading off to play ball
-		#return False
+		return False
 
-	#def _shared_cb( self, activity ):
-		#print("i am shared")
-		#self.startMesh()
+	def _shared_cb( self, activity ):
+		print("i am shared")
+		self.startMesh()
 
-	#def _joined_cb( self, activity ):
-		#print("i am joined")
-		#self.startMesh()
+	def _joined_cb( self, activity ):
+		print("i am joined")
+		self.startMesh()
 
-	#def startMesh( self ):
-		#self.c.initMesh()
+	def startMesh( self ):
+		self.c.initMesh()
 
 	def newGlive( self, record, sound ):
 		LiveVideoSlot(self.c)
@@ -154,8 +154,26 @@ class CToolbar(gtk.Toolbar):
 		self.insert(vidButt, -1)
 		vidButt.show()
 
+		picMeshButt = ToolButton('go-next')
+		picMeshButt.props.sensitive = True
+		picMeshButt.connect('clicked', self._mode_picmesh_cb)
+		self.insert(picMeshButt, -1)
+		picMeshButt.show()
+
+		vidMeshButt = ToolButton('go-previous')
+		vidMeshButt.props.sensitive = True
+		vidMeshButt.connect('clicked', self._mode_vidmesh_cb)
+		self.insert(vidMeshButt, -1)
+		vidMeshButt.show()
+
 	def _mode_vid_cb(self, button):
 		self.c.doVideoMode()
 
 	def _mode_pic_cb(self, button):
 		self.c.doPhotoMode()
+
+	def _mode_vidmesh_cb(self, button):
+		self.c.doVideoMeshMode()
+
+	def _mode_picmesh_cb(self, button):
+		self.c.doPhotoMeshMode()

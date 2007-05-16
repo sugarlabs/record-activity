@@ -31,9 +31,9 @@ import _camera
 from color import Color
 from polygon import Polygon
 
-#from mesh import MeshClient
-#from mesh import MeshXMLRPCServer
-#from mesh import HttpServer
+from mesh import MeshClient
+from mesh import MeshXMLRPCServer
+from mesh import HttpServer
 
 class Controller:
 
@@ -70,10 +70,10 @@ class Controller:
 		self.loadGfx()
 		self.setConstants()
 
-	#def initMesh( self ):
-		#httpSvr = HttpServer(self)
-		#meshClient = MeshClient(self)
-		#meshXMLRPCServer = MeshXMLRPCServer(self);
+	def initMesh( self ):
+		self.httpServer = HttpServer(self)
+		self.meshClient = MeshClient(self)
+		self.meshXMLRPCServer = MeshXMLRPCServer(self)
 
 	def fillPhotoHash( self, index ):
 		self.photoHash = []
@@ -226,6 +226,9 @@ class Controller:
 
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
+
+		#hey, i just took a cool picture!  let me show you!
+		self.meshClient.notifyBudsOfNewPic()
 
 	#outdated?
 	def generateThumbnail( self, pixbuf, scale ):
@@ -447,6 +450,15 @@ class Controller:
 			self._id.redraw()
 
 		self.MODE = self.MODE_VIDEO
+
+
+	def doVideoMeshMode( self ):
+		print("in video mesh mode")
+
+
+	def doPhotoMeshMode( self ):
+		print("in photo mesh mode")
+
 
 	def doPhotoMode( self ):
 		if (self.MODE == self.MODE_PHOTO):
