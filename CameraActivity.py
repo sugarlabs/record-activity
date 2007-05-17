@@ -90,8 +90,10 @@ class CameraActivity(activity.Activity):
 		if self._shared_activity:
 			#have you joined or shared this activity yourself?
 			if self.get_shared():
-				self._joined_cb()
+				print("in get_shared()")
+				self.startMesh()
 			else:
+				print("! get_shared()")
 				# Wait until you're at the door of the party...
 				self.connect("joined", self._joined_cb)
 
@@ -107,6 +109,7 @@ class CameraActivity(activity.Activity):
 		self.startMesh()
 
 	def startMesh( self ):
+		print("starting mesh")
 		self.c.initMesh()
 
 	def newGlive( self, record, sound ):

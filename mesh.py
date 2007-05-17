@@ -67,31 +67,42 @@ class MeshClient:
 		self.c = pc
 
 		#stay alert!  buddies might show up at any time!
+		print("1 meshClient");
+		print("1.1 meshClient: ", self.c._frame)
 		self.my_acty = self.c._frame._shared_activity  #_pservice.get_activity(self.c.activity_id)
-		self.my_acty_id = self.c._frame.activity_id
-		print( "uid:", self.my_acty_id )
+		print("1.2 meshClient: ", self.my_acty)
+		#self.my_acty_id = self.c._frame.activity_id
+		#print( "uid:", self.my_acty_id )
 
 		self.my_acty.connect('buddy-joined', self.buddy_joined_cb)
+		print("1.3")
 		self.my_acty.connect('buddy-left', self.buddy_left_cb)
+		print("1.4")
 
+		#this crashes 95% of the time
+		#print("1.5", len(self.my_acty.get_joined_buddies()) )
 		#if you've just arrived at the playground, take a peruse around
-		for buddy in self.my_acty.get_joined_buddies():
-			print buddy.props.nick
-			print buddy.props.ip4_address
-			print buddy.props.owner #me boolean
+		#for buddy in self.my_acty.get_joined_buddies():
+			#print ("a", buddy.props.nick)
+			#print ("a", buddy.props.ip4_address)
+			#print ("a", buddy.props.owner) #me boolean
+
+		print("1.6")
 
 	def buddy_joined_cb( self, activity, buddy ):
-		print buddy.props.nick
-		print buddy.props.ip4_address
-		print buddy.props.owner #me boolean
+		print ("b", buddy.props.nick)
+		print ("b", buddy.props.ip4_address)
+		print ("b", buddy.props.owner) #me boolean
 
 	def buddy_left_cb( self, activity, buddy ):
-		pass
+		print ("c", buddy.props.nick)
+		print ("c", buddy.props.ip4_address)
+		print ("c", buddy.props.owner) #me boolean
 
 	#herein we notify our buddies of some cool stuff we got going on they mights wants to knows abouts
 	def notifyBudsOfNewPic( self ):
 		for buddy in self.my_acty.get_joined_buddies():
-			bud = network.GlibServerProxy((buddy.props.ip4_address, xmlRpcPort))
+			bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
 			bud.newPicNotice("bar", reply_handler=self.notifyBudsOfNewPic_cb,
 									error_handler=self.error_cb, user_data=bud)
 

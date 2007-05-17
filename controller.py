@@ -65,15 +65,18 @@ class Controller:
 
 		self._w = gtk.gdk.screen_width()
 		self._h = gtk.gdk.screen_height()-75
-		print( self._w, self._h )
 		self.loadColors()
 		self.loadGfx()
 		self.setConstants()
 
 	def initMesh( self ):
+		print( "1 initMesh" );
 		self.httpServer = HttpServer(self)
+		print( "2 initMesh" );
 		self.meshClient = MeshClient(self)
+		print( "3 initMesh" );
 		self.meshXMLRPCServer = MeshXMLRPCServer(self)
+		print( "4 initMesh" );
 
 	def fillPhotoHash( self, index ):
 		self.photoHash = []
