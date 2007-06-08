@@ -79,13 +79,12 @@ class MeshClient:
 		self.my_acty.connect('buddy-left', self.buddy_left_cb)
 		print("1.4")
 
-		#this crashes 95% of the time
-		#print("1.5", len(self.my_acty.get_joined_buddies()) )
+		print("1.5", len(self.my_acty.get_joined_buddies()) )
 		#if you've just arrived at the playground, take a peruse around
-		#for buddy in self.my_acty.get_joined_buddies():
-			#print ("a", buddy.props.nick)
-			#print ("a", buddy.props.ip4_address)
-			#print ("a", buddy.props.owner) #me boolean
+		for buddy in self.my_acty.get_joined_buddies():
+			print ("a", buddy.props.nick)
+			print ("a", buddy.props.ip4_address)
+			print ("a", buddy.props.owner) #me boolean
 
 		print("1.6")
 

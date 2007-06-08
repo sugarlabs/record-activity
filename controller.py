@@ -28,55 +28,15 @@ from sugar.activity import activity
 
 import _camera
 
-from color import Color
-from polygon import Polygon
-
-from mesh import MeshClient
-from mesh import MeshXMLRPCServer
-from mesh import HttpServer
-
 class Controller:
-
-	def __init__( self ):
-		self._basepath = activity.get_bundle_path()
-		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", "camera")
-		if (not os.path.exists(self.journalPath)):
-			os.makedirs(self.journalPath)
-
-		self.journalIndex = os.path.join(self.journalPath, 'camera_index.xml')
+	def __init__( self, pca ):
+		self.ca = pca
+		self.setConstants()
+		self.journalIndex = os.path.join(self.ca.journalPath, 'camera_index.xml')
 		self.fillPhotoHash( self.journalIndex )
 
-		#the current image
-		self._img = None
-
-		#container
-		self._frame = None
-		#menubar
-		self._mb = None
-		#img display
-		self._id = None
-		#video slot for live video
-		self._livevideo = None
-		#video slot for playback of video
-		self._playvideo = None
-		#thumbs
-		self._thuPho = None
-		self._thuVid = None
-
-		self._w = gtk.gdk.screen_width()
-		self._h = gtk.gdk.screen_height()-75
-		self.loadColors()
-		self.loadGfx()
-		self.setConstants()
-
-	def initMesh( self ):
-		print( "1 initMesh" );
-		self.httpServer = HttpServer(self)
-		print( "2 initMesh" );
-		self.meshClient = MeshClient(self)
-		print( "3 initMesh" );
-		self.meshXMLRPCServer = MeshXMLRPCServer(self)
-		print( "4 initMesh" );
+	def initPostUI( self ):
+		self.setup()
 
 	def fillPhotoHash( self, index ):
 		self.photoHash = []
@@ -98,6 +58,7 @@ class Controller:
 				thmb = each.getAttribute('thumb')
 				self.movieHash.append( ( int(time), name, path, thmb ) )
 
+
 	def setup( self ):
 		p_mx = len(self.photoHash)
 		p_mn = max(p_mx-self._thuPho.numButts, 0)
@@ -106,17 +67,6 @@ class Controller:
 		v_mn = max(v_mx-self._thuVid.numButts, 0)
 		gobject.idle_add(self.setupThumbs, self.movieHash, self._thuVid, v_mn, v_mx)
 
-	def inFocus( self, widget, event ):
-		if (self.SHOW == self.SHOW_LIVE):
-			self._livevideo.playa.play()
-		if (self.SHOW == self.SHOW_PLAY):
-			self._playvideo.playa.play()
-
-	def outFocus( self, widget, event ):
-		if (self.SHOW == self.SHOW_LIVE):
-			self._livevideo.playa.stop()
-		if (self.SHOW == self.SHOW_PLAY):
-			self._playvideo.playa.stop()
 
 	def setupThumbs( self, hash, thumbTray, mn, mx ):
 		self.UPDATING = True
@@ -151,14 +101,13 @@ class Controller:
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
 
-	def getJournalPath( self ):
-		return self.journalPath
 
 	def openShutter( self ):
 		if (self.isPhotoMode()):
 			self.startTakingPicture()
 		elif (self.isVideoMode()):
 			self.startRecordingVideo()
+
 
 	def showLive( self ):
 		self._img = None
@@ -174,6 +123,7 @@ class Controller:
 
 		self._id.redraw()
 
+
 	#todo: hide the video widget here by moving it offscreen until recording begins
 	def startRecordingVideo( self ):
 		self.UPDATING = True
@@ -185,6 +135,7 @@ class Controller:
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
 
+
 	def stopRecordingVideo( self ):
 		self.UPDATING = True
 		self._frame.setWaitCursor()
@@ -193,6 +144,7 @@ class Controller:
 		self._livevideo.hide()
 		self._id.redraw()
 		self._livevideo.playa.stopRecordingVideo()
+
 
 	def stoppedRecordingVideo( self ):
 		self._livevideo.show()
@@ -204,10 +156,12 @@ class Controller:
 		self._frame.setDefaultCursor()
 		self.UPDATING = False
 
+
 	def startTakingPicture( self ):
 		self.UPDATING = True
 		self._frame.setWaitCursor()
 		self._livevideo.playa.takePic()
+
 
 	def setPic( self, pixbuf ):
 		nowtime = int(time.time())
@@ -233,6 +187,7 @@ class Controller:
 		#hey, i just took a cool picture!  let me show you!
 		self.meshClient.notifyBudsOfNewPic()
 
+
 	#outdated?
 	def generateThumbnail( self, pixbuf, scale ):
 		#need to generate thumbnail version here
@@ -244,6 +199,7 @@ class Controller:
 		tctx.set_source_surface(img, 0, 0)
 		tctx.paint()
 		return thumbImg
+
 
 	def thumbDeleted( self, path, hash, thuPanel ):
 		pathName = os.path.split(path)
@@ -284,11 +240,13 @@ class Controller:
 			self._img = self.modVidImg
 		self._id.redraw()
 
+
 	def getThumbPath( self, hash, path ):
 		pathSplit = os.path.split(path)
 		for each in hash:
 			if (each[2] == pathSplit[1]):
 				return os.path.join(self.journalPath, each[3])
+
 
 	def updatePhotoIndex( self ):
 		#delete all old htmls
@@ -368,6 +326,7 @@ class Controller:
 		album.writexml(f)
 		f.close()
 
+
 	def setVid( self, pixbuf, tempPath ):
 		nowtime = str(int(time.time()))
 		thumbFn = nowtime + "_thumbnail.png"
@@ -385,8 +344,7 @@ class Controller:
 		self.updatePhotoIndex()
 		self.thumbAdded(self._thuVid, self.movieHash, thumbImg, oggPath)
 
-	#if we're not at the end, move to the end...
-	#otherwise, just append to the end
+
 	def thumbAdded( self, thuPanel, hash, thumbImg, path ):
 		thuStart = 0
 		if (hash == self.photoHash):
@@ -402,42 +360,6 @@ class Controller:
 		self.setupThumbs(hash, thuPanel, mn, mx)
 		return
 
-		#if we're far along in picture taking just push along
-		#if (thuStart > thuPanel.numButts):
-		#	if (hash == self.photoHash):
-		#		self.thuPhoStart = self.thuPhoStart + 1
-		#	elif (hash == self.movieHash):
-		#		self.thuVidStart = self.thuVidStart + 1
-
-		#thuPanel.addThumb(thumbImg, path)
-
-	def showImg( self, imgPath ):
-		self.SHOW = self.SHOW_STILL
-
-		if (self._img == None):
-			self._livevideo.hide()
-			self._playvideo.hide()
-
-		pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
-		self._img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-		self._id.redraw()
-
-	def showVid( self, vidPath = None ):
-		if (vidPath != None):
-			self.UPDATING = True
-			self._frame.setWaitCursor()
-
-			self._img = self.modWaitImg
-			self.SHOW = self.SHOW_PLAY
-			self._id.redraw()
-
-			self._livevideo.hide()
-			self._livevideo.playa.stop()
-			self._playvideo.show()
-			vp = "file://" + vidPath
-			self._playvideo.playa.setLocation(vp)
-			self._frame.setDefaultCursor()
-			self.UPDATING = False
 
 	def doVideoMode( self ):
 		if (self.MODE == self.MODE_VIDEO):
@@ -453,14 +375,6 @@ class Controller:
 			self._id.redraw()
 
 		self.MODE = self.MODE_VIDEO
-
-
-	def doVideoMeshMode( self ):
-		print("in video mesh mode")
-
-
-	def doPhotoMeshMode( self ):
-		print("in photo mesh mode")
 
 
 	def doPhotoMode( self ):
@@ -488,117 +402,8 @@ class Controller:
 
 		self.MODE = self.MODE_PHOTO
 
-	def isVideoMode( self ):
-		return self.MODE == self.MODE_VIDEO
-
-	def isPhotoMode( self ):
-		return self.MODE == self.MODE_PHOTO
-
-	def loadGfx( self ):
-		#load svgs
-		polSvg_f = open(os.path.join(self._basepath, 'polaroid.svg'), 'r')
-		polSvg_d = polSvg_f.read()
-		polSvg_f.close()
-		self.polSvg = self.loadSvg( polSvg_d, None, None )
-
-		camSvg_f = open(os.path.join(self._basepath, 'shutter_button.svg'), 'r')
-		camSvg_d = camSvg_f.read()
-		camSvg_f.close()
-		self.camSvg = self.loadSvg( camSvg_d, None, None )
-		
-		camInvSvg_f = open( os.path.join(self._basepath, 'shutter_button_invert.svg'), 'r')
-		camInvSvg_d = camInvSvg_f.read()
-		camInvSvg_f.close()
-		self.camInvSvg = self.loadSvg(camInvSvg_d, None, None)
-
-		camRecSvg_f = open(os.path.join(self._basepath, 'shutter_button_record.svg'), 'r')
-		camRecSvg_d = camRecSvg_f.read()
-		camRecSvg_f.close()
-		self.camRecSvg = self.loadSvg( camRecSvg_d, None, None)
-
-		self.nickName = profile.get_nick_name()
-
-		#sugar colors, replaced with b&w b/c of xv issues
-		color = profile.get_color()
-		fill = color.get_fill_color()
-		stroke = color.get_stroke_color()
-		self.colorFill = self._colWhite._hex
-		self.colorStroke = self._colBlack._hex
-
-		butPhoSvg_f = open(os.path.join(self._basepath, 'thumb_photo.svg'), 'r')
-		butPhoSvg_d = butPhoSvg_f.read()
-		self.thumbPhotoSvg = self.loadSvg(butPhoSvg_d, self.colorStroke, self.colorFill)
-		butPhoSvg_f.close()
-
-		butVidSvg_f = open(os.path.join(self._basepath, 'thumb_video.svg'), 'r')
-		butVidSvg_d = butVidSvg_f.read()
-		self.thumbVideoSvg = self.loadSvg(butVidSvg_d, self.colorStroke, self.colorFill)
-		butVidSvg_f.close()
-
-		closeSvg_f = open(os.path.join(self._basepath, 'thumb_close.svg'), 'r')
-		closeSvg_d = closeSvg_f.read()
-		self.closeSvg = self.loadSvg(closeSvg_d, self.colorStroke, self.colorFill)
-		closeSvg_f.close()
-
-		menubarPhoto_f = open( os.path.join(self._basepath, 'menubar_photo.svg'), 'r' )
-		menubarPhoto_d = menubarPhoto_f.read()
-		self.menubarPhoto = self.loadSvg( menubarPhoto_d, self._colWhite._hex, self._colMenuBar._hex )
-		menubarPhoto_f.close()
-
-		menubarVideo_f = open( os.path.join(self._basepath, 'menubar_video.svg'), 'r' )
-		menubarVideo_d = menubarVideo_f.read()
-		self.menubarVideo = self.loadSvg( menubarVideo_d, self._colWhite._hex, self._colMenuBar._hex)
-		menubarVideo_f.close()
-
-		self.modVidF = os.path.join(self._basepath, 'mode_video.png')
-		modVidPB = gtk.gdk.pixbuf_new_from_file(self.modVidF)
-		self.modVidImg = _camera.cairo_surface_from_gdk_pixbuf(modVidPB)
-
-		modPhoF = os.path.join(self._basepath, 'mode_photo.png')
-		modPhoPB = gtk.gdk.pixbuf_new_from_file(modPhoF)
-		self.modPhoImg = _camera.cairo_surface_from_gdk_pixbuf(modPhoPB)
-
-		modWaitF = os.path.join(self._basepath, 'mode_wait.png')
-		modWaitPB = gtk.gdk.pixbuf_new_from_file(modWaitF)
-		self.modWaitImg = _camera.cairo_surface_from_gdk_pixbuf(modWaitPB)
-
-		modDoneF = os.path.join(self._basepath, 'mode_restart.png')
-		modDonePB = gtk.gdk.pixbuf_new_from_file(modDoneF)
-		self.modDoneImg = _camera.cairo_surface_from_gdk_pixbuf(modDonePB)
-
-		#reset there here for uploading to server
-		self.fill = color.get_fill_color()
-		self.stroke = color.get_stroke_color()
-		key = profile.get_pubkey()
-		key_hash = util._sha_data(key)
-		self.hashed_key = util.printable_hash(key_hash)
-
-	def loadColors( self ):
-		self._colBlack = Color( 0, 0, 0, 255 )
-		self._colWhite = Color( 255, 255, 255, 255 )
-		self._colRed = Color( 255, 0, 0, 255 )
-		self._colThumbTray = Color( 255, 255, 255, 255 )
-		#Color( 224, 224, 224, 255 )
-		self._colMenuBar = Color( 0, 0, 0, 255 )
-		#Color( 65, 65, 65, 255 )
-
-	def loadSvg( self, data, stroke, fill ):
-		if ((stroke == None) or (fill == None)):
-			return rsvg.Handle( data=data )
-
-		entity = '<!ENTITY fill_color "%s">' % fill
-		data = re.sub('<!ENTITY fill_color .*>', entity, data)
-
-		entity = '<!ENTITY stroke_color "%s">' % stroke
-		data = re.sub('<!ENTITY stroke_color .*>', entity, data)
-
-		return rsvg.Handle( data=data )
 
 	def setConstants( self ):
-		#THUMB TRAY TYPES
-		self.THUMB_PHOTO = 0
-		self.THUMB_VIDEO = 1
-
 		#pics or vids?
 		self.MODE_PHOTO = 0
 		self.MODE_VIDEO = 1

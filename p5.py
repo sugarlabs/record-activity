@@ -9,8 +9,6 @@ from polygon import Polygon
 
 
 class P5(gtk.DrawingArea):
-
-
 	def __init__(self):
 		super(P5, self).__init__()
 
@@ -82,13 +80,11 @@ class P5(gtk.DrawingArea):
 			self._dragging = False
 
 
-	#jedi says: this is dragging...
 	def motion_notify(self, widget, event):
 		self._mouseX = event.x
 		self._mouseY = event.y
 
 
-	#this is where we go cairo crazeee
 	def draw(self, ctx, w, h):
 		ctx.set_antialias( cairo.ANTIALIAS_NONE )
 		ctx.set_line_width( 1 )
@@ -146,7 +142,7 @@ class P5(gtk.DrawingArea):
 		image = cairo.ImageSurface.create_from_png( name )
 		return image
 
-	
+
 	def background( self, ctx, col, w, h ):
 		self.setColor( ctx, col )
 
