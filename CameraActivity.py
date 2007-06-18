@@ -2,8 +2,10 @@
 
 import gtk
 import gobject
+import os
 
 from sugar.activity import activity
+from sugar import profile
 
 from controller import Controller
 from ui import UI
@@ -14,15 +16,16 @@ from mesh import HttpServer
 class CameraActivity(activity.Activity):
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
-		self.name = "camera";
-		self.set_title( self.name )
+		self.activityName = "camera"
+		self.set_title( self.activityName )
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
 
 	def _initme( self, userdata=None ):
+		self.nickName = profile.get_nick_name()
 		self.basePath = activity.get_bundle_path()
 		self.gfxPath = os.path.join(self.basePath, "gfx")
-		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", self.name)
+		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", self.activityName)
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
 

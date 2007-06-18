@@ -9,22 +9,17 @@ import cairo
 import gtk
 import pygtk
 pygtk.require('2.0')
-import rsvg
-import re
+
 import math
 import gtk.gdk
 import sugar.env
 import random
 import time
-import shutil
 import time
 import gobject
 import xml.dom.minidom
 from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
-from sugar import profile
-from sugar import util
-from sugar.activity import activity
 
 import _camera
 
@@ -60,12 +55,12 @@ class Controller:
 
 
 	def setup( self ):
-		p_mx = len(self.photoHash)
-		p_mn = max(p_mx-self._thuPho.numButts, 0)
-		gobject.idle_add(self.setupThumbs, self.photoHash, self._thuPho, p_mn, p_mx)
-		v_mx = len(self.movieHash)
-		v_mn = max(v_mx-self._thuVid.numButts, 0)
-		gobject.idle_add(self.setupThumbs, self.movieHash, self._thuVid, v_mn, v_mx)
+		#p_mx = len(self.photoHash)
+		#p_mn = max(p_mx-self._thuPho.numButts, 0)
+		#gobject.idle_add(self.setupThumbs, self.photoHash, self._thuPho, p_mn, p_mx)
+		#v_mx = len(self.movieHash)
+		#v_mn = max(v_mx-self._thuVid.numButts, 0)
+		pass
 
 
 	def setupThumbs( self, hash, thumbTray, mn, mx ):

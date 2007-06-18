@@ -1,7 +1,25 @@
+#!/usr/bin/env python
+
+import gtk
+import gobject
+import os
+#parse svg
+import rsvg
+#parse svg xml with regex
+import re
+#we do some image conversion when loading gfx
+import _camera
+
+from sugar import util
+#to get the toolbox
+from sugar.activity import activity
 from sugar.graphics.toolbutton import ToolButton
+from sugar import profile
+
 
 from color import Color
 from polygon import Polygon
+from p5 import P5
 
 class UI:
 
@@ -11,53 +29,78 @@ class UI:
 		self.loadGfx()
 
 		#this includes the default sharing tab
-		toolbox = activity.ActivityToolbox(self)
-		self.set_toolbox(toolbox)
-		toolbar = CToolbar(self.c)
-		toolbox.add_toolbar( ('Camera'), toolbar)
+		toolbox = activity.ActivityToolbox(self.ca)
+		self.ca.set_toolbox(toolbox)
+		cToolbar = CaptureToolbar(self.ca)
+		toolbox.add_toolbar( ('Capture'), cToolbar)
+		sToolbar = SearchToolbar(self.ca)
+		toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
 
-		#two pipelines, connected by bloodlust
-		self.newGlive(False, False)
-		self.newGplay()
+		#two pipelines
+		#self.newGlive(False, False)
+		#self.newGplay()
 
-		mainBox = Gtk.VBox()
-		self.set_canvas(mainBox)
-		topBox = Gtk.HBox()
+		mainBox = gtk.VBox()
+		self.ca.set_canvas(mainBox)
+
+		topBox = gtk.HBox()
 		mainBox.pack_start(topBox)
+
 		#insert entry fields on left
-		infoBox = Gtk.VBox()
-		mainBox.pack_start(infoBox)
-		self.nameField = gtk.Button()
-		infoBox.pack_start(self.nameField)
-		self.photographerField = gtk.Button()
-		infoBox.pack_start(self.photographerField)
-		self.tagField = gtk.Button()
-		infoBox.pack_start(self.tagField)
+		infoBox = gtk.VBox()
+		topBox.pack_start(infoBox)
+		namePanel = gtk.HBox()
+		infoBox.pack_start(namePanel, expand=False)
+		nameLabel = gtk.Label("Name:")
+		namePanel.pack_start( nameLabel, expand=False )
+		self.nameTextfield = gtk.TextView(buffer=None)
+		namePanel.pack_start( self.nameTextfield )
+
+		photographerPanel = gtk.HBox()
+		infoBox.pack_start(photographerPanel, expand=False)
+		photographerLabel = gtk.Label("Photographer:")
+		photographerPanel.pack_start(photographerLabel, expand=False)
+		self.photographerNameLabel = gtk.Label("some cool kid")
+		photographerPanel.pack_start(self.photographerNameLabel, expand=False)
+
+		tagPanel = gtk.VBox()
+		tagLabel = gtk.Label("Tags:")
+		tagLabel.set_justify(gtk.JUSTIFY_LEFT)
+		tagPanel.pack_start(tagLabel, expand=False)
+		self.tagField = gtk.TextView(buffer=None)
+		tagPanel.pack_start(self.tagField)
+		infoBox.pack_start(tagPanel, expand=False)
 		self.shutterField = gtk.Button()
 		infoBox.pack_start(self.shutterField)
 
 		#video, scrubber etc on right
-		videoBox = Gtk.VBox()
-		#blank space for video and info gfx
-		self.videoSpace = gtk.Button()
+		videoBox = gtk.VBox()
+		videoBox.set_size_request( 735, -1 )
+		topBox.pack_start(videoBox, expand=False)
+		self.videoSpace = VideoBackgroundCanvas()
 		videoBox.pack_start(self.videoSpace)
 		self.videoScrubber = gtk.Button()
-		videoBox.pack_start(self.videoScrubber)
+		self.videoScrubber.set_size_request( -1, 80 )
+		videoBox.pack_end(self.videoScrubber, expand=False)
 
-		thumbnailsBox = Gtk.HBox()
-		mainBox.pack_end(thumbnailsBox)
+		thumbnailsBox = gtk.HBox()
+		thumbnailsBox.set_size_request( -1, 150 )
+		mainBox.pack_end(thumbnailsBox, expand=False)
 		self.leftThumbButton = gtk.Button()
-		thumbnailsBox.pack_start( self.leftThumbButton )
+		self.leftThumbButton.set_size_request( 80, -1 )
+		thumbnailsBox.pack_start( self.leftThumbButton, expand=False )
 		self.thumbButts = []
 		for i in range (0, 7):
 			thumbButt = gtk.Button()
-			thumbButt.callback( i )
+			#thumbButt.callback( i )
 			thumbnailsBox.pack_start( thumbButt )
-			thumbButts[i] = thumbButt
+			self.thumbButts.append(thumbButt)
 		self.rightThumbButton = gtk.Button()
-		thumbnailsBox.pack_start( self.rightThumbButton )
-		self.show_all()
+		self.rightThumbButton.set_size_request( 80, -1 )
+		thumbnailsBox.pack_start( self.rightThumbButton, expand=False )
+
+		self.ca.show_all()
 
 
 	def showVid( self, vidPath = None ):
@@ -99,27 +142,25 @@ class UI:
 
 	def loadGfx( self ):
 		#load svgs
-		polSvg_f = open(os.path.join(self._basepath, 'polaroid.svg'), 'r')
+		polSvg_f = open(os.path.join(self.ca.gfxPath, 'polaroid.svg'), 'r')
 		polSvg_d = polSvg_f.read()
 		polSvg_f.close()
 		self.polSvg = self.loadSvg( polSvg_d, None, None )
 
-		camSvg_f = open(os.path.join(self._basepath, 'shutter_button.svg'), 'r')
+		camSvg_f = open(os.path.join(self.ca.gfxPath, 'shutter_button.svg'), 'r')
 		camSvg_d = camSvg_f.read()
 		camSvg_f.close()
 		self.camSvg = self.loadSvg( camSvg_d, None, None )
 
-		camInvSvg_f = open( os.path.join(self._basepath, 'shutter_button_invert.svg'), 'r')
+		camInvSvg_f = open( os.path.join(self.ca.gfxPath, 'shutter_button_invert.svg'), 'r')
 		camInvSvg_d = camInvSvg_f.read()
 		camInvSvg_f.close()
 		self.camInvSvg = self.loadSvg(camInvSvg_d, None, None)
 
-		camRecSvg_f = open(os.path.join(self._basepath, 'shutter_button_record.svg'), 'r')
+		camRecSvg_f = open(os.path.join(self.ca.gfxPath, 'shutter_button_record.svg'), 'r')
 		camRecSvg_d = camRecSvg_f.read()
 		camRecSvg_f.close()
 		self.camRecSvg = self.loadSvg( camRecSvg_d, None, None)
-
-		self.nickName = profile.get_nick_name()
 
 		#sugar colors, replaced with b&w b/c of xv issues
 		color = profile.get_color()
@@ -128,44 +169,44 @@ class UI:
 		self.colorFill = self._colWhite._hex
 		self.colorStroke = self._colBlack._hex
 
-		butPhoSvg_f = open(os.path.join(self._basepath, 'thumb_photo.svg'), 'r')
+		butPhoSvg_f = open(os.path.join(self.ca.gfxPath, 'thumb_photo.svg'), 'r')
 		butPhoSvg_d = butPhoSvg_f.read()
 		self.thumbPhotoSvg = self.loadSvg(butPhoSvg_d, self.colorStroke, self.colorFill)
 		butPhoSvg_f.close()
 
-		butVidSvg_f = open(os.path.join(self._basepath, 'thumb_video.svg'), 'r')
+		butVidSvg_f = open(os.path.join(self.ca.gfxPath, 'thumb_video.svg'), 'r')
 		butVidSvg_d = butVidSvg_f.read()
 		self.thumbVideoSvg = self.loadSvg(butVidSvg_d, self.colorStroke, self.colorFill)
 		butVidSvg_f.close()
 
-		closeSvg_f = open(os.path.join(self._basepath, 'thumb_close.svg'), 'r')
+		closeSvg_f = open(os.path.join(self.ca.gfxPath, 'thumb_close.svg'), 'r')
 		closeSvg_d = closeSvg_f.read()
 		self.closeSvg = self.loadSvg(closeSvg_d, self.colorStroke, self.colorFill)
 		closeSvg_f.close()
 
-		menubarPhoto_f = open( os.path.join(self._basepath, 'menubar_photo.svg'), 'r' )
+		menubarPhoto_f = open( os.path.join(self.ca.gfxPath, 'menubar_photo.svg'), 'r' )
 		menubarPhoto_d = menubarPhoto_f.read()
 		self.menubarPhoto = self.loadSvg( menubarPhoto_d, self._colWhite._hex, self._colMenuBar._hex )
 		menubarPhoto_f.close()
 
-		menubarVideo_f = open( os.path.join(self._basepath, 'menubar_video.svg'), 'r' )
+		menubarVideo_f = open( os.path.join(self.ca.gfxPath, 'menubar_video.svg'), 'r' )
 		menubarVideo_d = menubarVideo_f.read()
 		self.menubarVideo = self.loadSvg( menubarVideo_d, self._colWhite._hex, self._colMenuBar._hex)
 		menubarVideo_f.close()
 
-		self.modVidF = os.path.join(self._basepath, 'mode_video.png')
+		self.modVidF = os.path.join(self.ca.gfxPath, 'mode_video.png')
 		modVidPB = gtk.gdk.pixbuf_new_from_file(self.modVidF)
 		self.modVidImg = _camera.cairo_surface_from_gdk_pixbuf(modVidPB)
 
-		modPhoF = os.path.join(self._basepath, 'mode_photo.png')
+		modPhoF = os.path.join(self.ca.gfxPath, 'mode_photo.png')
 		modPhoPB = gtk.gdk.pixbuf_new_from_file(modPhoF)
 		self.modPhoImg = _camera.cairo_surface_from_gdk_pixbuf(modPhoPB)
 
-		modWaitF = os.path.join(self._basepath, 'mode_wait.png')
+		modWaitF = os.path.join(self.ca.gfxPath, 'mode_wait.png')
 		modWaitPB = gtk.gdk.pixbuf_new_from_file(modWaitF)
 		self.modWaitImg = _camera.cairo_surface_from_gdk_pixbuf(modWaitPB)
 
-		modDoneF = os.path.join(self._basepath, 'mode_restart.png')
+		modDoneF = os.path.join(self.ca.gfxPath, 'mode_restart.png')
 		modDonePB = gtk.gdk.pixbuf_new_from_file(modDoneF)
 		self.modDoneImg = _camera.cairo_surface_from_gdk_pixbuf(modDonePB)
 
@@ -196,21 +237,25 @@ class UI:
 		return rsvg.Handle( data=data )
 
 
+class VideoBackgroundCanvas(P5):
+	def draw(self, ctx, w, h):
+		c = Color(255,0,0,255)
+		self.background( ctx, c, w, h )
+		#draw a big wait icon here
 
 
-class CToolbar(gtk.Toolbar):
+class CaptureToolbar(gtk.Toolbar):
 	def __init__(self, pc):
 		gtk.Toolbar.__init__(self)
-		self.c = pc
+		self.ca = pc
 
-
-		picButt = ToolButton( os.path.join(self.gfxPath, "menubar_photo.svg" ) )
+		picButt = ToolButton( os.path.join(self.ca.gfxPath, "menubar_photo.svg" ) )
 		picButt.props.sensitive = True
 		picButt.connect('clicked', self._mode_pic_cb)
 		self.insert(picButt, -1)
 		picButt.show()
 
-		vidButt = ToolButton( os.path.join(self.gfxPath, "menubar_video.svg" ) )
+		vidButt = ToolButton( os.path.join(self.ca.gfxPath, "menubar_video.svg" ) )
 		vidButt.props.sensitive = True
 		vidButt.connect('clicked', self._mode_vid_cb)
 		self.insert(vidButt, -1)
@@ -229,7 +274,12 @@ class CToolbar(gtk.Toolbar):
 #		vidMeshButt.show()
 
 	def _mode_vid_cb(self, button):
-		self.c.doVideoMode()
+		self.ca.doVideoMode()
 
 	def _mode_pic_cb(self, button):
-		self.c.doPhotoMode()
+		self.ca.doPhotoMode()
+
+class SearchToolbar(gtk.Toolbar):
+	def __init__(self, pc):
+		gtk.Toolbar.__init__(self)
+		self.ca = pc
