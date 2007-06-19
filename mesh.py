@@ -1,4 +1,4 @@
-from sugar.p2p import network
+from sugar import network
 from sugar.presence import presenceservice
 import urlparse
 import urllib

@@ -20,6 +20,7 @@ from sugar import profile
 from color import Color
 from polygon import Polygon
 from p5 import P5
+from glive import VideoWindow
 
 class UI:
 
@@ -36,10 +37,6 @@ class UI:
 		sToolbar = SearchToolbar(self.ca)
 		toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
-
-		#two pipelines
-		#self.newGlive(False, False)
-		#self.newGplay()
 
 		mainBox = gtk.VBox()
 		self.ca.set_canvas(mainBox)
@@ -102,6 +99,17 @@ class UI:
 
 		self.ca.show_all()
 
+		#two pipelines
+		self.liveVideoWindow = VideoWindow(self.ca)
+		self.liveVideoWindow.set_transient_for(self.ca)
+		self.liveVideoWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+		self.liveVideoWindow.set_decorated(False)
+		self.liveVideoWindow.resize(640,480)
+		#todo: move to the location where you should be!
+		self.liveVideoWindow.move(40, 40)
+
+		self.liveVideoWindow.show_all()
+		self.liveVideoWindow.connect("map-event", self._start)
 
 	def showVid( self, vidPath = None ):
 		if (vidPath != None):
@@ -120,6 +128,8 @@ class UI:
 			self._frame.setDefaultCursor()
 			self.UPDATING = False
 
+	def _start( self, widget, event ):
+		self.liveVideo.playa.play()
 
 	def showImg( self, imgPath ):
 		self.SHOW = self.SHOW_STILL

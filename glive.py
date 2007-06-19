@@ -203,20 +203,24 @@ class Glive:
 		self.el('videoTee').unlink(self.el('picQueue'))
 		self.pipe().set_state(gst.STATE_PLAYED)
 
-class LiveVideoSlot(gtk.EventBox):
-
+class VideoWindow(gtk.Window):
 	def __init__(self, pc):
-		gtk.EventBox.__init__(self)
+		gtk.Window.__init__(self)
 
 		self._c = pc
-		self._c._livevideo = self
-
 		self.imagesink = None
-		self.unset_flags(gtk.DOUBLE_BUFFERED)
-		self.playa = Glive(self)
- 
+
+		#self.unset_flags(gtk.DOUBLE_BUFFERED)
+		colr = gtk.gdk.Color(red=1, green=2, blue=3)
+		self.modify_bg(gtk.STATE_NORMAL, colr)
+		self.modify_bg(gtk.STATE_ACTIVE, colr)
+		self.modify_bg(gtk.STATE_PRELIGHT, colr)
+		self.modify_bg(gtk.STATE_SELECTED, colr)
+		self.modify_bg(gtk.STATE_INSENSITIVE, colr)
+
 	def set_sink(self, sink):
 		if (self.imagesink != None):
+			assert self.window.xid
 			self.imagesink = None
 			del self.imagesink
 
