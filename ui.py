@@ -18,8 +18,10 @@ from sugar import profile
 
 
 from color import Color
-from polygon import Polygon
 from p5 import P5
+from p5_button import P5Button
+from p5_button import Polygon
+from p5_button import Button
 from glive import VideoWindow
 
 class UI:
@@ -28,6 +30,9 @@ class UI:
 		self.ca = pca
 		self.loadColors()
 		self.loadGfx()
+		#thumb dimensions:
+		self.tw = 107
+		self.th = 80
 
 		#this includes the default sharing tab
 		toolbox = activity.ActivityToolbox(self.ca)
@@ -38,11 +43,11 @@ class UI:
 		toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
 
-		mainBox = gtk.VBox()
-		self.ca.set_canvas(mainBox)
+		self.mainBox = gtk.VBox()
+		self.ca.set_canvas(self.mainBox)
 
 		topBox = gtk.HBox()
-		mainBox.pack_start(topBox)
+		self.mainBox.pack_start(topBox)
 
 		#insert entry fields on left
 		infoBox = gtk.VBox()
@@ -69,6 +74,7 @@ class UI:
 		tagPanel.pack_start(self.tagField)
 		infoBox.pack_start(tagPanel, expand=False)
 		self.shutterField = gtk.Button()
+		self.shutterField.connect("clicked", self.shutterClick)
 		infoBox.pack_start(self.shutterField)
 
 		#video, scrubber etc on right
@@ -83,31 +89,29 @@ class UI:
 
 		thumbnailsBox = gtk.HBox()
 		thumbnailsBox.set_size_request( -1, 150 )
-		mainBox.pack_end(thumbnailsBox, expand=False)
+		self.mainBox.pack_end(thumbnailsBox, expand=False)
 		self.leftThumbButton = gtk.Button()
 		self.leftThumbButton.set_size_request( 80, -1 )
 		thumbnailsBox.pack_start( self.leftThumbButton, expand=False )
 		self.thumbButts = []
-		for i in range (0, 7):
-			thumbButt = gtk.Button()
-			#thumbButt.callback( i )
-			thumbnailsBox.pack_start( thumbButt )
+		self.numThumbs = 7
+		for i in range (0, self.numThumbs):
+			#todo: make these into little canvases with the right graphics
+			thumbButt = ThumbnailCanvas(self)
+			thumbnailsBox.pack_start( thumbButt, expand=True )
 			self.thumbButts.append(thumbButt)
 		self.rightThumbButton = gtk.Button()
 		self.rightThumbButton.set_size_request( 80, -1 )
 		thumbnailsBox.pack_start( self.rightThumbButton, expand=False )
-
 		self.ca.show_all()
 
 		#two pipelines
-		self.liveVideoWindow = VideoWindow(self.ca)
+		self.liveVideoWindow = VideoWindow()
+		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.liveVideoWindow.set_transient_for(self.ca)
 		self.liveVideoWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.liveVideoWindow.set_decorated(False)
 		self.liveVideoWindow.resize(640,480)
-		#todo: move to the location where you should be!
-		self.liveVideoWindow.move(40, 40)
-
 		self.liveVideoWindow.show_all()
 		self.liveVideoWindow.connect("map-event", self._start)
 
@@ -120,16 +124,33 @@ class UI:
 			self.SHOW = self.SHOW_PLAY
 			self._id.redraw()
 
-			self._livevideo.hide()
-			self._livevideo.playa.stop()
-			self._playvideo.show()
+			self.liveVideoWindow.hide()
+			self.ca.glive.stop()
+			#self._playvideo.show()
 			vp = "file://" + vidPath
-			self._playvideo.playa.setLocation(vp)
-			self._frame.setDefaultCursor()
+			#self._playvideo.playa.setLocation(vp)
+			self.setDefaultCursor()
 			self.UPDATING = False
 
 	def _start( self, widget, event ):
-		self.liveVideo.playa.play()
+		#todo: move to the location where you should be!
+		videoSpacePos = self.mainBox.translate_coordinates( self.videoSpace, 480, 90 )
+		print("~", videoSpacePos)
+		self.liveVideoWindow.move(videoSpacePos[0], videoSpacePos[1])
+		self.ca.glive.play()
+
+	def shutterClick( self, arg ):
+		self.ca.c.doShutter()
+
+
+	def updateThumbs( self, addToTrayArray ):
+		#todo: clear away old thumbs
+		for i in range (0, len(self.thumbButts)):
+			self.thumbButts[i].clear()
+
+		for i in range (0, len(addToTrayArray)):
+			self.thumbButts[i].setButton(addToTrayArray[i][0], addToTrayArray[i][1], 1)
+
 
 	def showImg( self, imgPath ):
 		self.SHOW = self.SHOW_STILL
@@ -142,13 +163,11 @@ class UI:
 		self._img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self._id.redraw()
 
-
-	#cursor control
 	def setWaitCursor( self ):
-		self.window.set_cursor( gtk.gdk.Cursor(gtk.gdk.WATCH) )
+		self.ca.window.set_cursor( gtk.gdk.Cursor(gtk.gdk.WATCH) )
 
 	def setDefaultCursor( self ):
-		self.window.set_cursor( None )
+		self.ca.window.set_cursor( None )
 
 	def loadGfx( self ):
 		#load svgs
@@ -223,9 +242,6 @@ class UI:
 		#reset there here for uploading to server
 		self.fill = color.get_fill_color()
 		self.stroke = color.get_stroke_color()
-		key = profile.get_pubkey()
-		key_hash = util._sha_data(key)
-		self.hashed_key = util.printable_hash(key_hash)
 
 	def loadColors( self ):
 		self._colBlack = Color( 0, 0, 0, 255 )
@@ -253,6 +269,57 @@ class VideoBackgroundCanvas(P5):
 		self.background( ctx, c, w, h )
 		#draw a big wait icon here
 
+class ThumbnailCanvas(P5Button):
+	def __init__(self, pui):
+		P5Button.__init__(self)
+		self.ui = pui
+
+		ixs = []
+		iys = []
+		ixs.append(0)
+		iys.append(0)
+		ixs.append(self.ui.tw)
+		iys.append(0)
+		ixs.append(self.ui.tw)
+		iys.append(self.ui.th)
+		ixs.append(0)
+		iys.append(self.ui.th)
+		self.iPoly = Polygon( ixs, iys )
+		#todo: center based on avail size, use in the draw method too
+		imgButt = Button(self.iPoly, 23, 23)
+		imgButt.addActionListener( self )
+		imgButt.setActionCommand( "thumb" )
+		self._butts.append( imgButt )
+		#delButt = Button(delPoly, offX, offY)
+		#self._buttons.append( delButt )
+
+		#init with a clear
+		self.clear()
+
+	def clear(self):
+		self.thumb = None
+		self.path = None
+		self.type = -1
+		self.redraw()
+
+	def setButton(self, img, path, type):
+		self.img = img
+		self.path = path
+		self.type = 1
+		self.redraw()
+
+	def draw(self, ctx, w, h):
+		c = Color(255,0,0,255)
+		self.background( ctx, c, w, h )
+		if (self.type != -1):
+			ctx.identity_matrix( )
+			ctx.translate( 15, 15 )
+			self.ui.thumbPhotoSvg.render_cairo(ctx)
+			ctx.translate( 8, 8 )
+			ctx.set_source_surface(self.img, 0, 0)
+
+	def fireButton(self, actionCommand):
+		print("woo hoo: ", actionCommand)
 
 class CaptureToolbar(gtk.Toolbar):
 	def __init__(self, pc):

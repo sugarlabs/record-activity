@@ -1,37 +1,13 @@
-import datetime
-import time
 
 from p5 import P5
-from color import Color
-from button import Button
 
 class P5Button(P5):
 
 	def __init__(self):
 		P5.__init__(self)
 		self.noloop()
-
 		self._butts = []
-
-		self._colPressed = Color( 172, 168, 153, 200 )
-		self._colHighlight = Color( 255, 255, 255, 255 )
-		self._colDarkShadow = Color( 113, 111, 100, 255 )
-		self._colShadow = Color( 172, 168, 153, 255 )
-		self._colBackground = Color( 236, 233, 216, 0 )
-
-		self._pressDownTime = -1
 		self._buttonPressed = False
-
-
-	def getButtonPressTime():
-		now = datetime.datetime.now()
-		nowTime = time.mktime( now.timetuple() )
-		diff = nowTime - self._pressDownTime
-		return diff
-
-
-	def fireButton(self, actionCommand):
-		pass
 
 
 	def button_press(self, widget, event):
@@ -44,8 +20,6 @@ class P5Button(P5):
 				contains = self._butts[i].contains(event.x, event.y)
 				self._butts[i]._pressed = contains
 				if (contains):
-					now = datetime.datetime.now()
-					self._pressDownTime = time.mktime( now.timetuple() )
 					bp = True
 
 		self._buttonPressed = bp
@@ -75,46 +49,98 @@ class P5Button(P5):
 		self.redraw()
 
 
-	def drawButton(self, ctx, butt):
-		pass
+class Polygon:
+
+	def __init__( self, xs, ys ):
+		self.setPoints( xs, ys )
 
 
-	def drawButtonOld(self, ctx, butt):
-		ctx.scale (1, 1)
-		ctx.translate( butt._offX, butt._offY )
-		
-		#!enabled?
-		#do stuff, return
-		if (not butt._enabled):
-			#if(butt.isImg()):
-			#	ctx.set_source_surface(butt._img, 0, 0)
-			#	ctx.paint()
+	def setPoints( self, xs, ys ):
+		self._xs = xs
+		self._ys = ys
 
-			#self.fillShape( ctx, butt._poly, self._colPressed )
-			#ctx.translate( -butt._offX, -butt._offY )
-			return
+		self._boundingX = self._xs[0]
+		self._boundingY = self._ys[0]
+		self._boundingW = self._xs[0]
+		self._boundingH = self._ys[0]
 
-		#set highlightColor
-		#draw highlightShape
-		ctx.translate( 1, 1 )
-		#self.drawShape( ctx, butt._poly, self._colHighlight )
-		ctx.translate( -1, -1 )
+		for i in range ( 1, len(self._xs) ):
+			if (self._xs[i] > self._boundingW):
+				self._boundingW = self._xs[i]
+			if (self._ys[i] > self._boundingH):
+				self._boundingH = self._ys[i]
+			if (self._xs[i] < self._boundingX):
+				self._boundingX = self._xs[i]
+			if (self._ys[i] < self._boundingY):
+				self._boundingY = self._ys[i]
 
-		#draw image
-		if (butt.isImg()):
-			ctx.set_source_surface(butt._img, 0, 0)
-			ctx.paint()
 
-		if (butt._pressed):
-			self.fillShape( ctx, butt._poly, self._colPressed )
+	def contains( self, mx, my ):
+		if (not self.bbox_contains(mx, my)):
+			return False
 
-		#self.drawShape( ctx, butt._poly, self._colDarkShadow )
+		#insert simple path tracing check on the polygon here
 
-		#if not pressed, setColor buttonHighlightColor
-		#if not pressed, draw HighlightShape
-		if (not butt._pressed):
-			ctx.translate( 1, 1 )
-			#self.drawShape( ctx, butt._poly, self._colHighlight )
-			ctx.translate( -1, -1 )
+		return True
 
-		ctx.translate( -butt._offX, -butt._offY )
+
+	def bbox_contains( self, mx, my ):
+		if ( not((mx>=self._boundingX) and (my>=self._boundingY) and (mx<self._boundingW) and (my<self._boundingH)) ):
+			return False
+		else:
+			return True
+
+
+class Button:
+
+	def __init__(self, poly, offX, offY):
+		self._poly = poly
+		self._offX = offX
+		self._offY = offY
+
+		self._enabled = True
+		self._pressed = False
+		self._toggle = False
+
+		self._listeners = []
+
+		self._actionCommand = None
+
+		self._img = None
+
+
+	def addActionListener(self, listen):
+		self._listeners.append(listen)
+
+
+	def removeActionListener(self, listen):
+		self._listeners.remove(listen)
+
+
+	def setActionCommand(self, command):
+		self._actionCommand = command
+
+
+	def getActionCommand(self):
+		return self._actionCommand
+
+
+	def setImage(self, img):
+		self._img = img
+
+
+	def contains( self, mx, my ):
+		x = mx - self._offX
+		y = my - self._offY
+
+		contains = self._poly.contains( x, y )
+		return contains
+
+
+	def doPressed( self ):
+		for i in range ( 0, len(self._listeners) ):
+			self._listeners[i].fireButton( self._actionCommand )
+
+
+	def isImg( self ):
+		return self._img != None

@@ -37,7 +37,6 @@ class Image_Display(P5Button):
 		ctx.set_antialias( cairo.ANTIALIAS_NONE )
 		ctx.identity_matrix( )
 
-
 		ctx.set_antialias( cairo.ANTIALIAS_SUBPIXEL )
 		sx = (self._w/2) - (self.c.camSvg.props.width/2)
 		sy = ((self._h/2)-(self.c.polSvg.props.height/2)) + polMargin + 480 + polMargin

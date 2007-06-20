@@ -3,6 +3,7 @@
 import gtk
 import gobject
 import os
+from sugar import util
 
 from sugar.activity import activity
 from sugar import profile
@@ -12,6 +13,7 @@ from ui import UI
 from mesh import MeshClient
 from mesh import MeshXMLRPCServer
 from mesh import HttpServer
+from glive import Glive
 
 class CameraActivity(activity.Activity):
 	def __init__(self, handle):
@@ -28,7 +30,12 @@ class CameraActivity(activity.Activity):
 		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", self.activityName)
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
+		#whoami?
+		key = profile.get_pubkey()
+		key_hash = util._sha_data(key)
+		self.hashed_key = util.printable_hash(key_hash)
 
+		self.glive = Glive( self )
 		self.c = Controller( self )
 		self.ui = UI( self )
 
@@ -54,7 +61,7 @@ class CameraActivity(activity.Activity):
 				print("! in get_shared() 2")
 
 		print("leaving constructor")
-		self.c.initPostUI()
+		self.c.setup()
 		return False
 
 	def _shared_cb( self, activity ):

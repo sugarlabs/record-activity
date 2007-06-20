@@ -20,8 +20,9 @@ gobject.threads_init()
 
 class Glive:
 
-	def __init__(self, pop):
-		self._pop = pop
+	def __init__(self, pca):
+		self.window = None
+		self.ca = pca
 		self.pipes = []
 		self.nextPipe()
 		self.thumbPipes = []
@@ -112,7 +113,7 @@ class Glive:
 			gobject.idle_add(self.savePic, pixBuf)
 
 	def savePic(self, pixbuf):
-		self._pop._c.setPic(pixbuf)
+		self.ca.c.savePic(pixbuf)
 
 	def startRecordingVideo(self):
 		self.pipe().set_state(gst.STATE_READY)
@@ -174,8 +175,8 @@ class Glive:
 			else:
 				self.record = False
 				self.audio = False
-				self._pop._c.setVid(self.thumbBuf, "/home/olpc/output_"+n+".ogg")
-				self._pop._c.stoppedRecordingVideo()
+				self.ca.c.setVid(self.thumbBuf, "/home/olpc/output_"+n+".ogg")
+				self.ca.c.stoppedRecordingVideo()
 
 	def onMuxedMessage(self, bus, message):
 		t = message.type
@@ -187,14 +188,14 @@ class Glive:
 			n = str(len(self.muxPipes)-1)
 			os.remove(os.path.abspath("/home/olpc/output_"+n+".wav"))
 			os.remove(os.path.abspath("/home/olpc/output_"+n+".ogg"))
-			self._pop._c.setVid(self.thumbBuf, "/home/olpc/mux.ogg")
-			self._pop._c.stoppedRecordingVideo()
+			self.ca.c.setVid(self.thumbBuf, "/home/olpc/mux.ogg")
+			self.ca.c.stoppedRecordingVideo()
 
 	def onSyncMessage(self, bus, message):
 		if message.structure is None:
 			return
 		if message.structure.get_name() == 'prepare-xwindow-id':
-			self._pop.set_sink(message.src)
+			self.window.set_sink(message.src)
 			message.src.set_property('force-aspect-ratio', True)
 
 	def showLiveVideo(self):
@@ -204,11 +205,11 @@ class Glive:
 		self.pipe().set_state(gst.STATE_PLAYED)
 
 class VideoWindow(gtk.Window):
-	def __init__(self, pc):
+	def __init__(self):
 		gtk.Window.__init__(self)
 
-		self._c = pc
 		self.imagesink = None
+		self.glive = None
 
 		#self.unset_flags(gtk.DOUBLE_BUFFERED)
 		colr = gtk.gdk.Color(red=1, green=2, blue=3)
@@ -217,6 +218,10 @@ class VideoWindow(gtk.Window):
 		self.modify_bg(gtk.STATE_PRELIGHT, colr)
 		self.modify_bg(gtk.STATE_SELECTED, colr)
 		self.modify_bg(gtk.STATE_INSENSITIVE, colr)
+
+	def set_glive(self, pglive):
+		self.glive = pglive
+		self.glive.window = self
 
 	def set_sink(self, sink):
 		if (self.imagesink != None):

@@ -4,10 +4,6 @@ import gobject
 import cairo
 import math
 
-from datetime import datetime
-from polygon import Polygon
-
-
 class P5(gtk.DrawingArea):
 	def __init__(self):
 		super(P5, self).__init__()
@@ -29,7 +25,6 @@ class P5(gtk.DrawingArea):
 		self._w = -1
 		self._h = -1
 
-		self._backPoly = Polygon( [0,0,0,0], [0,0,0,0] )
 
 		#ok, this calls an initial painting & setting of painterly variables
 		#e.g. time for the clock widget
@@ -122,16 +117,16 @@ class P5(gtk.DrawingArea):
 	def drawShape( self, ctx, poly, col ):
 		self.setColor( ctx, col )
 
-		for i in range ( 0, len(poly._xs) ):	
+		for i in range ( 0, len(poly._xs) ):
 			ctx.line_to ( poly._xs[i], poly._ys[i] )
 		ctx.close_path()
-		ctx.set_line_width(1)	
+		ctx.set_line_width(1)
 		ctx.stroke()
 
 
 	def fillShape( self, ctx, poly, col ):
 		self.setColor( ctx, col )
-		for i in range ( 0, len(poly._xs) ):	
+		for i in range ( 0, len(poly._xs) ):
 			ctx.line_to (poly._xs[i], poly._ys[i])
 		ctx.close_path()
 

@@ -30,8 +30,6 @@ class Controller:
 		self.journalIndex = os.path.join(self.ca.journalPath, 'camera_index.xml')
 		self.fillPhotoHash( self.journalIndex )
 
-	def initPostUI( self ):
-		self.setup()
 
 	def fillPhotoHash( self, index ):
 		self.photoHash = []
@@ -55,53 +53,57 @@ class Controller:
 
 
 	def setup( self ):
-		#p_mx = len(self.photoHash)
-		#p_mn = max(p_mx-self._thuPho.numButts, 0)
-		#gobject.idle_add(self.setupThumbs, self.photoHash, self._thuPho, p_mn, p_mx)
-		#v_mx = len(self.movieHash)
-		#v_mn = max(v_mx-self._thuVid.numButts, 0)
-		pass
+		p_mx = len(self.photoHash)
+		p_mn = max(p_mx-self.ca.ui.numThumbs, 0)
+		gobject.idle_add(self.setupThumbs, self.photoHash, p_mn, p_mx)
 
 
-	def setupThumbs( self, hash, thumbTray, mn, mx ):
+	def isVideoMode( self ):
+		return self.MODE == self.MODE_VIDEO
+
+
+	def isPhotoMode( self ):
+		return self.MODE == self.MODE_PHOTO
+
+
+	def setupThumbs( self, hash, mn, mx ):
 		self.UPDATING = True
-		self._frame.setWaitCursor()
+		self.ca.ui.setWaitCursor()
 
-		if (hash == self.photoHash):
-			self.thuPhoStart = mn
-		elif (hash == self.movieHash):
-			self.thuVidStart = mn
-
-		thumbTray.removeButtons()
-
+		#some files might have been deleted
 		removes = []
+		#and also show everything which needs to be shown
+		addToTray = []
 		for i in range (mn, mx):
 			each = hash[i]
-			thmbPath = os.path.join(self.journalPath, each[3])
+			thmbPath = os.path.join(self.ca.journalPath, each[3])
 			thmbPath_s = os.path.abspath(thmbPath)
-			imgPath = os.path.join(self.journalPath, each[2])
+			imgPath = os.path.join(self.ca.journalPath, each[2])
 			imgPath_s = os.path.abspath(imgPath)
 			if ( (os.path.isfile(thmbPath_s)) and (os.path.isfile(imgPath_s)) ):
 				pb = gtk.gdk.pixbuf_new_from_file(thmbPath_s)
 				img = _camera.cairo_surface_from_gdk_pixbuf(pb)
-				thumbTray.addThumb(img, imgPath_s)
+				#thumbTray.addThumb(img, imgPath_s)
+				addToTray.append( [img, imgPath_s] )
 			else:
 				removes.append(each)
 
+		#throw out the removes
 		for each in removes:
 			hash.remove(each)
 		if (len(removes) > 0):
 			self.updatePhotoIndex()
 
-		self._frame.setDefaultCursor()
+		self.ca.ui.updateThumbs( addToTray )
+		self.ca.ui.setDefaultCursor()
 		self.UPDATING = False
 
 
-	def openShutter( self ):
-		if (self.isPhotoMode()):
-			self.startTakingPicture()
-		elif (self.isVideoMode()):
-			self.startRecordingVideo()
+	def doShutter( self ):
+		#if (self.isPhotoMode()):
+		self.startTakingPicture()
+		#elif (self.isVideoMode()):
+		#	self.startRecordingVideo()
 
 
 	def showLive( self ):
@@ -127,7 +129,7 @@ class Controller:
 		self._img = self.modWaitImg
 		self._id.redraw()
 		self._livevideo.playa.startRecordingVideo()
-		self._frame.setDefaultCursor()
+		self.ca.ui.setDefaultCursor()
 		self.UPDATING = False
 
 
@@ -148,35 +150,36 @@ class Controller:
 		self.SHOW = self.SHOW_LIVE
 		self._id.redraw()
 
-		self._frame.setDefaultCursor()
+		self.ca.ui.setDefaultCursor()
 		self.UPDATING = False
 
 
 	def startTakingPicture( self ):
 		self.UPDATING = True
-		self._frame.setWaitCursor()
-		self._livevideo.playa.takePic()
+		self.ca.ui.setWaitCursor()
+		self.ca.glive.takePic()
 
 
-	def setPic( self, pixbuf ):
+	#todo: save to filestore / journal
+	def savePic( self, pixbuf ):
 		nowtime = int(time.time())
 		nowtime_s = str(nowtime)
 		nowtime_fn = nowtime_s + ".jpg"
-		imgpath = os.path.join(self.journalPath, nowtime_fn)
+		imgpath = os.path.join(self.ca.journalPath, nowtime_fn)
 		pixbuf.save( imgpath, "jpeg" )
 		thumb_fn = nowtime_s + "_thumb.jpg"
-		thumbpath = os.path.join(self.journalPath, thumb_fn)
+		thumbpath = os.path.join(self.ca.journalPath, thumb_fn)
 
-		thumbImg = self.generateThumbnail(pixbuf, self._thuPho.tscale)
+		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 		thumbImg.write_to_png(thumbpath)
 		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
 		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
-		self.photoHash.append( (nowtime, self.nickName, nowtime_fn, thumb_fn) )
+		self.photoHash.append( (nowtime, self.ca.nickName, nowtime_fn, thumb_fn) )
 		self.updatePhotoIndex()
 		self.thumbAdded(self._thuPho, self.photoHash, thumbImg, imgpath)
 
-		self._frame.setDefaultCursor()
+		self.ca.ui.setDefaultCursor()
 		self.UPDATING = False
 
 		#hey, i just took a cool picture!  let me show you!
@@ -186,7 +189,7 @@ class Controller:
 	#outdated?
 	def generateThumbnail( self, pixbuf, scale ):
 		#need to generate thumbnail version here
-		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self._thuPho.tw, self._thuPho.th)
+		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.tw, self.ca.ui.th)
 		tctx = cairo.Context(thumbImg)
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 
@@ -216,15 +219,9 @@ class Controller:
 		hash.remove(deleteMe)
 		self.updatePhotoIndex()
 
-		#start = self.thuPhoStart
-		#thumbs = self._thuPho
-		#if (self.MODE == self.MODE_VIDEO):
-		#	start = self.vidPhoStart
-		#	thumbs = self._thuVid
-
 		mx = len(hash)
 		mn = max(mx-thuPanel.numButts, 0)
-		self.setupThumbs(hash, thuPanel, mn, mx)
+		self.setupThumbs(hash, mn, mx)
 
 		#todo: only show this if you've deleted the pic you're looking at!
 		if (self.MODE == self.MODE_PHOTO):
@@ -240,16 +237,16 @@ class Controller:
 		pathSplit = os.path.split(path)
 		for each in hash:
 			if (each[2] == pathSplit[1]):
-				return os.path.join(self.journalPath, each[3])
+				return os.path.join(self.ca.journalPath, each[3])
 
 
 	def updatePhotoIndex( self ):
 		#delete all old htmls
-		files = os.listdir(self.journalPath)
+		files = os.listdir(self.ca.journalPath)
 		for file in files:
 			if (len(file) > 5):
 				if ("html" == file[len(file)-4:]):
-					html = os.path.join(self.journalPath, file)
+					html = os.path.join(self.ca.journalPath, file)
 					os.remove(html)
 
 		impl = getDOMImplementation()
@@ -264,9 +261,9 @@ class Controller:
 			photo.setAttribute("name", each[1])
 			photo.setAttribute("path", each[2])
 			photo.setAttribute("thumb", each[3])
-			photo.setAttribute("colorStroke", str(self.colorStroke) )
-			photo.setAttribute("colorFill", str(self.colorFill) )
-			photo.setAttribute("hashKey", str(self.hashed_key))
+			photo.setAttribute("colorStroke", str(self.ca.ui.colorStroke) )
+			photo.setAttribute("colorFill", str(self.ca.ui.colorFill) )
+			photo.setAttribute("hashKey", str(self.ca.hashed_key))
 
 			htmlDoc = impl.createDocument(None, "html", None)
 			html = htmlDoc.documentElement
@@ -287,7 +284,7 @@ class Controller:
 				nextEach = self.photoHash[0]
 				if (i < len(self.photoHash)-1):
 					nextEach = self.photoHash[i+1]
-				nextHtml = os.path.join(self.journalPath, str(nextEach[0])+".html")
+				nextHtml = os.path.join(self.ca.journalPath, str(nextEach[0])+".html")
 				ahref.setAttribute('href', os.path.abspath(nextHtml))
 
 			img = htmlDoc.createElement('img')
@@ -296,11 +293,11 @@ class Controller:
 			ahref.appendChild(img)
 			img.setAttribute('src', each[2])
 			if (i == 0):
-				f = open(os.path.join(self.journalPath, "index.html"), 'w')
+				f = open(os.path.join(self.ca.journalPath, "index.html"), 'w')
 				htmlDoc.writexml(f)
 				f.close()
 			else:
-				f = open(os.path.join(self.journalPath, str(each[0])+".html"), 'w')
+				f = open(os.path.join(self.ca.journalPath, str(each[0])+".html"), 'w')
 				htmlDoc.writexml(f)
 				f.close()
 
@@ -313,9 +310,9 @@ class Controller:
 			video.setAttribute("name", each[1])
 			video.setAttribute("path", each[2])
 			video.setAttribute("thumb", each[3])
-			video.setAttribute("colorStroke", str(self.colorStroke) )
-			video.setAttribute("colorFill", str(self.colorFill) )
-			video.setAttribute("hashKey", str(self.hashed_key) )
+			video.setAttribute("colorStroke", str(self.ca.ui.colorStroke) )
+			video.setAttribute("colorFill", str(self.ca.ui.colorFill) )
+			video.setAttribute("hashKey", str(self.ca.hashed_key) )
 
 		f = open( self.journalIndex, 'w')
 		album.writexml(f)
@@ -326,8 +323,8 @@ class Controller:
 		nowtime = str(int(time.time()))
 		thumbFn = nowtime + "_thumbnail.png"
 		movieFn = nowtime + ".ogg"
-		thumbPath = os.path.join(self.journalPath, thumbFn)
-		oggPath = os.path.join(self.journalPath, movieFn)
+		thumbPath = os.path.join(self.ca.journalPath, thumbFn)
+		oggPath = os.path.join(self.ca.journalPath, movieFn)
 
 		thumbImg = self.generateThumbnail(pixbuf, float(.66875) )
 		thumbImg.write_to_png(thumbPath)
@@ -335,25 +332,15 @@ class Controller:
 		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 		shutil.move(tempPath, oggPath)
 
-		self.movieHash.append( (nowtime, self.nickName, movieFn, thumbFn) )
+		self.movieHash.append( (nowtime, self.ca.nickName, movieFn, thumbFn) )
 		self.updatePhotoIndex()
 		self.thumbAdded(self._thuVid, self.movieHash, thumbImg, oggPath)
 
 
-	def thumbAdded( self, thuPanel, hash, thumbImg, path ):
-		thuStart = 0
-		if (hash == self.photoHash):
-			thuStart = self.thuPhoStart
-		elif (hash == self.movieHash):
-			thuStart = self.thuVidStart
-
-		#if we're somewhere at the back of the queue...
-		#print( len(hash), thuPanel.numButts, thuStart )
-		#if (thuStart < len(hash)):
+	def thumbAdded( self, hash, thumbImg, path ):
 		mx = len(hash)
-		mn = max(mx-thuPanel.numButts, 0)
-		self.setupThumbs(hash, thuPanel, mn, mx)
-		return
+		mn = max(mx-ca.ui.numThumbs, 0)
+		self.setupThumbs(hash, mn, mx)
 
 
 	def doVideoMode( self ):
@@ -412,7 +399,5 @@ class Controller:
 		self.SHOW_PROCESSING = 4
 		self.SHOW = self.SHOW_LIVE
 
-		self.thuPhoStart = 0
-		self.thuVidStart = 0
-
+		#are we busy now?
 		self.UPDATING = True
