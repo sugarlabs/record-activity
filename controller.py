@@ -177,13 +177,13 @@ class Controller:
 
 		self.photoHash.append( (nowtime, self.ca.nickName, nowtime_fn, thumb_fn) )
 		self.updatePhotoIndex()
-		self.thumbAdded(self._thuPho, self.photoHash, thumbImg, imgpath)
+		self.thumbAdded(self.photoHash, thumbImg, imgpath)
 
 		self.ca.ui.setDefaultCursor()
 		self.UPDATING = False
 
 		#hey, i just took a cool picture!  let me show you!
-		self.meshClient.notifyBudsOfNewPic()
+		self.ca.meshClient.notifyBudsOfNewPic()
 
 
 	#outdated?
@@ -334,12 +334,12 @@ class Controller:
 
 		self.movieHash.append( (nowtime, self.ca.nickName, movieFn, thumbFn) )
 		self.updatePhotoIndex()
-		self.thumbAdded(self._thuVid, self.movieHash, thumbImg, oggPath)
+		self.thumbAdded(self.movieHash, thumbImg, oggPath)
 
 
 	def thumbAdded( self, hash, thumbImg, path ):
 		mx = len(hash)
-		mn = max(mx-ca.ui.numThumbs, 0)
+		mn = max(mx-self.ca.ui.numThumbs, 0)
 		self.setupThumbs(hash, mn, mx)
 
 

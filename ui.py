@@ -317,6 +317,7 @@ class ThumbnailCanvas(P5Button):
 			self.ui.thumbPhotoSvg.render_cairo(ctx)
 			ctx.translate( 8, 8 )
 			ctx.set_source_surface(self.img, 0, 0)
+			ctx.paint()
 
 	def fireButton(self, actionCommand):
 		print("woo hoo: ", actionCommand)

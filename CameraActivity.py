@@ -98,5 +98,3 @@ class CameraActivity(activity.Activity):
 	def destroy( self, *args ):
 		#self.c.outFocus()
 		gtk.main_quit()
-
-	#filestore, etc.
