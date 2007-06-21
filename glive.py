@@ -211,13 +211,8 @@ class VideoWindow(gtk.Window):
 		self.imagesink = None
 		self.glive = None
 
-		#self.unset_flags(gtk.DOUBLE_BUFFERED)
-		colr = gtk.gdk.Color(red=1, green=2, blue=3)
-		self.modify_bg(gtk.STATE_NORMAL, colr)
-		self.modify_bg(gtk.STATE_ACTIVE, colr)
-		self.modify_bg(gtk.STATE_PRELIGHT, colr)
-		self.modify_bg(gtk.STATE_SELECTED, colr)
-		self.modify_bg(gtk.STATE_INSENSITIVE, colr)
+		self.unset_flags(gtk.DOUBLE_BUFFERED)
+		self.set_flags(gtk.APP_PAINTABLE)
 
 	def set_glive(self, pglive):
 		self.glive = pglive
