@@ -100,7 +100,7 @@ class UI:
 
 		photographerPanel = gtk.HBox(spacing=self.inset)
 		infoBox.pack_start(photographerPanel, expand=False)
-		photographerLabel = gtk.Label("Photographer:")
+		photographerLabel = gtk.Label("Recorder:")
 		photographerPanel.pack_start(photographerLabel, expand=False)
 		self.photographerNameLabel = gtk.Label("")
 		self.photographerNameLabel.set_alignment(0, .5)
