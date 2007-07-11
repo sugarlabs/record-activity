@@ -60,8 +60,7 @@ class Glive:
 			self.pipe().get_bus().disable_sync_message_emission()
 
 		n = str(len(self.pipes))
-		pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n)
-		#todo: add the ximagesink w/ xv conditionals
+		pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n +" videoTee_"+n+". ! ximagesink name=ximagesink_"+n)
 
 		v4l2src = pipeline.get_by_name('v4l2src_'+n)
 		try:
@@ -69,8 +68,6 @@ class Glive:
 		except:
 			pass
 		videoTee = pipeline.get_by_name('videoTee_'+n)
-		xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
-		xvimagesink.set_property("sync", False)
 
 		picQueue = pipeline.get_by_name('picQueue_'+n)
 		picQueue.set_property("leaky", True)
@@ -92,6 +89,15 @@ class Glive:
 		audioTee.unlink(audioWavenc)
 		videoTee.unlink(movieQueue)
 		videoTee.unlink(picQueue)
+
+		xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
+		#xvimagesink.set_property("sync", False)
+		ximagesink = pipeline.get_by_name('ximagesink_'+n)
+		#ximagesink.set_property("sync", False)
+		if (self.xv):
+			videoTee.unlink(ximagesink)
+		else:
+			videoTee.unlink(xvimagesink)
 
 		bus = pipeline.get_bus()
 		bus.enable_sync_message_emission()

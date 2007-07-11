@@ -67,6 +67,10 @@ class UI:
 		self.exposed = False
 		self.mapped = False
 
+		#turn on x-eyes?
+		self.xeyesEnabled = True
+		self.eyeTrack = 0
+
 		self.shownRecd = None
 
 		#this includes the default sharing tab
@@ -77,7 +81,6 @@ class UI:
 		#sToolbar = SearchToolbar(self.ca)
 		#toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
-
 
 		self.mainBox = gtk.VBox()
 		self.ca.set_canvas(self.mainBox)
@@ -229,21 +232,33 @@ class UI:
 		self.playLiveWindow.show_all()
 		self.playMaxWindow.show_all()
 
-		#lazy eye, only looks around every 1/2 second
-		gobject.timeout_add( 500, self.xeyeCb )
+		self.enableEyeTracking( True )
 
 
 	def updateShutterButton( self ):
 		if (self.ca.m.UPDATING):
 			self.shutterButton.set_sensitive( False )
 			self.ca.ui.setWaitCursor()
+			self.enableEyeTracking( False )
 		else:
 			self.shutterButton.set_sensitive( True )
-			self.ca.ui.setDefaultCursor()
+			self.ca.ui.setDefaultCursor( )
+			self.enableEyeTracking( True )
 
 		self.shutterCanvas.update()
 
-	#todo: turn on/off with the notify
+
+	#lazy eye, only looks around every 1/2 second
+	def enableEyeTracking( self, eye ):
+		if (eye and self.eyeTrack == 0):
+			self.eyeTrack = gobject.timeout_add( 500, self.xeyeCb )
+		else:
+			if (self.eyeTrack != 0):
+				gobject.source_remove( self.eyeTrack )
+				self.eyeTrack = 0
+
+
+	#todo: turn on/off with the notify & recording
 	def xeyeCb( self ):
 		x, y = self.ca.get_pointer()
 		sx, sy = self.shutterCanvas.translate_coordinates( self.ca, 0, 0 )
@@ -495,9 +510,10 @@ class UI:
 	def showVideo( self, recd ):
 		self.hideLiveWindows()
 
-		#todo: dynamic switch between x & xv
-		#self.ca.glive.forceResync()
+		#todo: only switch here when first showing a movie
+		self.ca.glive.xv = False
 		self.ca.glive.stop()
+		self.ca.glive.play()
 
 		#self.playLiveWindow.set_glive(self.ca.glive)
 		#self.ca.glive.setXmode(False)

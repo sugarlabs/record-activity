@@ -40,7 +40,7 @@ class P5(gtk.DrawingArea):
 		else:
 			self._looping = True
 			# this is our maybe-threaded refresh (in millisecs)
-			gobject.timeout_add( self._msecUpdate, self.update )	
+			gobject.timeout_add( self._msecUpdate, self.update )
 
 
 	def noloop(self):
