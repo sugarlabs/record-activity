@@ -72,8 +72,8 @@ class UI:
 		#this includes the default sharing tab
 		toolbox = activity.ActivityToolbox(self.ca)
 		self.ca.set_toolbox(toolbox)
-		cToolbar = CaptureToolbar(self.ca)
-		toolbox.add_toolbar( ('Capture & Review'), cToolbar)
+		cToolbar = ModeToolbar(self.ca)
+		toolbox.add_toolbar( ('Mode'), cToolbar)
 		#sToolbar = SearchToolbar(self.ca)
 		#toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
@@ -108,7 +108,7 @@ class UI:
 
 		datePanel = gtk.HBox(spacing=self.inset)
 		infoBox.pack_start(datePanel, expand=False)
-		dateLabel = gtk.Label("Date Taken:")
+		dateLabel = gtk.Label("Date:")
 		datePanel.pack_start(dateLabel, expand=False)
 		self.dateDateLabel = gtk.Label("")
 		self.dateDateLabel.set_alignment(0, .5)
@@ -909,7 +909,7 @@ class ThumbnailCanvas(P5Button):
 			self.ui.deleteThumbSelection( self.recd )
 
 
-class CaptureToolbar(gtk.Toolbar):
+class ModeToolbar(gtk.Toolbar):
 	def __init__(self, pc):
 		gtk.Toolbar.__init__(self)
 		self.ca = pc

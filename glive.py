@@ -141,6 +141,7 @@ class Glive:
 
 		self.pipe().set_state(gst.STATE_PLAYING)
 
+	#todo: why doesn't this always return?
 	def stopRecordingVideo(self):
 		self.pipe().set_state(gst.STATE_NULL)
 		self.nextPipe()
