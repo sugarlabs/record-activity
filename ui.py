@@ -915,8 +915,7 @@ class ModeToolbar(gtk.Toolbar):
 		self.ca = pc
 
 		picButt = RadioToolButton( "menubar_photo" )
-		#todo: tooltips
-		#picButt.set_tooltip("photo")
+		picButt.set_tooltip("photo")
 		picButt.props.sensitive = True
 		picButt.connect('clicked', self._mode_pic_cb)
 		self.insert(picButt, -1)
@@ -924,7 +923,7 @@ class ModeToolbar(gtk.Toolbar):
 
 		vidButt = RadioToolButton( "menubar_video" )
 		vidButt.set_group( picButt )
-		#vidButt.set_tooltip("video")
+		vidButt.set_tooltip("video")
 		vidButt.props.sensitive = True
 		vidButt.connect('clicked', self._mode_vid_cb)
 		self.insert(vidButt, -1)
