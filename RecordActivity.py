@@ -8,17 +8,18 @@ from sugar import util
 from sugar.activity import activity
 from sugar import profile
 
-from controller import Controller
+from model import Model
 from ui import UI
 from mesh import MeshClient
 from mesh import MeshXMLRPCServer
 from mesh import HttpServer
 from glive import Glive
+from gplay import Gplay
 
-class CameraActivity(activity.Activity):
+class RecordActivity(activity.Activity):
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
-		self.activityName = "camera"
+		self.activityName = "record"
 		self.set_title( self.activityName )
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
@@ -35,16 +36,22 @@ class CameraActivity(activity.Activity):
 		key_hash = util._sha_data(key)
 		self.hashed_key = util.printable_hash(key_hash)
 
+		self.httpServer = None
+		self.meshClient = None
+		self.meshXMLRPCServer = None
 		self.glive = Glive( self )
-		self.c = Controller( self )
+		self.gplay = Gplay( self )
+		self.m = Model( self )
 		self.ui = UI( self )
 
 		#listen for meshins
-		self.connect( "shared", self._shared_cb )
-		self.connect( "destroy", self.destroy)
+		self.connect( "shared", self.sharedCb )
+		self.connect( "destroy", self.destroyCb)
+
 		#todo: proper focus listeners to turn camera on / off
 		#self.connect("focus-in-event", self.c.inFocus)
 		#self.connect("focus-out-event", self.c.outFocus)
+		self.connect( "notify::active", self.activeCb )
 
 		#share, share alike
 		#if the prsc knows about an act with my id on the network...
@@ -57,19 +64,20 @@ class CameraActivity(activity.Activity):
 			else:
 				print("! in get_shared() 1")
 				# Wait until you're at the door of the party...
-				self.connect("joined", self._joined_cb)
+				self.connect("joined", self.meshJoinedCb)
 				print("! in get_shared() 2")
 
 		print("leaving constructor")
-		self.c.setup()
+		self.m.selectLatestThumbs(self.m.TYPE_PHOTO)
 		return False
 
-	def _shared_cb( self, activity ):
+
+	def sharedCb( self, activity ):
 		print("1 i am shared")
 		self.startMesh()
 		print("2 i am shared")
 
-	def _joined_cb( self, activity ):
+	def meshJoinedCb( self, activity ):
 		print("1 i am joined")
 		self.startMesh()
 		print("2 i am joined")
@@ -83,6 +91,9 @@ class CameraActivity(activity.Activity):
 		self.meshXMLRPCServer = MeshXMLRPCServer(self)
 		print( "4 startMesh" );
 
+	def activeCb( self, widget, pspec ):
+		print("active?", self.props.active )
+
 #	def inFocus( self, widget, event ):
 #		if (self.SHOW == self.SHOW_LIVE):
 #			self._livevideo.playa.play()
@@ -95,6 +106,6 @@ class CameraActivity(activity.Activity):
 #		if (self.SHOW == self.SHOW_PLAY):
 #			self._playvideo.playa.stop()
 
-	def destroy( self, *args ):
-		#self.c.outFocus()
+	def destroyCb( self, *args ):
+		#self.m.outFocus()
 		gtk.main_quit()

@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- Mode: Python -*-
-# vi:si:et:sw=4:sts=4:ts=4
-
-from controller import Controller
-
 import os
 import gtk
 import pygtk
@@ -52,16 +46,27 @@ class Glive:
 		self.pipe().set_state(gst.STATE_NULL)
 		self.nextPipe()
 
+	def setXmode(self, xv):
+		if (xv):
+			pass
+		else:
+			pass
+
 	def nextPipe(self):
 		if ( len(self.pipes) > 0 ):
 			self.pipe().get_bus().disconnect(self.SYNC_ID)
 			self.pipe().get_bus().remove_signal_watch()
 			self.pipe().get_bus().disable_sync_message_emission()
-	
+
 		n = str(len(self.pipes))
 		pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n)
 
+
 		v4l2src = pipeline.get_by_name('v4l2src_'+n)
+		try:
+			v4l2src.set_property("queue-size", 2)
+		except:
+			pass
 		videoTee = pipeline.get_by_name('videoTee_'+n)
 		xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
 		xvimagesink.set_property("sync", False)
@@ -94,7 +99,17 @@ class Glive:
 
 		self.pipes.append(pipeline)
 
-	def takePic(self):
+	def forceResync(self):
+		bus = self.pipe().get_bus()
+		bus.disconnect(self.SYNC_ID)
+		bus.remove_signal_watch()
+		bus.disable_sync_message_emission()
+
+		bus.enable_sync_message_emission()
+		bus.add_signal_watch()
+		self.SYNC_ID = bus.connect('sync-message::element', self.onSyncMessage)
+
+	def takePhoto(self):
 		if not(self.picExposureOpen):
 			self.picExposureOpen = True
 			self.el("videoTee").link(self.el("picQueue"))
@@ -110,10 +125,10 @@ class Glive:
 
 			self.el("videoTee").unlink(self.el("picQueue"))
 
-			gobject.idle_add(self.savePic, pixBuf)
+			gobject.idle_add(self.savePhoto, pixBuf)
 
-	def savePic(self, pixbuf):
-		self.ca.c.savePic(pixbuf)
+	def savePhoto(self, pixbuf):
+		self.ca.m.savePhoto(pixbuf)
 
 	def startRecordingVideo(self):
 		self.pipe().set_state(gst.STATE_READY)
@@ -175,8 +190,8 @@ class Glive:
 			else:
 				self.record = False
 				self.audio = False
-				self.ca.c.setVid(self.thumbBuf, "/home/olpc/output_"+n+".ogg")
-				self.ca.c.stoppedRecordingVideo()
+				self.ca.m.setVid(self.thumbBuf, "/home/olpc/output_"+n+".ogg")
+				self.ca.m.stoppedRecordingVideo()
 
 	def onMuxedMessage(self, bus, message):
 		t = message.type
@@ -186,12 +201,14 @@ class Glive:
 			self.muxPipe().set_state(gst.STATE_NULL)
 
 			n = str(len(self.muxPipes)-1)
+			#todo: use real paths
 			os.remove(os.path.abspath("/home/olpc/output_"+n+".wav"))
 			os.remove(os.path.abspath("/home/olpc/output_"+n+".ogg"))
-			self.ca.c.setVid(self.thumbBuf, "/home/olpc/mux.ogg")
-			self.ca.c.stoppedRecordingVideo()
+			self.ca.m.saveVideo(self.thumbBuf, "/home/olpc/mux.ogg")
+			self.ca.m.stoppedRecordingVideo()
 
 	def onSyncMessage(self, bus, message):
+		print("cool, got an onSyncMessage")
 		if message.structure is None:
 			return
 		if message.structure.get_name() == 'prepare-xwindow-id':
@@ -204,7 +221,7 @@ class Glive:
 		self.el('videoTee').unlink(self.el('picQueue'))
 		self.pipe().set_state(gst.STATE_PLAYED)
 
-class VideoWindow(gtk.Window):
+class LiveVideoWindow(gtk.Window):
 	def __init__(self):
 		gtk.Window.__init__(self)
 

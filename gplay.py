@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- Mode: Python -*-
-# vi:si:et:sw=4:sts=4:ts=4
-
-from controller import Controller
-
 import gtk
 import pygtk
 pygtk.require('2.0')
@@ -18,9 +12,9 @@ gobject.threads_init()
 
 class Gplay:
 
-	def __init__(self, pop):
-		self._pop = pop
-
+	def __init__(self, pca):
+		self.ca = pca
+		self.window = None
 		self.players = []
 		self.nextMovie()
 
@@ -47,7 +41,7 @@ class Gplay:
 		if message.structure is None:
 			return
 		if message.structure.get_name() == 'prepare-xwindow-id':
-			self._pop.set_sink(message.src)
+			self.window.set_sink(message.src)
 			message.src.set_property('force-aspect-ratio', True)
 
 	def setLocation(self, location):
@@ -73,20 +67,23 @@ class Gplay:
 		self.nextMovie()
 
 
-class PlayVideoSlot(gtk.EventBox):
-
-	def __init__(self, pc):
-		gtk.EventBox.__init__(self)
-
-		self._c = pc
-		self._c._playvideo = self
+class PlayVideoWindow(gtk.Window):
+	def __init__(self):
+		gtk.Window.__init__(self)
 
 		self.imagesink = None
+		self.glive = None
+
 		self.unset_flags(gtk.DOUBLE_BUFFERED)
-		self.playa = Gplay(self)
+		self.set_flags(gtk.APP_PAINTABLE)
+
+	def set_gplay(self, pgplay):
+		self.gplay = pgplay
+		self.gplay.window = self
 
 	def set_sink(self, sink):
 		if (self.imagesink != None):
+			assert self.window.xid
 			self.imagesink = None
 			del self.imagesink
 

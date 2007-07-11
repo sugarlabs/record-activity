@@ -1,4 +1,5 @@
-PYTHON=python2.4
+PYVER=`python -c "import sys; print '%s.%s' % (sys.version_info[0], sys.version_info[1])"`
+PYTHON=python$(PYVER)
 
 GLIB_INCLUDES=`pkg-config --cflags glib-2.0`
 GLIB_LIBS=`pkg-config --libs glib-2.0`

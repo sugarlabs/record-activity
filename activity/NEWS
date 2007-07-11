@@ -1,0 +1,8 @@
+14
+* Multiple video recordings work (jedierikb)
+* Better shutter-click protection (jedierikb)
+
+13
+* New camera activity layout (jedierikb, mikhak, eben)
+* New camera.c for python 2.5 (jedierikb, dcbw)
+* Just a test release, many features do not work (jedierikb)

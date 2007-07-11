@@ -3,13 +3,14 @@ from sugar.presence import presenceservice
 import urlparse
 import urllib
 import posixpath
+import shutil
 
 xmlRpcPort = 8888
 httpPort = 8889
 
 class MeshXMLRPCServer:
-	def __init__( self, pc ):
-		self.c = pc
+	def __init__( self, pca ):
+		self.ca = pca
 
 		#this is ye olde xmlrpc server
 		#listen to and talk through this port for xmlrpc, using this here info
@@ -22,9 +23,9 @@ class MeshXMLRPCServer:
 
 
 class HttpServer(network.GlibTCPServer):
-	def __init__(self, pc):
-		self.c = pc
-		self.rootpath = self.c.journalPath
+	def __init__(self, pca):
+		self.ca = pca
+		self.rootpath = self.ca.journalPath
 		server_address = ("", httpPort)
 		network.GlibTCPServer.__init__(self, server_address, HttpReqHandler);
 
@@ -55,7 +56,7 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		#self.send_header("Content-Disposition", 'attachment; filename="' + str(self.server.c.modFile) )
 
 		#should be abs path... check it 1st
-		fileToSend = self.server.c.modVidF
+		fileToSend = self.server.ca.ui.maxReduceSvgFile
 		return fileToSend
 
 
@@ -63,20 +64,20 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 
 class MeshClient:
 
-	def __init__( self, pc ):
-		self.c = pc
+	def __init__( self, pca ):
+		self.ca = pca
 
 		#stay alert!  buddies might show up at any time!
 		print("1 meshClient");
-		print("1.1 meshClient: ", self.c._frame)
-		self.my_acty = self.c._frame._shared_activity  #_pservice.get_activity(self.c.activity_id)
+		print("1.1 meshClient: ", self.ca)
+		self.my_acty = self.ca._shared_activity #_pservice.get_activity(self.c.activity_id)
 		print("1.2 meshClient: ", self.my_acty)
 		#self.my_acty_id = self.c._frame.activity_id
 		#print( "uid:", self.my_acty_id )
 
-		self.my_acty.connect('buddy-joined', self.buddy_joined_cb)
+		self.my_acty.connect('buddy-joined', self.buddyJoinedCcb)
 		print("1.3")
-		self.my_acty.connect('buddy-left', self.buddy_left_cb)
+		self.my_acty.connect('buddy-left', self.buddyDepartedCcb)
 		print("1.4")
 
 		print("1.5", len(self.my_acty.get_joined_buddies()) )
@@ -88,12 +89,12 @@ class MeshClient:
 
 		print("1.6")
 
-	def buddy_joined_cb( self, activity, buddy ):
+	def buddyJoinedCb( self, activity, buddy ):
 		print ("b", buddy.props.nick)
 		print ("b", buddy.props.ip4_address)
 		print ("b", buddy.props.owner) #me boolean
 
-	def buddy_left_cb( self, activity, buddy ):
+	def buddyDepartedCb( self, activity, buddy ):
 		print ("c", buddy.props.nick)
 		print ("c", buddy.props.ip4_address)
 		print ("c", buddy.props.owner) #me boolean
@@ -102,8 +103,10 @@ class MeshClient:
 	def notifyBudsOfNewPic( self ):
 		for buddy in self.my_acty.get_joined_buddies():
 			bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
-			bud.newPicNotice("bar", reply_handler=self.notifyBudsOfNewPic_cb,
-									error_handler=self.error_cb, user_data=bud)
+			bud.newPicNotice(	"bar",
+								reply_handler=self.notifyBudsOfNewPic_cb,
+								error_handler=self.error_cb,
+								user_data=bud)
 
 	def notifyBudsOfNewPic_cb(self, response, bud):
 		print "Response was %s, user_data was %s" % (response, user_data)
@@ -115,17 +118,17 @@ class MeshClient:
 		#check i am not me, iterate till you get another dude
 		bud = self.my_acty.get_joined_buddies()[0]
 		getter = network.GlibURLDownloader("http://" + str(bud.props.ip4_address) + ":" + str(httpPort) + "/getStuff")
-		getter.connect( "finished", self._download_result_cb, bud )
-		getter.connect( "error", self._download_error_cb, bud )
+		getter.connect( "finished", self.downloadResultCb, bud )
+		getter.connect( "error", self.downloadErrorCb, bud )
 		getter.start()
 
-	def _download_result_cb(self, getter, tempfile, suggested_name, buddy):
+	def downloadResultCb(self, getter, tempfile, suggested_name, buddy):
 		dest = os.path.join(os.path.expanduser("~"), suggested_name)
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 		print( "downloaded and here it is: " + str(dest) )
 		#self._load_document("file://%s" % dest)
 
-	def _download_error_cb(self, getter, err, buddy):
+	def downloadErrorCb(self, getter, err, buddy):
 		logging.debug("Error getting document from %s (%s): %s" % (buddy.props.nick, buddy.props.ip4_address, err))
 		#gobject.idle_add(self._get_document)

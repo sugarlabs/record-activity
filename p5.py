@@ -173,20 +173,3 @@ class P5(gtk.DrawingArea):
 
 	def point( self, ctx, x1, y1 ):
 		self.line( ctx, x1, y1, x1+1, y1 )
-
-
-
-def main():
-	window = gtk.Window()
-	crop = P5()
-	
-	window.add(crop)
-	window.connect("destroy", gtk.main_quit)
-	
-	window.show_all()
-	
-	gtk.main()
-
-
-if __name__ == "__main__":
-	main()

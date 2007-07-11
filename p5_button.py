@@ -109,12 +109,20 @@ class Button:
 		self._img = None
 
 
+	def setOffsets(self, offs):
+		self._offX = offs[0]
+		self._offY = offs[1]
+
+
 	def addActionListener(self, listen):
 		self._listeners.append(listen)
 
 
 	def removeActionListener(self, listen):
-		self._listeners.remove(listen)
+		try:
+			self._listeners.remove(listen)
+		except ValueError:
+			pass
 
 
 	def setActionCommand(self, command):
