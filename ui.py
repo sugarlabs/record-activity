@@ -19,7 +19,7 @@ from sugar import profile
 from sugar import util
 #to get the toolbox
 from sugar.activity import activity
-from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.radiotoolbutton import RadioToolButton
 
 from color import Color
 from p5 import P5
@@ -914,15 +914,17 @@ class ModeToolbar(gtk.Toolbar):
 		gtk.Toolbar.__init__(self)
 		self.ca = pc
 
-		picButt = ToolButton( "menubar_photo" )
-		picButt.set_tooltip("photo")
+		picButt = RadioToolButton( "menubar_photo" )
+		#todo: tooltips
+		#picButt.set_tooltip("photo")
 		picButt.props.sensitive = True
 		picButt.connect('clicked', self._mode_pic_cb)
 		self.insert(picButt, -1)
 		picButt.show()
 
-		vidButt = ToolButton( "menubar_video" )
-		vidButt.set_tooltip("video")
+		vidButt = RadioToolButton( "menubar_video" )
+		vidButt.set_group( picButt )
+		#vidButt.set_tooltip("video")
 		vidButt.props.sensitive = True
 		vidButt.connect('clicked', self._mode_vid_cb)
 		self.insert(vidButt, -1)

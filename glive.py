@@ -21,6 +21,7 @@ class Glive:
 		self.nextPipe()
 		self.thumbPipes = []
 		self.muxPipes = []
+		self.xv = True
 
 	def pipe(self):
 		return self.pipes[ len(self.pipes)-1 ]
@@ -60,7 +61,7 @@ class Glive:
 
 		n = str(len(self.pipes))
 		pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n)
-
+		#todo: add the ximagesink w/ xv conditionals
 
 		v4l2src = pipeline.get_by_name('v4l2src_'+n)
 		try:
@@ -143,6 +144,7 @@ class Glive:
 
 	#todo: why doesn't this always return?
 	def stopRecordingVideo(self):
+		print("glive stopRecordingVideo 1")
 		self.pipe().set_state(gst.STATE_NULL)
 		self.nextPipe()
 
@@ -163,8 +165,10 @@ class Glive:
 		self.thumbPipes.append(thumbline)
 		self.thumbExposureOpen = True
 		thumbline.set_state(gst.STATE_PLAYING)
+		print("glive stopRecordingVideo 2")
 
 	def copyThumbPic(self, fsink, buffer, pad, user_data=None):
+		print("glive copyThumbPic 1")
 		if (self.thumbExposureOpen):
 			self.thumbExposureOpen = False
 			pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
@@ -193,8 +197,11 @@ class Glive:
 				self.audio = False
 				self.ca.m.setVid(self.thumbBuf, "/home/olpc/output_"+n+".ogg")
 				self.ca.m.stoppedRecordingVideo()
+		print("glive copyThumbPic 2")
+
 
 	def onMuxedMessage(self, bus, message):
+		print("glive onMuxedMessage 1")
 		t = message.type
 		if (t == gst.MESSAGE_EOS):
 			self.record = False
@@ -207,6 +214,9 @@ class Glive:
 			os.remove(os.path.abspath("/home/olpc/output_"+n+".ogg"))
 			self.ca.m.saveVideo(self.thumbBuf, "/home/olpc/mux.ogg")
 			self.ca.m.stoppedRecordingVideo()
+
+		print("glive onMuxedMessage 2")
+
 
 	def onSyncMessage(self, bus, message):
 		print("cool, got an onSyncMessage")
