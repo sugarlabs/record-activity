@@ -273,30 +273,6 @@ class UI:
 		#todo: replace #s with variable
 
 		#circle
-		rads = math.atan2(y,x)
-		degs = math.degrees(rads)
-		self.shutterCanvas.goalEyeX = (sw/2) + ( 40*math.cos(rads) )
-		self.shutterCanvas.goalEyeY = (sh/2) - ( 40*math.sin(rads) )
-
-		#oval
-		#if (x==0):
-		#	x = .01
-		#m = y/x
-		#a = 100
-		#b = 50
-		#xx = (a*b)/math.sqrt( (math.pow(a,2)*math.pow(m,2))+math.pow(b,2) )
-		#yy = m*xx
-		#if (x<0):
-		#	xx = -xx
-		#if (y<0):
-		#	yy = -yy
-		#xx = (sw/2) + xx
-		#yy = (sh/2) - yy
-		#print( x, y, xx, yy )
-		#self.shutterCanvas.goalEyeX = xx
-		#self.shutterCanvas.goalEyeY = yy
-
-		self.shutterCanvas.queue_draw()
 		return True
 
 
@@ -326,7 +302,24 @@ class UI:
 
 
 	def playLiveButtonRelease(self, widget, event):
-		print("playLiveButtonRelease")
+		print("playLiveButtonRelease 1")
+		self.hideLiveWindows()
+		self.hidePlayWindows()
+
+		self.stopXstartXV()
+
+		self.liveMode = True
+		self.updateVideoComponents()
+		print("playLiveButtonRelease 2")
+
+
+	def stopXstartXV(self):
+		print("stopXstartXV 1")
+		self.ca.glive.xv = True
+		self.liveVideoWindow.set_glive(self.ca.glive)
+		self.ca.glive.stop()
+		self.ca.glive.play()
+		print("stopXstartXV 2")
 
 
 	def doFullscreen( self ):
@@ -428,6 +421,7 @@ class UI:
 				self.setMaxLocDim( self.liveMaxWindow )
 		else:
 			if (self.liveMode):
+				print("inUpdateComponents... video & live")
 				self.setImgLocDim( self.liveVideoWindow )
 				self.setMaxLocDim( self.liveMaxWindow )
 			else:
@@ -507,21 +501,20 @@ class UI:
 			#todo: note what we're looking at in the case of changes to metadata
 
 
+	#todo: switch back to full video
 	def showVideo( self, recd ):
 		self.hideLiveWindows()
 
-		#todo: only switch here when first showing a movie
-		self.ca.glive.xv = False
-		self.playLiveWindow.set_glive(self.ca.glive)
-		print("stop!")
-		self.ca.glive.stop()
-		print("play!")
-		self.ca.glive.play()
+		#only switch here when first showing a movie
+		print("in showVideo...", self.photoMode)
+		if (self.photoMode):
+			self.ca.glive.xv = False
+			self.playLiveWindow.set_glive(self.ca.glive)
+			self.ca.glive.stop()
+			self.ca.glive.play()
 
 		self.photoMode = False
 		self.liveMode = False
-
-		self.hideLiveWindows()
 		self.updateVideoComponents()
 
 		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
