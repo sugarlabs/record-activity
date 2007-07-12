@@ -18,10 +18,10 @@ class Glive:
 		self.window = None
 		self.ca = pca
 		self.pipes = []
-		self.nextPipe()
+		self.xv = True
 		self.thumbPipes = []
 		self.muxPipes = []
-		self.xv = True
+		self.nextPipe()
 
 	def pipe(self):
 		return self.pipes[ len(self.pipes)-1 ]
@@ -60,13 +60,17 @@ class Glive:
 			self.pipe().get_bus().disable_sync_message_emission()
 
 		n = str(len(self.pipes))
-		pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n +" videoTee_"+n+". ! ximagesink name=ximagesink_"+n)
+		if (self.xv):
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
+		else:
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n +" videoTee_"+n+". ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 
 		v4l2src = pipeline.get_by_name('v4l2src_'+n)
 		try:
 			v4l2src.set_property("queue-size", 2)
 		except:
 			pass
+
 		videoTee = pipeline.get_by_name('videoTee_'+n)
 
 		picQueue = pipeline.get_by_name('picQueue_'+n)
@@ -90,14 +94,17 @@ class Glive:
 		videoTee.unlink(movieQueue)
 		videoTee.unlink(picQueue)
 
-		xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
-		#xvimagesink.set_property("sync", False)
-		ximagesink = pipeline.get_by_name('ximagesink_'+n)
-		#ximagesink.set_property("sync", False)
 		if (self.xv):
-			videoTee.unlink(ximagesink)
+			pass
+			#xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
+			#xvimagesink.set_property("sync", False)
+			#xQueue = pipeline.get_by_name('xQueue_'+n)
+			#videoTee.unlink(xQueue)
 		else:
-			videoTee.unlink(xvimagesink)
+			print("woo hoo, no xv!")
+			ximagesink = pipeline.get_by_name('ximagesink_'+n)
+			#ximagesink.set_property("sync", True)
+		#	videoTee.unlink(xvimagesink)
 
 		bus = pipeline.get_bus()
 		bus.enable_sync_message_emission()
@@ -106,20 +113,12 @@ class Glive:
 
 		self.pipes.append(pipeline)
 
-	def forceResync(self):
-		bus = self.pipe().get_bus()
-		bus.disconnect(self.SYNC_ID)
-		bus.remove_signal_watch()
-		bus.disable_sync_message_emission()
-
-		bus.enable_sync_message_emission()
-		bus.add_signal_watch()
-		self.SYNC_ID = bus.connect('sync-message::element', self.onSyncMessage)
 
 	def takePhoto(self):
 		if not(self.picExposureOpen):
 			self.picExposureOpen = True
 			self.el("videoTee").link(self.el("picQueue"))
+
 
 	def copyPic(self, fsink, buffer, pad, user_data=None):
 		if (self.picExposureOpen):

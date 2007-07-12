@@ -19,7 +19,7 @@ from gplay import Gplay
 class RecordActivity(activity.Activity):
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
-		self.activityName = "record"
+		self.activityName = "Record"
 		self.set_title( self.activityName )
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )

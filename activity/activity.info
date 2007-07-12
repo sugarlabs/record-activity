@@ -1,5 +1,5 @@
 [Activity]
-name = record
+name = Record
 activity_version = 14
 host_version = 1
 icon = activity-record

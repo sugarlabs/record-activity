@@ -433,7 +433,7 @@ class UI:
 			else:
 				self.setImgLocDim( self.playOggWindow )
 				self.setMaxLocDim( self.playMaxWindow )
-				#self.setPipLocDim( self.playLiveWindow )
+				self.setPipLocDim( self.playLiveWindow )
 
 
 	def updateThumbs( self, addToTrayArray, left, start, right ):
@@ -512,18 +512,18 @@ class UI:
 
 		#todo: only switch here when first showing a movie
 		self.ca.glive.xv = False
+		self.playLiveWindow.set_glive(self.ca.glive)
+		print("stop!")
 		self.ca.glive.stop()
+		print("play!")
 		self.ca.glive.play()
-
-		#self.playLiveWindow.set_glive(self.ca.glive)
-		#self.ca.glive.setXmode(False)
-		#self.ca.glive.play()
 
 		self.photoMode = False
 		self.liveMode = False
 
 		self.hideLiveWindows()
 		self.updateVideoComponents()
+
 		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
 		self.ca.gplay.setLocation(videoUrl)
 
@@ -572,6 +572,7 @@ class UI:
 		maxReduceSvgData = self.maxReduceSvgFile.read()
 		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
 		self.maxReduceSvgFile.close()
+
 
 	def loadColors( self ):
 		profileColor = profile.get_color()
