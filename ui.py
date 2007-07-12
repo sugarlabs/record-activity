@@ -524,10 +524,7 @@ class UI:
 		self.liveMode = True
 		self.updateVideoComponents()
 
-		self.nameTextfield.set_text( "" )
-		self.nameTextfield.set_editable( False )
-		self.photographerNameLabel.set_label( "" )
-		self.dateDateLabel.set_label( "" )
+		self.showLiveVideoTags()
 
 
 	def showPhoto( self, recd ):
@@ -548,7 +545,6 @@ class UI:
 			#todo: note what we're looking at in the case of changes to metadata
 
 
-	#todo: switch back to full video
 	def showVideo( self, recd ):
 		self.hideLiveWindows()
 
