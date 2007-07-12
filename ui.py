@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+#todo: mode switch between photo & video
+#todo: mode switch between play video & live video
+#todo: mode switch between play video & record video
+#todo: add the white borders around pip
+
 import gtk
 from gtk import gdk
 import gobject
@@ -56,6 +61,9 @@ class UI:
 		#todo: return this to 160x120 when we see if this is an off by one bug or not
 		self.pipw = 161
 		self.piph = 121
+		self.pipBorderW = self.pipw + 7
+		self.pipBorderH = self.piph + 7
+
 		#maximize size:
 		self.maxw = 49
 		self.maxh = 49
@@ -117,15 +125,17 @@ class UI:
 		self.dateDateLabel.set_alignment(0, .5)
 		datePanel.pack_start(self.dateDateLabel)
 
-		tagPanel = gtk.VBox(spacing=self.inset)
-		tagLabel = gtk.Label("Tags:")
-		tagLabel.set_justify(gtk.JUSTIFY_LEFT)
-		tagLabel.set_alignment(0, .5)
-		tagPanel.pack_start(tagLabel, expand=False)
-		self.tagField = gtk.TextView(buffer=None)
-		self.tagField.set_size_request( -1, 150 )
-		tagPanel.pack_start(self.tagField)
-		infoBox.pack_start(tagPanel, expand=False)
+		self.showLiveVideoTags()
+
+		#tagPanel = gtk.VBox(spacing=self.inset)
+		#tagLabel = gtk.Label("Tags:")
+		#tagLabel.set_justify(gtk.JUSTIFY_LEFT)
+		#tagLabel.set_alignment(0, .5)
+		#tagPanel.pack_start(tagLabel, expand=False)
+		#self.tagField = gtk.TextView(buffer=None)
+		#self.tagField.set_size_request( -1, 150 )
+		#tagPanel.pack_start(self.tagField)
+		#infoBox.pack_start(tagPanel, expand=False)
 
 		self.shutterCanvas = ShutterCanvas(self)
 		self.shutterButton = gtk.Button()
@@ -235,6 +245,13 @@ class UI:
 		self.enableEyeTracking( True )
 
 
+	def showLiveVideoTags( self ):
+		self.nameTextfield.set_text("Live Video")
+		self.nameTextfield.set_editable( False )
+		self.photographerNameLabel.set_label( str(self.ca.nickName) )
+		self.dateDateLabel.set_label( "Today" )
+
+
 	def updateShutterButton( self ):
 		if (self.ca.m.UPDATING):
 			self.shutterButton.set_sensitive( False )
@@ -250,16 +267,19 @@ class UI:
 
 	#lazy eye, only looks around every 1/2 second
 	def enableEyeTracking( self, eye ):
+		#alas, no eye tracking for now...
+		return
+
 		if (eye and self.eyeTrack == 0):
-			self.eyeTrack = gobject.timeout_add( 500, self.xeyeCb )
+			self.eyeTrack = gobject.timeout_add( 500, self.xEyeCb )
 		else:
 			if (self.eyeTrack != 0):
 				gobject.source_remove( self.eyeTrack )
 				self.eyeTrack = 0
 
 
-	#todo: turn on/off with the notify & recording
-	def xeyeCb( self ):
+	#todo: turn xeye on/off with the notify & recording
+	def xEyeCb( self ):
 		x, y = self.ca.get_pointer()
 		sx, sy = self.shutterCanvas.translate_coordinates( self.ca, 0, 0 )
 		allocation = self.shutterCanvas.allocation
@@ -271,8 +291,11 @@ class UI:
 		y = sy - y
 
 		#todo: replace #s with variable
+		rads = math.atan2(y,x)
+		degs = math.degrees(rads)
+		self.shutterCanvas.goalEyeX = (sw/2) + ( 40*math.cos(rads) )
+		self.shutterCanvas.goalEyeY = (sh/2) - ( 40*math.sin(rads) )
 
-		#circle
 		return True
 
 
@@ -315,11 +338,28 @@ class UI:
 
 	def stopXstartXV(self):
 		print("stopXstartXV 1")
+		if (self.ca.glive.xv):
+			print("already stopXstartXV")
+			return
+
 		self.ca.glive.xv = True
 		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.ca.glive.stop()
 		self.ca.glive.play()
 		print("stopXstartXV 2")
+
+
+	def stopXVstartX(self):
+		print("stopXVstartX 1")
+		if (not self.ca.glive.xv):
+			print("already stopXVstartX")
+			return
+
+		self.ca.glive.xv = False
+		self.playLiveWindow.set_glive(self.ca.glive)
+		self.ca.glive.stop()
+		self.ca.glive.play()
+		print("stopXVstartX 2")
 
 
 	def doFullscreen( self ):
@@ -381,10 +421,18 @@ class UI:
 		self.ca.m.doShutter()
 
 
+	#this is called when a menubar button is clicked
 	def updateModeChange(self):
 		self.liveMode = True
 		self.fullScreen = False
 		self.photoMode = (self.ca.m.MODE == self.ca.m.MODE_PHOTO)
+
+		#set up the x & xv x-ition (if need be)
+		if (self.photoMode):
+			self.stopXstartXV()
+		else:
+			self.stopXVstartX()
+
 		self.updateVideoComponents()
 
 
@@ -421,8 +469,7 @@ class UI:
 				self.setMaxLocDim( self.liveMaxWindow )
 		else:
 			if (self.liveMode):
-				print("inUpdateComponents... video & live")
-				self.setImgLocDim( self.liveVideoWindow )
+				self.setImgLocDim( self.playLiveWindow )
 				self.setMaxLocDim( self.liveMaxWindow )
 			else:
 				self.setImgLocDim( self.playOggWindow )
@@ -925,25 +972,25 @@ class ModeToolbar(gtk.Toolbar):
 		self.ca = pc
 
 		picButt = RadioToolButton( "menubar_photo" )
-		picButt.set_tooltip("photo")
+		picButt.set_tooltip("Photo")
 		picButt.props.sensitive = True
-		picButt.connect('clicked', self._mode_pic_cb)
+		picButt.connect('clicked', self.modePhotoCb)
 		self.insert(picButt, -1)
 		picButt.show()
 
 		vidButt = RadioToolButton( "menubar_video" )
 		vidButt.set_group( picButt )
-		vidButt.set_tooltip("video")
+		vidButt.set_tooltip("Video")
 		vidButt.props.sensitive = True
-		vidButt.connect('clicked', self._mode_vid_cb)
+		vidButt.connect('clicked', self.modeVideoCb)
 		self.insert(vidButt, -1)
 		vidButt.show()
 
 
-	def _mode_vid_cb(self, button):
+	def modeVideoCb(self, button):
 		self.ca.m.doVideoMode()
 
-	def _mode_pic_cb(self, button):
+	def modePhotoCb(self, button):
 		self.ca.m.doPhotoMode()
 
 
