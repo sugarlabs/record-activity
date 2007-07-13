@@ -325,14 +325,18 @@ class UI:
 
 
 	def playLiveButtonRelease(self, widget, event):
+		#if you are big on the screen, don't go changing anything, ok?
+		if (self.liveMode):
+			return
+
 		print("playLiveButtonRelease 1")
-		self.hideLiveWindows()
-		self.hidePlayWindows()
 
-		self.stopXstartXV()
-
+		#todo: stop the video that's playing
+		self.ca.gplay.stop()
 		self.liveMode = True
+		self.startXV( self.playLiveWindow )
 		self.updateVideoComponents()
+
 		print("playLiveButtonRelease 2")
 
 
@@ -345,10 +349,14 @@ class UI:
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 
+
+		self.startXV( self.liveVideoWindow )
 		#set up the x & xv x-ition (if need be)
 		if (self.photoMode):
 			self.startXV( self.liveVideoWindow )
 		else:
+			#todo: stop the video that's playing
+			self.ca.gplay.stop()
 			self.startXV( self.playLiveWindow )
 
 		self.updateVideoComponents()
@@ -547,18 +555,16 @@ class UI:
 			#todo: note what we're looking at in the case of changes to metadata
 
 
+	#todo: fix this, it makes no sense...
 	def showVideo( self, recd ):
-		self.hideLiveWindows()
 
-		#only switch here when first showing a movie
-		print("in showVideo...", self.photoMode)
-		if (self.photoMode):
+		if (not self.ca.glive.xv):
 			self.ca.glive.xv = False
-			self.playLiveWindow.set_glive(self.ca.glive)
+			#redundant
+			#self.playLiveWindow.set_glive(self.ca.glive)
 			self.ca.glive.stop()
 			self.ca.glive.play()
 
-		self.photoMode = False
 		self.liveMode = False
 		self.updateVideoComponents()
 

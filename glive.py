@@ -95,9 +95,8 @@ class Glive:
 		videoTee.unlink(picQueue)
 
 		if (self.xv):
-			pass
-			#xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
-			#xvimagesink.set_property("sync", False)
+			xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
+			xvimagesink.set_property("sync", False)
 			#xQueue = pipeline.get_by_name('xQueue_'+n)
 			#videoTee.unlink(xQueue)
 		else:
@@ -112,6 +111,7 @@ class Glive:
 		self.SYNC_ID = bus.connect('sync-message::element', self.onSyncMessage)
 
 		self.pipes.append(pipeline)
+		print("added a pipe...", len(self.pipes))
 
 
 	def takePhoto(self):
@@ -159,7 +159,10 @@ class Glive:
 			thumbline.get_by_name( "thumbFakesink_"+n ).disconnect( self.THUMB_HANDOFF )
 
 		n = str(len(self.thumbPipes))
-		thumbline = gst.parse_launch('filesrc location=/home/olpc/output_'+n+'.ogg name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n)
+		f = str(len(self.pipes)-2)
+		line = 'filesrc location=/home/olpc/output_'+f+'.ogg name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n
+		print( line )
+		thumbline = gst.parse_launch(line)
 		thumbQueue = thumbline.get_by_name('thumbQueue_'+n)
 		thumbQueue.set_property("leaky", True)
 		thumbQueue.set_property("max-size-buffers", 1)
@@ -169,7 +172,7 @@ class Glive:
 		thumbFakesink.set_property("signal-handoffs", True)
 		self.thumbPipes.append(thumbline)
 		self.thumbExposureOpen = True
-		thumbline.set_state(gst.STATE_PLAYING)
+		gobject.idle_add( thumbline.set_state, gst.STATE_PLAYING )
 		print("glive stopRecordingVideo 2")
 
 	def copyThumbPic(self, fsink, buffer, pad, user_data=None):
@@ -183,14 +186,15 @@ class Glive:
 			del pic
 			self.thumbEl('thumbTee').unlink(self.thumbEl('thumbQueue'))
 
+			n = str(len(self.muxPipes))
+			f = str(len(self.pipes)-2)
 			if (self.audio):
 				if ( len(self.muxPipes) > 0 ):
 					self.muxPipe().get_bus().disable_sync_message_emission()
 					self.muxPipe().get_bus().disconnect(self.MUX_MESSAGE_ID)
 					self.muxPipe().get_bus().remove_signal_watch()
 
-				n = str(len(self.muxPipes))
-				muxline = gst.parse_launch('filesrc location=/home/olpc/output_'+n+'.ogg name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=/home/olpc/mux.ogg name=muxFilesink_'+n+' filesrc location=/home/olpc/output_'+n+'.wav name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
+				muxline = gst.parse_launch('filesrc location=/home/olpc/output_'+f+'.ogg name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=/home/olpc/mux.ogg name=muxFilesink_'+n+' filesrc location=/home/olpc/output_'+f+'.wav name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
 				muxBus = muxline.get_bus()
 				muxBus.enable_sync_message_emission()
 				muxBus.add_signal_watch()
@@ -200,7 +204,7 @@ class Glive:
 			else:
 				self.record = False
 				self.audio = False
-				self.ca.m.setVid(self.thumbBuf, "/home/olpc/output_"+n+".ogg")
+				self.ca.m.setVid(self.thumbBuf, "/home/olpc/output_"+f+".ogg")
 				self.ca.m.stoppedRecordingVideo()
 		print("glive copyThumbPic 2")
 
@@ -214,13 +218,16 @@ class Glive:
 			self.muxPipe().set_state(gst.STATE_NULL)
 
 			n = str(len(self.muxPipes)-1)
+			f = str(len(self.pipes)-2)
+
 			#todo: use real paths
-			os.remove(os.path.abspath("/home/olpc/output_"+n+".wav"))
-			os.remove(os.path.abspath("/home/olpc/output_"+n+".ogg"))
+			#todo: delete all the files
+			os.remove(os.path.abspath("/home/olpc/output_"+f+".wav"))
+			os.remove(os.path.abspath("/home/olpc/output_"+f+".ogg"))
 			self.ca.m.saveVideo(self.thumbBuf, "/home/olpc/mux.ogg")
 			self.ca.m.stoppedRecordingVideo()
+			print("glive onMuxedMessage 2.5 ...", f)
 
-		print("glive onMuxedMessage 2")
 
 
 	def onSyncMessage(self, bus, message):
