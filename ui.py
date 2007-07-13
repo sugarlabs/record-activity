@@ -340,6 +340,29 @@ class UI:
 		print("playLiveButtonRelease 2")
 
 
+	def recordVideo( self ):
+		#show the clock while this gets set up
+		self.hideLiveWindows()
+		self.hidePlayWindows()
+
+		self.stopPlayVideoToRecord()
+
+		#this blocks while recording gets started
+		self.ca.glive.startRecordingVideo()
+
+		#and now we show the live/recorded video at 640x480, setting liveMode on in case we were watching vhs earlier
+		self.liveMode = True
+		self.updateVideoComponents()
+
+	def stopPlayVideoToRecord( self ):
+		print( "stopPlayVideoToRecord 1", self.ca.ui.liveMode )
+		#if we're watching a movie...
+		if (not self.ca.ui.liveMode):
+			#stop the movie
+			self.ca.gplay.stop()
+			self.startXV( self.playLiveWindow )
+
+
 	#this is called when a menubar button is clicked
 	def updateModeChange(self):
 		self.liveMode = True

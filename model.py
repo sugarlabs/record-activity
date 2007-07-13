@@ -158,17 +158,7 @@ class Model:
 		self.setUpdating( True )
 		self.RECORDING = True
 
-		#show the clock while this gets set up
-		self.ca.ui.hideLiveWindows()
-		self.ca.ui.hidePlayWindows()
-
-		#todo: maybe need to thread this until the windows are hidden in the call above?
-		#this blocks while recording gets started
-		self.ca.glive.startRecordingVideo()
-
-		#and now we show the live/recorded video at 640x480
-		self.ca.ui.photoMode = False
-		self.ca.ui.updateVideoComponents()
+		self.ca.ui.recordVideo()
 
 		self.setUpdating( False )
 		print("startRecordingVideo 2")
