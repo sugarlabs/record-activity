@@ -396,9 +396,10 @@ class Model:
 		self.MODE = self.MODE_VIDEO
 		self.selectLatestThumbs(self.TYPE_VIDEO)
 
-		#show the default picture maybe?
-		#update what we're showing in the ui?
+		self.setUpdating(True)
 		self.ca.ui.updateModeChange()
+		self.setUpdating(False)
+
 
 	def doPhotoMode( self ):
 		if (self.MODE == self.MODE_PHOTO):
@@ -407,9 +408,10 @@ class Model:
 		#assign your new mode
 		self.MODE = self.MODE_PHOTO
 		self.selectLatestThumbs(self.TYPE_PHOTO)
-		self.ca.ui.updateModeChange()
 
-		#show the default picture maybe?
+		self.setUpdating(True)
+		self.ca.ui.updateModeChange()
+		self.setUpdating(False)
 
 
 	def setConstants( self ):

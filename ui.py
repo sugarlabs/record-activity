@@ -336,14 +336,31 @@ class UI:
 		print("playLiveButtonRelease 2")
 
 
-	def stopXstartXV(self):
+	#this is called when a menubar button is clicked
+	def updateModeChange(self):
+		self.liveMode = True
+		self.fullScreen = False
+		self.photoMode = (self.ca.m.MODE == self.ca.m.MODE_PHOTO)
+
+		self.hideLiveWindows()
+		self.hidePlayWindows()
+
+		#set up the x & xv x-ition (if need be)
+		if (self.photoMode):
+			self.startXV( self.liveVideoWindow )
+		else:
+			self.startXV( self.playLiveWindow )
+
+		self.updateVideoComponents()
+
+
+	def startXV(self, window):
 		print("stopXstartXV 1")
-		if (self.ca.glive.xv):
-			print("already stopXstartXV")
+		if (self.ca.glive.xv and self.ca.glive.window == window):
 			return
 
 		self.ca.glive.xv = True
-		self.liveVideoWindow.set_glive(self.ca.glive)
+		window.set_glive(self.ca.glive)
 		self.ca.glive.stop()
 		self.ca.glive.play()
 		print("stopXstartXV 2")
@@ -421,21 +438,6 @@ class UI:
 		self.ca.m.doShutter()
 
 
-	#this is called when a menubar button is clicked
-	def updateModeChange(self):
-		self.liveMode = True
-		self.fullScreen = False
-		self.photoMode = (self.ca.m.MODE == self.ca.m.MODE_PHOTO)
-
-		#set up the x & xv x-ition (if need be)
-		if (self.photoMode):
-			self.stopXstartXV()
-		else:
-			self.stopXVstartX()
-
-		self.updateVideoComponents()
-
-
 	def checkReadyToSetup(self):
 		if (self.exposed and self.mapped):
 			self.updateVideoComponents()
@@ -470,7 +472,7 @@ class UI:
 		else:
 			if (self.liveMode):
 				self.setImgLocDim( self.playLiveWindow )
-				self.setMaxLocDim( self.liveMaxWindow )
+				self.setMaxLocDim( self.playMaxWindow )
 			else:
 				self.setImgLocDim( self.playOggWindow )
 				self.setMaxLocDim( self.playMaxWindow )
@@ -719,7 +721,9 @@ class ShutterCanvas(P5):
 		eyeDim = self.ui.eyeSvg.get_dimension_data()
 		lidW = eyeDim[0]
 		lidH = eyeDim[1]
-		xSc = h/lidH
+		#todo: which is smaller?  make the eye fit
+		#xSc = h/lidH
+		xSc = w/lidW
 		ctx.translate( (w/2)-((xSc*lidW)/2), (h/2)-((xSc*lidH)/2) )
 		ctx.scale( xSc, xSc )
 
