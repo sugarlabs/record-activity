@@ -558,10 +558,10 @@ class UI:
 	#todo: fix this, it makes no sense...
 	def showVideo( self, recd ):
 
-		if (not self.ca.glive.xv):
+		if (self.ca.glive.xv):
 			self.ca.glive.xv = False
-			#redundant
-			#self.playLiveWindow.set_glive(self.ca.glive)
+			#redundant (?)
+			self.playLiveWindow.set_glive(self.ca.glive)
 			self.ca.glive.stop()
 			self.ca.glive.play()
 
