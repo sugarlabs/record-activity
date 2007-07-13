@@ -154,14 +154,12 @@ class Model:
 
 
 	def startRecordingVideo( self ):
-		print("startRecordingVideo 1")
 		self.setUpdating( True )
 		self.RECORDING = True
 
 		self.ca.ui.recordVideo()
 
 		self.setUpdating( False )
-		print("startRecordingVideo 2")
 
 
 	def setUpdating( self, upd ):
@@ -169,18 +167,15 @@ class Model:
 		self.ca.ui.updateShutterButton()
 
 	def stopRecordingVideo( self ):
-		print("stopRecordingVideo 1")
 		self.setUpdating( True )
 
 		self.ca.ui.hideLiveWindows()
 		self.ca.ui.hidePlayWindows()
 
 		self.ca.glive.stopRecordingVideo()
-		print("stopRecordingVideo 2")
 
 
 	def saveVideo( self, pixbuf, tempPath ):
-		print("saveVideo 1")
 		recd = self.createNewRecorded( self.TYPE_VIDEO )
 
 		oggPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
@@ -202,7 +197,6 @@ class Model:
 		self.ca.ui.updateVideoComponents()
 		self.ca.glive.play()
 		self.RECORDING = False
-		print("saveVideo 2")
 
 	def stoppedRecordingVideo( self ):
 		self.setUpdating( False )
@@ -255,7 +249,6 @@ class Model:
 		if (type == self.TYPE_VIDEO):
 			nowtime_fn = nowtime_s + ".ogg"
 			recd.mediaFilename = nowtime_fn
-			print( "made the filename: " + recd.mediaFilename )
 
 		thumb_fn = nowtime_s + "_thumb.jpg"
 		recd.thumbFilename = thumb_fn

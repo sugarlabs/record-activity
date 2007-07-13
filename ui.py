@@ -58,9 +58,8 @@ class UI:
 		self.vw = 640
 		self.vh = 480
 		#pip size:
-		#todo: return this to 160x120 when we see if this is an off by one bug or not
-		self.pipw = 161
-		self.piph = 121
+		self.pipw = 160
+		self.piph = 120
 		self.pipBorderW = self.pipw + 7
 		self.pipBorderH = self.piph + 7
 
@@ -220,7 +219,7 @@ class UI:
 		self.playLiveWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playLiveWindow.set_decorated(False)
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.playLiveWindow.connect("button_release_event", self.playLiveButtonRelease)
+		self.playLiveWindow.connect("button_release_event", self.playLiveButtonReleaseCb)
 
 		self.playMaxWindow = MaxWindow(self, False)
 		self.playMaxWindow.set_transient_for(self.playLiveWindow)
@@ -324,20 +323,18 @@ class UI:
 			self.updateVideoComponents()
 
 
-	def playLiveButtonRelease(self, widget, event):
+	def playLiveButtonReleaseCb(self, widget, event):
 		#if you are big on the screen, don't go changing anything, ok?
 		if (self.liveMode):
 			return
 
-		print("playLiveButtonRelease 1")
-
-		#todo: stop the video that's playing
 		self.ca.gplay.stop()
 		self.liveMode = True
 		self.startXV( self.playLiveWindow )
+
+		#might need to hide video components here
 		self.updateVideoComponents()
 
-		print("playLiveButtonRelease 2")
 
 
 	def recordVideo( self ):
@@ -355,7 +352,6 @@ class UI:
 		self.updateVideoComponents()
 
 	def stopPlayVideoToRecord( self ):
-		print( "stopPlayVideoToRecord 1", self.ca.ui.liveMode )
 		#if we're watching a movie...
 		if (not self.ca.ui.liveMode):
 			#stop the movie
@@ -383,7 +379,6 @@ class UI:
 
 
 	def startXV(self, window):
-		print("stopXstartXV 1")
 		if (self.ca.glive.xv and self.ca.glive.window == window):
 			return
 
@@ -391,20 +386,6 @@ class UI:
 		window.set_glive(self.ca.glive)
 		self.ca.glive.stop()
 		self.ca.glive.play()
-		print("stopXstartXV 2")
-
-
-	def stopXVstartX(self):
-		print("stopXVstartX 1")
-		if (not self.ca.glive.xv):
-			print("already stopXVstartX")
-			return
-
-		self.ca.glive.xv = False
-		self.playLiveWindow.set_glive(self.ca.glive)
-		self.ca.glive.stop()
-		self.ca.glive.play()
-		print("stopXVstartX 2")
 
 
 	def doFullscreen( self ):
@@ -486,7 +467,6 @@ class UI:
 		self.checkReadyToSetup( )
 
 
-	#todo: hide things?
 	def updateVideoComponents( self ):
 		if (self.photoMode):
 			if (self.liveMode):
@@ -499,6 +479,8 @@ class UI:
 				self.setMaxLocDim( self.liveMaxWindow )
 		else:
 			if (self.liveMode):
+				self.playOggWindow.resize(self.vw, self.vh)
+				self.playOggWindow.move(-(self.vw+10), -(self.vh+10))
 				self.setImgLocDim( self.playLiveWindow )
 				self.setMaxLocDim( self.playMaxWindow )
 			else:
