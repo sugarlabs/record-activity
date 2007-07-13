@@ -349,14 +349,11 @@ class UI:
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 
-
-		self.startXV( self.liveVideoWindow )
 		#set up the x & xv x-ition (if need be)
 		if (self.photoMode):
+			self.ca.gplay.stop()
 			self.startXV( self.liveVideoWindow )
 		else:
-			#todo: stop the video that's playing
-			self.ca.gplay.stop()
 			self.startXV( self.playLiveWindow )
 
 		self.updateVideoComponents()
@@ -561,7 +558,7 @@ class UI:
 		if (self.ca.glive.xv):
 			self.ca.glive.xv = False
 			#redundant (?)
-			self.playLiveWindow.set_glive(self.ca.glive)
+			#self.playLiveWindow.set_glive(self.ca.glive)
 			self.ca.glive.stop()
 			self.ca.glive.play()
 
