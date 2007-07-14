@@ -62,8 +62,9 @@ class UI:
 		#pip size:
 		self.pipw = 160
 		self.piph = 120
-		self.pipBorderW = self.pipw + 7
-		self.pipBorderH = self.piph + 7
+		self.pipBorder = 6
+		self.pipBorderW = self.pipw + (self.pipBorder*2)
+		self.pipBorderH = self.piph + (self.pipBorder*2)
 
 		#maximize size:
 		self.maxw = 49
@@ -81,8 +82,8 @@ class UI:
 		#this includes the default sharing tab
 		toolbox = activity.ActivityToolbox(self.ca)
 		self.ca.set_toolbox(toolbox)
-		cToolbar = ModeToolbar(self.ca)
-		toolbox.add_toolbar( ('Mode'), cToolbar)
+		self.modeToolbar = ModeToolbar(self.ca)
+		toolbox.add_toolbar( ('Mode'), self.modeToolbar )
 		#sToolbar = SearchToolbar(self.ca)
 		#toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
@@ -126,11 +127,17 @@ class UI:
 
 		self.shutterButton = gtk.Button()
 		self.shutterButton.set_image( self.shutterImg )
+		#todo: insensitive at launch?
 		self.shutterButton.connect("clicked", self.shutterClickCb)
 		shutterBox = gtk.EventBox()
 		shutterBox.add( self.shutterButton )
 		shutterBox.set_border_width( 50 )
 		infoBox.pack_start(shutterBox, expand=True)
+
+		#todo: dynamically query/set size
+		spaceTaker = gtk.HBox()
+		spaceTaker.set_size_request( -1, 85 )
+		infoBox.pack_start(spaceTaker, expand=True)
 
 		#video, scrubber etc on right
 		videoBox = gtk.VBox()
@@ -179,8 +186,14 @@ class UI:
 		self.livePhotoWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.livePhotoWindow.set_decorated(False)
 
+		#pipbackground here
+		self.livePipBgdWindow = PipWindow(self)
+		self.livePipBgdWindow.set_transient_for(self.ca)
+		self.livePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+		self.livePipBgdWindow.set_decorated(False)
+
 		self.liveVideoWindow = LiveVideoWindow()
-		self.liveVideoWindow.set_transient_for(self.livePhotoWindow)
+		self.liveVideoWindow.set_transient_for(self.livePipBgdWindow)
 		self.liveVideoWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.liveVideoWindow.set_decorated(False)
 		self.liveVideoWindow.set_glive(self.ca.glive)
@@ -201,8 +214,15 @@ class UI:
 		self.playOggWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playOggWindow.set_decorated(False)
 
+		#pipbackground here
+		self.playLivePipBgdWindow = PipWindow(self)
+		self.playLivePipBgdWindow.modify_bg( gtk.STATE_NORMAL, self.colorWhite.gColor )
+		self.playLivePipBgdWindow.set_transient_for(self.playOggWindow)
+		self.playLivePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+		self.playLivePipBgdWindow.set_decorated(False)
+
 		self.playLiveWindow = LiveVideoWindow()
-		self.playLiveWindow.set_transient_for(self.playOggWindow)
+		self.playLiveWindow.set_transient_for(self.playLivePipBgdWindow)
 		self.playLiveWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playLiveWindow.set_decorated(False)
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
@@ -228,8 +248,6 @@ class UI:
 		self.playLiveWindow.show_all()
 		self.playMaxWindow.show_all()
 
-		self.enableEyeTracking( True )
-
 
 	def showLiveVideoTags( self ):
 		self.nameTextfield.set_label("Live Video")
@@ -238,14 +256,19 @@ class UI:
 
 
 	def updateShutterButton( self ):
+		self.shutterButton.set_sensitive( not self.ca.m.UPDATING )
+		self.modeToolbar.picButt.set_sensitive( not self.ca.m.UPDATING )
+		self.modeToolbar.vidButt.set_sensitive( not self.ca.m.UPDATING )
+
 		if (self.ca.m.UPDATING):
-			self.shutterButton.set_sensitive( False )
 			self.ca.ui.setWaitCursor()
-			self.enableEyeTracking( False )
 		else:
-			self.shutterButton.set_sensitive( True )
 			self.ca.ui.setDefaultCursor( )
-			self.enableEyeTracking( True )
+
+		if (self.ca.m.RECORDING):
+			self.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+		else:
+			self.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
 
 	def hideLiveWindows( self ):
@@ -309,8 +332,9 @@ class UI:
 			self.startXV( self.playLiveWindow )
 
 
-	#this is called when a menubar button is clicked
+
 	def updateModeChange(self):
+		#this is called when a menubar button is clicked
 		self.liveMode = True
 		self.fullScreen = False
 		self.photoMode = (self.ca.m.MODE == self.ca.m.MODE_PHOTO)
@@ -362,10 +386,19 @@ class UI:
 			win.move( self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			win.move( vPos[0]+self.inset, (vPos[1]+self.vh)-(self.piph+self.inset) )
+			win.move( vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
 
 		win.show_all()
 
+	def setPipBgdLocDim( self, win ):
+		win.resize( self.pipBorderW, self.pipBorderH )
+		if (self.fullScreen):
+			win.move( self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder))
+		else:
+			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
+			win.move( vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder) )
+
+		win.show_all()
 
 	def setMaxLocDim( self, win ):
 		if (self.fullScreen):
@@ -403,15 +436,15 @@ class UI:
 			self.ca.glive.play()
 
 
-	#when your parent window is ready, turn on the feed of live video
 	def mapEvent( self, widget, event ):
+		#when your parent window is ready, turn on the feed of live video
 		self.liveVideoWindow.disconnect(self.mapId)
 		self.mapped = True
 		self.checkReadyToSetup()
 
 
-	#initial setup of the panels
 	def exposeEvent( self, widget, event):
+		#initial setup of the panels
 		self.ca.disconnect(self.exposeId)
 		self.exposed = True
 		self.checkReadyToSetup( )
@@ -425,6 +458,7 @@ class UI:
 				self.setMaxLocDim( self.liveMaxWindow )
 			else:
 				self.setImgLocDim( self.livePhotoWindow )
+				self.setPipBgdLocDim( self.livePipBgdWindow )
 				self.setPipLocDim( self.liveVideoWindow )
 				self.setMaxLocDim( self.liveMaxWindow )
 		else:
@@ -436,6 +470,7 @@ class UI:
 			else:
 				self.setImgLocDim( self.playOggWindow )
 				self.setMaxLocDim( self.playMaxWindow )
+				self.setPipBgdLocDim( self.playLivePipBgdWindow )
 				self.setPipLocDim( self.playLiveWindow )
 
 
@@ -469,8 +504,8 @@ class UI:
 		self.ca.m.setupThumbs( self.ca.m.MODE, self.rightThumbMove, self.rightThumbMove+self.numThumbs )
 
 
-	#do we need to know the type, since we're showing based on the mode of the app?
 	def showThumbSelection( self, recd ):
+		#do we need to know the type, since we're showing based on the mode of the app?
 		if (recd.type == self.ca.m.TYPE_PHOTO):
 			self.showPhoto( recd )
 		if (recd.type == self.ca.m.TYPE_VIDEO):
@@ -505,7 +540,6 @@ class UI:
 
 
 	def showVideo( self, recd ):
-
 		if (self.ca.glive.xv):
 			self.ca.glive.xv = False
 			#redundant (?)
@@ -549,11 +583,6 @@ class UI:
 		self.modWaitSvg = self.loadSvg( modWaitSvgData, None, None )
 		modWaitSvgFile.close()
 
-		eyeSvgFile = open(os.path.join(self.ca.gfxPath, 'eye.svg'), 'r')
-		eyeSvgData = eyeSvgFile.read()
-		self.eyeSvg = self.loadSvg(eyeSvgData, None, None )
-		eyeSvgFile.close()
-
 		maxEnlargeSvgFile = open(os.path.join(self.ca.gfxPath, 'max-enlarge.svg'), 'r')
 		maxEnlargeSvgData = maxEnlargeSvgFile.read()
 		self.maxEnlargeSvg = self.loadSvg(maxEnlargeSvgData, None, None )
@@ -565,7 +594,7 @@ class UI:
 		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
 		self.maxReduceSvgFile.close()
 
-		shutterImgFile = os.path.join(self.ca.gfxPath, 'shutter.png')
+		shutterImgFile = os.path.join(self.ca.gfxPath, 'shutter_button.png')
 		shutterImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterImgFile)
 		self.shutterImg = gtk.Image()
 		self.shutterImg.set_from_pixbuf( shutterImgPixbuf )
@@ -668,8 +697,17 @@ class PipWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.pipButton = PipButton(self.ui)
-		self.add( self.pipButton )
+		self.pipCanvas = PipCanvas(self.ui)
+		self.add( self.pipCanvas )
+
+
+class PipCanvas(P5):
+	def __init__(self, ui):
+		P5.__init__(self)
+		self.ui = ui
+
+	def draw(self, ctx, w, h):
+		self.background( ctx, self.ui.colorWhite, w, h )
 
 
 class MaxWindow(gtk.Window):
@@ -678,39 +716,6 @@ class MaxWindow(gtk.Window):
 		self.ui = ui
 		self.maxButton = MaxButton(self.ui, play)
 		self.add( self.maxButton )
-
-
-#need two sizes for this guy -- max'd and min'd
-class PipButton(P5Button):
-	def __init__(self, ui):
-		P5Button.__init__(self)
-		self.ui = ui
-		xs = []
-		ys = []
-		xs.append(0)
-		ys.append(0)
-		xs.append(self.ui.pipw)
-		ys.append(0)
-		xs.append(self.ui.pipw)
-		ys.append(self.ui.piph)
-		xs.append(0)
-		ys.append(self.ui.piph)
-		poly = Polygon( xs, ys )
-		butt = Button( poly, 0, 0)
-		butt.addActionListener( self )
-		self.pipS = "pip"
-		butt.setActionCommand( self.pipS )
-		self._butts.append( butt )
-
-	def draw(self, ctx, w, h):
-		c = Color( )
-		c.init_rgba( 0, 255, 0, 255 )
-		self.background( ctx, c, w, h )
-
-	def fireButton(self, actionCommand):
-		if (actionCommand == self.pipS):
-			print("pip!")
-
 
 class MaxButton(P5Button):
 	def __init__(self, ui, play):
@@ -864,20 +869,20 @@ class ModeToolbar(gtk.Toolbar):
 		gtk.Toolbar.__init__(self)
 		self.ca = pc
 
-		picButt = RadioToolButton( "menubar_photo" )
-		picButt.set_tooltip("Photo")
-		picButt.props.sensitive = True
-		picButt.connect('clicked', self.modePhotoCb)
-		self.insert(picButt, -1)
-		picButt.show()
+		self.picButt = RadioToolButton( "menubar_photo" )
+		self.picButt.set_tooltip("Photo")
+		self.picButt.props.sensitive = True
+		self.picButt.connect('clicked', self.modePhotoCb)
+		self.insert(self.picButt, -1)
+		self.picButt.show()
 
-		vidButt = RadioToolButton( "menubar_video" )
-		vidButt.set_group( picButt )
-		vidButt.set_tooltip("Video")
-		vidButt.props.sensitive = True
-		vidButt.connect('clicked', self.modeVideoCb)
-		self.insert(vidButt, -1)
-		vidButt.show()
+		self.vidButt = RadioToolButton( "menubar_video" )
+		self.vidButt.set_group( self.picButt )
+		self.vidButt.set_tooltip("Video")
+		self.vidButt.props.sensitive = True
+		self.vidButt.connect('clicked', self.modeVideoCb)
+		self.insert(self.vidButt, -1)
+		self.vidButt.show()
 
 
 	def modeVideoCb(self, button):
@@ -891,6 +896,3 @@ class SearchToolbar(gtk.Toolbar):
 	def __init__(self, pc):
 		gtk.Toolbar.__init__(self)
 		self.ca = pc
-
-#todo:
-#multiple record

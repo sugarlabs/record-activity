@@ -254,7 +254,7 @@ class Model:
 		recd.thumbFilename = thumb_fn
 
 		recd.photographer = self.ca.nickName
-		recd.name = ""
+		recd.name = recd.mediaFilename
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill
