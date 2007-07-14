@@ -62,7 +62,7 @@ class UI:
 		#pip size:
 		self.pipw = 160
 		self.piph = 120
-		self.pipBorder = 6
+		self.pipBorder = 4
 		self.pipBorderW = self.pipw + (self.pipBorder*2)
 		self.pipBorderH = self.piph + (self.pipBorder*2)
 
@@ -136,7 +136,7 @@ class UI:
 
 		#todo: dynamically query/set size
 		spaceTaker = gtk.HBox()
-		spaceTaker.set_size_request( -1, 85 )
+		spaceTaker.set_size_request( -1, 25 )
 		infoBox.pack_start(spaceTaker, expand=True)
 
 		#video, scrubber etc on right
@@ -198,7 +198,7 @@ class UI:
 		self.liveVideoWindow.set_decorated(False)
 		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.liveVideoWindow.connect("button_release_event", self.liveButtonRelease)
+		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
 
 		self.liveMaxWindow = MaxWindow(self, True)
 		self.liveMaxWindow.set_transient_for(self.liveVideoWindow)
@@ -289,10 +289,11 @@ class UI:
 		self.playMaxWindow.move(-(self.maxw+10), -(self.maxh+10))
 
 
-	def liveButtonRelease(self, widget, event):
+	def liveButtonReleaseCb(self, widget, event):
 		self.livePhotoCanvas.setImage(None)
 		if (self.liveMode != True):
 			self.liveMode = True
+			self.showLiveVideoTags()
 			self.updateVideoComponents()
 
 
@@ -300,6 +301,8 @@ class UI:
 		#if you are big on the screen, don't go changing anything, ok?
 		if (self.liveMode):
 			return
+
+		self.showLiveVideoTags()
 
 		self.ca.gplay.stop()
 		self.liveMode = True
@@ -453,6 +456,11 @@ class UI:
 	def updateVideoComponents( self ):
 		if (self.photoMode):
 			if (self.liveMode):
+				a = -(self.pipBorderW+10)
+				b = -(self.pipBorderH+10)
+				print( a, b )
+				self.playLivePipBgdWindow.move( a, b )
+
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setImgLocDim( self.liveVideoWindow )
 				self.setMaxLocDim( self.liveMaxWindow )
@@ -465,6 +473,8 @@ class UI:
 			if (self.liveMode):
 				self.playOggWindow.resize(self.vw, self.vh)
 				self.playOggWindow.move(-(self.vw+10), -(self.vh+10))
+				self.playLivePipBgdWindow.move(-(self.pipBorderW+10), -(self.pipBorderH+10))
+
 				self.setImgLocDim( self.playLiveWindow )
 				self.setMaxLocDim( self.playMaxWindow )
 			else:
