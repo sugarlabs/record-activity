@@ -37,6 +37,8 @@ from gplay import PlayVideoWindow
 #for debug testing
 from recorded import Recorded
 
+import _camera
+
 class UI:
 
 	def __init__( self, pca ):
@@ -74,10 +76,6 @@ class UI:
 		self.exposed = False
 		self.mapped = False
 
-		#turn on x-eyes?
-		self.xeyesEnabled = True
-		self.eyeTrack = 0
-
 		self.shownRecd = None
 
 		#this includes the default sharing tab
@@ -104,9 +102,9 @@ class UI:
 		infoBox.pack_start(namePanel, expand=False)
 		nameLabel = gtk.Label("Name:")
 		namePanel.pack_start( nameLabel, expand=False )
-		self.nameTextfield = gtk.Entry()
-		self.nameTextfield.set_editable( False )
-		namePanel.pack_start( self.nameTextfield )
+		self.nameTextfield = gtk.Label("")
+		self.nameTextfield.set_alignment(0, .5)
+		namePanel.pack_start(self.nameTextfield)
 
 		photographerPanel = gtk.HBox(spacing=self.inset)
 		infoBox.pack_start(photographerPanel, expand=False)
@@ -126,19 +124,8 @@ class UI:
 
 		self.showLiveVideoTags()
 
-		#tagPanel = gtk.VBox(spacing=self.inset)
-		#tagLabel = gtk.Label("Tags:")
-		#tagLabel.set_justify(gtk.JUSTIFY_LEFT)
-		#tagLabel.set_alignment(0, .5)
-		#tagPanel.pack_start(tagLabel, expand=False)
-		#self.tagField = gtk.TextView(buffer=None)
-		#self.tagField.set_size_request( -1, 150 )
-		#tagPanel.pack_start(self.tagField)
-		#infoBox.pack_start(tagPanel, expand=False)
-
-		self.shutterCanvas = ShutterCanvas(self)
 		self.shutterButton = gtk.Button()
-		self.shutterButton.add( self.shutterCanvas )
+		self.shutterButton.set_image( self.shutterImg )
 		self.shutterButton.connect("clicked", self.shutterClickCb)
 		shutterBox = gtk.EventBox()
 		shutterBox.add( self.shutterButton )
@@ -245,8 +232,7 @@ class UI:
 
 
 	def showLiveVideoTags( self ):
-		self.nameTextfield.set_text("Live Video")
-		self.nameTextfield.set_editable( False )
+		self.nameTextfield.set_label("Live Video")
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
@@ -260,42 +246,6 @@ class UI:
 			self.shutterButton.set_sensitive( True )
 			self.ca.ui.setDefaultCursor( )
 			self.enableEyeTracking( True )
-
-		self.shutterCanvas.update()
-
-
-	#lazy eye, only looks around every 1/2 second
-	def enableEyeTracking( self, eye ):
-		#alas, no eye tracking for now...
-		return
-
-		if (eye and self.eyeTrack == 0):
-			self.eyeTrack = gobject.timeout_add( 500, self.xEyeCb )
-		else:
-			if (self.eyeTrack != 0):
-				gobject.source_remove( self.eyeTrack )
-				self.eyeTrack = 0
-
-
-	#todo: turn xeye on/off with the notify & recording
-	def xEyeCb( self ):
-		x, y = self.ca.get_pointer()
-		sx, sy = self.shutterCanvas.translate_coordinates( self.ca, 0, 0 )
-		allocation = self.shutterCanvas.allocation
-		sw = allocation.width
-		sh = allocation.height
-		sx = sx + (sw/2)
-		sy = sy + (sh/2)
-		x = x - sx
-		y = sy - y
-
-		#todo: replace #s with variable
-		rads = math.atan2(y,x)
-		degs = math.degrees(rads)
-		self.shutterCanvas.goalEyeX = (sw/2) + ( 40*math.cos(rads) )
-		self.shutterCanvas.goalEyeY = (sh/2) - ( 40*math.sin(rads) )
-
-		return True
 
 
 	def hideLiveWindows( self ):
@@ -336,7 +286,6 @@ class UI:
 		self.updateVideoComponents()
 
 
-
 	def recordVideo( self ):
 		#show the clock while this gets set up
 		self.hideLiveWindows()
@@ -350,6 +299,7 @@ class UI:
 		#and now we show the live/recorded video at 640x480, setting liveMode on in case we were watching vhs earlier
 		self.liveMode = True
 		self.updateVideoComponents()
+
 
 	def stopPlayVideoToRecord( self ):
 		#if we're watching a movie...
@@ -549,15 +499,11 @@ class UI:
 			self.livePhotoCanvas.setImage(img)
 			self.liveMode = False
 			self.updateVideoComponents()
-			#todo: update the fields to editable or not... (how to update if kids leave the mesh?)
 			self.photographerNameLabel.set_label( recd.photographer )
-			self.nameTextfield.set_text( recd.name )
-			self.nameTextfield.set_editable( True )
+			self.nameTextfield.set_label( recd.name )
 			self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
-			#todo: note what we're looking at in the case of changes to metadata
 
 
-	#todo: fix this, it makes no sense...
 	def showVideo( self, recd ):
 
 		if (self.ca.glive.xv):
@@ -619,6 +565,11 @@ class UI:
 		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
 		self.maxReduceSvgFile.close()
 
+		shutterImgFile = os.path.join(self.ca.gfxPath, 'shutter.png')
+		shutterImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterImgFile)
+		self.shutterImg = gtk.Image()
+		self.shutterImg.set_from_pixbuf( shutterImgPixbuf )
+
 
 	def loadColors( self ):
 		profileColor = profile.get_color()
@@ -636,6 +587,7 @@ class UI:
 		self.colorBg.init_rgba( 198, 199, 201, 255 )
 		self.colorRed = Color()
 		self.colorRed.init_rgba( 255, 0, 0, 255)
+
 
 	def loadSvg( self, data, stroke, fill ):
 		if ((stroke == None) or (fill == None)):
@@ -711,73 +663,6 @@ class PhotoCanvas(P5):
 			self.drawImg = None
 		self.redraw()
 
-class ShutterCanvas(P5):
-	def __init__(self, ui):
-		P5.__init__(self)
-		self.ui = ui
-
-		self.easyEye = 0.05
-		self.firstPaint = True
-		self.eyeX = 100
-		self.eyeY = 100
-		self.goalEyeX = 100
-		self.goalEyeY = 100
-		self.set_flags(gtk.DOUBLE_BUFFERED)
-
-
-	def draw(self, ctx, w, h):
-		eyeDim = self.ui.eyeSvg.get_dimension_data()
-		lidW = eyeDim[0]
-		lidH = eyeDim[1]
-		#todo: which is smaller?  make the eye fit
-		#xSc = h/lidH
-		xSc = w/lidW
-		ctx.translate( (w/2)-((xSc*lidW)/2), (h/2)-((xSc*lidH)/2) )
-		ctx.scale( xSc, xSc )
-
-		#todo: if UPDATING, make it looked insensitive
-		self.ui.eyeSvg.render_cairo( ctx )
-
-		if (self.firstPaint):
-			self.eyeX = w/2
-			self.eyeY = h/2
-			self.goalEyeX = self.eyeX
-			self.goalEyeY = self.eyeY
-			self.firstPaint = False
-
-		ctx.identity_matrix()
-
-		#radius of the eye's movement:
-		#ctx.arc( w/2, h/2, 60, 0, 2*3.14)
-		#self.setColor( ctx, self.ui.colorRed )
-		#ctx.fill( )
-
-		#todo: make pupilRad a variable
-		#todo: maybe add some eye lashes when closed
-		if (not self.ui.ca.m.UPDATING):
-			pupilRad = 40
-			ctx.arc( self.eyeX, self.eyeY, pupilRad, 0, 2*3.14)
-			self.setColor( ctx, self.ui.colorBlack )
-			if (self.ui.ca.m.RECORDING):
-				self.setColor( ctx, self.ui.colorRed )
-			ctx.fill( )
-
-			xDone = False
-			dx = self.goalEyeX - self.eyeX
-			if (abs(dx) > 1):
-				self.eyeX += dx * self.easyEye
-			else:
-				xDone = True
-
-			yDone = False
-			dy = self.goalEyeY - self.eyeY
-			if (abs(dy) > 1):
-				self.eyeY += dy * self.easyEye
-			else:
-				yDone = True
-
-			if ((not xDone) and (not yDone)):
-				self.queue_draw()
 
 class PipWindow(gtk.Window):
 	def __init__(self, ui):

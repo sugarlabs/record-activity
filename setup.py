@@ -21,5 +21,5 @@ import os
 
 os.system("make")
 
-bundlebuilder.start()
+bundlebuilder.start("Record")
 
