@@ -16,9 +16,6 @@ from mesh import HttpServer
 from glive import Glive
 from gplay import Gplay
 
-#todo: make camera go away when jumping between windows...
-#shutdown pipelines on quit
-
 class RecordActivity(activity.Activity):
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
@@ -28,12 +25,18 @@ class RecordActivity(activity.Activity):
 		gobject.idle_add( self._initme, None )
 
 	def _initme( self, userdata=None ):
+		self.instanceId = self._activity_id
+
 		self.nickName = profile.get_nick_name()
 		self.basePath = activity.get_bundle_path()
 		self.gfxPath = os.path.join(self.basePath, "gfx")
-		self.journalPath = os.path.join(os.path.expanduser("~"), "Journal", self.activityName)
+		self.topJournalPath = os.path.join(os.path.expanduser("~"), "Journal", self.activityName)
+		if (not os.path.exists(self.topJournalPath)):
+			os.makedirs(self.topJournalPath)
+		self.journalPath = os.path.join( self.topJournalPath, self.instanceId)
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
+
 		#whoami?
 		key = profile.get_pubkey()
 		key_hash = util._sha_data(key)

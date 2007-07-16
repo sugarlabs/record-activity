@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 
-#todo: mode switch between photo & video
-#todo: mode switch between play video & live video
-#todo: mode switch between play video & record video
-#todo: add the white borders around pip
-
 import gtk
 from gtk import gdk
 import gobject
@@ -849,6 +844,9 @@ class ThumbnailCanvas(P5Button):
 
 	def loadThumb(self):
 		thmbPath = os.path.join(self.ui.ca.journalPath, self.recd.thumbFilename)
+		if (self.recd.buddy):
+			thmbPath = os.path.join(self.ui.ca.journalPath, "buddy", self.recd.thumbFilename)
+
 		thmbPath_s = os.path.abspath(thmbPath)
 		if ( os.path.isfile(thmbPath_s) ):
 			pb = gtk.gdk.pixbuf_new_from_file(thmbPath_s)

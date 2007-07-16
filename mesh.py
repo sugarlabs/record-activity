@@ -10,6 +10,12 @@ import os
 xmlRpcPort = 8888
 httpPort = 8889
 
+#todo: when you take a picture, transmit the name and who took it, and buddy colors too... all things to create a rec'd
+#todo: then create a directory in which to put buddy photos
+#todo: then display them as thumbs, but when you click them, do resolution on where to get them from...
+#todo: on joining activity get all of the existing photos from who has them
+#todo: when someone deletes a photo, delete all photos
+
 class MeshXMLRPCServer:
 	def __init__( self, pca ):
 		self.ca = pca
@@ -18,9 +24,22 @@ class MeshXMLRPCServer:
 		self.server = network.GlibXMLRPCServer(("", xmlRpcPort))
 		self.server.register_instance(self) #anything witout an _ is callable by all the hos and joes out there
 
-	def newPhotoNotice( self, arg1, arg2 ):
-		print "Request got " + str(arg1) + ", " + str(arg2)
-		self.ca.meshClient.reqNewPhotoBits( str(arg1), str(arg2) )
+	def newPhotoNotice( self,
+						ip,
+						mediaFilename, thumbFilename, time, photographer, name, colorStroke, colorFill, hashKey ):
+
+		newRecd = Recorded()
+		newRecd.buddy = True
+		newRecd.mediaFilename = mediaFilename
+		newRecd.thumbFilename = thumbFilename
+		newRecd.time = time
+		newRecd.photographer = photographer
+		newRecd.name = name
+		newRecd.colorStroke = colorStroke
+		newRecd.colorFill = colorFill
+		newRecd.hash = hash
+
+		self.ca.meshClient.requestThumbBits( ip, newRecd )
 		print "requested new bits from that other buddy"
 		return "successios"
 
@@ -49,11 +68,7 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		for i in range (0, len(allParams)):
 			parama.append(allParams[i].split('='))
 
-#		result = self.server.acty.slogic.doServerLogic(self.path,urlPath,parama)
-#		self.send_response(200)
-#		for i in range (0, len(result.headers)):
-#			self.send_header( result.headers[i][0], result.headers[i][1] )
-#		self.end_headers()
+		print( urlPath, allParams, parama )
 
 		#should be abs path... check it 1st
 		fileToSend = self.server.ca.ui.sendMeFedEx
@@ -119,14 +134,11 @@ class MeshClient:
 	def errorCb(self, error, bud):
 		print "We've a no go erroro! ", bud
 
-	def reqNewPhotoBits(self, ip, file):
-		#check i am not me, iterate till you get another dude
-		#bud = self.my_acty.get_joined_buddies()[0]
-		#todo: better way to get me?
+	def requestThumbBits(self, ip, recd):
 		ps = presenceservice.get_instance()
 		me = ps.get_owner()
 
-		uri = "http://" + str(ip) + ":" + str(httpPort) + "/getStuff?" + str(file)
+		uri = "http://" + str(ip) + ":" + str(httpPort) + "/thumb?" + str(recd.thumbFilename)
 		print( uri )
 		getter = network.GlibURLDownloader( uri )
 		getter.connect( "finished", self.downloadResultCb, me )

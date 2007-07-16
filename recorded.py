@@ -7,7 +7,6 @@ class Recorded:
 		self.time = None
 		self.photographer = None
 		self.name = None
-		self.tags = []
 		self.colorStroke = None
 		self.colorFill = None
 		self.hashKey = None
@@ -15,3 +14,6 @@ class Recorded:
 		#transient
 		self.media = None
 		self.thumb = None
+
+		#assume you took the picture
+		self.buddy = False
