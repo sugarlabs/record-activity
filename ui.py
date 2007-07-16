@@ -335,7 +335,6 @@ class UI:
 			self.startXV( self.playLiveWindow )
 
 
-
 	def updateModeChange(self):
 		#this is called when a menubar button is clicked
 		self.liveMode = True
@@ -393,6 +392,7 @@ class UI:
 
 		win.show_all()
 
+
 	def setPipBgdLocDim( self, win ):
 		win.resize( self.pipBorderW, self.pipBorderH )
 		if (self.fullScreen):
@@ -402,6 +402,7 @@ class UI:
 			win.move( vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder) )
 
 		win.show_all()
+
 
 	def setMaxLocDim( self, win ):
 		if (self.fullScreen):
@@ -484,7 +485,9 @@ class UI:
 				self.setPipLocDim( self.playLiveWindow )
 
 
+	#todo: cache buttons which we can reuse
 	def updateThumbs( self, addToTrayArray, left, start, right ):
+
 		for i in range (0, len(self.thumbButts)):
 			self.thumbButts[i].clear()
 
@@ -524,6 +527,7 @@ class UI:
 
 	def deleteThumbSelection( self, recd ):
 		#todo: test --> if this is the current selection, then clear it away here
+		#todo: for video too
 		self.ca.m.deleteMedia( recd, self.startThumb )
 
 		self.shownRecd = None
@@ -668,7 +672,7 @@ class PhotoCanvas(P5):
 		self.ui = ui
 		self.img = None
 		self.drawImg = None
-		self.scalingImgCb = 0
+		self.scalingImageCb = 0
 		self.cacheWid = -1
 
 	def draw(self, ctx, w, h):
@@ -681,15 +685,18 @@ class PhotoCanvas(P5):
 
 			#only scale images when you need to, otherwise you're wasting cycles, fool!
 			if (self.cacheWid != w):
-				if (self.scalingImgCb != 0):
-					self.scalingImgCb = gobject.idle_add( self.drawImg, w, h )
+				print("a")
+				if (self.scalingImageCb == 0):
+					print("b")
+					self.scalingImageCb = gobject.idle_add( self.resizeImage, w, h )
 
 			if (self.drawImg != None):
-				#todo: center the image based on the image size, and w & h
-				ctx.set_source_surface(self.drawImg, 0, 0)
+				#center the image based on the image size, and w & h
+				ctx.set_source_surface(self.drawImg, (w/2)-(self.drawImg.get_width()/2), (h/2)-(self.drawImg.get_height()/2))
 				ctx.paint()
 
 			self.cacheWid = w
+
 
 	def setImage(self, img):
 		self.cacheWid = -1
@@ -698,7 +705,9 @@ class PhotoCanvas(P5):
 			self.drawImg = None
 		self.queue_draw()
 
+
 	def resizeImage(self, w, h):
+		#use image size in case 640 no more
 		scaleImg = cairo.ImageSurface( cairo.FORMAT_ARGB32, w, h)
 		sCtx = cairo.Context(scaleImg)
 		sScl = (w+0.0)/(self.ui.vw+0.0)
@@ -820,6 +829,8 @@ class ThumbnailCanvas(P5Button):
 		self.recd = None
 		self.delButt.removeActionListener(self)
 		self.imgButt.removeActionListener(self)
+
+		self.recdThumbRenderImg = None
 		self.redraw()
 
 	def setButton(self, recd):
@@ -837,43 +848,47 @@ class ThumbnailCanvas(P5Button):
 			img = _camera.cairo_surface_from_gdk_pixbuf(pb)
 			self.recd.thumb = img
 
-	#todo: dImg this sucka
 	#todo: make this into gtk buttons?
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorTray, w, h )
 		if (self.recd == None):
 			return
 
-		xSvg = (w-self.ui.thumbSvgW)/2
-		ySvg = (h-self.ui.thumbSvgH)/2
+		if (self.recdThumbRenderImg == None):
+			self.recdThumbRenderImg = cairo.ImageSurface( cairo.FORMAT_ARGB32, w, h)
+			rtCtx = cairo.Context(self.recdThumbRenderImg)
+			xSvg = (w-self.ui.thumbSvgW)/2
+			ySvg = (h-self.ui.thumbSvgH)/2
 
-		if (self.recd.type == self.ui.ca.m.TYPE_PHOTO):
-			ctx.translate( xSvg, ySvg )
-			self.ui.thumbPhotoSvg.render_cairo(ctx)
+			if (self.recd.type == self.ui.ca.m.TYPE_PHOTO):
+				rtCtx.translate( xSvg, ySvg )
+				self.ui.thumbPhotoSvg.render_cairo(rtCtx)
 
-			ctx.translate( 8, 8 )
-			ctx.set_source_surface(self.recd.thumb, 0, 0)
-			self.imgButt.setOffsets( ctx.user_to_device(0,0) )
-			ctx.paint()
+				rtCtx.translate( 8, 8 )
+				rtCtx.set_source_surface(self.recd.thumb, 0, 0)
+				self.imgButt.setOffsets( rtCtx.user_to_device(0,0) )
+				rtCtx.paint()
 
-			ctx.translate( self.ui.tw-self.deleteDim, self.ui.th+4 )
-			self.delButt.setOffsets( ctx.user_to_device(0,0) )
-			self.ui.closeSvg.render_cairo(ctx)
+				rtCtx.translate( self.ui.tw-self.deleteDim, self.ui.th+4 )
+				self.delButt.setOffsets( rtCtx.user_to_device(0,0) )
+				self.ui.closeSvg.render_cairo(rtCtx)
 
-		elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
-			ctx.translate( xSvg, ySvg )
-			self.ui.thumbVideoSvg.render_cairo(ctx)
+			elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
+				rtCtx.translate( xSvg, ySvg )
+				self.ui.thumbVideoSvg.render_cairo(rtCtx)
 
-			ctx.translate( 8, 22 )
-			ctx.set_source_surface(self.recd.thumb, 0, 0)
-			self.imgButt.setOffsets( ctx.user_to_device(0,0) )
-			ctx.paint()
+				rtCtx.translate( 8, 22 )
+				rtCtx.set_source_surface(self.recd.thumb, 0, 0)
+				self.imgButt.setOffsets( rtCtx.user_to_device(0,0) )
+				rtCtx.paint()
 
-			ctx.translate( self.ui.tw-self.deleteDim, self.ui.th+1 )
-			self.delButt.setOffsets( ctx.user_to_device(0,0) )
-			self.ui.closeSvg.render_cairo(ctx)
+				rtCtx.translate( self.ui.tw-self.deleteDim, self.ui.th+1 )
+				self.delButt.setOffsets( rtCtx.user_to_device(0,0) )
+				self.ui.closeSvg.render_cairo( rtCtx )
 
-		self.cacheW = w
+		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
+		ctx.paint()
+
 
 	def fireButton(self, actionCommand):
 		if (actionCommand == self.thumbS):
