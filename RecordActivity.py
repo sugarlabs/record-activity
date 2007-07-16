@@ -16,6 +16,9 @@ from mesh import HttpServer
 from glive import Glive
 from gplay import Gplay
 
+#todo: make camera go away when jumping between windows...
+#shutdown pipelines on quit
+
 class RecordActivity(activity.Activity):
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
@@ -108,4 +111,7 @@ class RecordActivity(activity.Activity):
 
 	def destroyCb( self, *args ):
 		#self.m.outFocus()
+		#close all pipelines, otherwise they linger when the rest of the activity is long gone
+		self.gplay.stop()
+		self.glive.stop()
 		gtk.main_quit()

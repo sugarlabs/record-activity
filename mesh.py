@@ -11,7 +11,6 @@ httpPort = 8889
 class MeshXMLRPCServer:
 	def __init__( self, pca ):
 		self.ca = pca
-
 		#this is ye olde xmlrpc server
 		#listen to and talk through this port for xmlrpc, using this here info
 		self.server = network.GlibXMLRPCServer(("", xmlRpcPort))
@@ -19,6 +18,8 @@ class MeshXMLRPCServer:
 
 	def newPicNotice( self, arg1, arg2=None ):
 		print "Request got " + str(arg1) + ", " + str(arg2)
+		self.ca.meshClient.reqNewPhotoBits( str(arg1) )
+		print "requested new bits from that other buddy"
 		return "successios"
 
 
@@ -75,9 +76,9 @@ class MeshClient:
 		#self.my_acty_id = self.c._frame.activity_id
 		#print( "uid:", self.my_acty_id )
 
-		self.my_acty.connect('buddy-joined', self.buddyJoinedCcb)
+		self.my_acty.connect('buddy-joined', self.buddyJoinedCb)
 		print("1.3")
-		self.my_acty.connect('buddy-left', self.buddyDepartedCcb)
+		self.my_acty.connect('buddy-left', self.buddyDepartedCb)
 		print("1.4")
 
 		print("1.5", len(self.my_acty.get_joined_buddies()) )
@@ -101,23 +102,31 @@ class MeshClient:
 
 	#herein we notify our buddies of some cool stuff we got going on they mights wants to knows abouts
 	def notifyBudsOfNewPic( self ):
+		#todo: better way to get me?
+		meme = None
 		for buddy in self.my_acty.get_joined_buddies():
-			bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
-			bud.newPicNotice(	"bar",
-								reply_handler=self.notifyBudsOfNewPic_cb,
-								error_handler=self.error_cb,
-								user_data=bud)
+			if (buddy.props.owner):
+				meme = buddy
 
-	def notifyBudsOfNewPic_cb(self, response, bud):
+		for buddy in self.my_acty.get_joined_buddies():
+			if (not buddy.props.owner):
+				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
+
+				bud.newPicNotice(	str(meme.props.ip4_address),
+									reply_handler=self.notifyBudsOfNewPicCb,
+									error_handler=self.errorCb,
+									user_data=bud)
+
+	def notifyBudsOfNewPicCb(self, response, bud):
 		print "Response was %s, user_data was %s" % (response, user_data)
 
-	def error_cb(self, error, bud):
+	def errorCb(self, error, bud):
 		print "We've a no go erroro! ", bud
 
-	def reqNewPhotoBits(self):
+	def reqNewPhotoBits(self, ip):
 		#check i am not me, iterate till you get another dude
 		bud = self.my_acty.get_joined_buddies()[0]
-		getter = network.GlibURLDownloader("http://" + str(bud.props.ip4_address) + ":" + str(httpPort) + "/getStuff")
+		getter = network.GlibURLDownloader("http://" + str(ip) + ":" + str(httpPort) + "/getStuff")
 		getter.connect( "finished", self.downloadResultCb, bud )
 		getter.connect( "error", self.downloadErrorCb, bud )
 		getter.start()
