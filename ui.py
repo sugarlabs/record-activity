@@ -276,6 +276,8 @@ class UI:
 	def hideLiveWindows( self ):
 		self.livePhotoWindow.resize(self.vw, self.vh)
 		self.livePhotoWindow.move(-(self.vw+10), -(self.vh+10))
+		self.livePipBgdWindow.resize(self.pipBorderW, self.pipBorderH)
+		self.livePipBgdWindow.move(-(self.pipBorderW+10), -(self.pipBorderH+10))
 		self.liveVideoWindow.resize(self.vw, self.vh)
 		self.liveVideoWindow.move(-(self.vw+10), -(self.vh+10))
 		self.liveMaxWindow.resize(self.maxw, self.maxh)
@@ -285,6 +287,8 @@ class UI:
 	def hidePlayWindows( self ):
 		self.playOggWindow.resize(self.vw, self.vh)
 		self.playOggWindow.move(-(self.vw+10), -(self.vh+10))
+		self.playLivePipBgdWindow.resize(self.pipBorderW, self.pipBorderH)
+		self.playLivePipBgdWindow.move(-(self.pipBorderW+10), -(self.pipBorderH+10))
 		self.playLiveWindow.resize(self.pipw, self.piph)
 		self.playLiveWindow.move(-(self.pipw+10), -(self.piph+10))
 		self.playMaxWindow.resize(self.maxw, self.maxh)
