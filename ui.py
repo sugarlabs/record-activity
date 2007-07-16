@@ -188,7 +188,7 @@ class UI:
 
 		#pipbackground here
 		self.livePipBgdWindow = PipWindow(self)
-		self.livePipBgdWindow.set_transient_for(self.ca)
+		self.livePipBgdWindow.set_transient_for(self.livePhotoWindow)
 		self.livePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.livePipBgdWindow.set_decorated(False)
 
@@ -240,11 +240,13 @@ class UI:
 		self.ca.show_all()
 		self.exposeId = self.ca.connect("expose-event", self.exposeEvent)
 		self.livePhotoWindow.show_all()
+		self.livePipBgdWindow.show_all()
 		self.liveVideoWindow.show_all()
 		self.mapId = self.liveVideoWindow.connect("map-event", self.mapEvent)
 		self.liveMaxWindow.show_all()
 
 		self.playOggWindow.show_all()
+		self.playLivePipBgdWindow.show_all()
 		self.playLiveWindow.show_all()
 		self.playMaxWindow.show_all()
 

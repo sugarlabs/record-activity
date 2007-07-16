@@ -102,11 +102,15 @@ class MeshClient:
 
 	#herein we notify our buddies of some cool stuff we got going on they mights wants to knows abouts
 	def notifyBudsOfNewPic( self ):
+
 		#todo: better way to get me?
-		meme = None
-		for buddy in self.my_acty.get_joined_buddies():
-			if (buddy.props.owner):
-				meme = buddy
+		ps = presenceservice.get_instance()
+		meme = ps.get_owner()
+
+		#meme = None
+		#for buddy in self.my_acty.get_joined_buddies():
+		#	if (buddy.props.owner):
+		#		meme = buddy
 
 		for buddy in self.my_acty.get_joined_buddies():
 			if (not buddy.props.owner):
@@ -125,7 +129,8 @@ class MeshClient:
 
 	def reqNewPhotoBits(self, ip):
 		#check i am not me, iterate till you get another dude
-		bud = self.my_acty.get_joined_buddies()[0]
+		#bud = self.my_acty.get_joined_buddies()[0]
+
 		getter = network.GlibURLDownloader("http://" + str(ip) + ":" + str(httpPort) + "/getStuff")
 		getter.connect( "finished", self.downloadResultCb, bud )
 		getter.connect( "error", self.downloadErrorCb, bud )

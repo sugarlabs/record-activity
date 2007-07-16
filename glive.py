@@ -12,8 +12,12 @@ import threading
 import gobject
 gobject.threads_init()
 
-class Glive:
 
+#todo: clean up the empty .ogg files
+#todo: simpler ximagesink pipeline
+#todo: use correct path / filename
+
+class Glive:
 	def __init__(self, pca):
 		self.window = None
 		self.ca = pca
@@ -94,17 +98,17 @@ class Glive:
 		videoTee.unlink(movieQueue)
 		videoTee.unlink(picQueue)
 
-		if (self.xv):
-			xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
-			xvimagesink.set_property("sync", False)
-			#xQueue = pipeline.get_by_name('xQueue_'+n)
-			#videoTee.unlink(xQueue)
-		else:
-			pass
-			#print("woo hoo, no xv!")
-			#ximagesink = pipeline.get_by_name('ximagesink_'+n)
-			#ximagesink.set_property("sync", True)
-			#videoTee.unlink(xvimagesink)
+#		if (self.xv):
+#			xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
+#			xvimagesink.set_property("sync", False)
+#			#xQueue = pipeline.get_by_name('xQueue_'+n)
+#			#videoTee.unlink(xQueue)
+#		else:
+#			pass
+#			#print("woo hoo, no xv!")
+#			#ximagesink = pipeline.get_by_name('ximagesink_'+n)
+#			#ximagesink.set_property("sync", True)
+#			#videoTee.unlink(xvimagesink)
 
 		bus = pipeline.get_bus()
 		bus.enable_sync_message_emission()

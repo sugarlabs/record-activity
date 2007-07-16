@@ -114,4 +114,5 @@ class RecordActivity(activity.Activity):
 		#close all pipelines, otherwise they linger when the rest of the activity is long gone
 		self.gplay.stop()
 		self.glive.stop()
+		#todo: clean up / throw away any video you might be recording when you quit the activity
 		gtk.main_quit()
