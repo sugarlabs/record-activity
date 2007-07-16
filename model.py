@@ -232,7 +232,8 @@ class Model:
 
 		#hey, i just took a cool picture!  let me show you!
 		if (self.ca.meshClient != None):
-			self.ca.meshClient.notifyBudsOfNewPic()
+			#md5?
+			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
 
 
 	def createNewRecorded( self, type ):

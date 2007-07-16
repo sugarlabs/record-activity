@@ -1,9 +1,11 @@
 from sugar import network
 from sugar.presence import presenceservice
+
 import urlparse
 import urllib
 import posixpath
 import shutil
+import os
 
 xmlRpcPort = 8888
 httpPort = 8889
@@ -16,9 +18,9 @@ class MeshXMLRPCServer:
 		self.server = network.GlibXMLRPCServer(("", xmlRpcPort))
 		self.server.register_instance(self) #anything witout an _ is callable by all the hos and joes out there
 
-	def newPicNotice( self, arg1, arg2=None ):
+	def newPhotoNotice( self, arg1, arg2 ):
 		print "Request got " + str(arg1) + ", " + str(arg2)
-		self.ca.meshClient.reqNewPhotoBits( str(arg1) )
+		self.ca.meshClient.reqNewPhotoBits( str(arg1), str(arg2) )
 		print "requested new bits from that other buddy"
 		return "successios"
 
@@ -32,35 +34,30 @@ class HttpServer(network.GlibTCPServer):
 
 
 class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
-	#path is url to the path to the file being requested
+
+	#from map...
 	def translate_path(self, path):
-		print( "a: ", path )
+		urlp = urlparse.urlparse(path)
+		urls = urlp[2]
+		urls = posixpath.normpath(urllib.unquote(urls))
+		urlPath = urls.split('/')
+		urlPath = filter(None, urlPath)
 
-		url = urlparse.urlparse(path)[2]
-		params = urlparse.urlparse(path)[4]
-		print( "url:", url )
-		print( "params:", params )
+		params = urlp[4]
+		parama = []
+		allParams = params.split('&')
+		for i in range (0, len(allParams)):
+			parama.append(allParams[i].split('='))
 
-		urlPath = posixpath.normpath(urllib.unquote(url))
-		urlPathAy = path.split('/')
-		urlPathAy = filter(None, urlPathAy)
-		print( "urlPathAy: ", urlPathAy )
-
-		#do some logic here to figure out what to do next
-
-		#take a looksee at this coolness from our superclass (which is persistant mofo above..
-		#who is always here whenever i wake up)
-		print( "rootpath: ", self.server.rootpath )
-
-		self.send_response(200)
-		#self.send_header("Content-type", "jpeg/jpg")
-		#self.send_header("Content-Disposition", 'attachment; filename="' + str(self.server.c.modFile) )
+#		result = self.server.acty.slogic.doServerLogic(self.path,urlPath,parama)
+#		self.send_response(200)
+#		for i in range (0, len(result.headers)):
+#			self.send_header( result.headers[i][0], result.headers[i][1] )
+#		self.end_headers()
 
 		#should be abs path... check it 1st
-		fileToSend = self.server.ca.ui.maxReduceSvgFile
+		fileToSend = self.server.ca.ui.sendMeFedEx
 		return fileToSend
-
-
 
 
 class MeshClient:
@@ -101,22 +98,17 @@ class MeshClient:
 		print ("c", buddy.props.owner) #me boolean
 
 	#herein we notify our buddies of some cool stuff we got going on they mights wants to knows abouts
-	def notifyBudsOfNewPic( self ):
+	def notifyBudsOfNewPhoto( self, recd ):
 
-		#todo: better way to get me?
 		ps = presenceservice.get_instance()
-		meme = ps.get_owner()
-
-		#meme = None
-		#for buddy in self.my_acty.get_joined_buddies():
-		#	if (buddy.props.owner):
-		#		meme = buddy
+		me = ps.get_owner()
 
 		for buddy in self.my_acty.get_joined_buddies():
 			if (not buddy.props.owner):
 				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
 
-				bud.newPicNotice(	str(meme.props.ip4_address),
+				bud.newPhotoNotice(	str(me.props.ip4_address),
+									recd.thumbFilename,
 									reply_handler=self.notifyBudsOfNewPicCb,
 									error_handler=self.errorCb,
 									user_data=bud)
@@ -127,13 +119,18 @@ class MeshClient:
 	def errorCb(self, error, bud):
 		print "We've a no go erroro! ", bud
 
-	def reqNewPhotoBits(self, ip):
+	def reqNewPhotoBits(self, ip, file):
 		#check i am not me, iterate till you get another dude
 		#bud = self.my_acty.get_joined_buddies()[0]
+		#todo: better way to get me?
+		ps = presenceservice.get_instance()
+		me = ps.get_owner()
 
-		getter = network.GlibURLDownloader("http://" + str(ip) + ":" + str(httpPort) + "/getStuff")
-		getter.connect( "finished", self.downloadResultCb, bud )
-		getter.connect( "error", self.downloadErrorCb, bud )
+		uri = "http://" + str(ip) + ":" + str(httpPort) + "/getStuff?" + str(file)
+		print( uri )
+		getter = network.GlibURLDownloader( uri )
+		getter.connect( "finished", self.downloadResultCb, me )
+		getter.connect( "error", self.downloadErrorCb, me )
 		getter.start()
 
 	def downloadResultCb(self, getter, tempfile, suggested_name, buddy):

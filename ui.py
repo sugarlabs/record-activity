@@ -609,10 +609,11 @@ class UI:
 		maxEnlargeSvgFile.close()
 
 		#todo: this is only maxReduceSvgFile for mesh test
-		self.maxReduceSvgFile = open(os.path.join(self.ca.gfxPath, 'max-reduce.svg'), 'r')
-		maxReduceSvgData = self.maxReduceSvgFile.read()
+		self.sendMeFedEx = os.path.join(self.ca.gfxPath, 'max-reduce.svg')
+		maxReduceSvgFile = open(self.sendMeFedEx, 'r')
+		maxReduceSvgData = maxReduceSvgFile.read()
 		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
-		self.maxReduceSvgFile.close()
+		maxReduceSvgFile.close()
 
 		shutterImgFile = os.path.join(self.ca.gfxPath, 'shutter_button.png')
 		shutterImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterImgFile)
