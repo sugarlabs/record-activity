@@ -718,9 +718,10 @@ class PhotoCanvas(P5):
 
 	def resizeImage(self, w, h):
 		#use image size in case 640 no more
-		scaleImg = cairo.ImageSurface( cairo.FORMAT_ARGB32, w, h)
+		scaleImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
 		sCtx = cairo.Context(scaleImg)
-		sScl = (w+0.0)/(self.ui.vw+0.0)
+		#todo: test --> self.ui.vw not necc b/c of thumbs when over the network
+		sScl = (w+0.0)/(self.img.get_width()+0.0)
 		sCtx.scale( sScl, sScl )
 		sCtx.set_source_surface( self.img, 0, 0 )
 		sCtx.paint()
