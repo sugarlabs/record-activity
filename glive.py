@@ -14,7 +14,6 @@ gobject.threads_init()
 
 
 #todo: clean up the empty .ogg files
-#todo: simpler ximagesink pipeline
 #todo: use correct path / filename
 
 class Glive:
@@ -67,7 +66,7 @@ class Glive:
 		if (self.xv):
 			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
 		else:
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=8000,channels=1,depth=8 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n +" videoTee_"+n+". ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 
 		v4l2src = pipeline.get_by_name('v4l2src_'+n)
 		try:
@@ -75,40 +74,32 @@ class Glive:
 		except:
 			pass
 
-		videoTee = pipeline.get_by_name('videoTee_'+n)
+		#todo: go through the code and add this conditional throughout
+		if (self.xv):
+			videoTee = pipeline.get_by_name('videoTee_'+n)
 
-		picQueue = pipeline.get_by_name('picQueue_'+n)
-		picQueue.set_property("leaky", True)
-		picQueue.set_property("max-size-buffers", 1)
-		picFakesink = pipeline.get_by_name("picFakesink_"+n)
-		picFakesink.connect("handoff", self.copyPic)
-		picFakesink.set_property("signal-handoffs", True)
-		self.picExposureOpen = False
+			picQueue = pipeline.get_by_name('picQueue_'+n)
+			picQueue.set_property("leaky", True)
+			picQueue.set_property("max-size-buffers", 1)
+			picFakesink = pipeline.get_by_name("picFakesink_"+n)
+			picFakesink.connect("handoff", self.copyPic)
+			picFakesink.set_property("signal-handoffs", True)
+			self.picExposureOpen = False
 
-		movieQueue = pipeline.get_by_name("movieQueue_"+n)
-		movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
-		movieFilesink.set_property("location", "/home/olpc/output_"+n+".ogg")
+			movieQueue = pipeline.get_by_name("movieQueue_"+n)
+			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
+			movieFilepath = os.path.join(self.ca.tempPath, "output_"+n+".ogg" )
+			movieFilesink.set_property("location", movieFilepath )
 
-		audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
-		audioFilesink.set_property("location", "/home/olpc/output_"+n+".wav")
-		audioTee = pipeline.get_by_name('audioTee_'+n)
-		audioWavenc = pipeline.get_by_name('audioWavenc_'+n)
+			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
+			audioFilepath = os.path.join(self.ca.tempPath, "output_"+n+".wav")
+			audioFilesink.set_property("location", audioFilepath )
+			audioTee = pipeline.get_by_name('audioTee_'+n)
+			audioWavenc = pipeline.get_by_name('audioWavenc_'+n)
 
-		audioTee.unlink(audioWavenc)
-		videoTee.unlink(movieQueue)
-		videoTee.unlink(picQueue)
-
-#		if (self.xv):
-#			xvimagesink = pipeline.get_by_name('xvimagesink_'+n)
-#			xvimagesink.set_property("sync", False)
-#			#xQueue = pipeline.get_by_name('xQueue_'+n)
-#			#videoTee.unlink(xQueue)
-#		else:
-#			pass
-#			#print("woo hoo, no xv!")
-#			#ximagesink = pipeline.get_by_name('ximagesink_'+n)
-#			#ximagesink.set_property("sync", True)
-#			#videoTee.unlink(xvimagesink)
+			audioTee.unlink(audioWavenc)
+			videoTee.unlink(movieQueue)
+			videoTee.unlink(picQueue)
 
 		bus = pipeline.get_bus()
 		bus.enable_sync_message_emission()
@@ -163,7 +154,8 @@ class Glive:
 
 		n = str(len(self.thumbPipes))
 		f = str(len(self.pipes)-2)
-		line = 'filesrc location=/home/olpc/output_'+f+'.ogg name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n
+		oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogg" )
+		line = 'filesrc location=' + str(oggFilepath) + ' name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n
 		thumbline = gst.parse_launch(line)
 		thumbQueue = thumbline.get_by_name('thumbQueue_'+n)
 		thumbQueue.set_property("leaky", True)
@@ -188,13 +180,16 @@ class Glive:
 
 			n = str(len(self.muxPipes))
 			f = str(len(self.pipes)-2)
+			oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogg")
 			if (self.audio):
 				if ( len(self.muxPipes) > 0 ):
 					self.muxPipe().get_bus().disable_sync_message_emission()
 					self.muxPipe().get_bus().disconnect(self.MUX_MESSAGE_ID)
 					self.muxPipe().get_bus().remove_signal_watch()
 
-				muxline = gst.parse_launch('filesrc location=/home/olpc/output_'+f+'.ogg name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=/home/olpc/mux.ogg name=muxFilesink_'+n+' filesrc location=/home/olpc/output_'+f+'.wav name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
+				wavFilepath = os.path.join(self.ca.tempPath, "output_"+f+".wav")
+				muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg")
+				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
 				muxBus = muxline.get_bus()
 				muxBus.enable_sync_message_emission()
 				muxBus.add_signal_watch()
@@ -204,7 +199,7 @@ class Glive:
 			else:
 				self.record = False
 				self.audio = False
-				self.ca.m.setVid(self.thumbBuf, "/home/olpc/output_"+f+".ogg")
+				self.ca.m.setVid(self.thumbBuf, str(oggFilepath))
 				self.ca.m.stoppedRecordingVideo()
 
 
@@ -218,11 +213,12 @@ class Glive:
 			n = str(len(self.muxPipes)-1)
 			f = str(len(self.pipes)-2)
 
-			#todo: use real paths
-			#todo: delete all the files
-			os.remove(os.path.abspath("/home/olpc/output_"+f+".wav"))
-			os.remove(os.path.abspath("/home/olpc/output_"+f+".ogg"))
-			self.ca.m.saveVideo(self.thumbBuf, "/home/olpc/mux.ogg")
+			wavFilepath = os.path.join(self.ca.tempPath, "output_"+f+".wav")
+			oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogg")
+			muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg")
+			os.remove( wavFilepath )
+			os.remove( oggFilepath )
+			self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath))
 			self.ca.m.stoppedRecordingVideo()
 
 

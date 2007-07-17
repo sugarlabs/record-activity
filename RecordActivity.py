@@ -36,6 +36,12 @@ class RecordActivity(activity.Activity):
 		self.journalPath = os.path.join(self.topJournalPath, self.instanceId)
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
+		self.tempPath = os.path.join(self.topJournalPath, "temp")
+		if (os.path.exists(self.tempPath)):
+			pass
+			#todo: delete this directory
+		os.makedirs(self.tempPath)
+
 
 		#whoami?
 		key = profile.get_pubkey()
