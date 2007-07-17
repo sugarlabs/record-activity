@@ -149,6 +149,7 @@ class Model:
 		else:
 			return None
 
+
 	def doShutter( self ):
 		if (self.UPDATING):
 			return
@@ -174,6 +175,7 @@ class Model:
 	def setUpdating( self, upd ):
 		self.UPDATING = upd
 		self.ca.ui.updateShutterButton()
+
 
 	def stopRecordingVideo( self ):
 		self.setUpdating( True )
@@ -202,9 +204,11 @@ class Model:
 		self.updateMediaIndex()
 		self.thumbAdded( self.TYPE_VIDEO )
 
-		#resume live video from the camera
-		self.ca.ui.updateVideoComponents()
-		self.ca.glive.play()
+		#resume live video from the camera (if the activity is active)
+		if (self.ca.ACTIVE):
+			self.ca.ui.updateVideoComponents()
+			self.ca.glive.play()
+
 		self.RECORDING = False
 
 	def stoppedRecordingVideo( self ):

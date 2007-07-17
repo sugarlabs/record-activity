@@ -28,7 +28,7 @@ class RecordActivity(activity.Activity):
 
 	def _initme( self, userdata=None ):
 		self.instanceId = self._activity_id
-		self.active = True
+		self.ACTIVE = True
 
 		self.nickName = profile.get_nick_name()
 		self.basePath = activity.get_bundle_path()
@@ -39,11 +39,7 @@ class RecordActivity(activity.Activity):
 		self.journalPath = os.path.join(self.topJournalPath, self.instanceId)
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
-		self.tempPath = os.path.join(self.topJournalPath, "temp")
-		if (os.path.exists(self.tempPath)):
-			shutil.rmtree( self.tempPath )
-		os.makedirs(self.tempPath)
-
+		self.recreateTemp()
 
 		#whoami?
 		key = profile.get_pubkey()
@@ -91,10 +87,12 @@ class RecordActivity(activity.Activity):
 		self.startMesh()
 		print("2 i am shared")
 
+
 	def meshJoinedCb( self, activity ):
 		print("1 i am joined")
 		self.startMesh()
 		print("2 i am joined")
+
 
 	def startMesh( self ):
 		print( "1 startMesh" );
@@ -105,30 +103,44 @@ class RecordActivity(activity.Activity):
 		self.meshXMLRPCServer = MeshXMLRPCServer(self)
 		print( "4 startMesh" );
 
+
 	def activeCb( self, widget, pspec ):
-		print("active?", self.props.active, self.active )
-		if (not self.props.active and self.active):
+		print("active?", self.props.active, self.ACTIVE )
+		if (not self.props.active and self.ACTIVE):
 			self.stopPipes()
-		elif (self.props.active and not self.active):
+		elif (self.props.active and not self.ACTIVE):
 			self.restartPipes()
 
-		self.active = self.props.active
+		self.ACTIVE = self.props.active
+
 
 	#todo: if recording a movie when you leave, stop.  also make sure not to put the video back on display when done.
 	def stopPipes(self):
 		print("stop pipes")
-		self.glive.stop()
 		self.gplay.stop()
+
+		if (self.m.RECORDING):
+			self.m.stopRecordingVideo()
+		else:
+			self.glive.stop()
+
 
 	def restartPipes(self):
 		print("restart pipes")
-		self.glive.start()
-		#todo: switch to a ui mode where the screen is full size and disregard any video you might have been playing
+		if (not self.m.UPDATING):
+			self.ui.updateModeChange()
+
+
+	def recreateTemp( self ):
+		self.tempPath = os.path.join(self.topJournalPath, "temp")
+		if (os.path.exists(self.tempPath)):
+			shutil.rmtree( self.tempPath )
+		os.makedirs(self.tempPath)
+
 
 	def destroyCb( self, *args ):
-		#self.m.outFocus()
-		#close all pipelines, otherwise they linger when the rest of the activity is long gone
 		self.gplay.stop()
 		self.glive.stop()
 		#todo: clean up / throw away any video you might be recording when you quit the activity
+		self.recreateTemp()
 		gtk.main_quit()

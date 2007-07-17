@@ -269,25 +269,25 @@ class UI:
 
 
 	def hideLiveWindows( self ):
-		self.livePhotoWindow.resize(self.vw, self.vh)
-		self.livePhotoWindow.move(-(self.vw+10), -(self.vh+10))
-		self.livePipBgdWindow.resize(self.pipBorderW, self.pipBorderH)
-		self.livePipBgdWindow.move(-(self.pipBorderW+10), -(self.pipBorderH+10))
-		self.liveVideoWindow.resize(self.vw, self.vh)
-		self.liveVideoWindow.move(-(self.vw+10), -(self.vh+10))
-		self.liveMaxWindow.resize(self.maxw, self.maxh)
-		self.liveMaxWindow.move(-(self.maxw+10), -(self.maxh+10))
+		offW = gtk.gdk.screen_width() + 100
+		offH = gtk.gdk.screen_height() + 100
+		print( "live", offW, offH )
+
+		self.livePhotoWindow.move( offW, offH )
+		self.livePipBgdWindow.move( offW, offH )
+		self.liveVideoWindow.move( offW, offH )
+		self.liveMaxWindow.move( offW, offH )
 
 
 	def hidePlayWindows( self ):
-		self.playOggWindow.resize(self.vw, self.vh)
-		self.playOggWindow.move(-(self.vw+10), -(self.vh+10))
-		self.playLivePipBgdWindow.resize(self.pipBorderW, self.pipBorderH)
-		self.playLivePipBgdWindow.move(-(self.pipBorderW+10), -(self.pipBorderH+10))
-		self.playLiveWindow.resize(self.pipw, self.piph)
-		self.playLiveWindow.move(-(self.pipw+10), -(self.piph+10))
-		self.playMaxWindow.resize(self.maxw, self.maxh)
-		self.playMaxWindow.move(-(self.maxw+10), -(self.maxh+10))
+		offW = gtk.gdk.screen_width() + 100
+		offH = gtk.gdk.screen_height() + 100
+		print( "play", offW, offH )
+
+		self.playOggWindow.move( offW, offH )
+		self.playLivePipBgdWindow.move( offW, offH )
+		self.playLiveWindow.move( offW, offH )
+		self.playMaxWindow.move( offW, offH )
 
 
 	def liveButtonReleaseCb(self, widget, event):
@@ -456,11 +456,12 @@ class UI:
 
 
 	def updateVideoComponents( self ):
+		offW = gtk.gdk.screen_width() + 100
+		offH = gtk.gdk.screen_height() + 100
+
 		if (self.photoMode):
 			if (self.liveMode):
-				a = -(self.pipBorderW+10)
-				b = -(self.pipBorderH+10)
-				self.playLivePipBgdWindow.move( a, b )
+				self.playLivePipBgdWindow.move( offW, offH )
 
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setImgLocDim( self.liveVideoWindow )
@@ -472,9 +473,8 @@ class UI:
 				self.setMaxLocDim( self.liveMaxWindow )
 		else:
 			if (self.liveMode):
-				self.playOggWindow.resize(self.vw, self.vh)
-				self.playOggWindow.move(-(self.vw+10), -(self.vh+10))
-				self.playLivePipBgdWindow.move(-(self.pipBorderW+10), -(self.pipBorderH+10))
+				self.playOggWindow.move( offW, offH )
+				self.playLivePipBgdWindow.move( offW, offH )
 
 				self.setImgLocDim( self.playLiveWindow )
 				self.setMaxLocDim( self.playMaxWindow )
@@ -865,8 +865,9 @@ class ThumbnailCanvas(P5Button):
 			img = _camera.cairo_surface_from_gdk_pixbuf(pb)
 			self.recd.thumb = img
 
-	#todo: make this into gtk buttons?  will require segmenting the thumbnail gfx or use windows
+
 	def draw(self, ctx, w, h):
+		#todo: make this into gtk buttons?  will require segmenting the thumbnail gfx or use windows & more usablity
 		self.background( ctx, self.ui.colorTray, w, h )
 		if (self.recd == None):
 			return
