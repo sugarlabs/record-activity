@@ -539,15 +539,27 @@ class UI:
 
 
 	def showPhoto( self, recd ):
+		#todo: show networked photos and request their bits
 		self.shownRecd = recd
+
 		imgPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		imgPath_s = os.path.abspath(imgPath)
+
+		if (self.shownRecd.buddy):
+			imgPath = os.path.join(self.ca.journalPath, "buddy", recd.mediaFilename)
+			imgPath_s = os.path.abspath(imgPath)
+			if (not os.path.isfile(imgPath_s)):
+				imgPath = os.path.join(self.ca.journalPath, "buddy", recd.thumbFilename)
+				#todo: make req for the real picture here
+				#todo: make sure to get the correct url, pbly by asking...
+
 		if ( os.path.isfile(imgPath_s) ):
 			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath_s)
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 			self.livePhotoCanvas.setImage(img)
 			self.liveMode = False
 			self.updateVideoComponents()
+
 			self.photographerNameLabel.set_label( recd.photographer )
 			self.nameTextfield.set_label( recd.name )
 			self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
@@ -602,9 +614,8 @@ class UI:
 		self.maxEnlargeSvg = self.loadSvg(maxEnlargeSvgData, None, None )
 		maxEnlargeSvgFile.close()
 
-		#todo: this is only maxReduceSvgFile for mesh test
-		self.sendMeFedEx = os.path.join(self.ca.gfxPath, 'max-reduce.svg')
-		maxReduceSvgFile = open(self.sendMeFedEx, 'r')
+		maxReduceSvgPath = os.path.join(self.ca.gfxPath, 'max-reduce.svg')
+		maxReduceSvgFile = open(maxReduceSvgPath, 'r')
 		maxReduceSvgData = maxReduceSvgFile.read()
 		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
 		maxReduceSvgFile.close()
