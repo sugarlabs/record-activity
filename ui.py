@@ -881,7 +881,11 @@ class ThumbnailCanvas(P5Button):
 
 			elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
 				rtCtx.translate( xSvg, ySvg )
-				self.ui.thumbVideoSvg.render_cairo(rtCtx)
+				if (self.recd.buddy):
+					thumbVideoSvg = self.loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+					thumbVideoSvg.render_cairo(rtCtx)
+				else:
+					self.ui.thumbVideoSvg.render_cairo(rtCtx)
 
 				rtCtx.translate( 8, 22 )
 				rtCtx.set_source_surface(self.recd.thumb, 0, 0)
