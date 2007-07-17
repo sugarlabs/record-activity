@@ -75,6 +75,7 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		for i in range (0, len(allParams)):
 			parama.append(allParams[i].split('='))
 
+		#todo: test to make sure file still here and not deleted
 		#should be abs path... check it 1st
 		ff = parama[0][1]
 		fileToSend = os.path.join( self.server.ca.journalPath, ff )
@@ -151,18 +152,25 @@ class MeshClient:
 		uri = "http://" + str(ip) + ":" + str(httpPort) + "/thumb?thumbFilename=" + str(recd.thumbFilename)
 		print( uri )
 		getter = network.GlibURLDownloader( uri )
-		getter.connect( "finished", self.downloadResultCb, me )
-		getter.connect( "error", self.downloadErrorCb, me )
+		getter.connect( "finished", self.downloadResultCb, recd )
+		getter.connect( "error", self.downloadErrorCb, recd )
 		getter.start()
 
-	def downloadResultCb(self, getter, tempfile, suggested_name, buddy):
-		dest = os.path.join(os.path.expanduser("~"), suggested_name)
+	def downloadResultCb(self, getter, tempfile, suggested_name, recd):
+		#todo: better way to disambiguate who took which photo (hash)?
+		#dest = os.path.join(os.path.expanduser("~"), suggested_name)
+		buddyDirPath = os.path.join( self.ca.journalPath, "buddies" )
+		if (not os.path.exists(buddyDirPath)):
+			os.makedirs(buddyDirPath)
+
+		dest = os.path.join( buddyDirPath, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 		print( "downloaded and here it is: " + str(dest) )
-		#todo: add that damned thumbnail
-		#self._load_document("file://%s" % dest)
+		print( "recd: ", recd )
+		self.ca.m.addPhoto( recd )
 
-	def downloadErrorCb(self, getter, err, buddy):
+
+	def downloadErrorCb(self, getter, err, recd):
 		logging.debug("Error getting document from %s (%s): %s" % (buddy.props.nick, buddy.props.ip4_address, err))
 		#gobject.idle_add(self._get_document)

@@ -33,7 +33,7 @@ class RecordActivity(activity.Activity):
 		self.topJournalPath = os.path.join(os.path.expanduser("~"), "Journal", self.activityName)
 		if (not os.path.exists(self.topJournalPath)):
 			os.makedirs(self.topJournalPath)
-		self.journalPath = os.path.join( self.topJournalPath, self.instanceId)
+		self.journalPath = os.path.join(self.topJournalPath, self.instanceId)
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
 

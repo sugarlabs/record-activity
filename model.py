@@ -65,6 +65,7 @@ class Model:
 		colorFill = Color()
 		colorFill.init_hex( colorFillHex )
 		recd.colorFill = colorFill
+		recd.buddy = (el.getAttribute('buddy') == "True")
 		#recd.hashKey = el.getAttribute('hashKey')
 
 		hash.append( recd )
@@ -79,6 +80,7 @@ class Model:
 		el.setAttribute("colorStroke", str(recd.colorStroke.hex) )
 		el.setAttribute("colorFill", str(recd.colorFill.hex) )
 		#el.setAttribute("hashKey", str(recd.hashKey))
+		el.setAttribute("buddy", str(recd.buddy))
 
 
 	def selectLatestThumbs( self, type ):
@@ -228,19 +230,23 @@ class Model:
 		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
 		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
-		#append
+		self.addPhoto( recd )
+
+		#hey, i just took a cool picture!  let me show you!
+		if (self.ca.meshClient != None):
+			#md5?
+			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
+
+
+	def addPhoto( self, recd ):
 		self.mediaHashs[self.TYPE_PHOTO].append( recd )
+		#todo: sort on time-taken
 		#save index
 		self.updateMediaIndex()
 		#updateUi
 		self.thumbAdded(self.TYPE_PHOTO)
 
 		self.setUpdating( False )
-
-		#hey, i just took a cool picture!  let me show you!
-		if (self.ca.meshClient != None):
-			#md5?
-			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
 
 
 	def createNewRecorded( self, type ):
@@ -266,10 +272,9 @@ class Model:
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill
-		recd.hashKey = self.ca.hashed_key
+		#recd.hashKey = self.ca.hashed_key
 
 		return recd
-
 
 
 	#outdated?

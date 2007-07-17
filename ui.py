@@ -842,7 +842,7 @@ class ThumbnailCanvas(P5Button):
 	def loadThumb(self):
 		thmbPath = os.path.join(self.ui.ca.journalPath, self.recd.thumbFilename)
 		if (self.recd.buddy):
-			thmbPath = os.path.join(self.ui.ca.journalPath, "buddy", self.recd.thumbFilename)
+			thmbPath = os.path.join(self.ui.ca.journalPath, "buddies", self.recd.thumbFilename)
 
 		thmbPath_s = os.path.abspath(thmbPath)
 		if ( os.path.isfile(thmbPath_s) ):
@@ -864,7 +864,11 @@ class ThumbnailCanvas(P5Button):
 
 			if (self.recd.type == self.ui.ca.m.TYPE_PHOTO):
 				rtCtx.translate( xSvg, ySvg )
-				self.ui.thumbPhotoSvg.render_cairo(rtCtx)
+				if (self.recd.buddy):
+					thumbPhotoSvg = self.loadSvg(self.ui.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+					thumbPhotoSvg.render_cairo(rtCtx)
+				else:
+					self.ui.thumbPhotoSvg.render_cairo(rtCtx)
 
 				rtCtx.translate( 8, 8 )
 				rtCtx.set_source_surface(self.recd.thumb, 0, 0)
