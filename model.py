@@ -22,6 +22,7 @@ from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
 
 from recorded import Recorded
+from color import Color
 
 import _camera
 
@@ -56,9 +57,15 @@ class Model:
 		recd.photographer = el.getAttribute('photographer')
 		recd.mediaFilename = el.getAttribute('mediaFilename')
 		recd.thumbFilename = el.getAttribute('thumbFilename')
-		recd.colorStroke = el.getAttribute('colorStroke')
-		recd.colorFill = el.getAttribute('colorFill')
-		recd.hashKey = el.getAttribute('hashKey')
+		colorStrokeHex = el.getAttribute('colorStroke')
+		colorStroke = Color()
+		colorStroke.init_hex( colorStrokeHex )
+		recd.colorStroke = colorStroke
+		colorFillHex = el.getAttribute('colorFill')
+		colorFill = Color()
+		colorFill.init_hex( colorFillHex )
+		recd.colorFill = colorFill
+		#recd.hashKey = el.getAttribute('hashKey')
 
 		hash.append( recd )
 
@@ -69,9 +76,9 @@ class Model:
 		el.setAttribute("photographer", recd.photographer)
 		el.setAttribute("mediaFilename", recd.mediaFilename)
 		el.setAttribute("thumbFilename", recd.thumbFilename)
-		el.setAttribute("colorStroke", str(recd.colorStroke) )
-		el.setAttribute("colorFill", str(recd.colorFill) )
-		el.setAttribute("hashKey", str(recd.hashKey))
+		el.setAttribute("colorStroke", str(recd.colorStroke.hex) )
+		el.setAttribute("colorFill", str(recd.colorFill.hex) )
+		#el.setAttribute("hashKey", str(recd.hashKey))
 
 
 	def selectLatestThumbs( self, type ):

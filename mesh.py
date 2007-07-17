@@ -7,8 +7,12 @@ import posixpath
 import shutil
 import os
 
+from recorded import Recorded
+from color import Color
+
 xmlRpcPort = 8888
 httpPort = 8889
+
 
 #todo: when you take a picture, transmit the name and who took it, and buddy colors too... all things to create a rec'd
 #todo: then create a directory in which to put buddy photos
@@ -26,7 +30,7 @@ class MeshXMLRPCServer:
 
 	def newPhotoNotice( self,
 						ip,
-						mediaFilename, thumbFilename, time, photographer, name, colorStroke, colorFill, hashKey ):
+						mediaFilename, thumbFilename, time, photographer, name, colorStroke, colorFill ):
 
 		newRecd = Recorded()
 		newRecd.buddy = True
@@ -35,9 +39,14 @@ class MeshXMLRPCServer:
 		newRecd.time = time
 		newRecd.photographer = photographer
 		newRecd.name = name
+		colorStrokeHex = colorStroke
+		colorStroke = Color()
+		colorStroke.init_hex( colorStrokeHex )
 		newRecd.colorStroke = colorStroke
-		newRecd.colorFill = colorFill
-		newRecd.hash = hash
+		colorFillHex = colorFill
+		colorFill = Color()
+		colorFill.init_hex( colorFillHex )
+		newRecd.colorFill =  colorFill
 
 		self.ca.meshClient.requestThumbBits( ip, newRecd )
 		print "requested new bits from that other buddy"
@@ -47,14 +56,12 @@ class MeshXMLRPCServer:
 class HttpServer(network.GlibTCPServer):
 	def __init__(self, pca):
 		self.ca = pca
-		self.rootpath = self.ca.journalPath
 		server_address = ("", httpPort)
 		network.GlibTCPServer.__init__(self, server_address, HttpReqHandler);
 
 
 class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 
-	#from map...
 	def translate_path(self, path):
 		urlp = urlparse.urlparse(path)
 		urls = urlp[2]
@@ -68,10 +75,9 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		for i in range (0, len(allParams)):
 			parama.append(allParams[i].split('='))
 
-		print( urlPath, allParams, parama )
-
 		#should be abs path... check it 1st
-		fileToSend = self.server.ca.ui.sendMeFedEx
+		ff = parama[0][1]
+		fileToSend = os.path.join( self.server.ca.journalPath, ff )
 		return fileToSend
 
 
@@ -123,12 +129,15 @@ class MeshClient:
 				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
 
 				bud.newPhotoNotice(	str(me.props.ip4_address),
-									recd.thumbFilename,
+									recd.mediaFilename, recd.thumbFilename,
+									recd.time, recd.photographer,
+									recd.name,
+									recd.colorStroke.hex, recd.colorFill.hex,
 									reply_handler=self.notifyBudsOfNewPicCb,
 									error_handler=self.errorCb,
 									user_data=bud)
 
-	def notifyBudsOfNewPicCb(self, response, bud):
+	def notifyBudsOfNewPicCb(self, response, user_data):
 		print "Response was %s, user_data was %s" % (response, user_data)
 
 	def errorCb(self, error, bud):
@@ -138,7 +147,8 @@ class MeshClient:
 		ps = presenceservice.get_instance()
 		me = ps.get_owner()
 
-		uri = "http://" + str(ip) + ":" + str(httpPort) + "/thumb?" + str(recd.thumbFilename)
+		#todo: differentiate which session
+		uri = "http://" + str(ip) + ":" + str(httpPort) + "/thumb?thumbFilename=" + str(recd.thumbFilename)
 		print( uri )
 		getter = network.GlibURLDownloader( uri )
 		getter.connect( "finished", self.downloadResultCb, me )
@@ -150,6 +160,7 @@ class MeshClient:
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 		print( "downloaded and here it is: " + str(dest) )
+		#todo: add that damned thumbnail
 		#self._load_document("file://%s" % dest)
 
 	def downloadErrorCb(self, getter, err, buddy):

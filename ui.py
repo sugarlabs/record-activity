@@ -460,7 +460,6 @@ class UI:
 			if (self.liveMode):
 				a = -(self.pipBorderW+10)
 				b = -(self.pipBorderH+10)
-				print( a, b )
 				self.playLivePipBgdWindow.move( a, b )
 
 				self.setImgLocDim( self.livePhotoWindow )
@@ -687,9 +686,7 @@ class PhotoCanvas(P5):
 
 			#only scale images when you need to, otherwise you're wasting cycles, fool!
 			if (self.cacheWid != w):
-				print("a")
 				if (self.scalingImageCb == 0):
-					print("b")
 					self.scalingImageCb = gobject.idle_add( self.resizeImage, w, h )
 
 			if (self.drawImg != None):
