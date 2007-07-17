@@ -837,9 +837,9 @@ class ThumbnailCanvas(P5Button):
 	def clear(self):
 		if (self.recd != None):
 			self.recd.thumb = None
+			if (not self.recd.buddy):
+				self.delButt.removeActionListener(self)
 
-		if (not self.recd.buddy):
-			self.delButt.removeActionListener(self)
 		self.imgButt.removeActionListener(self)
 		self.recd = None
 
