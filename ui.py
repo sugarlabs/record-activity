@@ -850,7 +850,7 @@ class ThumbnailCanvas(P5Button):
 			img = _camera.cairo_surface_from_gdk_pixbuf(pb)
 			self.recd.thumb = img
 
-	#todo: make this into gtk buttons?
+	#todo: make this into gtk buttons?  will require segmenting the thumbnail gfx or use windows
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorTray, w, h )
 		if (self.recd == None):
@@ -865,7 +865,7 @@ class ThumbnailCanvas(P5Button):
 			if (self.recd.type == self.ui.ca.m.TYPE_PHOTO):
 				rtCtx.translate( xSvg, ySvg )
 				if (self.recd.buddy):
-					thumbPhotoSvg = self.loadSvg(self.ui.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+					thumbPhotoSvg = self.ui.loadSvg(self.ui.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 					thumbPhotoSvg.render_cairo(rtCtx)
 				else:
 					self.ui.thumbPhotoSvg.render_cairo(rtCtx)
@@ -882,7 +882,7 @@ class ThumbnailCanvas(P5Button):
 			elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
 				rtCtx.translate( xSvg, ySvg )
 				if (self.recd.buddy):
-					thumbVideoSvg = self.loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+					thumbVideoSvg = self.ui,loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 					thumbVideoSvg.render_cairo(rtCtx)
 				else:
 					self.ui.thumbVideoSvg.render_cairo(rtCtx)
