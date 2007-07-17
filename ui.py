@@ -837,9 +837,11 @@ class ThumbnailCanvas(P5Button):
 	def clear(self):
 		if (self.recd != None):
 			self.recd.thumb = None
-		self.recd = None
-		self.delButt.removeActionListener(self)
+
+		if (not self.recd.buddy):
+			self.delButt.removeActionListener(self)
 		self.imgButt.removeActionListener(self)
+		self.recd = None
 
 		self.recdThumbRenderImg = None
 		self.redraw()
@@ -847,7 +849,8 @@ class ThumbnailCanvas(P5Button):
 	def setButton(self, recd):
 		self.recd = recd
 		self.loadThumb()
-		self.delButt.addActionListener(self)
+		if (not self.recd.buddy):
+			self.delButt.addActionListener(self)
 		self.imgButt.addActionListener(self)
 		self.redraw()
 
@@ -887,9 +890,10 @@ class ThumbnailCanvas(P5Button):
 				self.imgButt.setOffsets( rtCtx.user_to_device(0,0) )
 				rtCtx.paint()
 
-				rtCtx.translate( self.ui.tw-self.deleteDim, self.ui.th+4 )
-				self.delButt.setOffsets( rtCtx.user_to_device(0,0) )
-				self.ui.closeSvg.render_cairo(rtCtx)
+				if (not self.recd.buddy):
+					rtCtx.translate( self.ui.tw-self.deleteDim, self.ui.th+4 )
+					self.delButt.setOffsets( rtCtx.user_to_device(0,0) )
+					self.ui.closeSvg.render_cairo(rtCtx)
 
 			elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
 				rtCtx.translate( xSvg, ySvg )
@@ -904,9 +908,10 @@ class ThumbnailCanvas(P5Button):
 				self.imgButt.setOffsets( rtCtx.user_to_device(0,0) )
 				rtCtx.paint()
 
-				rtCtx.translate( self.ui.tw-self.deleteDim, self.ui.th+1 )
-				self.delButt.setOffsets( rtCtx.user_to_device(0,0) )
-				self.ui.closeSvg.render_cairo( rtCtx )
+				if (not self.recd.buddy):
+					rtCtx.translate( self.ui.tw-self.deleteDim, self.ui.th+1 )
+					self.delButt.setOffsets( rtCtx.user_to_device(0,0) )
+					self.ui.closeSvg.render_cairo( rtCtx )
 
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
 		ctx.paint()
