@@ -562,9 +562,7 @@ class UI:
 			self.liveMode = False
 			self.updateVideoComponents()
 
-			self.photographerNameLabel.set_label( recd.photographer )
-			self.nameTextfield.set_label( recd.name )
-			self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
+			self.showRecdMeta(recd)
 
 
 	def showVideo( self, recd ):
@@ -578,8 +576,17 @@ class UI:
 		self.liveMode = False
 		self.updateVideoComponents()
 
+		#todo: use os.path calls here
 		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
 		self.ca.gplay.setLocation(videoUrl)
+
+		self.showRecdMeta(recd)
+
+
+	def showRecdMeta( self ):
+		self.photographerNameLabel.set_label( recd.photographer )
+		self.nameTextfield.set_label( recd.name )
+		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
 
 
 	def setWaitCursor( self ):
