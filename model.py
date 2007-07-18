@@ -243,7 +243,9 @@ class Model:
 
 
 	def addPhoto( self, recd ):
+		print("adding photo: ", recd)
 		self.mediaHashs[self.TYPE_PHOTO].append( recd )
+		print( "# of hashes...", len(self.mediaHashs[self.TYPE_PHOTO]) )
 		#todo: sort on time-taken
 		#save index
 		self.updateMediaIndex()
@@ -382,6 +384,7 @@ class Model:
 		f.close()
 
 
+	#todo: if you are not at the end of the list, do we want to force you to the end?
 	def thumbAdded( self, type ):
 		mx = len(self.mediaHashs[type])
 		mn = max(mx-self.ca.ui.numThumbs, 0)

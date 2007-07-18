@@ -489,7 +489,6 @@ class UI:
 
 	#todo: cache buttons which we can reuse
 	def updateThumbs( self, addToTrayArray, left, start, right ):
-
 		for i in range (0, len(self.thumbButts)):
 			self.thumbButts[i].clear()
 
@@ -583,7 +582,7 @@ class UI:
 		self.showRecdMeta(recd)
 
 
-	def showRecdMeta( self ):
+	def showRecdMeta( self, recd ):
 		self.photographerNameLabel.set_label( recd.photographer )
 		self.nameTextfield.set_label( recd.name )
 		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
@@ -651,6 +650,10 @@ class UI:
 		self.colorBg.init_rgba( 198, 199, 201, 255 )
 		self.colorRed = Color()
 		self.colorRed.init_rgba( 255, 0, 0, 255)
+		self.colorGreen = Color()
+		self.colorGreen.init_rgba( 0, 255, 0, 255)
+		self.colorBlue = Color()
+		self.colorBlue.init_rgba( 0, 0, 255, 255)
 
 
 	def loadSvg( self, data, stroke, fill ):
@@ -853,7 +856,8 @@ class ThumbnailCanvas(P5Button):
 		self.recd = None
 
 		self.recdThumbRenderImg = None
-		self.redraw()
+		self.queue_draw()
+
 
 	def setButton(self, recd):
 		self.recd = recd
@@ -861,7 +865,8 @@ class ThumbnailCanvas(P5Button):
 		if (not self.recd.buddy):
 			self.delButt.addActionListener(self)
 		self.imgButt.addActionListener(self)
-		self.redraw()
+		self.queue_draw()
+
 
 	def loadThumb(self):
 		thmbPath = os.path.join(self.ui.ca.journalPath, self.recd.thumbFilename)
@@ -884,6 +889,7 @@ class ThumbnailCanvas(P5Button):
 		if (self.recdThumbRenderImg == None):
 			self.recdThumbRenderImg = cairo.ImageSurface( cairo.FORMAT_ARGB32, w, h)
 			rtCtx = cairo.Context(self.recdThumbRenderImg)
+			self.background( rtCtx, self.ui.colorTray, w, h )
 			xSvg = (w-self.ui.thumbSvgW)/2
 			ySvg = (h-self.ui.thumbSvgH)/2
 
@@ -908,7 +914,7 @@ class ThumbnailCanvas(P5Button):
 			elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
 				rtCtx.translate( xSvg, ySvg )
 				if (self.recd.buddy):
-					thumbVideoSvg = self.ui,loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+					thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 					thumbVideoSvg.render_cairo(rtCtx)
 				else:
 					self.ui.thumbVideoSvg.render_cairo(rtCtx)

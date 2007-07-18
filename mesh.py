@@ -33,12 +33,14 @@ class MeshXMLRPCServer:
 						mediaFilename, thumbFilename, time, photographer, name, colorStroke, colorFill ):
 
 		newRecd = Recorded()
+		newRecd.type = self.ca.m.TYPE_PHOTO
 		newRecd.buddy = True
 		newRecd.mediaFilename = mediaFilename
 		newRecd.thumbFilename = thumbFilename
 		newRecd.time = time
 		newRecd.photographer = photographer
 		newRecd.name = name
+
 		colorStrokeHex = colorStroke
 		colorStroke = Color()
 		colorStroke.init_hex( colorStrokeHex )
@@ -139,11 +141,14 @@ class MeshClient:
 									error_handler=self.errorCb,
 									user_data=bud)
 
+
 	def notifyBudsOfNewPicCb(self, response, user_data):
 		print "Response was %s, user_data was %s" % (response, user_data)
 
+
 	def errorCb(self, error, bud):
 		print "We've a no go erroro! ", bud
+
 
 	def requestThumbBits(self, ip, recd):
 		ps = presenceservice.get_instance()
@@ -156,6 +161,7 @@ class MeshClient:
 		getter.connect( "finished", self.downloadResultCb, recd )
 		getter.connect( "error", self.downloadErrorCb, recd )
 		getter.start()
+
 
 	def downloadResultCb(self, getter, tempfile, suggested_name, recd):
 		#todo: better way to disambiguate who took which photo (hash)?
