@@ -935,7 +935,7 @@ class ThumbnailCanvas(P5Button):
 
 
 	def fireButton(self, actionCommand):
-		print("fireButton...", actionCommand, recd )
+		print("fireButton...", actionCommand )
 		if (actionCommand == self.thumbS):
 			self.ui.showThumbSelection( self.recd )
 		elif (actionCommand == self.deleteS):
