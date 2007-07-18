@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+#fullscreen image, then click pip, then return to 640x480 video
+
 import gtk
 from gtk import gdk
 import gobject
@@ -458,9 +460,10 @@ class UI:
 		offW = gtk.gdk.screen_width() + 100
 		offH = gtk.gdk.screen_height() + 100
 
+
 		if (self.photoMode):
 			if (self.liveMode):
-				self.playLivePipBgdWindow.move( offW, offH )
+				self.livePipBgdWindow.move( offW, offH )
 
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setImgLocDim( self.liveVideoWindow )
