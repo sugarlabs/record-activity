@@ -243,9 +243,7 @@ class Model:
 
 
 	def addPhoto( self, recd ):
-		print("adding photo: ", recd)
 		self.mediaHashs[self.TYPE_PHOTO].append( recd )
-		print( "# of hashes...", len(self.mediaHashs[self.TYPE_PHOTO]) )
 		#todo: sort on time-taken
 		#save index
 		self.updateMediaIndex()

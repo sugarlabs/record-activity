@@ -519,6 +519,7 @@ class UI:
 
 
 	def showThumbSelection( self, recd ):
+		print("showThumbSelection", recd.type)
 		#do we need to know the type, since we're showing based on the mode of the app?
 		if (recd.type == self.ca.m.TYPE_PHOTO):
 			self.showPhoto( recd )
@@ -547,10 +548,10 @@ class UI:
 		imgPath_s = os.path.abspath(imgPath)
 
 		if (self.shownRecd.buddy):
-			imgPath = os.path.join(self.ca.journalPath, "buddy", recd.mediaFilename)
+			imgPath = os.path.join(self.ca.journalPath, "buddies", recd.mediaFilename)
 			imgPath_s = os.path.abspath(imgPath)
 			if (not os.path.isfile(imgPath_s)):
-				imgPath = os.path.join(self.ca.journalPath, "buddy", recd.thumbFilename)
+				imgPath = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
 				#todo: make req for the real picture here
 				#todo: make sure to get the correct url, pbly by asking...
 
@@ -934,6 +935,7 @@ class ThumbnailCanvas(P5Button):
 
 
 	def fireButton(self, actionCommand):
+		print("fireButton...", actionCommand, recd )
 		if (actionCommand == self.thumbS):
 			self.ui.showThumbSelection( self.recd )
 		elif (actionCommand == self.deleteS):
