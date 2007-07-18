@@ -359,7 +359,8 @@ class UI:
 
 
 	def startXV(self, window):
-		if (self.ca.glive.xv and self.ca.glive.window == window):
+		#if returning from another activity, active won't be false and needs to be to get started
+		if (self.ca.glive.xv and self.ca.glive.window == window and self.ca.ACTIVE):
 			return
 
 		self.ca.glive.xv = True
@@ -459,7 +460,6 @@ class UI:
 	def updateVideoComponents( self ):
 		offW = gtk.gdk.screen_width() + 100
 		offH = gtk.gdk.screen_height() + 100
-
 
 		if (self.photoMode):
 			if (self.liveMode):

@@ -392,11 +392,12 @@ class Model:
 		if (self.MODE == self.MODE_VIDEO):
 			return
 
+		self.setUpdating(True)
 		#assign your new mode
 		self.MODE = self.MODE_VIDEO
 		self.selectLatestThumbs(self.TYPE_VIDEO)
 
-		self.setUpdating(True)
+
 		self.ca.ui.updateModeChange()
 		self.setUpdating(False)
 
@@ -405,11 +406,11 @@ class Model:
 		if (self.MODE == self.MODE_PHOTO):
 			return
 
+		self.setUpdating(True)
 		#assign your new mode
 		self.MODE = self.MODE_PHOTO
 		self.selectLatestThumbs(self.TYPE_PHOTO)
 
-		self.setUpdating(True)
 		self.ca.ui.updateModeChange()
 		self.setUpdating(False)
 
