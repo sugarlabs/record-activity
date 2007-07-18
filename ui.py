@@ -183,6 +183,7 @@ class UI:
 
 		#pipbackground here
 		self.livePipBgdWindow = PipWindow(self)
+		self.livePipBgdWindow.resize( self.pipBorderW, self.pipBorderH )
 		self.livePipBgdWindow.set_transient_for(self.livePhotoWindow)
 		self.livePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.livePipBgdWindow.set_decorated(False)
@@ -196,6 +197,7 @@ class UI:
 		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
 
 		self.liveMaxWindow = MaxWindow(self, True)
+		self.liveMaxWindow.resize( self.maxw, self.maxh )
 		self.liveMaxWindow.set_transient_for(self.liveVideoWindow)
 		self.liveMaxWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.liveMaxWindow.set_decorated(False)
@@ -211,7 +213,7 @@ class UI:
 
 		#pipbackground here
 		self.playLivePipBgdWindow = PipWindow(self)
-		self.playLivePipBgdWindow.modify_bg( gtk.STATE_NORMAL, self.colorWhite.gColor )
+		self.playLivePipBgdWindow.resize( self.pipBorderW, self.pipBorderH )
 		self.playLivePipBgdWindow.set_transient_for(self.playOggWindow)
 		self.playLivePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playLivePipBgdWindow.set_decorated(False)
@@ -224,6 +226,7 @@ class UI:
 		self.playLiveWindow.connect("button_release_event", self.playLiveButtonReleaseCb)
 
 		self.playMaxWindow = MaxWindow(self, False)
+		self.playMaxWindow.resize( self.maxw, self.maxh )
 		self.playMaxWindow.set_transient_for(self.playLiveWindow)
 		self.playMaxWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playMaxWindow.set_decorated(False)
@@ -271,7 +274,6 @@ class UI:
 	def hideLiveWindows( self ):
 		offW = gtk.gdk.screen_width() + 100
 		offH = gtk.gdk.screen_height() + 100
-		print( "live", offW, offH )
 
 		self.livePhotoWindow.move( offW, offH )
 		self.livePipBgdWindow.move( offW, offH )
@@ -282,7 +284,6 @@ class UI:
 	def hidePlayWindows( self ):
 		offW = gtk.gdk.screen_width() + 100
 		offH = gtk.gdk.screen_height() + 100
-		print( "play", offW, offH )
 
 		self.playOggWindow.move( offW, offH )
 		self.playLivePipBgdWindow.move( offW, offH )
@@ -384,7 +385,6 @@ class UI:
 
 	def setPipLocDim( self, win ):
 		win.resize( self.pipw, self.piph )
-
 		if (self.fullScreen):
 			win.move( self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
 		else:
@@ -395,7 +395,6 @@ class UI:
 
 
 	def setPipBgdLocDim( self, win ):
-		win.resize( self.pipBorderW, self.pipBorderH )
 		if (self.fullScreen):
 			win.move( self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder))
 		else:
