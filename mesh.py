@@ -28,9 +28,9 @@ class MeshXMLRPCServer:
 		self.server = network.GlibXMLRPCServer(("", xmlRpcPort))
 		self.server.register_instance(self) #anything witout an _ is callable by all the hos and joes out there
 
-	def newPhotoNotice( self,
+	def newPhotoNotice(	self,
 						ip,
-						mediaFilename, thumbFilename, time, photographer, name, colorStroke, colorFill ):
+						mediaFilename, thumbFilename, time, photographer, name, colorStroke, colorFill, hashKey ):
 
 		newRecd = Recorded()
 		newRecd.type = self.ca.m.TYPE_PHOTO
@@ -40,6 +40,7 @@ class MeshXMLRPCServer:
 		newRecd.time = time
 		newRecd.photographer = photographer
 		newRecd.name = name
+		newRecd.hashKey = hashKey
 
 		colorStrokeHex = colorStroke
 		colorStroke = Color()
@@ -54,6 +55,11 @@ class MeshXMLRPCServer:
 		print "requested new bits from that other buddy"
 		return "successios"
 
+
+	def deleteMediaNotice( 	self,
+							hashKey, time, type):
+		self.ca.m.deleteBuddyMedia( hashKey, int(time), int(type) )
+		return "deletedPhoto"
 
 class HttpServer(network.GlibTCPServer):
 
@@ -137,17 +143,40 @@ class MeshClient:
 									recd.time, recd.photographer,
 									recd.name,
 									recd.colorStroke.hex, recd.colorFill.hex,
-									reply_handler=self.notifyBudsOfNewPicCb,
-									error_handler=self.errorCb,
-									user_data=bud)
+									recd.hashKey,
+									reply_handler=self.notifyBudsOfNewPhotoCb,
+									error_handler=self.notifyBudsOfNewPhotoErrorCb,
+									user_data=buddy)
 
 
-	def notifyBudsOfNewPicCb(self, response, user_data):
+	def notifyBudsOfNewPhotoCb(self, response, user_data):
 		print "Response was %s, user_data was %s" % (response, user_data)
 
 
-	def errorCb(self, error, bud):
-		print "We've a no go erroro! ", bud
+	def notifyBudsOfNewPhotoErrorCb(self, error, user_data):
+		print "We've a no go erroro! ", user_data
+
+
+	def notifyBudsofDeleteMedia(self, recd):
+		for buddy in self.my_acty.get_joined_buddies():
+			if (not buddy.props.owner):
+				print("notifyBudsofDeleteMedia...")
+				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
+
+				bud.deleteMediaNotice(	recd.hashKey,
+										recd.time,
+										recd.type,
+										reply_handler=self.notifyBudsOfDeleteMediaCb,
+										error_handler=self.notifyBudsOfDeleteMediaErrorCb,
+										user_data=buddy)
+
+
+	def notifyBudsOfDeleteMediaCb(self, response, user_data):
+		print "Response was %s, user_data was %s" % (response, user_data)
+
+
+	def notifyBudsOfDeleteMediaErrorCb(self, error, user_data):
+		print "We've a no go erroro! ", user_data
 
 
 	def requestThumbBits(self, ip, recd):
@@ -174,7 +203,6 @@ class MeshClient:
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 		print( "downloaded and here it is: " + str(dest) )
-		print( "recd: ", recd )
 		self.ca.m.addPhoto( recd )
 
 

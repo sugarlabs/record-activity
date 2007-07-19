@@ -519,7 +519,6 @@ class UI:
 
 
 	def showThumbSelection( self, recd ):
-		print("showThumbSelection", recd.type)
 		#do we need to know the type, since we're showing based on the mode of the app?
 		if (recd.type == self.ca.m.TYPE_PHOTO):
 			self.showPhoto( recd )
@@ -530,7 +529,7 @@ class UI:
 	def deleteThumbSelection( self, recd ):
 		#todo: test --> if this is the current selection, then clear it away here
 		#todo: for video too
-		self.ca.m.deleteMedia( recd, self.startThumb )
+		self.ca.m.deleteRecorded( recd, self.startThumb )
 
 		self.shownRecd = None
 		self.livePhotoCanvas.setImage(None)
@@ -552,6 +551,8 @@ class UI:
 			imgPath_s = os.path.abspath(imgPath)
 			if (not os.path.isfile(imgPath_s)):
 				imgPath = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
+				imgPath_s = os.path.abspath( imgPath )
+
 				#todo: make req for the real picture here
 				#todo: make sure to get the correct url, pbly by asking...
 
@@ -935,7 +936,6 @@ class ThumbnailCanvas(P5Button):
 
 
 	def fireButton(self, actionCommand):
-		print("fireButton...", actionCommand )
 		if (actionCommand == self.thumbS):
 			self.ui.showThumbSelection( self.recd )
 		elif (actionCommand == self.deleteS):

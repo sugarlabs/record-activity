@@ -53,7 +53,7 @@ class Model:
 
 		recd.type = int(el.getAttribute('type'))
 		recd.name = el.getAttribute('name')
-		recd.time = float(el.getAttribute('time'))
+		recd.time = int(el.getAttribute('time'))
 		recd.photographer = el.getAttribute('photographer')
 		recd.mediaFilename = el.getAttribute('mediaFilename')
 		recd.thumbFilename = el.getAttribute('thumbFilename')
@@ -66,7 +66,7 @@ class Model:
 		colorFill.init_hex( colorFillHex )
 		recd.colorFill = colorFill
 		recd.buddy = (el.getAttribute('buddy') == "True")
-		#recd.hashKey = el.getAttribute('hashKey')
+		recd.hashKey = el.getAttribute('hashKey')
 
 		hash.append( recd )
 
@@ -79,7 +79,7 @@ class Model:
 		el.setAttribute("thumbFilename", recd.thumbFilename)
 		el.setAttribute("colorStroke", str(recd.colorStroke.hex) )
 		el.setAttribute("colorFill", str(recd.colorFill.hex) )
-		#el.setAttribute("hashKey", str(recd.hashKey))
+		el.setAttribute("hashKey", str(recd.hashKey))
 		el.setAttribute("buddy", str(recd.buddy))
 
 
@@ -98,6 +98,10 @@ class Model:
 
 
 	def setupThumbs( self, type, mn, mx ):
+
+		if (not type == self.MODE):
+			return
+
 		self.setUpdating( True )
 
 		hash = self.mediaHashs[type]
@@ -253,6 +257,7 @@ class Model:
 		self.setUpdating( False )
 
 
+	#assign a better name here (name_0.jpg)
 	def createNewRecorded( self, type ):
 		recd = Recorded()
 
@@ -276,7 +281,7 @@ class Model:
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill
-		#recd.hashKey = self.ca.hashed_key
+		recd.hashKey = self.ca.hashedKey
 
 		return recd
 
@@ -294,7 +299,7 @@ class Model:
 		return thumbImg
 
 
-	def deleteMedia( self, recd, mn ):
+	def deleteRecorded( self, recd, mn ):
 		#clear the index
 		hash = self.mediaHashs[recd.type]
 		index = hash.index(recd)
@@ -303,15 +308,40 @@ class Model:
 		#clear transients
 		recd.thumb = None
 		recd.media = None
+
 		#remove files from the filesystem
 		mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		os.remove(mediaFile)
-		thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
-		os.remove(thumbFile)
+		if (recd.buddy):
+			mediaFile = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
+		if (os.path.exists(mediaFile)):
+			os.remove(mediaFile)
 
+		thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
+		if (recd.buddy):
+			thumbFile = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
+		if (os.path.exists(thumbFile)):
+			os.remove(thumbFile)
+
+		if (not recd.buddy):
+			self.ca.meshClient.notifyBudsofDeleteMedia( recd )
+
+		print("deleted!")
+		#todo: handle -1 here as recd was deleted remotely...
 		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
 
 
+	def deleteBuddyMedia( self, hashKey, time, type ):
+		print("deleting buddies media:", hashKey, time, type )
+		if (type == self.TYPE_PHOTO or type == self.TYPE_VIDEO):
+			hash = self.mediaHashs[type]
+			for recd in hash:
+				if ((recd.hashKey == hashKey) and (recd.time == time)):
+					#pass in -1 since we don't know where it is (or we should find out)
+					self.deleteRecorded( recd, 0)
+					#todo: remove it in the ui if showing it
+
+
+	#todo: update photo index to point to the "buddies"
 	def updateMediaIndex( self ):
 		#delete all old htmls
 		files = os.listdir(self.ca.journalPath)

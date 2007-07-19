@@ -9,7 +9,7 @@ class Recorded:
 		self.name = None
 		self.colorStroke = None
 		self.colorFill = None
-		#self.hashKey = None
+		self.hashKey = None
 
 		#transient
 		self.media = None

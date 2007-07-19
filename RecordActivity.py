@@ -44,8 +44,8 @@ class RecordActivity(activity.Activity):
 
 		#whoami?
 		key = profile.get_pubkey()
-		key_hash = util._sha_data(key)
-		self.hashed_key = util.printable_hash(key_hash)
+		keyHash = util._sha_data(key)
+		self.hashedKey = util.printable_hash(keyHash)
 
 		self.httpServer = None
 		self.meshClient = None
