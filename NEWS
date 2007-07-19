@@ -1,10 +1,11 @@
-16
+15
 * Cache rendered thumbnails (jedierikb)
 * Thread the rendering of full-screen photos (jedierikb)
-* Border around pip (jedierikb)sense
-
-15
+* Border around pip (jedierikb)
 * Switch display sizes of ogg and live video (jedierikb)
+* Higher quality audio & video recording (jedierikb)
+* Mesh transfer of thumbnails, photos, and deleting of photos (jedierikb)
+* Activity instance directories for photos
 
 14
 * Multiple video recordings work (jedierikb)
