@@ -551,10 +551,13 @@ class UI:
 			imgPath_s = os.path.abspath(imgPath)
 			if (not os.path.isfile(imgPath_s)):
 				imgPath = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
+				#todo: check that we use abspath everywheres
 				imgPath_s = os.path.abspath( imgPath )
+				self.ca.meshClient.requestPhotoBits( recd )
 
 				#todo: make req for the real picture here
 				#todo: make sure to get the correct url, pbly by asking...
+				#todo: limit the # of times we ask for the photo?
 
 		if ( os.path.isfile(imgPath_s) ):
 			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath_s)
@@ -564,6 +567,11 @@ class UI:
 			self.updateVideoComponents()
 
 			self.showRecdMeta(recd)
+
+
+	def updateShownPhoto( self, recd ):
+		if (self.shownRecd == recd):
+			self.showPhoto( recd )
 
 
 	def showVideo( self, recd ):

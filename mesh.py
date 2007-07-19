@@ -84,7 +84,8 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		for i in range (0, len(allParams)):
 			parama.append(allParams[i].split('='))
 
-		#todo: test to make sure file still here and not deleted
+		print( "http parama...", parama )
+		#todo: test to make sure file still here and not deleted... and what to return if not there?
 		#should be abs path... check it 1st
 		ff = parama[0][1]
 		fileToSend = os.path.join( self.server.ca.journalPath, ff )
@@ -160,7 +161,6 @@ class MeshClient:
 	def notifyBudsofDeleteMedia(self, recd):
 		for buddy in self.my_acty.get_joined_buddies():
 			if (not buddy.props.owner):
-				print("notifyBudsofDeleteMedia...")
 				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
 
 				bud.deleteMediaNotice(	recd.hashKey,
@@ -183,17 +183,16 @@ class MeshClient:
 		ps = presenceservice.get_instance()
 		me = ps.get_owner()
 
-		#todo: differentiate which session
+		#todo: differentiate which session in case many cameras are running
 		uri = "http://" + str(ip) + ":" + str(httpPort) + "/thumb?thumbFilename=" + str(recd.thumbFilename)
-		print( uri )
 		getter = network.GlibURLDownloader( uri )
-		getter.connect( "finished", self.downloadResultCb, recd )
-		getter.connect( "error", self.downloadErrorCb, recd )
+		getter.connect( "finished", self.thumbDownloadResultCb, recd )
+		getter.connect( "error", self.thumbDownloadErrorCb, recd )
 		getter.start()
 
 
-	def downloadResultCb(self, getter, tempfile, suggested_name, recd):
-		#todo: better way to disambiguate who took which photo (hash)?
+	def thumbDownloadResultCb(self, getter, tempfile, suggested_name, recd):
+		#todo: better way to disambiguate who took which photo (hash, md5sum)?
 		#dest = os.path.join(os.path.expanduser("~"), suggested_name)
 		buddyDirPath = os.path.join( self.ca.journalPath, "buddies" )
 		if (not os.path.exists(buddyDirPath)):
@@ -202,10 +201,43 @@ class MeshClient:
 		dest = os.path.join( buddyDirPath, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
-		print( "downloaded and here it is: " + str(dest) )
+		print( "downloaded thumb and here it is: " + str(dest) )
 		self.ca.m.addPhoto( recd )
 
 
-	def downloadErrorCb(self, getter, err, recd):
-		logging.debug("Error getting document from %s (%s): %s" % (buddy.props.nick, buddy.props.ip4_address, err))
-		#gobject.idle_add(self._get_document)
+	def thumbDownloadErrorCb(self, getter, err, recd):
+		print("thumbDownloadError", getter, err, recd )
+
+
+	#todo: round robin everyone for a copy of this photo?
+	#todo: handshake that said buddy has a copy of this photo to offer you
+	def requestPhotoBits(self, recd):
+		photoTakingBuddy = None
+		for buddy in self.my_acty.get_joined_buddies():
+			if (not buddy.props.owner):
+				if (buddy.props.nick == recd.photographer):
+					photoTakingBuddy = buddy
+
+		if (photoTakingBuddy != None):
+			uri = "http://" + str(photoTakingBuddy.props.ip4_address) + ":" + str(httpPort) + "/media?mediaFilename=" + str(recd.mediaFilename)
+			getter = network.GlibURLDownloader( uri )
+			getter.connect( "finished", self.mediaDownloadResultCb, recd )
+			getter.connect( "error", self.mediaDownloadErrorCb, recd )
+			getter.start()
+
+
+	def mediaDownloadResultCb(self, getter, tempfile, suggested_name, recd):
+		#todo: make lazy maker+getter fot buddy dir
+		buddyDirPath = os.path.join( self.ca.journalPath, "buddies" )
+		if (not os.path.exists(buddyDirPath)):
+			os.makedirs(buddyDirPath)
+
+		dest = os.path.join( buddyDirPath, suggested_name )
+		shutil.copyfile(tempfile, dest)
+		os.remove(tempfile)
+		print( "downloaded media and here it is: " + str(dest) )
+		self.ca.ui.updateShownPhoto( recd )
+
+
+	def mediaDownloadErrorCb(self, getter, err, recd):
+		print("mediaDownloadError", getter, err, recd)

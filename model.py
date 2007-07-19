@@ -325,20 +325,17 @@ class Model:
 		if (not recd.buddy):
 			self.ca.meshClient.notifyBudsofDeleteMedia( recd )
 
-		print("deleted!")
-		#todo: handle -1 here as recd was deleted remotely...
 		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
 
 
 	def deleteBuddyMedia( self, hashKey, time, type ):
-		print("deleting buddies media:", hashKey, time, type )
 		if (type == self.TYPE_PHOTO or type == self.TYPE_VIDEO):
 			hash = self.mediaHashs[type]
 			for recd in hash:
 				if ((recd.hashKey == hashKey) and (recd.time == time)):
-					#pass in -1 since we don't know where it is (or we should find out)
-					self.deleteRecorded( recd, 0)
-					#todo: remove it in the ui if showing it
+					#todo: pass in -1 since we don't know where it is (or we should find out)
+					self.deleteRecorded( recd, 0 )
+					#todo: remove it in the main ui if showing it
 
 
 	#todo: update photo index to point to the "buddies"
