@@ -28,7 +28,6 @@ class RecordActivity(activity.Activity):
 
 	def _initme( self, userdata=None ):
 		self.instanceId = self._activity_id
-		print( "instanceId", self.instanceId )
 		self.ACTIVE = True
 
 		self.nickName = profile.get_nick_name()

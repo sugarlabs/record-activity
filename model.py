@@ -322,7 +322,7 @@ class Model:
 		if (os.path.exists(thumbFile)):
 			os.remove(thumbFile)
 
-		if (not recd.buddy):
+		if ((not recd.buddy) and (self.ca.meshClient != None)):
 			self.ca.meshClient.notifyBudsofDeleteMedia( recd )
 
 		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
@@ -332,10 +332,12 @@ class Model:
 		if (type == self.TYPE_PHOTO or type == self.TYPE_VIDEO):
 			hash = self.mediaHashs[type]
 			for recd in hash:
+				#todo: md5sum
 				if ((recd.hashKey == hashKey) and (recd.time == time)):
 					#todo: pass in -1 since we don't know where it is (or we should find out)
 					self.deleteRecorded( recd, 0 )
 					#todo: remove it in the main ui if showing it
+					self.ca.ui.removeIfSelectedRecorded( recd )
 
 
 	#todo: update photo index to point to the "buddies"
@@ -424,7 +426,6 @@ class Model:
 		#assign your new mode
 		self.MODE = self.MODE_VIDEO
 		self.selectLatestThumbs(self.TYPE_VIDEO)
-
 
 		self.ca.ui.updateModeChange()
 		self.setUpdating(False)

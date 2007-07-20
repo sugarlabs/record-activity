@@ -1,5 +1,6 @@
 from sugar import network
 from sugar.presence import presenceservice
+from sugar import util
 
 import urlparse
 import urllib
@@ -116,6 +117,7 @@ class MeshClient:
 			print ("a", buddy.props.nick)
 			print ("a", buddy.props.ip4_address)
 			print ("a", buddy.props.owner) #me boolean
+			print ("a", buddy.props.key)
 
 		print("1.6")
 
@@ -123,11 +125,13 @@ class MeshClient:
 		print ("b", buddy.props.nick)
 		print ("b", buddy.props.ip4_address)
 		print ("b", buddy.props.owner) #me boolean
+		print ("b", buddy.props.key)
 
 	def buddyDepartedCb( self, activity, buddy ):
 		print ("c", buddy.props.nick)
 		print ("c", buddy.props.ip4_address)
 		print ("c", buddy.props.owner) #me boolean
+		print ("c", buddy.props.key)
 
 	#herein we notify our buddies of some cool stuff we got going on they mights wants to knows abouts
 	def notifyBudsOfNewPhoto( self, recd ):
@@ -201,7 +205,6 @@ class MeshClient:
 		dest = os.path.join( buddyDirPath, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
-		print( "downloaded thumb and here it is: " + str(dest) )
 		self.ca.m.addPhoto( recd )
 
 
@@ -209,15 +212,19 @@ class MeshClient:
 		print("thumbDownloadError", getter, err, recd )
 
 
-	#todo: round robin everyone for a copy of this photo?
-	#todo: handshake that said buddy has a copy of this photo to offer you
+	#todo: don't request this if requesting this already
 	def requestPhotoBits(self, recd):
+		print("requestingPhotoBits...", len(self.my_acty.get_joined_buddies()))
 		photoTakingBuddy = None
 		for buddy in self.my_acty.get_joined_buddies():
 			if (not buddy.props.owner):
-				if (buddy.props.nick == recd.photographer):
+				keyHash = util._sha_data(buddy.props.key)
+				hashKey = util.printable_hash(keyHash)
+				print(hashKey, recd.hashKey)
+				if (hashKey == recd.hashKey):
 					photoTakingBuddy = buddy
 
+		print("photoTakingBuddy...", photoTakingBuddy)
 		if (photoTakingBuddy != None):
 			uri = "http://" + str(photoTakingBuddy.props.ip4_address) + ":" + str(httpPort) + "/media?mediaFilename=" + str(recd.mediaFilename)
 			getter = network.GlibURLDownloader( uri )

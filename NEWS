@@ -1,3 +1,10 @@
+17
+* Fix out-of-bounds theoraenc recording (jedierikb)
+* Fix delete of video thumbnails (jedierikb)
+* Remove the shown media if its thumbnail is deleted (jedierikb)
+* Show live video tags when switching modes (jedierikb)
+* Fixes for showing hi-res shared photos (jedierikb)
+
 16
 * Cache rendered thumbnails (jedierikb)
 * Thread the rendering of full-screen photos (jedierikb)

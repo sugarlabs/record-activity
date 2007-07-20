@@ -355,6 +355,7 @@ class UI:
 		else:
 			self.startXV( self.playLiveWindow )
 
+		self.showLiveVideoTags()
 		self.updateVideoComponents()
 
 
@@ -374,6 +375,7 @@ class UI:
 		self.updateVideoComponents()
 
 
+	#todo: remove flicker when showing photo from live video...
 	def setImgLocDim( self, win ):
 		if (self.fullScreen):
 			win.move( 0, 0 )
@@ -527,16 +529,26 @@ class UI:
 
 
 	def deleteThumbSelection( self, recd ):
-		#todo: test --> if this is the current selection, then clear it away here
-		#todo: for video too
 		self.ca.m.deleteRecorded( recd, self.startThumb )
 
-		self.shownRecd = None
-		self.livePhotoCanvas.setImage(None)
-		self.liveMode = True
-		self.updateVideoComponents()
+		self.removeIfSelectedRecorded( recd )
 
-		self.showLiveVideoTags()
+
+	#todo: blank the livePhotoCanvas whenever it is removed
+	def removeIfSelectedRecorded( self, recd ):
+		if (recd == self.shownRecd):
+			self.shownRecd = None
+
+			if (recd.type == self.ca.m.TYPE_PHOTO):
+				self.livePhotoCanvas.setImage(None)
+			elif (recd.type == self.ca.m.TYPE_VIDEO):
+				self.ca.gplay.stop()
+				self.startXV( self.playLiveWindow )
+
+			self.liveMode = True
+			self.updateVideoComponents()
+
+			self.showLiveVideoTags()
 
 
 	def showPhoto( self, recd ):
@@ -560,11 +572,12 @@ class UI:
 				#todo: limit the # of times we ask for the photo?
 
 		if ( os.path.isfile(imgPath_s) ):
+			self.liveMode = False
+			self.updateVideoComponents()
+
 			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath_s)
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 			self.livePhotoCanvas.setImage(img)
-			self.liveMode = False
-			self.updateVideoComponents()
 
 			self.showRecdMeta(recd)
 
@@ -589,6 +602,7 @@ class UI:
 		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
 		self.ca.gplay.setLocation(videoUrl)
 
+		self.shownRecd = recd
 		self.showRecdMeta(recd)
 
 
