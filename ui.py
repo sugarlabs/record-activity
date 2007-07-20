@@ -405,13 +405,37 @@ class UI:
 		win.show_all()
 
 
+#	def setPipLocDim( self, win ):
+#		#todo: get rid of the flash when moving live video down and resizing
+#		#win.unmap()
+#		self.moveWinOffscreen( win )
+#		win.resize( self.pipw, self.piph )
+#		#win.map()
+
+#		if (self.fullScreen):
+#			win.move( self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
+#		else:
+#			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
+#			win.move( vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
+
+#		win.show_all()
+
+
 	def setPipLocDim( self, win ):
 		#todo: get rid of the flash when moving live video down and resizing
-		#win.unmap()
+		win.unmap()
 		self.moveWinOffscreen( win )
 		win.resize( self.pipw, self.piph )
-		#win.map()
 
+		self.mapId2 = win.connect("map-event", self.mapEvent2, win)
+
+
+	def mapEvent2( self, widget, event, win ):
+		win.disconnect(self.mapId2)
+		self.setPipLocDim2(win)
+
+
+	def setPipLocDim2( self, win ):
 		if (self.fullScreen):
 			win.move( self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
 		else:
@@ -419,7 +443,6 @@ class UI:
 			win.move( vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
 
 		win.show_all()
-
 
 	def setPipBgdLocDim( self, win ):
 		if (self.fullScreen):
@@ -482,8 +505,6 @@ class UI:
 
 
 	def updateVideoComponents( self ):
-
-		print( self.photoMode, self.liveMode, self.fullScreen )
 		if (self.photoMode):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.livePipBgdWindow )
