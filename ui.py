@@ -274,30 +274,25 @@ class UI:
 
 
 	def hideLiveWindows( self ):
-		offW = gtk.gdk.screen_width() + 100
-		offH = gtk.gdk.screen_height() + 100
-
-		self.livePhotoWindow.move( offW, offH )
-		self.livePipBgdWindow.move( offW, offH )
-		self.liveVideoWindow.move( offW, offH )
-		self.liveMaxWindow.move( offW, offH )
+		self.moveWinOffscreen( self.livePhotoWindow )
+		self.moveWinOffscreen( self.livePipBgdWindow )
+		self.moveWinOffscreen( self.liveVideoWindow )
+		self.moveWinOffscreen( self.liveMaxWindow )
 
 
 	def hidePlayWindows( self ):
-		offW = gtk.gdk.screen_width() + 100
-		offH = gtk.gdk.screen_height() + 100
-
-		self.playOggWindow.move( offW, offH )
-		self.playLivePipBgdWindow.move( offW, offH )
-		self.playLiveWindow.move( offW, offH )
-		self.playMaxWindow.move( offW, offH )
+		self.moveWinOffscreen( self.playOggWindow )
+		self.moveWinOffscreen( self.playLivePipBgdWindow )
+		self.moveWinOffscreen( self.playLiveWindow )
+		self.moveWinOffscreen( self.playMaxWindow )
 
 
 	def liveButtonReleaseCb(self, widget, event):
 		self.livePhotoCanvas.setImage(None)
 		if (self.liveMode != True):
-			self.liveMode = True
+			#todo: updating here?
 			self.showLiveVideoTags()
+			self.liveMode = True
 			self.updateVideoComponents()
 
 
@@ -374,22 +369,33 @@ class UI:
 		self.fullScreen = not self.fullScreen
 		self.updateVideoComponents()
 
+	def moveWinOffscreen( self, win ):
+		#we move offscreen to resize or else we get flashes on screen, and setting hide() doesn't allow resize & moves
+		offW = (gtk.gdk.screen_width() + 100)
+		offH = (gtk.gdk.screen_height() + 100)
+		win.move(offW, offH)
 
-	#todo: remove flicker when showing photo from live video...
 	def setImgLocDim( self, win ):
 		if (self.fullScreen):
-			win.move( 0, 0 )
+			self.moveWinOffscreen( win )
 			win.resize( gtk.gdk.screen_width(), gtk.gdk.screen_height() )
+			win.move( 0, 0 )
 		else:
+			self.moveWinOffscreen( win )
+			win.resize( self.vw, self.vh )
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			win.move( vPos[0], vPos[1] )
-			win.resize( self.vw, self.vh )
 
 		win.show_all()
 
 
 	def setPipLocDim( self, win ):
+		#todo: get rid of the flash when moving live video down and resizing
+		#win.unmap()
+		self.moveWinOffscreen( win )
 		win.resize( self.pipw, self.piph )
+		#win.map()
+
 		if (self.fullScreen):
 			win.move( self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
 		else:
@@ -460,12 +466,11 @@ class UI:
 
 
 	def updateVideoComponents( self ):
-		offW = gtk.gdk.screen_width() + 100
-		offH = gtk.gdk.screen_height() + 100
 
+		print( self.photoMode, self.liveMode, self.fullScreen )
 		if (self.photoMode):
 			if (self.liveMode):
-				self.livePipBgdWindow.move( offW, offH )
+				self.moveWinOffscreen( self.livePipBgdWindow )
 
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setImgLocDim( self.liveVideoWindow )
@@ -477,8 +482,8 @@ class UI:
 				self.setMaxLocDim( self.liveMaxWindow )
 		else:
 			if (self.liveMode):
-				self.playOggWindow.move( offW, offH )
-				self.playLivePipBgdWindow.move( offW, offH )
+				self.moveWinOffscreen( self.playOggWindow )
+				self.moveWinOffscreen( self.playLivePipBgdWindow )
 
 				self.setImgLocDim( self.playLiveWindow )
 				self.setMaxLocDim( self.playMaxWindow )
@@ -552,7 +557,6 @@ class UI:
 
 
 	def showPhoto( self, recd ):
-		#todo: show networked photos and request their bits
 		self.shownRecd = recd
 
 		imgPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
@@ -567,17 +571,13 @@ class UI:
 				imgPath_s = os.path.abspath( imgPath )
 				self.ca.meshClient.requestPhotoBits( recd )
 
-				#todo: make req for the real picture here
-				#todo: make sure to get the correct url, pbly by asking...
-				#todo: limit the # of times we ask for the photo?
-
 		if ( os.path.isfile(imgPath_s) ):
-			self.liveMode = False
-			self.updateVideoComponents()
-
 			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath_s)
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 			self.livePhotoCanvas.setImage(img)
+
+			self.liveMode = False
+			self.updateVideoComponents()
 
 			self.showRecdMeta(recd)
 
