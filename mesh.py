@@ -1,4 +1,4 @@
-#Copyright (c) 2007 Media Modifications Ltd.
+#Copyright (c) 2007, Media Modifications Ltd.
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -90,9 +90,11 @@ class HttpServer(network.GlibTCPServer):
 		network.GlibTCPServer.__init__(self, server_address, HttpReqHandler);
 
 
+
 class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 
 	def translate_path(self, path):
+		#todo: what to return here if not returning a file or how to handle errors?
 		urlp = urlparse.urlparse(path)
 		urls = urlp[2]
 		urls = posixpath.normpath(urllib.unquote(urls))
@@ -218,6 +220,7 @@ class MeshClient:
 	def thumbDownloadResultCb(self, getter, tempfile, suggested_name, recd):
 		#todo: better way to disambiguate who took which photo (hash, md5sum)?
 		#dest = os.path.join(os.path.expanduser("~"), suggested_name)
+		#todo: handle empty files here... or errors
 		buddyDirPath = os.path.join( self.ca.journalPath, "buddies" )
 		if (not os.path.exists(buddyDirPath)):
 			os.makedirs(buddyDirPath)

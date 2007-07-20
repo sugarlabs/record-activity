@@ -1,4 +1,4 @@
-#Copyright (c) 2007 Media Modifications Ltd.
+#Copyright (c) 2007, Media Modifications Ltd.
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -17,6 +17,7 @@
 #LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
+
 
 import urllib
 import string
@@ -42,7 +43,11 @@ from xml.dom.minidom import parse
 from recorded import Recorded
 from color import Color
 
+from hashlib import md5
+from sugar import util
+
 import _camera
+
 
 class Model:
 	def __init__( self, pca ):
@@ -51,7 +56,6 @@ class Model:
 		self.journalIndex = os.path.join(self.ca.journalPath, 'camera_index.xml')
 		self.mediaHashs = {}
 		self.fillMediaHash( self.journalIndex )
-
 
 	def fillMediaHash( self, index ):
 		self.mediaHashs[self.TYPE_PHOTO] = []
@@ -85,8 +89,11 @@ class Model:
 		recd.colorFill = colorFill
 		recd.buddy = (el.getAttribute('buddy') == "True")
 		recd.hashKey = el.getAttribute('hashKey')
+		recd.mediaMd5 = el.getAttribute('mediaMd5')
+		recd.thumbMd5 = el.getAttribute('thumbMd5')
 
 		hash.append( recd )
+
 
 	def saveMedia( self, el, recd, type ):
 		el.setAttribute("type", str(type))
@@ -99,6 +106,8 @@ class Model:
 		el.setAttribute("colorFill", str(recd.colorFill.hex) )
 		el.setAttribute("hashKey", str(recd.hashKey))
 		el.setAttribute("buddy", str(recd.buddy))
+		el.setAttribute("mediaMd5", str(recd.mediaMd5))
+		el.setAttribute("thumbMd5", str(recd.thumbMd5))
 
 
 	def selectLatestThumbs( self, type ):
@@ -302,6 +311,27 @@ class Model:
 		recd.hashKey = self.ca.hashedKey
 
 		return recd
+
+
+	def createNewRecordedMd5Sums( self, recd ):
+		#load the thumbfile
+		thumbFile = os.path.join(self.journalPath, recd.thumbFilename)
+		thumbMd5 = self.md5File( thumbFile )
+		recd.thumbMd5 = thumbMd5
+
+		#load the mediafile
+		mediaFile = os.path.join(self.journalPath, recd.mediaFilename)
+		mediaMd5 = self.m5dFile( mediaFile )
+		recd.mediaMd5 = mediaMd5
+
+
+	def md5File( self, file ):
+		os.load( thumbFile )
+
+		md = md5()
+		digest = md.update(file).hex_digest()
+		hash = util.printable_hash(digest)
+		return hash
 
 
 	#outdated?
