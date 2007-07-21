@@ -255,7 +255,6 @@ class UI:
 
 		self.hidePlayWindows()
 
-
 		#only show the floating windows once everything is exposed and has a layout position
 		self.ca.show_all()
 		self.exposeId = self.ca.connect("expose-event", self.exposeEvent)
@@ -355,6 +354,8 @@ class UI:
 
 
 	def updateModeChange(self):
+		#todo: move the video offscreen when switching modes until the video comes on and is playng
+
 		#this is called when a menubar button is clicked
 		self.liveMode = True
 		self.fullScreen = False
@@ -396,7 +397,7 @@ class UI:
 		win.move(offW, offH)
 
 	def setImgLocDim( self, win ):
-		win.hide_all()
+		#win.hide_all()
 		self.moveWinOffscreen( win )
 
 		if (self.fullScreen):
@@ -786,7 +787,6 @@ class PhotoCanvas(P5):
 		#use image size in case 640 no more
 		scaleImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
 		sCtx = cairo.Context(scaleImg)
-		#todo: test --> self.ui.vw not necc b/c of thumbs when over the network
 		sScl = (w+0.0)/(self.img.get_width()+0.0)
 		sCtx.scale( sScl, sScl )
 		sCtx.set_source_surface( self.img, 0, 0 )
