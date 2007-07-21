@@ -193,6 +193,7 @@ class UI:
 
 		#image windows
 		self.livePhotoWindow = PhotoCanvasWindow(self)
+		self.livePhotoWindow.resize( self.vw, self.vh )
 		self.livePhotoCanvas = PhotoCanvas(self)
 		self.livePhotoWindow.setPhotoCanvas(self.livePhotoCanvas)
 		self.livePhotoWindow.set_transient_for(self.ca)
@@ -207,6 +208,7 @@ class UI:
 		self.livePipBgdWindow.set_decorated(False)
 
 		self.liveVideoWindow = LiveVideoWindow()
+		self.liveVideoWindow.resize( self.vw, self.vh )
 		self.liveVideoWindow.set_transient_for(self.livePipBgdWindow)
 		self.liveVideoWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.liveVideoWindow.set_decorated(False)
@@ -224,6 +226,7 @@ class UI:
 
 		#video playback windows
 		self.playOggWindow = PlayVideoWindow()
+		self.playOggWindow.resize(self.vw, self.vh)
 		self.playOggWindow.set_gplay(self.ca.gplay)
 		self.playOggWindow.set_transient_for(self.liveMaxWindow)
 		self.playOggWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
@@ -237,6 +240,7 @@ class UI:
 		self.playLivePipBgdWindow.set_decorated(False)
 
 		self.playLiveWindow = LiveVideoWindow()
+		self.playLiveWindow.resize( self.pipw, self.piph )
 		self.playLiveWindow.set_transient_for(self.playLivePipBgdWindow)
 		self.playLiveWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playLiveWindow.set_decorated(False)
