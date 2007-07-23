@@ -272,7 +272,7 @@ class UI:
 
 	def showLiveVideoTags( self ):
 		#todo: if this is too long, then live video gets pushed off screen (and ends up at 0x0??!)
-		self.nameTextfield.set_label("Live Video:" + str(self.ca.instanceId ))
+		self.nameTextfield.set_label("Live Video") # + str(self.ca.instanceId ))
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
