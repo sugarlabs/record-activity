@@ -32,7 +32,6 @@ import threading
 import gobject
 gobject.threads_init()
 
-
 class Glive:
 	def __init__(self, pca):
 		self.window = None
@@ -70,12 +69,6 @@ class Glive:
 		self.pipe().set_state(gst.STATE_NULL)
 		self.nextPipe()
 
-	def setXmode(self, xv):
-		if (xv):
-			pass
-		else:
-			pass
-
 	def nextPipe(self):
 		if ( len(self.pipes) > 0 ):
 			self.pipe().get_bus().disconnect(self.SYNC_ID)
@@ -88,11 +81,15 @@ class Glive:
 		else:
 			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 
+
 		v4l2src = pipeline.get_by_name('v4l2src_'+n)
 		try:
 			v4l2src.set_property("queue-size", 2)
 		except:
 			pass
+
+		#pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
+		#self.xv = False
 
 		#todo: go through the code and add this conditional throughout
 		if (self.xv):

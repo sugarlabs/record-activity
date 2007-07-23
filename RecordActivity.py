@@ -46,6 +46,7 @@ class RecordActivity(activity.Activity):
 
 	def _initme( self, userdata=None ):
 		self.instanceId = self._activity_id
+		print( "instanceId:", self.instanceId)
 		self.ACTIVE = True
 
 		self.nickName = profile.get_nick_name()
@@ -58,6 +59,9 @@ class RecordActivity(activity.Activity):
 		if (not os.path.exists(self.journalPath)):
 			os.makedirs(self.journalPath)
 		self.recreateTemp()
+
+		#let people copy photos
+		self.clipBoard = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 
 		#whoami?
 		key = profile.get_pubkey()

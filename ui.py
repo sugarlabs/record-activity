@@ -271,7 +271,8 @@ class UI:
 
 
 	def showLiveVideoTags( self ):
-		self.nameTextfield.set_label("Live Video")
+		#todo: if this is too long, then live video gets pushed off screen (and ends up at 0x0??!)
+		self.nameTextfield.set_label("Live Video:" + str(self.ca.instanceId ))
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
@@ -611,6 +612,9 @@ class UI:
 			self.updateVideoComponents()
 
 			self.showRecdMeta(recd)
+
+			#todo: should probably listen for a CTRL+C callback, but how?
+			self.ca.clipBoard.set_image( pixbuf )
 
 
 	def updateShownPhoto( self, recd ):
