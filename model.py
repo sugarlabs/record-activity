@@ -388,7 +388,9 @@ class Model:
 					self.ca.ui.removeIfSelectedRecorded( recd )
 
 
+	#todo: decide even to include this anymore?? 
 	#todo: update photo index to point to the "buddies"
+	#todo: create a top level html file?
 	def updateMediaIndex( self ):
 		#delete all old htmls
 		files = os.listdir(self.ca.journalPath)
