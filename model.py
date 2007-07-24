@@ -409,42 +409,43 @@ class Model:
 			root.appendChild(photo)
 			self.saveMedia(photo, recd, self.TYPE_PHOTO)
 
-			htmlDoc = impl.createDocument(None, "html", None)
-			html = htmlDoc.documentElement
-			head = htmlDoc.createElement('head')
-			html.appendChild(head)
-			title = htmlDoc.createElement('title')
-			head.appendChild(title)
-			titleText = htmlDoc.createTextNode( "Your Photos" )
-			title.appendChild(titleText)
-			body = htmlDoc.createElement('body')
-			html.appendChild(body)
-			center = htmlDoc.createElement('center')
-			body.appendChild(center)
-			ahref = htmlDoc.createElement('a')
-			center.appendChild(ahref)
+			if (not recd.buddy):
+				htmlDoc = impl.createDocument(None, "html", None)
+				html = htmlDoc.documentElement
+				head = htmlDoc.createElement('head')
+				html.appendChild(head)
+				title = htmlDoc.createElement('title')
+				head.appendChild(title)
+				titleText = htmlDoc.createTextNode( "Your Photos" )
+				title.appendChild(titleText)
+				body = htmlDoc.createElement('body')
+				html.appendChild(body)
+				center = htmlDoc.createElement('center')
+				body.appendChild(center)
+				ahref = htmlDoc.createElement('a')
+				center.appendChild(ahref)
 
-			if (len(photoHash)>0):
-				nextRecd = photoHash[0]
-				if (i < len(photoHash)-1):
-					nextRecd = photoHash[i+1]
-				#todo: more specific, per kid?
-				nextHtml = os.path.join(self.ca.journalPath, str(nextRecd.time)+".html")
-				ahref.setAttribute('href', os.path.abspath(nextHtml))
+				if (len(photoHash)>0):
+					nextRecd = photoHash[0]
+					if (i < len(photoHash)-1):
+						nextRecd = photoHash[i+1]
+					#todo: more specific, per kid?
+					nextHtml = os.path.join(self.ca.journalPath, str(nextRecd.time)+".html")
+					ahref.setAttribute('href', os.path.abspath(nextHtml))
 
-			img = htmlDoc.createElement('img')
-			img.setAttribute("width", "320")
-			img.setAttribute("height", "240")
-			ahref.appendChild(img)
-			img.setAttribute('src', recd.mediaFilename)
-			if (i == 0):
-				f = open(os.path.join(self.ca.journalPath, "index.html"), 'w')
-				htmlDoc.writexml(f)
-				f.close()
-			else:
-				f = open(os.path.join(self.ca.journalPath, str(recd.time)+".html"), 'w')
-				htmlDoc.writexml(f)
-				f.close()
+				img = htmlDoc.createElement('img')
+				img.setAttribute("width", "320")
+				img.setAttribute("height", "240")
+				ahref.appendChild(img)
+				img.setAttribute('src', recd.mediaFilename)
+				if (i == 0):
+					f = open(os.path.join(self.ca.journalPath, "index.html"), 'w')
+					htmlDoc.writexml(f)
+					f.close()
+				else:
+					f = open(os.path.join(self.ca.journalPath, str(recd.time)+".html"), 'w')
+					htmlDoc.writexml(f)
+					f.close()
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		for i in range (0, len(videoHash)):
