@@ -72,7 +72,7 @@ class RecordActivity(activity.Activity):
 		#httpPort = 8889
 		h = hash(self.instanceId)
 		self.xmlRpcPort = 1024 + (h%32255) * 2
-		self.httpPort + 1
+		self.httpPort = self.xmlRpcPort + 1
 
 		self.httpServer = None
 		self.meshClient = None

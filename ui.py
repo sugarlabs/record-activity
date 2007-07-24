@@ -599,8 +599,9 @@ class UI:
 			imgPath_s = os.path.abspath(imgPath)
 			if (not os.path.isfile(imgPath_s)):
 				imgPath = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
-				#todo: check that we use abspath everywheres
+				#todo: check that we use abspath everywheres (ck jukebox for how to do this with playbin too)
 				imgPath_s = os.path.abspath( imgPath )
+				#todo: fix... for some reason, if the person left the mesh, we don't get to see even this
 				self.ca.meshClient.requestPhotoBits( recd )
 
 		if ( os.path.isfile(imgPath_s) ):
@@ -614,7 +615,7 @@ class UI:
 			self.showRecdMeta(recd)
 
 			#todo: should probably listen for a CTRL+C callback, but how?
-			self.ca.clipBoard.set_image( pixbuf )
+			#self.ca.clipBoard.set_image( pixbuf )
 
 
 	def updateShownPhoto( self, recd ):
