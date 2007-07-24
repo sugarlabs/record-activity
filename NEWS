@@ -1,3 +1,8 @@
+18
+* Jitters when switching video modes reduced (jedierikb)
+* Able to re-open photo sessions from the journal (jedierikb)
+* Mesh sharing uses unique ports per instance of Record (jedierikb, dcbw)
+
 17
 * Fix out-of-bounds theoraenc recording (jedierikb)
 * Fix delete of video thumbnails (jedierikb)
