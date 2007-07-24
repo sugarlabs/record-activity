@@ -31,22 +31,12 @@ import os
 from recorded import Recorded
 from color import Color
 
-xmlRpcPort = 8888
-httpPort = 8889
-
-
-#todo: when you take a picture, transmit the name and who took it, and buddy colors too... all things to create a rec'd
-#todo: then create a directory in which to put buddy photos
-#todo: then display them as thumbs, but when you click them, do resolution on where to get them from...
-#todo: on joining activity get all of the existing photos from who has them
-#todo: when someone deletes a photo, delete all photos
-
 class MeshXMLRPCServer:
 	def __init__( self, pca ):
 		self.ca = pca
 		#this is ye olde xmlrpc server
 		#listen to and talk through this port for xmlrpc, using this here info
-		self.server = network.GlibXMLRPCServer(("", xmlRpcPort))
+		self.server = network.GlibXMLRPCServer(("", self.ca.xmlRpcPort))
 		self.server.register_instance(self) #anything witout an _ is callable by all the hos and joes out there
 
 	def newPhotoNotice(	self,
@@ -86,7 +76,7 @@ class HttpServer(network.GlibTCPServer):
 
 	def __init__(self, pca):
 		self.ca = pca
-		server_address = ("", httpPort)
+		server_address = ("", self.ca.httpPort)
 		network.GlibTCPServer.__init__(self, server_address, HttpReqHandler);
 
 
@@ -163,7 +153,7 @@ class MeshClient:
 
 		for buddy in self.my_acty.get_joined_buddies():
 			if (not buddy.props.owner):
-				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
+				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, self.ca.xmlRpcPort))
 
 				bud.newPhotoNotice(	str(me.props.ip4_address),
 									recd.mediaFilename, recd.thumbFilename,
@@ -187,7 +177,7 @@ class MeshClient:
 	def notifyBudsofDeleteMedia(self, recd):
 		for buddy in self.my_acty.get_joined_buddies():
 			if (not buddy.props.owner):
-				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, xmlRpcPort))
+				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, self.ca.xmlRpcPort))
 
 				bud.deleteMediaNotice(	recd.hashKey,
 										recd.time,
@@ -210,7 +200,7 @@ class MeshClient:
 		me = ps.get_owner()
 
 		#todo: differentiate which session in case many cameras are running
-		uri = "http://" + str(ip) + ":" + str(httpPort) + "/thumb?thumbFilename=" + str(recd.thumbFilename)
+		uri = "http://" + str(ip) + ":" + str(self.ca.httpPort) + "/thumb?thumbFilename=" + str(recd.thumbFilename)
 		getter = network.GlibURLDownloader( uri )
 		getter.connect( "finished", self.thumbDownloadResultCb, recd )
 		getter.connect( "error", self.thumbDownloadErrorCb, recd )
@@ -249,7 +239,7 @@ class MeshClient:
 
 		print("photoTakingBuddy...", photoTakingBuddy)
 		if (photoTakingBuddy != None):
-			uri = "http://" + str(photoTakingBuddy.props.ip4_address) + ":" + str(httpPort) + "/media?mediaFilename=" + str(recd.mediaFilename)
+			uri = "http://" + str(photoTakingBuddy.props.ip4_address) + ":" + str(self.ca.httpPort) + "/media?mediaFilename=" + str(recd.mediaFilename)
 			getter = network.GlibURLDownloader( uri )
 			getter.connect( "finished", self.mediaDownloadResultCb, recd )
 			getter.connect( "error", self.mediaDownloadErrorCb, recd )

@@ -46,7 +46,6 @@ class RecordActivity(activity.Activity):
 
 	def _initme( self, userdata=None ):
 		self.instanceId = self._activity_id
-		print( "instanceId:", self.instanceId)
 		self.ACTIVE = True
 
 		self.nickName = profile.get_nick_name()
@@ -61,12 +60,19 @@ class RecordActivity(activity.Activity):
 		self.recreateTemp()
 
 		#let people copy photos
-		self.clipBoard = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
+		#self.clipBoard = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 
 		#whoami?
 		key = profile.get_pubkey()
 		keyHash = util._sha_data(key)
 		self.hashedKey = util.printable_hash(keyHash)
+
+		#todo: replace this code to avoid conflicts between multiple
+		#xmlRpcPort = 8888
+		#httpPort = 8889
+		h = hash(self.instanceId)
+		self.xmlRpcPort = 1024 + (h%32255) * 2
+		self.httpPort + 1
 
 		self.httpServer = None
 		self.meshClient = None
