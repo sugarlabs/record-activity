@@ -634,7 +634,7 @@ class UI:
 		self.liveMode = False
 		self.updateVideoComponents()
 
-		#todo: use os.path calls here
+		#todo: use os.path calls here, see jukebox
 		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
 		self.ca.gplay.setLocation(videoUrl)
 
@@ -859,75 +859,59 @@ class MaxButton(P5Button):
 			self.ui.doFullscreen()
 
 
-class ThumbnailCanvas(P5Button):
+class ThumbnailCanvas(gtk.VBox):
 	def __init__(self, pui):
-		P5Button.__init__(self)
+		gtk.VBox.__init__(self)
 		self.ui = pui
 
-		ixs = []
-		iys = []
-		ixs.append(0)
-		iys.append(0)
-		ixs.append(self.ui.tw)
-		iys.append(0)
-		ixs.append(self.ui.tw)
-		iys.append(self.ui.th)
-		ixs.append(0)
-		iys.append(self.ui.th)
-		iPoly = Polygon( ixs, iys )
-
-		self.imgButt = Button(iPoly, 0, 0)
-		#imgButt.addActionListener( self )
-		self.thumbS = "thumb"
-		self.imgButt.setActionCommand( self.thumbS)
-		self._butts.append( self.imgButt )
-
-		self.deleteDim = 25
-		dxs = []
-		dys = []
-		dxs.append(0)
-		dys.append(0)
-		dxs.append(self.deleteDim)
-		dys.append(0)
-		dxs.append(self.deleteDim)
-		dys.append(self.deleteDim)
-		dxs.append(0)
-		dys.append(self.deleteDim)
-		dPoly = Polygon(dxs, dys )
-		self.delButt = Button(dPoly, 0, 0)
-		#delButt.addActionListener( self )
-		self.deleteS = "delete"
-		self.delButt.setActionCommand(self.deleteS)
-		self._butts.append( self.delButt )
-
-		#init with a clear
 		self.recd = None
-		self.clear()
-		self.cacheW = -1
+		self.butt = None
+		self.delButt = None
+
+		self.butt = ThumbnailButton(self, self.ui)
+		self.pack_start(self.butt, expand=True)
+		self.delButt = gtk.Button()
+		self.delButt.set_size_request( -1, 20 )
+		self.pack_start(self.delButt, expand=False)
+
+		self.show_all()
+
 
 	def clear(self):
-		if (self.recd != None):
-			self.recd.thumb = None
-			if (not self.recd.buddy):
-				self.delButt.removeActionListener(self)
-
-		self.imgButt.removeActionListener(self)
-		self.recd = None
-
-		self.recdThumbRenderImg = None
-		self.queue_draw()
+		pass
+		#if (self.butt != None):
+		#	self.remove(self.butt)
+		#if (self.delButt != None):
+		#	self.remove( self.delButt )
 
 
 	def setButton(self, recd):
 		self.recd = recd
+		if (self.recd == None):
+			return
+
 		self.loadThumb()
-		if (not self.recd.buddy):
-			self.delButt.addActionListener(self)
-		self.imgButt.addActionListener(self)
-		self.queue_draw()
+		self.butt.queue_draw()
+
+		#if (self.recd.thumb != None):
+		#self.butt = ThumbnailButton(self.recd, self.ui)
+		#self.pack_start(self.butt, expand=True)
+
+		#self.buttBox = gtk.EventBox()
+		#self.buttBox.add( self.butt )
+		#self.pack_start( self.buttBox )
+
+		#todo
+		#if (not self.recd.buddy):
+		#	pass
+			#add a delete button self.delButt...
+
 
 
 	def loadThumb(self):
+		if (self.recd == None):
+			return
+
 		thmbPath = os.path.join(self.ui.ca.journalPath, self.recd.thumbFilename)
 		if (self.recd.buddy):
 			thmbPath = os.path.join(self.ui.ca.journalPath, "buddies", self.recd.thumbFilename)
@@ -939,64 +923,91 @@ class ThumbnailCanvas(P5Button):
 			self.recd.thumb = img
 
 
+class ThumbnailButton(gtk.Button):
+	def __init__(self, ptc, ui):
+		gtk.Button.__init__(self)
+		self.tc = ptc
+		self.ui = ui
+		self.recd = None
+		self.recdThumbRenderImg = None
+
+		self.connect("expose_event", self.expose)
+		clickConnection = self.connect("clicked", self.buttonClickCb)
+
+
+	def buttonClickCb(self, args ):
+		if (self.tc.recd == None):
+			return
+
+		self.ui.showThumbSelection( self.tc.recd )
+
+
+	def expose(self, widget, event):
+		ctx = widget.window.cairo_create()
+		self.draw( ctx, self.allocation.width, self.allocation.height )
+		return True
+
+
 	def draw(self, ctx, w, h):
-		#todo: make this into gtk buttons?  will require segmenting the thumbnail gfx or use windows & more usablity
+		ctx.translate( self.allocation.x, self.allocation.y )
 		self.background( ctx, self.ui.colorTray, w, h )
-		if (self.recd == None):
+
+		if (self.tc.recd == None):
+			return
+		if (self.tc.recd.thumb == None):
 			return
 
 		if (self.recdThumbRenderImg == None):
-			self.recdThumbRenderImg = cairo.ImageSurface( cairo.FORMAT_ARGB32, w, h)
+			self.recdThumbRenderImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
 			rtCtx = cairo.Context(self.recdThumbRenderImg)
-			self.background( rtCtx, self.ui.colorTray, w, h )
+			self.background(rtCtx, self.ui.colorTray, w, h)
 			xSvg = (w-self.ui.thumbSvgW)/2
 			ySvg = (h-self.ui.thumbSvgH)/2
 
-			if (self.recd.type == self.ui.ca.m.TYPE_PHOTO):
+			if (self.tc.recd.type == self.ui.ca.m.TYPE_PHOTO):
 				rtCtx.translate( xSvg, ySvg )
-				if (self.recd.buddy):
-					thumbPhotoSvg = self.ui.loadSvg(self.ui.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+				if (self.tc.recd.buddy):
+					thumbPhotoSvg = self.ui.loadSvg(self.ui.thumbPhotoSvgData, self.tc.recd.colorStroke.hex, self.tc.recd.colorFill.hex)
 					thumbPhotoSvg.render_cairo(rtCtx)
 				else:
 					self.ui.thumbPhotoSvg.render_cairo(rtCtx)
 
 				rtCtx.translate( 8, 8 )
-				rtCtx.set_source_surface(self.recd.thumb, 0, 0)
-				self.imgButt.setOffsets( rtCtx.user_to_device(0,0) )
+				rtCtx.set_source_surface(self.tc.recd.thumb, 0, 0)
 				rtCtx.paint()
-
-				if (not self.recd.buddy):
-					rtCtx.translate( self.ui.tw-self.deleteDim, self.ui.th+4 )
-					self.delButt.setOffsets( rtCtx.user_to_device(0,0) )
-					self.ui.closeSvg.render_cairo(rtCtx)
 
 			elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
 				rtCtx.translate( xSvg, ySvg )
 				if (self.recd.buddy):
-					thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+					thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.tc.recd.colorStroke.hex, self.tc.recd.colorFill.hex)
 					thumbVideoSvg.render_cairo(rtCtx)
 				else:
 					self.ui.thumbVideoSvg.render_cairo(rtCtx)
 
 				rtCtx.translate( 8, 22 )
-				rtCtx.set_source_surface(self.recd.thumb, 0, 0)
-				self.imgButt.setOffsets( rtCtx.user_to_device(0,0) )
+				rtCtx.set_source_surface(self.tc.recd.thumb, 0, 0)
 				rtCtx.paint()
-
-				if (not self.recd.buddy):
-					rtCtx.translate( self.ui.tw-self.deleteDim, self.ui.th+1 )
-					self.delButt.setOffsets( rtCtx.user_to_device(0,0) )
-					self.ui.closeSvg.render_cairo( rtCtx )
 
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
 		ctx.paint()
 
+	def background(self, ctx, col, w, h):
+		self.setColor( ctx, col )
 
-	def fireButton(self, actionCommand):
-		if (actionCommand == self.thumbS):
-			self.ui.showThumbSelection( self.recd )
-		elif (actionCommand == self.deleteS):
-			self.ui.deleteThumbSelection( self.recd )
+		ctx.line_to(0, 0)
+		ctx.line_to(w, 0)
+		ctx.line_to(w, h)
+		ctx.line_to(0, h)
+		ctx.close_path()
+
+		ctx.fill()
+
+	def setColor( self, ctx, col ):
+		if (not col._opaque):
+			ctx.set_source_rgba( col._r, col._g, col._b, col._a )
+		else:
+			ctx.set_source_rgb( col._r, col._g, col._b )
+
 
 
 class ModeToolbar(gtk.Toolbar):
