@@ -668,8 +668,8 @@ class UI:
 		thumbVideoSvgFile.close()
 
 		closeSvgFile = open(os.path.join(self.ca.gfxPath, 'thumb_close.svg'), 'r')
-		self.closeSvgData = closeSvgFile.read()
-		self.closeSvg = self.loadSvg(self.closeSvgData, self.colorStroke.hex, self.colorFill.hex)
+		closeSvgData = closeSvgFile.read()
+		self.closeSvg = self.loadSvg(closeSvgData, self.colorStroke.hex, self.colorFill.hex)
 		closeSvgFile.close()
 
 		modWaitSvgFile = open(os.path.join(self.ca.gfxPath, 'wait.svg'), 'r')
@@ -870,7 +870,7 @@ class ThumbnailCanvas(gtk.VBox):
 
 		self.butt = ThumbnailButton(self, self.ui)
 		self.pack_start(self.butt, expand=True)
-		self.delButt = gtk.Button()
+		self.delButt = ThumbnailDeleteButton(self, self.ui)
 		self.delButt.set_size_request( -1, 20 )
 		self.pack_start(self.delButt, expand=False)
 
@@ -878,7 +878,10 @@ class ThumbnailCanvas(gtk.VBox):
 
 
 	def clear(self):
-		pass
+		self.recd = None
+		self.butt.queue_draw()
+		self.delButt.queue_draw()
+
 		#if (self.butt != None):
 		#	self.remove(self.butt)
 		#if (self.delButt != None):
@@ -892,19 +895,7 @@ class ThumbnailCanvas(gtk.VBox):
 
 		self.loadThumb()
 		self.butt.queue_draw()
-
-		#if (self.recd.thumb != None):
-		#self.butt = ThumbnailButton(self.recd, self.ui)
-		#self.pack_start(self.butt, expand=True)
-
-		#self.buttBox = gtk.EventBox()
-		#self.buttBox.add( self.butt )
-		#self.pack_start( self.buttBox )
-
-		#todo
-		#if (not self.recd.buddy):
-		#	pass
-			#add a delete button self.delButt...
+		self.delButt.queue_draw()
 
 
 
@@ -923,6 +914,67 @@ class ThumbnailCanvas(gtk.VBox):
 			self.recd.thumb = img
 
 
+
+class ThumbnailDeleteButton(gtk.Button):
+	def __init__(self, ptc, ui):
+		gtk.Button.__init__(self)
+		self.tc = ptc
+		self.ui = ui
+		self.recd = None
+		self.recdThumbRenderImg = None
+
+		self.exposeConnection = self.connect("expose_event", self.expose)
+		self.clickConnection = self.connect("clicked", self.buttonClickCb)
+
+	def buttonClickCb(self, args ):
+		if (self.tc.recd == None):
+			return
+
+		self.ui.deleteThumbSelection( self.tc.recd )
+
+	def expose(self, widget, event):
+		ctx = widget.window.cairo_create()
+		self.draw( ctx, self.allocation.width, self.allocation.height )
+		return True
+
+	def draw(self, ctx, w, h):
+		ctx.translate( self.allocation.x, self.allocation.y )
+		self.background( ctx, self.ui.colorTray, w, h )
+		if (self.tc.recd == None):
+			return
+
+		if (self.recdThumbRenderImg == None):
+			self.recdThumbRenderImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+			rtCtx = cairo.Context(self.recdThumbRenderImg)
+			self.background(rtCtx, self.ui.colorTray, w, h)
+
+			if (not self.tc.recd.buddy):
+				#todo: dynamic query of the delete button size
+				rtCtx.translate( w/2-25/2, 0 )
+				self.ui.closeSvg.render_cairo(rtCtx)
+
+
+		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
+		ctx.paint()
+
+	def background(self, ctx, col, w, h):
+		self.setColor( ctx, col )
+
+		ctx.line_to(0, 0)
+		ctx.line_to(w, 0)
+		ctx.line_to(w, h)
+		ctx.line_to(0, h)
+		ctx.close_path()
+
+		ctx.fill()
+
+	def setColor( self, ctx, col ):
+		if (not col._opaque):
+			ctx.set_source_rgba( col._r, col._g, col._b, col._a )
+		else:
+			ctx.set_source_rgb( col._r, col._g, col._b )
+
+
 class ThumbnailButton(gtk.Button):
 	def __init__(self, ptc, ui):
 		gtk.Button.__init__(self)
@@ -931,16 +983,14 @@ class ThumbnailButton(gtk.Button):
 		self.recd = None
 		self.recdThumbRenderImg = None
 
-		self.connect("expose_event", self.expose)
-		clickConnection = self.connect("clicked", self.buttonClickCb)
-
+		self.exposeConnection = self.connect("expose_event", self.expose)
+		self.clickConnection = self.connect("clicked", self.buttonClickCb)
 
 	def buttonClickCb(self, args ):
 		if (self.tc.recd == None):
 			return
 
 		self.ui.showThumbSelection( self.tc.recd )
-
 
 	def expose(self, widget, event):
 		ctx = widget.window.cairo_create()
@@ -987,6 +1037,7 @@ class ThumbnailButton(gtk.Button):
 				rtCtx.translate( 8, 22 )
 				rtCtx.set_source_surface(self.tc.recd.thumb, 0, 0)
 				rtCtx.paint()
+
 
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
 		ctx.paint()
