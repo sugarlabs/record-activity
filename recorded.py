@@ -36,6 +36,7 @@ class Recorded:
 		#transient
 		self.media = None
 		self.thumb = None
+		self.thumbPixbuf = None
 
 		#assume you took the picture
 		self.buddy = False

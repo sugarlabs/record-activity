@@ -196,7 +196,7 @@ class Model:
 
 	def startRecordingVideo( self ):
 		self.setUpdating( True )
-		self.RECORDING = True
+		self.setRecording( True )
 
 		self.ca.ui.recordVideo()
 
@@ -205,7 +205,12 @@ class Model:
 
 	def setUpdating( self, upd ):
 		self.UPDATING = upd
-		self.ca.ui.updateShutterButton()
+		self.ca.ui.updateButtonSensitivities()
+
+
+	def setRecording( self, rec ):
+		self.RECORDING = rec
+		self.ca.ui.updateButtonSensitivities()
 
 
 	def stopRecordingVideo( self ):
@@ -240,7 +245,7 @@ class Model:
 			self.ca.ui.updateVideoComponents()
 			self.ca.glive.play()
 
-		self.RECORDING = False
+		self.setRecording( False )
 
 	def stoppedRecordingVideo( self ):
 		self.setUpdating( False )

@@ -277,18 +277,18 @@ class UI:
 		keyname = gtk.gdk.keyval_name(event.keyval)
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.shownRecd == None):
-				pixbuf = self._get_selected_pixbuf()
+				pixbuf = self.getRecdPixbuf( self.shownRecd )
 				if (pixbuf != None):
 					#self.clipBoard = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
-					gtk.Clipboard().clipboard.set_image(pixbuf)
+					gtk.Clipboard().set_image(pixbuf)
 
 
-	def getRecdPixBuf( self, recd ):
+	def getRecdPixbuf( self, recd ):
 		pixbuf = None
 		imgPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		imgPath_s = os.path.abspath(imgPath)
 
-		if (self.shownRecd.buddy):
+		if (recd.buddy):
 			imgPath = os.path.join(self.ca.journalPath, "buddies", recd.mediaFilename)
 			imgPath_s = os.path.abspath(imgPath)
 			if (not os.path.isfile(imgPath_s)):
@@ -305,8 +305,8 @@ class UI:
 
 
 	def showPhoto( self, recd ):
-		pixbuf = self.getRecdPixBuf( self.showRecd )
-		if (pixbuf != none):
+		pixbuf = self.getRecdPixbuf( recd )
+		if (pixbuf != None):
 			self.shownRecd = recd
 
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
@@ -325,10 +325,18 @@ class UI:
 		self.dateDateLabel.set_label( "Today" )
 
 
-	def updateShutterButton( self ):
+
+	def updateButtonSensitivities( self ):
 		self.shutterButton.set_sensitive( not self.ca.m.UPDATING )
-		self.modeToolbar.picButt.set_sensitive( not self.ca.m.UPDATING )
-		self.modeToolbar.vidButt.set_sensitive( not self.ca.m.UPDATING )
+
+		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
+		print( "ss", switchStuff )
+
+		self.modeToolbar.picButt.set_sensitive( switchStuff )
+		self.modeToolbar.vidButt.set_sensitive( switchStuff )
+
+		for i in range (0, len(self.thumbButts)):
+			self.thumbButts[i].set_sensitive( switchStuff )
 
 		if (self.ca.m.UPDATING):
 			self.ca.ui.setWaitCursor()
@@ -877,6 +885,7 @@ class MaxButton(P5Button):
 			self.ui.doFullscreen()
 
 
+#todo: rename, and handle clear events to clear away and remove all listeners
 class ThumbnailCanvas(gtk.VBox):
 	def __init__(self, pui):
 		gtk.VBox.__init__(self)
@@ -895,9 +904,17 @@ class ThumbnailCanvas(gtk.VBox):
 		self.show_all()
 
 
+	def set_sensitive(self, sen):
+		#todo: change colors here to gray'd out, and don't change if already in that mode
+		print( "setting sen", sen )
+		self.butt.set_sensitive( sen )
+		self.delButt.set_sensitive( sen )
+
 	def clear(self):
 		self.recd = None
+		self.butt.clear()
 		self.butt.queue_draw()
+		self.delButt.clear()
 		self.delButt.queue_draw()
 
 		#if (self.butt != None):
@@ -912,6 +929,7 @@ class ThumbnailCanvas(gtk.VBox):
 			return
 
 		self.loadThumb()
+		self.butt.setDraggable()
 		self.butt.queue_draw()
 		self.delButt.queue_draw()
 
@@ -928,8 +946,10 @@ class ThumbnailCanvas(gtk.VBox):
 		thmbPath_s = os.path.abspath(thmbPath)
 		if ( os.path.isfile(thmbPath_s) ):
 			pb = gtk.gdk.pixbuf_new_from_file(thmbPath_s)
-			img = _camera.cairo_surface_from_gdk_pixbuf(pb)
-			self.recd.thumb = img
+			if (pb != None):
+				self.recd.thumbPixbuf = pb
+				img = _camera.cairo_surface_from_gdk_pixbuf(pb)
+				self.recd.thumb = img
 
 
 
@@ -944,10 +964,16 @@ class ThumbnailDeleteButton(gtk.Button):
 		self.exposeConnection = self.connect("expose_event", self.expose)
 		self.clickConnection = self.connect("clicked", self.buttonClickCb)
 
+	def clear( self ):
+		self.recdThumbRenderImg == None
+
 	def buttonClickCb(self, args ):
 		if (self.tc.recd == None):
 			return
+		if (not self.props.sensitive):
+			return
 
+		print("clicky!")
 		self.ui.deleteThumbSelection( self.tc.recd )
 
 	def expose(self, widget, event):
@@ -1001,19 +1027,53 @@ class ThumbnailButton(gtk.Button):
 		self.recd = None
 		self.recdThumbRenderImg = None
 
-		self.exposeConnection = self.connect("expose_event", self.expose)
-		self.clickConnection = self.connect("clicked", self.buttonClickCb)
+		self.exposeConnection = self.connect("expose_event", self._exposeEventCb)
+		self.clickConnection = self.connect("clicked", self._buttonClickCb)
+		targets = [('image/jpeg', 0, 0)]
+		self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+		#self.drag_source_unset()
+		self.dragBeginConnection = self.connect("drag_begin", self._dragBeginCb)
+		self.dragDataGetConnection = self.connect("drag_data_get", self._dragDataGetCb)
 
-	def buttonClickCb(self, args ):
+
+	def setDraggable( self ):
+		if ( (not self.tc.recd.buddy) and (self.tc.recd.type == self.ui.ca.m.TYPE_PHOTO) ):
+			targets = [('image/jpeg', 0, 0)]
+			self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+			self.dragBeginConnection = self.connect("drag_begin", self._dragBeginCb)
+			self.dragDataGetConnection = self.connect("drag_data_get", self._dragDataGetCb)
+
+
+	def clear( self ):
+		self.drag_source_unset()
+		self.recdThumbRenderImg = None
+
+
+	def _buttonClickCb(self, args ):
 		if (self.tc.recd == None):
 			return
-
+		if (not self.props.sensitive):
+			return
 		self.ui.showThumbSelection( self.tc.recd )
 
-	def expose(self, widget, event):
+
+	def _exposeEventCb(self, widget, event):
 		ctx = widget.window.cairo_create()
 		self.draw( ctx, self.allocation.width, self.allocation.height )
 		return True
+
+
+	def _dragBeginCb(self, widget, dragCtxt ):
+		self.drag_source_set_icon_pixbuf( self.tc.recd.thumbPixbuf )
+
+
+	def _dragDataGetCb(self, widget, drag_context, selection_data, info, timestamp):
+		#todo: is this the proper way to handle returning None if file deleted from 
+		pb = self.ui.getRecdPixbuf( self.tc.recd )
+		if (pb != None):
+			return pb
+		else:
+			return None
 
 
 	def draw(self, ctx, w, h):
@@ -1029,11 +1089,12 @@ class ThumbnailButton(gtk.Button):
 			self.recdThumbRenderImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
 			rtCtx = cairo.Context(self.recdThumbRenderImg)
 			self.background(rtCtx, self.ui.colorTray, w, h)
+
 			xSvg = (w-self.ui.thumbSvgW)/2
 			ySvg = (h-self.ui.thumbSvgH)/2
+			rtCtx.translate( xSvg, ySvg )
 
 			if (self.tc.recd.type == self.ui.ca.m.TYPE_PHOTO):
-				rtCtx.translate( xSvg, ySvg )
 				if (self.tc.recd.buddy):
 					thumbPhotoSvg = self.ui.loadSvg(self.ui.thumbPhotoSvgData, self.tc.recd.colorStroke.hex, self.tc.recd.colorFill.hex)
 					thumbPhotoSvg.render_cairo(rtCtx)
@@ -1041,21 +1102,18 @@ class ThumbnailButton(gtk.Button):
 					self.ui.thumbPhotoSvg.render_cairo(rtCtx)
 
 				rtCtx.translate( 8, 8 )
-				rtCtx.set_source_surface(self.tc.recd.thumb, 0, 0)
-				rtCtx.paint()
 
-			elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
-				rtCtx.translate( xSvg, ySvg )
-				if (self.recd.buddy):
+			elif (self.tc.recd.type == self.ui.ca.m.TYPE_VIDEO):
+				if (self.tc.recd.buddy):
 					thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.tc.recd.colorStroke.hex, self.tc.recd.colorFill.hex)
 					thumbVideoSvg.render_cairo(rtCtx)
 				else:
 					self.ui.thumbVideoSvg.render_cairo(rtCtx)
 
 				rtCtx.translate( 8, 22 )
-				rtCtx.set_source_surface(self.tc.recd.thumb, 0, 0)
-				rtCtx.paint()
 
+			rtCtx.set_source_surface(self.tc.recd.thumb, 0, 0)
+			rtCtx.paint()
 
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
 		ctx.paint()

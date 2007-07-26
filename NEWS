@@ -1,3 +1,8 @@
+19
+* clipboard functionality for photos, including ctrl+c and drag (jedierikb, tomeu)
+* thumbnails buttons are not gtk.Buttons to allow for maximum usability (jedierikb)
+* fixed bug allowing the canceling of video recordings by accident (jedierikb)
+
 18
 * Jitters when switching video modes reduced (jedierikb)
 * Able to re-open photo sessions from the journal (jedierikb)
