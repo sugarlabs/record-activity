@@ -958,12 +958,14 @@ class ThumbnailDeleteButton(gtk.Button):
 		self.ui = ui
 		self.recd = None
 		self.recdThumbRenderImg = None
+		self.recdThumbInsensitiveImg = None
 
 		self.exposeConnection = self.connect("expose_event", self.expose)
 		self.clickConnection = self.connect("clicked", self.buttonClickCb)
 
 	def clear( self ):
 		self.recdThumbRenderImg == None
+		self.recdThumbInsensitiveImg = None
 
 	def buttonClickCb(self, args ):
 		if (self.tc.recd == None):
@@ -1024,6 +1026,7 @@ class ThumbnailButton(gtk.Button):
 		self.ui = ui
 		self.recd = None
 		self.recdThumbRenderImg = None
+		self.recdThumbInsensitiveImg = None
 
 		self.exposeConnection = self.connect("expose_event", self._exposeEventCb)
 		self.clickConnection = self.connect("clicked", self._buttonClickCb)
@@ -1042,9 +1045,14 @@ class ThumbnailButton(gtk.Button):
 			self.dragDataGetConnection = self.connect("drag_data_get", self._dragDataGetCb)
 
 
+#	def set_sensitive( self, sen ):
+#		gtk.Button.se
+
 	def clear( self ):
+		#todo: no dragging if insensitive either, why not?
 		self.drag_source_unset()
 		self.recdThumbRenderImg = None
+		self.recdThumbInsensitiveImg = None
 
 
 	def _buttonClickCb(self, args ):
