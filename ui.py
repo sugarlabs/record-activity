@@ -330,7 +330,6 @@ class UI:
 		self.shutterButton.set_sensitive( not self.ca.m.UPDATING )
 
 		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
-		print( "ss", switchStuff )
 
 		self.modeToolbar.picButt.set_sensitive( switchStuff )
 		self.modeToolbar.vidButt.set_sensitive( switchStuff )
@@ -906,7 +905,6 @@ class ThumbnailCanvas(gtk.VBox):
 
 	def set_sensitive(self, sen):
 		#todo: change colors here to gray'd out, and don't change if already in that mode
-		print( "setting sen", sen )
 		self.butt.set_sensitive( sen )
 		self.delButt.set_sensitive( sen )
 

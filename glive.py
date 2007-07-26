@@ -162,8 +162,9 @@ class Glive:
 
 		self.pipe().set_state(gst.STATE_PLAYING)
 
-	#sometimes we hang here because we're trying to open an empty file or nonexistant file
+
 	def stopRecordingVideo(self):
+		#sometimes we hang here because we're trying to open an empty file or nonexistant file
 		self.pipe().set_state(gst.STATE_NULL)
 		self.nextPipe()
 
@@ -175,6 +176,24 @@ class Glive:
 		n = str(len(self.thumbPipes))
 		f = str(len(self.pipes)-2)
 		oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogg" )
+		print("oggFilepath...")
+
+		#todo: test ~~> need to check *exists* and the filesize here to prevent stalling...
+		if (not os.path.exists(oggFilepath)):
+			print("a")
+			self.record = False
+			self.ca.m.cannotSaveVideo()
+			self.ca.m.stoppedRecordingVideo()
+			return
+
+		oggSize = os.path.getsize(oggFilepath)
+		if (oggSize <= 0):
+			print("b")
+			self.record = False
+			self.ca.m.cannotSaveVideo()
+			self.ca.m.stoppedRecordingVideo()
+			return
+
 		line = 'filesrc location=' + str(oggFilepath) + ' name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n
 		thumbline = gst.parse_launch(line)
 		thumbQueue = thumbline.get_by_name('thumbQueue_'+n)
@@ -187,6 +206,7 @@ class Glive:
 		self.thumbPipes.append(thumbline)
 		self.thumbExposureOpen = True
 		gobject.idle_add( thumbline.set_state, gst.STATE_PLAYING )
+
 
 	def copyThumbPic(self, fsink, buffer, pad, user_data=None):
 		if (self.thumbExposureOpen):
@@ -220,7 +240,7 @@ class Glive:
 			else:
 				self.record = False
 				self.audio = False
-				self.ca.m.setVid(self.thumbBuf, str(oggFilepath))
+				self.ca.m.saveVideo(self.thumbBuf, str(oggFilepath))
 				self.ca.m.stoppedRecordingVideo()
 
 

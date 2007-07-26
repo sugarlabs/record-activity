@@ -195,6 +195,7 @@ class Model:
 
 
 	def startRecordingVideo( self ):
+		print("start recording video")
 		self.setUpdating( True )
 		self.setRecording( True )
 
@@ -214,6 +215,7 @@ class Model:
 
 
 	def stopRecordingVideo( self ):
+		print("stop recording video")
 		self.setUpdating( True )
 
 		self.ca.ui.hideLiveWindows()
@@ -240,6 +242,15 @@ class Model:
 		self.updateMediaIndex()
 		self.thumbAdded( self.TYPE_VIDEO )
 
+		self.doPostSaveVideo()
+
+
+	def cannotSaveVideo( self ):
+		print("bad recorded video")
+		self.doPostSaveVideo()
+
+
+	def doPostSaveVideo( self ):
 		#resume live video from the camera (if the activity is active)
 		if (self.ca.ACTIVE):
 			self.ca.ui.updateVideoComponents()
@@ -247,7 +258,10 @@ class Model:
 
 		self.setRecording( False )
 
+
+
 	def stoppedRecordingVideo( self ):
+		print("stoppedRecordingVideo")
 		self.setUpdating( False )
 
 
