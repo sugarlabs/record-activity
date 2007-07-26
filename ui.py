@@ -270,6 +270,54 @@ class UI:
 		self.playMaxWindow.show_all()
 
 
+		self.ca.connect('key-press-event', self._keyPressEventCb)
+
+
+	def _keyPressEventCb( self, widget, event):
+		keyname = gtk.gdk.keyval_name(event.keyval)
+		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
+			if (not self.shownRecd == None):
+				pixbuf = self._get_selected_pixbuf()
+				if (pixbuf != None):
+					#self.clipBoard = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
+					gtk.Clipboard().clipboard.set_image(pixbuf)
+
+
+	def getRecdPixBuf( self, recd ):
+		pixbuf = None
+		imgPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
+		imgPath_s = os.path.abspath(imgPath)
+
+		if (self.shownRecd.buddy):
+			imgPath = os.path.join(self.ca.journalPath, "buddies", recd.mediaFilename)
+			imgPath_s = os.path.abspath(imgPath)
+			if (not os.path.isfile(imgPath_s)):
+				imgPath = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
+				#todo: check that we use abspath everywheres (ck jukebox for how to do this with playbin too)
+				imgPath_s = os.path.abspath( imgPath )
+				#todo: fix... for some reason, if the person left the mesh, we don't get to see even this
+				self.ca.meshClient.requestPhotoBits( recd )
+
+		if ( os.path.isfile(imgPath_s) ):
+			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath_s)
+
+		return pixbuf
+
+
+	def showPhoto( self, recd ):
+		pixbuf = self.getRecdPixBuf( self.showRecd )
+		if (pixbuf != none):
+			self.shownRecd = recd
+
+			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+			self.livePhotoCanvas.setImage(img)
+
+			self.liveMode = False
+			self.updateVideoComponents()
+
+			self.showRecdMeta(recd)
+
+
 	def showLiveVideoTags( self ):
 		#todo: if this is too long, then live video gets pushed off screen (and ends up at 0x0??!)
 		self.nameTextfield.set_label("Live Video") # + str(self.ca.instanceId ))
@@ -586,36 +634,6 @@ class UI:
 			self.updateVideoComponents()
 
 			self.showLiveVideoTags()
-
-
-	def showPhoto( self, recd ):
-		self.shownRecd = recd
-
-		imgPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		imgPath_s = os.path.abspath(imgPath)
-
-		if (self.shownRecd.buddy):
-			imgPath = os.path.join(self.ca.journalPath, "buddies", recd.mediaFilename)
-			imgPath_s = os.path.abspath(imgPath)
-			if (not os.path.isfile(imgPath_s)):
-				imgPath = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
-				#todo: check that we use abspath everywheres (ck jukebox for how to do this with playbin too)
-				imgPath_s = os.path.abspath( imgPath )
-				#todo: fix... for some reason, if the person left the mesh, we don't get to see even this
-				self.ca.meshClient.requestPhotoBits( recd )
-
-		if ( os.path.isfile(imgPath_s) ):
-			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath_s)
-			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-			self.livePhotoCanvas.setImage(img)
-
-			self.liveMode = False
-			self.updateVideoComponents()
-
-			self.showRecdMeta(recd)
-
-			#todo: should probably listen for a CTRL+C callback, but how?
-			#self.ca.clipBoard.set_image( pixbuf )
 
 
 	def updateShownPhoto( self, recd ):

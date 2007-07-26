@@ -59,9 +59,6 @@ class RecordActivity(activity.Activity):
 			os.makedirs(self.journalPath)
 		self.recreateTemp()
 
-		#let people copy photos
-		#self.clipBoard = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
-
 		#whoami?
 		key = profile.get_pubkey()
 		keyHash = util._sha_data(key)
