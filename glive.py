@@ -176,11 +176,9 @@ class Glive:
 		n = str(len(self.thumbPipes))
 		f = str(len(self.pipes)-2)
 		oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogg" )
-		print("oggFilepath...")
 
 		#todo: test ~~> need to check *exists* and the filesize here to prevent stalling...
 		if (not os.path.exists(oggFilepath)):
-			print("a")
 			self.record = False
 			self.ca.m.cannotSaveVideo()
 			self.ca.m.stoppedRecordingVideo()
@@ -188,7 +186,6 @@ class Glive:
 
 		oggSize = os.path.getsize(oggFilepath)
 		if (oggSize <= 0):
-			print("b")
 			self.record = False
 			self.ca.m.cannotSaveVideo()
 			self.ca.m.stoppedRecordingVideo()

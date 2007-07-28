@@ -32,6 +32,7 @@ import _camera
 import time
 from time import strftime
 import math
+import shutil
 
 from sugar import profile
 from sugar import util
@@ -290,14 +291,46 @@ class UI:
 
 	def _keyPressEventCb( self, widget, event):
 		keyname = gtk.gdk.keyval_name(event.keyval)
-		print( "keyname... ", keyname )
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.shownRecd == None):
-				pixbuf = self.getRecdPixbuf( self.shownRecd )
-				if (pixbuf != None):
-					#self.clipBoard = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
-					gtk.Clipboard().set_image(pixbuf)
+				if (self.shownRecd.type == self.ca.m.TYPE_PHOTO):
+					tempImgPath = self.doClipboardCopyStart( self.shownRecd )
+					gtk.Clipboard().set_with_data( [('text/uri-list', 0, 0)], self._clipboardGetFuncCb, self._clipboardClearFuncCb, tempImgPath )
+
 		return True
+
+
+	def doClipboardCopyStart( self, recd ):
+		imgPath_s = os.path.join(self.ca.journalPath, recd.mediaFilename)
+		imgPath_s = os.path.abspath(imgPath_s)
+		#todo: get alternate path for buddies pics...
+
+		#todo: truly unique filenames for temp... #and check they're not taken..
+		tempImgPath = os.path.join("tmp", recd.mediaFilename)
+		tempImgPath = os.path.abspath(tempImgPath)
+		shutil.copyfile(imgPath_s, tempImgPath)
+		print("start..", os.path.exists(imgPath_s), os.path.exists(tempImgPath))
+		return tempImgPath
+
+
+	def doClipboardCopyCopy( self, tempImgPath, selection_data ):
+		tempImgUri = "file://" + tempImgPath
+		selection_data.set( "text/uri-list", 8, tempImgUri )
+
+	def doClipboardCopyFinish( self, tempImgPath ):
+		if (tempImgPath != None):
+			if (os.path.exists(tempImgPath)):
+				os.remove( tempImgPath )
+		tempImgPath = None
+
+
+	def _clipboardGetFuncCb( self, clipboard, selection_data, info, data):
+		self.doClipboardCopyCopy( data, selection_data )
+
+
+	def _clipboardClearFuncCb( self, clipboard, data):
+		self.doClipboardCopyFinish( data )
+
 
 	def getRecdPixbuf( self, recd ):
 		pixbuf = None
@@ -994,7 +1027,6 @@ class ThumbnailDeleteButton(gtk.Button):
 		if (not self.props.sensitive):
 			return
 
-		print("clicky!")
 		self.ui.deleteThumbSelection( self.tc.recd )
 
 	def expose(self, widget, event):
@@ -1059,6 +1091,7 @@ class ThumbnailButton(gtk.Button):
 			self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
 			self.dragBeginConnection = self.connect("drag_begin", self._dragBeginCb)
 			self.dragDataGetConnection = self.connect("drag_data_get", self._dragDataGetCb)
+			self.dragEndConnection = self.connect("drag_end", self._dragEndCb)
 
 
 #	def set_sensitive( self, sen ):
@@ -1069,6 +1102,9 @@ class ThumbnailButton(gtk.Button):
 		self.drag_source_unset()
 		self.recdThumbRenderImg = None
 		self.recdThumbInsensitiveImg = None
+		#todo: remove the tempImagePath file..
+		self.tempImgPath = None
+		#todo: disconnect the dragConnections
 
 
 	def _buttonClickCb(self, args ):
@@ -1085,35 +1121,19 @@ class ThumbnailButton(gtk.Button):
 		return True
 
 
+	def _dragEndCb(self, widget, dragCtxt):
+		self.ui.doClipboardCopyFinish( self.tempImgPath )
+
+
 	def _dragBeginCb(self, widget, dragCtxt ):
 		self.drag_source_set_icon_pixbuf( self.tc.recd.thumbPixbuf )
 
 
 	def _dragDataGetCb(self, widget, drag_context, selection_data, info, timestamp):
-		#todo: tomeu is helping out here...
-
 		#todo: is this the proper way to handle returning None if file deleted from another xo..?
 		if (selection_data.target == 'image/jpeg'):
-			#pb = self.ui.getRecdPixbuf( self.tc.recd )
-
-			#ok2 = selection_data.set_pixbuf(pb)
-
-			#ok, can only use this to save a string for the third parameter, not a pb and not str(pb)
-			#ok = selection_data.set( selection_data.target, 8, str(pb) )
-			imgPath = os.path.join(self.ui.ca.journalPath, self.tc.recd.mediaFilename)
-			imgPath_s = os.path.abspath(imgPath)
-			#imgPath_c = os.path.join("tmp", "ok.jpg")
-			k = str(imgPath_s)
-			#tried // and \r\n
-
-			k = "file://" + k
-			print("k", k )
-			ok = selection_data.set( "text/uri-list", 8, k )
-			print("ok", ok)
-
-
-			#print( "ok?", ok, "ok2?", ok2, selection_data.target )
-
+			self.tempImgPath = self.ui.doClipboardCopyStart( self.tc.recd )
+			self.ui.doClipboardCopyCopy( self.tempImgPath, selection_data )
 
 
 	def draw(self, ctx, w, h):
