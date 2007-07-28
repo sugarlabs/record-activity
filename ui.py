@@ -199,6 +199,8 @@ class UI:
 		self.livePhotoWindow.set_transient_for(self.ca)
 		self.livePhotoWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.livePhotoWindow.set_decorated(False)
+		self.livePhotoWindow.set_focus_on_map(False)
+		self.livePhotoWindow.set_property("accept-focus", False)
 
 		#pipbackground here
 		self.livePipBgdWindow = PipWindow(self)
@@ -206,6 +208,8 @@ class UI:
 		self.livePipBgdWindow.set_transient_for(self.livePhotoWindow)
 		self.livePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.livePipBgdWindow.set_decorated(False)
+		self.livePipBgdWindow.set_focus_on_map(False)
+		self.livePipBgdWindow.set_property("accept-focus", False)
 
 		self.liveVideoWindow = LiveVideoWindow()
 		self.liveVideoWindow.resize( self.vw, self.vh )
@@ -215,12 +219,16 @@ class UI:
 		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
+		self.liveVideoWindow.set_focus_on_map(False)
+		self.liveVideoWindow.set_property("accept-focus", False)
 
 		self.liveMaxWindow = MaxWindow(self, True)
 		self.liveMaxWindow.resize( self.maxw, self.maxh )
 		self.liveMaxWindow.set_transient_for(self.liveVideoWindow)
 		self.liveMaxWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.liveMaxWindow.set_decorated(False)
+		self.liveMaxWindow.set_focus_on_map(False)
+		self.liveMaxWindow.set_property("accept-focus", False)
 
 		self.hideLiveWindows()
 
@@ -231,6 +239,8 @@ class UI:
 		self.playOggWindow.set_transient_for(self.liveMaxWindow)
 		self.playOggWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playOggWindow.set_decorated(False)
+		self.playOggWindow.set_focus_on_map(False)
+		self.playOggWindow.set_property("accept-focus", False) 
 
 		#pipbackground here
 		self.playLivePipBgdWindow = PipWindow(self)
@@ -238,6 +248,8 @@ class UI:
 		self.playLivePipBgdWindow.set_transient_for(self.playOggWindow)
 		self.playLivePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playLivePipBgdWindow.set_decorated(False)
+		self.playLivePipBgdWindow.set_focus_on_map(False)
+		self.playLivePipBgdWindow.set_property("accept-focus", False)
 
 		self.playLiveWindow = LiveVideoWindow()
 		self.playLiveWindow.resize( self.pipw, self.piph )
@@ -246,12 +258,16 @@ class UI:
 		self.playLiveWindow.set_decorated(False)
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self.playLiveButtonReleaseCb)
+		self.playLiveWindow.set_focus_on_map(False)
+		self.playLiveWindow.set_property("accept-focus", False)
 
 		self.playMaxWindow = MaxWindow(self, False)
 		self.playMaxWindow.resize( self.maxw, self.maxh )
 		self.playMaxWindow.set_transient_for(self.playLiveWindow)
 		self.playMaxWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.playMaxWindow.set_decorated(False)
+		self.playMaxWindow.set_focus_on_map(False)
+		self.playMaxWindow.set_property("accept-focus", False)
 
 		self.hidePlayWindows()
 
@@ -269,19 +285,19 @@ class UI:
 		self.playLiveWindow.show_all()
 		self.playMaxWindow.show_all()
 
-
 		self.ca.connect('key-press-event', self._keyPressEventCb)
 
 
 	def _keyPressEventCb( self, widget, event):
 		keyname = gtk.gdk.keyval_name(event.keyval)
+		print( "keyname... ", keyname )
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.shownRecd == None):
 				pixbuf = self.getRecdPixbuf( self.shownRecd )
 				if (pixbuf != None):
 					#self.clipBoard = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="CLIPBOARD")
 					gtk.Clipboard().set_image(pixbuf)
-
+		return True
 
 	def getRecdPixbuf( self, recd ):
 		pixbuf = None
@@ -895,7 +911,12 @@ class ThumbnailCanvas(gtk.VBox):
 		self.delButt = None
 
 		self.butt = ThumbnailButton(self, self.ui)
+		#buttBox = gtk.EventBox()
+		#buttBox.add( self.butt )
+		#self.pack_start(buttBox, expand=True)
 		self.pack_start(self.butt, expand=True)
+
+
 		self.delButt = ThumbnailDeleteButton(self, self.ui)
 		self.delButt.set_size_request( -1, 20 )
 		self.pack_start(self.delButt, expand=False)
@@ -1030,11 +1051,6 @@ class ThumbnailButton(gtk.Button):
 
 		self.exposeConnection = self.connect("expose_event", self._exposeEventCb)
 		self.clickConnection = self.connect("clicked", self._buttonClickCb)
-		targets = [('image/jpeg', 0, 0)]
-		self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
-		#self.drag_source_unset()
-		self.dragBeginConnection = self.connect("drag_begin", self._dragBeginCb)
-		self.dragDataGetConnection = self.connect("drag_data_get", self._dragDataGetCb)
 
 
 	def setDraggable( self ):
@@ -1074,12 +1090,30 @@ class ThumbnailButton(gtk.Button):
 
 
 	def _dragDataGetCb(self, widget, drag_context, selection_data, info, timestamp):
-		#todo: is this the proper way to handle returning None if file deleted from 
-		pb = self.ui.getRecdPixbuf( self.tc.recd )
-		if (pb != None):
-			return pb
-		else:
-			return None
+		#todo: tomeu is helping out here...
+
+		#todo: is this the proper way to handle returning None if file deleted from another xo..?
+		if (selection_data.target == 'image/jpeg'):
+			#pb = self.ui.getRecdPixbuf( self.tc.recd )
+
+			#ok2 = selection_data.set_pixbuf(pb)
+
+			#ok, can only use this to save a string for the third parameter, not a pb and not str(pb)
+			#ok = selection_data.set( selection_data.target, 8, str(pb) )
+			imgPath = os.path.join(self.ui.ca.journalPath, self.tc.recd.mediaFilename)
+			imgPath_s = os.path.abspath(imgPath)
+			#imgPath_c = os.path.join("tmp", "ok.jpg")
+			k = str(imgPath_s)
+			#tried // and \r\n
+
+			k = "file://" + k
+			print("k", k )
+			ok = selection_data.set( "text/uri-list", 8, k )
+			print("ok", ok)
+
+
+			#print( "ok?", ok, "ok2?", ok2, selection_data.target )
+
 
 
 	def draw(self, ctx, w, h):

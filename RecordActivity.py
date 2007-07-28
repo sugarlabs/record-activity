@@ -107,6 +107,13 @@ class RecordActivity(activity.Activity):
 		return False
 
 
+	def read_file(self, file_path):
+		print("read_file", file_path)
+
+
+	def write_file(self, file_path):
+		pass
+
 	def sharedCb( self, activity ):
 		print("1 i am shared")
 		self.startMesh()
