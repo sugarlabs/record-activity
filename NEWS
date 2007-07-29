@@ -1,5 +1,5 @@
 20
-* fixes to clipboard functionality
+* fixes to clipboard functionality for d&d and c&p (jedierikb, tomeu)
 
 19
 * clipboard functionality for photos, including ctrl+c and drag (jedierikb, tomeu)
