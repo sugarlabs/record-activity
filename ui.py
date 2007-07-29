@@ -309,13 +309,13 @@ class UI:
 		tempImgPath = os.path.join("tmp", recd.mediaFilename)
 		tempImgPath = os.path.abspath(tempImgPath)
 		shutil.copyfile(imgPath_s, tempImgPath)
-		print("start..", os.path.exists(imgPath_s), os.path.exists(tempImgPath))
 		return tempImgPath
 
 
 	def doClipboardCopyCopy( self, tempImgPath, selection_data ):
 		tempImgUri = "file://" + tempImgPath
 		selection_data.set( "text/uri-list", 8, tempImgUri )
+
 
 	def doClipboardCopyFinish( self, tempImgPath ):
 		if (tempImgPath != None):
@@ -333,24 +333,32 @@ class UI:
 
 
 	def getRecdPixbuf( self, recd ):
+		#todo: make one of these for thumbs too..
 		pixbuf = None
+		imgPath = self.getRecdMediaPath( recd )
+		if ( os.path.isfile(imgPath) ):
+			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
+		return pixbuf
+
+
+	def getRecdMediaPath( self, recd ):
+		#todo: this needs to be expanded for all other media types
 		imgPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		imgPath_s = os.path.abspath(imgPath)
+		imgPath = os.path.abspath(imgPath)
 
 		if (recd.buddy):
 			imgPath = os.path.join(self.ca.journalPath, "buddies", recd.mediaFilename)
-			imgPath_s = os.path.abspath(imgPath)
-			if (not os.path.isfile(imgPath_s)):
+			imgPath = os.path.abspath(imgPath)
+			if (not os.path.isfile(imgPath)):
+				#use the thumbnail if you can't get the real picture
 				imgPath = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
-				#todo: check that we use abspath everywheres (ck jukebox for how to do this with playbin too)
-				imgPath_s = os.path.abspath( imgPath )
-				#todo: fix... for some reason, if the person left the mesh, we don't get to see even this
-				self.ca.meshClient.requestPhotoBits( recd )
+				imgPath = os.path.abspath( imgPath )
+				#todo: always re-request?
+				if (self.ca.meshClient != None):
+					self.ca.meshClient.requestPhotoBits( recd )
 
-		if ( os.path.isfile(imgPath_s) ):
-			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath_s)
+		return imgPath
 
-		return pixbuf
 
 
 	def showPhoto( self, recd ):
@@ -986,7 +994,6 @@ class ThumbnailCanvas(gtk.VBox):
 		self.delButt.queue_draw()
 
 
-
 	def loadThumb(self):
 		if (self.recd == None):
 			return
@@ -995,14 +1002,13 @@ class ThumbnailCanvas(gtk.VBox):
 		if (self.recd.buddy):
 			thmbPath = os.path.join(self.ui.ca.journalPath, "buddies", self.recd.thumbFilename)
 
-		thmbPath_s = os.path.abspath(thmbPath)
-		if ( os.path.isfile(thmbPath_s) ):
-			pb = gtk.gdk.pixbuf_new_from_file(thmbPath_s)
+		thmbPath = os.path.abspath(thmbPath)
+		if ( os.path.isfile(thmbPath) ):
+			pb = gtk.gdk.pixbuf_new_from_file(thmbPath)
 			if (pb != None):
 				self.recd.thumbPixbuf = pb
 				img = _camera.cairo_surface_from_gdk_pixbuf(pb)
 				self.recd.thumb = img
-
 
 
 class ThumbnailDeleteButton(gtk.Button):
