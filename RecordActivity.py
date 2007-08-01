@@ -170,6 +170,12 @@ class RecordActivity(activity.Activity):
 		os.makedirs(self.tempPath)
 
 
+	def close( self ):
+		#extend the sugar close method for rapid shutdown
+		activity.Activity.close( self )
+		self.destroyCb( None )
+
+
 	def destroyCb( self, *args ):
 		self.gplay.stop()
 		self.glive.stop()
