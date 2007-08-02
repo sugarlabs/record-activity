@@ -171,12 +171,14 @@ class RecordActivity(activity.Activity):
 
 
 	def close( self ):
-		#extend the sugar close method for rapid shutdown
+		#extend the sugar close method for rapid shutdown that doesn't litter the
 		activity.Activity.close( self )
 		self.destroyCb( None )
 
 
 	def destroyCb( self, *args ):
+		self.ui.hideLiveWindows()
+		self.ui.hidePlayWindows()
 		self.gplay.stop()
 		self.glive.stop()
 		#todo: clean up / throw away any video you might be recording when you quit the activity

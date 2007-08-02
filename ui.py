@@ -18,6 +18,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
+#todo: fix... view photo, then fullscreen video.. where is max button?
+
 import gtk
 from gtk import gdk
 import gobject
@@ -510,6 +512,7 @@ class UI:
 		win.move(offW, offH)
 
 	def setImgLocDim( self, win ):
+		#this is *very* annoying... this call makes the video not show up at launch
 		#win.hide_all()
 		self.moveWinOffscreen( win )
 
@@ -541,17 +544,9 @@ class UI:
 		win.show_all()
 
 
-	def setPipLocDim2( self, win ):
-		if (self.fullScreen):
-			win.move( self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
-		else:
-			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			win.move( vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
-
-		win.show_all()
-
-
 	def setPipBgdLocDim( self, win ):
+		win.hide_all()
+
 		if (self.fullScreen):
 			win.move( self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder))
 		else:
@@ -562,6 +557,8 @@ class UI:
 
 
 	def setMaxLocDim( self, win ):
+		win.hide_all()
+
 		if (self.fullScreen):
 			win.move( gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
 		else:
@@ -970,17 +967,13 @@ class ThumbnailCanvas(gtk.VBox):
 		self.butt.set_sensitive( sen )
 		self.delButt.set_sensitive( sen )
 
+
 	def clear(self):
 		self.recd = None
 		self.butt.clear()
 		self.butt.queue_draw()
 		self.delButt.clear()
 		self.delButt.queue_draw()
-
-		#if (self.butt != None):
-		#	self.remove(self.butt)
-		#if (self.delButt != None):
-		#	self.remove( self.delButt )
 
 
 	def setButton(self, recd):
@@ -1089,6 +1082,9 @@ class ThumbnailButton(gtk.Button):
 
 		self.exposeConnection = self.connect("expose_event", self._exposeEventCb)
 		self.clickConnection = self.connect("clicked", self._buttonClickCb)
+		self.dragBeginConnection = None
+		self.dragDataGetConnection = None
+		self.dragEndConnection = None
 
 
 	def setDraggable( self ):
@@ -1108,9 +1104,22 @@ class ThumbnailButton(gtk.Button):
 		self.drag_source_unset()
 		self.recdThumbRenderImg = None
 		self.recdThumbInsensitiveImg = None
+
 		#todo: remove the tempImagePath file..
 		self.tempImgPath = None
+
 		#todo: disconnect the dragConnections
+		#print( "self.dragBeginConnection: ", self.dragBeginConnection )
+		if (self.dragBeginConnection != None):
+			#todo: check what a connect signal becomes after it is disconnected
+			if (self.dragBeginConnection != -1):
+				self.disconnect(self.dragBeginConnection)
+				self.disconnect(self.dragDataGetConnection)
+				self.disconnect(self.dragEndConnection)
+				#print( "2 self.dragBeginConnection: ", self.dragBeginConnection )
+				self.dragBeginConnection = None
+				self.dragDataGetConnection = None
+				self.dragEndConnection = None
 
 
 	def _buttonClickCb(self, args ):
