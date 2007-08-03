@@ -1,6 +1,6 @@
 [Activity]
 name = Record
-activity_version = 21
+activity_version = 22
 host_version = 1
 icon = activity-record
 service_name = org.laptop.RecordActivity
