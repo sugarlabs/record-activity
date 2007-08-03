@@ -371,6 +371,7 @@ class UI:
 		# allow for a preroll
 		self.ca.gplay.get_state(timeout=50 * gst.MSECOND) # 50 ms
 
+
 	def scale_button_release_cb(self, widget, event):
 		# see seek.cstop_seek
 		widget.disconnect(self.changed_id)
@@ -482,7 +483,7 @@ class UI:
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
-		self.videoScrubPanel.hide_all()
+		#self.videoScrubPanel.hide_all()
 
 
 	def updateButtonSensitivities( self ):
@@ -614,6 +615,9 @@ class UI:
 	def setImgLocDim( self, win ):
 		#this is *very* annoying... this call makes the video not show up at launch
 		#win.hide_all()
+
+		#win.hide()
+
 		self.moveWinOffscreen( win )
 
 		if (self.fullScreen):
@@ -624,12 +628,12 @@ class UI:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			win.move( vPos[0], vPos[1] )
 
-		win.show_all()
+		#win.show_all()
 
 
 	def setPipLocDim( self, win ):
 		#this order of operations prevents video flicker
-		win.hide_all()
+		#win.hide()
 
 		self.moveWinOffscreen( win )
 
@@ -641,11 +645,11 @@ class UI:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			win.move( vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
 
-		win.show_all()
+		#win.show_all()
 
 
 	def setPipBgdLocDim( self, win ):
-		win.hide_all()
+		#win.hide()
 
 		if (self.fullScreen):
 			win.move( self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder))
@@ -653,11 +657,11 @@ class UI:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			win.move( vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder) )
 
-		win.show_all()
+		#win.show_all()
 
 
 	def setMaxLocDim( self, win ):
-		win.hide_all()
+		#win.hide()
 
 		if (self.fullScreen):
 			win.move( gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
@@ -665,7 +669,7 @@ class UI:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			win.move( (vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset)
 
-		win.show_all()
+		#win.show_all()
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
@@ -709,6 +713,16 @@ class UI:
 
 
 	def updateVideoComponents( self ):
+
+#		self.livePhotoWindow.hide()
+#		self.livePipBgdWindow.hide()
+#		self.liveVideoWindow.hide()
+#		self.liveMaxWindow.hide()
+#		self.playOggWindow.hide()
+#		self.playLivePipBgdWindow.hide()
+#		self.playLiveWindow.hide()
+#		self.playMaxWindow.hide()
+
 		if (self.photoMode):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.livePipBgdWindow )
@@ -734,6 +748,46 @@ class UI:
 				self.setPipBgdLocDim( self.playLivePipBgdWindow )
 				self.setPipLocDim( self.playLiveWindow )
 
+
+#		self.livePhotoWindow.realize()
+#		self.livePhotoWindow.set_transient_for(self.ca)
+#		self.livePhotoWindow.window.raise_()
+#		self.livePhotoWindow.show_all()
+
+#		self.livePipBgdWindow.realize()
+#		self.livePipBgdWindow.set_transient_for(self.livePhotoWindow)
+#		self.livePipBgdWindow.window.raise_()
+#		self.livePipBgdWindow.show_all()
+
+#		self.liveVideoWindow.realize()
+#		self.liveVideoWindow.set_transient_for(self.livePipBgdWindow)
+#		self.liveVideoWindow.window.raise_()
+#		self.liveVideoWindow.show_all()
+
+#		self.liveMaxWindow.realize()
+#		self.liveMaxWindow.set_transient_for(self.liveVideoWindow)
+#		self.liveMaxWindow.window.raise_()
+#		self.liveMaxWindow.show_all()
+
+#		self.playOggWindow.realize()
+#		self.playOggWindow.set_transient_for(self.liveMaxWindow)
+#		self.playOggWindow.window.raise_()
+#		self.playOggWindow.show_all()
+
+#		self.playLivePipBgdWindow.realize()
+#		self.playLivePipBgdWindow.set_transient_for(self.playOggWindow)
+#		self.playLivePipBgdWindow.window.raise_()
+#		self.playLivePipBgdWindow.show_all()
+
+#		self.playLiveWindow.realize()
+#		self.playLiveWindow.set_transient_for(self.playLivePipBgdWindow)
+#		self.playLiveWindow.window.raise_()
+#		self.playLiveWindow.show_all()
+
+#		self.playMaxWindow.realize()
+#		self.playMaxWindow.set_transient_for(self.playLiveWindow)
+#		self.playMaxWindow.window.raise_()
+#		self.playMaxWindow.show_all()
 
 	#todo: cache buttons which we can reuse
 	def updateThumbs( self, addToTrayArray, left, start, right ):
@@ -818,7 +872,7 @@ class UI:
 		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
 		self.ca.gplay.setLocation(videoUrl)
 
-		self.videoScrubPanel.show_all()
+		#self.videoScrubPanel.show_all()
 
 		self.shownRecd = recd
 		self.showRecdMeta(recd)

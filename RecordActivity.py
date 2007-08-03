@@ -64,7 +64,7 @@ class RecordActivity(activity.Activity):
 		keyHash = util._sha_data(key)
 		self.hashedKey = util.printable_hash(keyHash)
 
-		#todo: replace this code to avoid conflicts between multiple
+		#todo: replace this code to avoid conflicts between multiple instances (tubes?)
 		#xmlRpcPort = 8888
 		#httpPort = 8889
 		h = hash(self.instanceId)
