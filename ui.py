@@ -36,6 +36,11 @@ from time import strftime
 import math
 import shutil
 
+import pygst
+pygst.require('0.10')
+import gst
+import gst.interfaces
+
 from sugar import profile
 from sugar import util
 #to get the toolbox
@@ -139,8 +144,6 @@ class UI:
 		self.dateDateLabel.set_alignment(0, .5)
 		datePanel.pack_start(self.dateDateLabel)
 
-		self.showLiveVideoTags()
-
 		self.shutterButton = gtk.Button()
 		self.shutterButton.set_image( self.shutterImg )
 		#todo: insensitive at launch?
@@ -164,6 +167,41 @@ class UI:
 		videoBox.pack_start(self.backgdCanvas, expand=False)
 		self.videoScrubPanel = gtk.EventBox()
 		videoBox.pack_end(self.videoScrubPanel, expand=True)
+
+
+		##
+		##
+		#the video scrubber
+		self.videoScrubBox = gtk.HBox()
+		self.videoScrubPanel.add( self.videoScrubBox )
+
+		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
+		self.pause_image.show()
+		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
+		self.play_image.show()
+
+		self.playPauseButton = gtk.ToolButton()
+		self.playPauseButton.set_icon_widget(self.play_image)
+		self.playPauseButton.set_property('can-default', True)
+		self.playPauseButton.show()
+		self.playPauseButton.connect('clicked', self._playPauseButtonCb)
+
+		self.videoScrubBox.pack_start(self.playPauseButton, expand=False)
+
+		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
+		self.hscale = gtk.HScale(self.adjustment)
+		self.hscale.set_draw_value(False)
+		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+		self.hscale.connect('button-press-event', self._scrubberPressCb)
+		self.hscale.connect('button-release-event', self._scrubberReleaseCb)
+
+		self.scale_item = gtk.ToolItem()
+		self.scale_item.set_expand(True)
+		self.scale_item.add(self.hscale)
+		self.videoScrubBox.pack_start(self.scale_item, expand=True)
+		##
+		##
+
 
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
@@ -288,10 +326,71 @@ class UI:
 		self.playLiveWindow.show_all()
 		self.playMaxWindow.show_all()
 
+		#actually, we're not showing you just yet
+		self.videoScrubPanel.hide_all()
+		self.showLiveVideoTags()
+
 		self.ca.connect('key-press-event', self._keyPressEventCb)
 
 
+	def _playPauseButtonCb(self, widget):
+		if (self.ca.gplay.is_playing()):
+			self.ca.gplay.pause()
+		else:
+			self.ca.gplay.play()
+
+		self.updatePlayPauseButton()
+
+
+	def updatePlayPauseButton(self):
+		if (self.ca.gplay.is_playing()):
+			self.playPauseButton.set_icon_widget(self.play_image)
+		else:
+			self.playPauseButton.set_icon_widget(self.pause_image)
+
+
+	def _scrubberPressCb(self, widget, event):
+		self.toolbar.button.set_sensitive(False)
+		self.was_playing = self.player.is_playing()
+		if self.was_playing:
+			self.player.pause()
+
+		# don't timeout-update position during seek
+		if self.update_id != -1:
+			gobject.source_remove(self.update_id)
+			self.update_id = -1
+		# make sure we get changed notifies
+			if self.changed_id == -1:
+				self.changed_id = self.toolbar.hscale.connect('value-changed', self.scale_value_changed_cb)
+
+
+	def _scrubberReleaseCb(self, scale):
+		#todo: where are these values from?
+		real = long(scale.get_value() * self.p_duration / 100) # in ns
+		self.ca.gplay.seek( real )
+		# allow for a preroll
+		self.ca.gplay.get_state(timeout=50 * gst.MSECOND) # 50 ms
+
+	def scale_button_release_cb(self, widget, event):
+		# see seek.cstop_seek
+		widget.disconnect(self.changed_id)
+		self.changed_id = -1
+
+		self.toolbar.button.set_sensitive(True)
+		if self.seek_timeout_id != -1:
+			gobject.source_remove(self.seek_timeout_id)
+			self.seek_timeout_id = -1
+		else:
+			if self.was_playing:
+				self.player.play()
+			if self.update_id != -1:
+				self.error('Had a previous update timeout id')
+			else:
+				self.update_id = gobject.timeout_add(self.UPDATE_INTERVAL, self.update_scale_cb)
+
+
 	def _keyPressEventCb( self, widget, event):
+		#we listen here for CTRL+C events
 		keyname = gtk.gdk.keyval_name(event.keyval)
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.shownRecd == None):
@@ -383,6 +482,7 @@ class UI:
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
+		self.videoScrubPanel.hide_all()
 
 
 	def updateButtonSensitivities( self ):
@@ -714,8 +814,11 @@ class UI:
 		self.updateVideoComponents()
 
 		#todo: use os.path calls here, see jukebox
+		#~~> urllib.quote(os.path.abspath(file_path))
 		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
 		self.ca.gplay.setLocation(videoUrl)
+
+		self.videoScrubPanel.show_all()
 
 		self.shownRecd = recd
 		self.showRecdMeta(recd)

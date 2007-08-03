@@ -38,10 +38,12 @@ class Gplay:
 		self.ca = pca
 		self.window = None
 		self.players = []
+		self.playing = False
 		self.nextMovie()
 
 	def nextMovie(self):
 		if ( len(self.players) > 0 ):
+			self.playing = False
 			self.getPlayer().set_property("video-sink", None)
 			self.getPlayer().get_bus().disconnect(self.SYNC_ID)
 			self.getPlayer().get_bus().remove_signal_watch()
@@ -68,26 +70,38 @@ class Gplay:
 
 	def setLocation(self, location):
 		if (self.getPlayer().get_property('uri') == location):
-			evt = gst.event_new_seek(1.0, gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE, gst.SEEK_TYPE_SET, gst.SECOND*0,  gst.SEEK_TYPE_NONE, 0)
-			res = self.getPlayer().send_event(evt)
-			if res:
-				self.getPlayer().set_new_stream_time(0L)
+			self.seek(gst.SECOND*0)
 			return
 
 		self.getPlayer().set_state(gst.STATE_READY)
 		self.getPlayer().set_property('uri', location)
 		self.play()
 
+
+	def seek(self, location):
+		event = gst.event_new_seek(1.0, gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE, gst.SEEK_TYPE_SET, location, gst.SEEK_TYPE_NONE, 0)
+		res = self.player.send_event(event)
+		if res:
+			self.player.set_new_stream_time(0L)
+
 	def pause(self):
+		self.playing = False
 		self.getPlayer().set_state(gst.STATE_PAUSED)
 
 	def play(self):
+		self.playing = True
 		self.getPlayer().set_state(gst.STATE_PLAYING)
 
 	def stop(self):
+		self.playing = False
 		self.getPlayer().set_state(gst.STATE_NULL)
 		self.nextMovie()
 
+	def get_state(self, timeout=1):
+		return self.getPlayer().get_state(timeout=timeout)
+
+	def is_playing(self):
+		return self.playing
 
 class PlayVideoWindow(gtk.Window):
 	def __init__(self):

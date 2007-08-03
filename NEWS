@@ -1,3 +1,6 @@
+22
+* video scrubber
+
 21
 * fixes to maximize window disappearing (jedierikb)
 * shutdown calls all through one method, prevents video lingering post shutdown (jedierikb, dcbw)
