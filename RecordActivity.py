@@ -110,7 +110,6 @@ class RecordActivity(activity.Activity):
 	def read_file(self, file_path):
 		print("read_file", file_path)
 
-
 	def write_file(self, file_path):
 		pass
 
