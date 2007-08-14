@@ -23,9 +23,12 @@ import gobject
 import os
 import shutil
 
+import xml.dom.minidom
+
 from sugar import util
 from sugar.activity import activity
 from sugar import profile
+from sugar.datastore import datastore
 
 from model import Model
 from ui import UI
@@ -107,11 +110,18 @@ class RecordActivity(activity.Activity):
 		return False
 
 
-	def read_file(self, file_path):
-		print("read_file", file_path)
+	def read_file(self, file):
+		print("read file")
+		self.m.fillMediaHash(file)
 
-	def write_file(self, file_path):
-		pass
+
+	def write_file(self, file):
+		print("write_file")
+		f = open( file, "w" )
+		album = self.m.updateMediaIndex()
+		album.writexml(f)
+		f.close()
+
 
 	def sharedCb( self, activity ):
 		print("1 i am shared")
@@ -145,8 +155,9 @@ class RecordActivity(activity.Activity):
 		self.ACTIVE = self.props.active
 
 
-	#todo: if recording a movie when you leave, stop.  also make sure not to put the video back on display when done.
+
 	def stopPipes(self):
+		#todo: if recording a movie when you leave, stop.  also make sure not to put the video back on display when done.
 		print("stop pipes")
 		self.gplay.stop()
 

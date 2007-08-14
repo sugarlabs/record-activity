@@ -57,6 +57,7 @@ class Model:
 		self.mediaHashs = {}
 		self.fillMediaHash( self.journalIndex )
 
+
 	def fillMediaHash( self, index ):
 		self.mediaHashs[self.TYPE_PHOTO] = []
 		self.mediaHashs[self.TYPE_VIDEO] = []
@@ -69,6 +70,7 @@ class Model:
 			videos = doc.documentElement.getElementsByTagName('video')
 			for each in videos:
 				self.loadMedia( each, self.mediaHashs[self.TYPE_VIDEO] )
+
 
 	def loadMedia( self, el, hash ):
 		recd = Recorded()
@@ -288,7 +290,7 @@ class Model:
 
 		#hey, i just took a cool picture!  let me show you!
 		if (self.ca.meshClient != None):
-			#md5?
+			#todo: md5?
 			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
 
 
@@ -411,14 +413,6 @@ class Model:
 	#todo: update photo index to point to the "buddies"
 	#todo: create a top level html file?
 	def updateMediaIndex( self ):
-		#delete all old htmls
-		files = os.listdir(self.ca.journalPath)
-		for file in files:
-			if (len(file) > 5):
-				if ("html" == file[len(file)-4:]):
-					html = os.path.join(self.ca.journalPath, file)
-					os.remove(html)
-
 		impl = getDOMImplementation()
 		album = impl.createDocument(None, "album", None)
 		root = album.documentElement
@@ -430,44 +424,6 @@ class Model:
 			root.appendChild(photo)
 			self.saveMedia(photo, recd, self.TYPE_PHOTO)
 
-			if (not recd.buddy):
-				htmlDoc = impl.createDocument(None, "html", None)
-				html = htmlDoc.documentElement
-				head = htmlDoc.createElement('head')
-				html.appendChild(head)
-				title = htmlDoc.createElement('title')
-				head.appendChild(title)
-				titleText = htmlDoc.createTextNode( "Your Photos" )
-				title.appendChild(titleText)
-				body = htmlDoc.createElement('body')
-				html.appendChild(body)
-				center = htmlDoc.createElement('center')
-				body.appendChild(center)
-				ahref = htmlDoc.createElement('a')
-				center.appendChild(ahref)
-
-				if (len(photoHash)>0):
-					nextRecd = photoHash[0]
-					if (i < len(photoHash)-1):
-						nextRecd = photoHash[i+1]
-					#todo: more specific, per kid?
-					nextHtml = os.path.join(self.ca.journalPath, str(nextRecd.time)+".html")
-					ahref.setAttribute('href', os.path.abspath(nextHtml))
-
-				img = htmlDoc.createElement('img')
-				img.setAttribute("width", "320")
-				img.setAttribute("height", "240")
-				ahref.appendChild(img)
-				img.setAttribute('src', recd.mediaFilename)
-				if (i == 0):
-					f = open(os.path.join(self.ca.journalPath, "index.html"), 'w')
-					htmlDoc.writexml(f)
-					f.close()
-				else:
-					f = open(os.path.join(self.ca.journalPath, str(recd.time)+".html"), 'w')
-					htmlDoc.writexml(f)
-					f.close()
-
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		for i in range (0, len(videoHash)):
 			recd = videoHash[i]
@@ -476,9 +432,7 @@ class Model:
 			root.appendChild(video)
 			self.saveMedia(video, recd, self.TYPE_VIDEO)
 
-		f = open( self.journalIndex, 'w')
-		album.writexml(f)
-		f.close()
+		return album
 
 
 	#todo: if you are not at the end of the list, do we want to force you to the end?
