@@ -286,6 +286,12 @@ class Model:
 		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
 		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
+		#add to the filestore here... #todo: need to delete temp at file close, I suppose
+		dso = datastore.create()
+		dso.file_path = thumbpath
+		datastore.write(dso)
+		recd.datastoreId = dso.
+
 		self.addPhoto( recd )
 
 		#hey, i just took a cool picture!  let me show you!
