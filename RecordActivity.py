@@ -117,8 +117,9 @@ class RecordActivity(activity.Activity):
 
 	def write_file(self, file):
 		print("write_file")
+		#todo: just pass the file over to the method in m
 		f = open( file, "w" )
-		album = self.m.updateMediaIndex()
+		album = self.m.updateMediaIndex( True )
 		album.writexml(f)
 		f.close()
 

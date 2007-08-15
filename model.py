@@ -39,23 +39,25 @@ import gobject
 import xml.dom.minidom
 from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
+from hashlib import md5
 
 from recorded import Recorded
 from color import Color
 
-from hashlib import md5
 from sugar import util
+from sugar.datastore import datastore
 
 import _camera
 
 
 class Model:
 	def __init__( self, pca ):
+		#todo: this might all need to be relocated b/c of datastore
 		self.ca = pca
 		self.setConstants()
-		self.journalIndex = os.path.join(self.ca.journalPath, 'camera_index.xml')
+		#self.journalIndex = os.path.join(self.ca.journalPath, 'camera_index.xml')
 		self.mediaHashs = {}
-		self.fillMediaHash( self.journalIndex )
+		#self.fillMediaHash( self.journalIndex )
 
 
 	def fillMediaHash( self, index ):
@@ -93,11 +95,15 @@ class Model:
 		recd.hashKey = el.getAttribute('hashKey')
 		recd.mediaMd5 = el.getAttribute('mediaMd5')
 		recd.thumbMd5 = el.getAttribute('thumbMd5')
+		recd.datastoreId = el.getAttribute('datastoreId')
 
 		hash.append( recd )
 
 
-	def saveMedia( self, el, recd, type ):
+	def saveMedia( self, el, recd, type, toDatastore ):
+		if (toDatastore):
+			self.saveRecdToDatastore( recd )
+
 		el.setAttribute("type", str(type))
 		el.setAttribute("name", recd.name)
 		el.setAttribute("time", str(recd.time))
@@ -110,6 +116,8 @@ class Model:
 		el.setAttribute("buddy", str(recd.buddy))
 		el.setAttribute("mediaMd5", str(recd.mediaMd5))
 		el.setAttribute("thumbMd5", str(recd.thumbMd5))
+		if (recd.datastoreId != None):
+			el.setAttribute("datastoreId", str(recd.datastoreId))
 
 
 	def selectLatestThumbs( self, type ):
@@ -241,7 +249,7 @@ class Model:
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		videoHash.append( recd )
-		self.updateMediaIndex()
+		#self.updateMediaIndex()
 		self.thumbAdded( self.TYPE_VIDEO )
 
 		self.doPostSaveVideo()
@@ -286,12 +294,6 @@ class Model:
 		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
 		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
-		#add to the filestore here... #todo: need to delete temp at file close, I suppose
-		dso = datastore.create()
-		dso.file_path = thumbpath
-		datastore.write(dso)
-		recd.datastoreId = dso.
-
 		self.addPhoto( recd )
 
 		#hey, i just took a cool picture!  let me show you!
@@ -300,11 +302,63 @@ class Model:
 			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
 
 
+
+	def saveRecdToDatastore( self, recd ):
+		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
+		#therefore this is only called when write_file is called by the activity superclass
+		try:
+			mediaObject = datastore.create()
+			thumbObject = datastore.create()
+			try:
+				#todo: what other metadata to set?
+				#jobject.metadata['title'] = _('Screenshot')
+				#jobject.metadata['keep'] = '0'
+				#jobject.metadata['buddies'] = ''
+				#todo: is this for setting the thumb?
+				#jobject.metadata['preview'] = ''
+				#todo: if someone else took a picture, can we set their colors with this? what about other metadata?
+				#jobject.metadata['icon-color'] = profile.get_color().to_string()
+
+				if (recd.type == self.TYPE_PHOTO):
+					mediaObject.metadata['mime_type'] = 'image/png'
+				#todo: other mime types
+
+				#todo: full abs path here
+				mediaFile = os.path.join(self.journalPath, recd.mediaFilename)
+				mediaObject.file_path = mediaFile
+				recd.datastoreId = mediaObject.object_id
+				datastore.write(mediaObject)
+
+
+			finally:
+				mediaObject.destroy()
+				del mediaObject
+
+		finally:
+			pass
+		#	don't need to do this here, since we delete our temp before shutdown
+		#	os.remove(file_path)
+
+
+	def removeRecdFromDatastore( self, recd ):
+		pass
+
+
+	def getMediaFromDatastore( self, recd ):
+		pass
+
+
+	def getThumbFromDatastore( self, recd ):
+		pass
+
+
 	def addPhoto( self, recd ):
 		self.mediaHashs[self.TYPE_PHOTO].append( recd )
-		#todo: sort on time-taken
+
+		#todo: sort on time-taken, not on their arrival time
 		#save index
-		self.updateMediaIndex()
+		#self.updateMediaIndex()
+
 		#updateUi
 		self.thumbAdded(self.TYPE_PHOTO)
 
@@ -375,11 +429,15 @@ class Model:
 
 
 	def deleteRecorded( self, recd, mn ):
+		#todo: remove from the datastore here, since once gone, it is gone...
+
 		#clear the index
 		hash = self.mediaHashs[recd.type]
 		index = hash.index(recd)
 		hash.remove( recd )
-		self.updateMediaIndex( )
+
+		#self.updateMediaIndex( )
+
 		#clear transients
 		recd.thumb = None
 		recd.media = None
@@ -415,10 +473,7 @@ class Model:
 					self.ca.ui.removeIfSelectedRecorded( recd )
 
 
-	#todo: decide even to include this anymore?? 
-	#todo: update photo index to point to the "buddies"
-	#todo: create a top level html file?
-	def updateMediaIndex( self ):
+	def updateMediaIndex( self, toDatastore ):
 		impl = getDOMImplementation()
 		album = impl.createDocument(None, "album", None)
 		root = album.documentElement
@@ -428,7 +483,7 @@ class Model:
 
 			photo = album.createElement('photo')
 			root.appendChild(photo)
-			self.saveMedia(photo, recd, self.TYPE_PHOTO)
+			self.saveMedia(photo, recd, self.TYPE_PHOTO, toDatastore)
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		for i in range (0, len(videoHash)):
@@ -436,7 +491,7 @@ class Model:
 
 			video = album.createElement('video')
 			root.appendChild(video)
-			self.saveMedia(video, recd, self.TYPE_VIDEO)
+			self.saveMedia(video, recd, self.TYPE_VIDEO, toDatastore)
 
 		return album
 

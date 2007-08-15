@@ -22,8 +22,6 @@ class Recorded:
 
 	def __init__( self ):
 		self.type = -1
-		self.mediaFilename = None
-		self.thumbFilename = None
 		self.time = None
 		self.photographer = None
 		self.name = None
@@ -33,9 +31,14 @@ class Recorded:
 		self.mediaMd5 = None
 		self.thumbMd5 = None
 
-		#transient
+		#when you are datastore-serialized, you get one of these ids...
+		self.datastoreId = None
+
+		#transient... when just taken or taken out of the datastore you get these guys
 		self.media = None
 		self.thumb = None
+		self.mediaFilename = None
+		self.thumbFilename = None
 		self.thumbPixbuf = None
 
 		#assume you took the picture
