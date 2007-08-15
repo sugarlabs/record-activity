@@ -102,7 +102,7 @@ class Model:
 
 	def saveMedia( self, el, recd, type, toDatastore ):
 		if (toDatastore):
-			self.saveRecdToDatastore( recd )
+			self.saveMediaToDatastore( recd )
 
 		el.setAttribute("type", str(type))
 		el.setAttribute("name", recd.name)
@@ -303,7 +303,7 @@ class Model:
 
 
 
-	def saveRecdToDatastore( self, recd ):
+	def saveMediaToDatastore( self, recd ):
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
 		#therefore this is only called when write_file is called by the activity superclass
 		try:
@@ -320,7 +320,7 @@ class Model:
 				#jobject.metadata['icon-color'] = profile.get_color().to_string()
 
 				if (recd.type == self.TYPE_PHOTO):
-					mediaObject.metadata['mime_type'] = 'image/png'
+					mediaObject.metadata['mime_type'] = 'image/jpeg'
 				#todo: other mime types
 
 				#todo: full abs path here
@@ -340,22 +340,42 @@ class Model:
 		#	os.remove(file_path)
 
 
-	def removeRecdFromDatastore( self, recd ):
-		pass
+	def removeMediaFromDatastore( self, recd ):
+		if (recd.datastoreId == None):
+			return
+
+		try:
+			datastore.delete( recd.datastoreId )
+		finally:
+			pass
 
 
-	def getMediaFromDatastore( self, recd ):
-		pass
+	def loadMediaFromDatastore( self, recd ):
+		if (recd.datastoreId == None):
+			#todo: in practice, who is returning this?
+			return None
 
+		mediaObject = datastore.get( recd.datastoreId )
+		if (mediaObject == None):
+			print("unable to find requested media object from datastore")
+			return None
 
-	def getThumbFromDatastore( self, recd ):
-		pass
+		#todo: is mediaObject.file_path a reliable way to reference a file? we'll copy it to make sure we're safe
+		#todo: and if we copy it, then make sure it is really there too
+
+		mediaFilename = os.split( mediaObject.file_path )[1];
+		mediaPath = os.path.join(self.ca.journalPath, mediaFilename )
+		print( mediaObject.file_path, " to mediaPath: ", mediaPath )
+		shutil.copy( mediaObject.file_path, mediaPath )
+
+		recd.mediaFilename = mediaFilename
+		#todo: notify datastore to delete what may be a temp file?
 
 
 	def addPhoto( self, recd ):
 		self.mediaHashs[self.TYPE_PHOTO].append( recd )
 
-		#todo: sort on time-taken, not on their arrival time
+		#todo: sort on time-taken, not on their arrival time over the mesh (?)
 		#save index
 		#self.updateMediaIndex()
 
@@ -429,14 +449,14 @@ class Model:
 
 
 	def deleteRecorded( self, recd, mn ):
-		#todo: remove from the datastore here, since once gone, it is gone...
-
 		#clear the index
 		hash = self.mediaHashs[recd.type]
 		index = hash.index(recd)
 		hash.remove( recd )
 
 		#self.updateMediaIndex( )
+		#todo: remove from the datastore here, since once gone, it is gone...
+		self.removeMediaFromDatastore( recd )
 
 		#clear transients
 		recd.thumb = None

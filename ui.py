@@ -403,6 +403,7 @@ class UI:
 
 
 	def doClipboardCopyStart( self, recd ):
+		#todo: gracefully make sure you are yanking from the datastore here
 		imgPath_s = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		imgPath_s = os.path.abspath(imgPath_s)
 		#todo: get alternate path for buddies pics...
@@ -445,6 +446,8 @@ class UI:
 
 	def getRecdMediaPath( self, recd ):
 		#todo: this needs to be expanded for all other media types
+		#todo: this needs to gracefully yank from the datastore, i suppose
+
 		imgPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		imgPath = os.path.abspath(imgPath)
 
@@ -867,6 +870,7 @@ class UI:
 		self.liveMode = False
 		self.updateVideoComponents()
 
+		#todo: yank from the datastore here, yo
 		#todo: use os.path calls here, see jukebox
 		#~~> urllib.quote(os.path.abspath(file_path))
 		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
@@ -1145,6 +1149,7 @@ class ThumbnailCanvas(gtk.VBox):
 
 
 	def loadThumb(self):
+		#todo: either thumbs are going into the main datastore object or they are dynamic.  ask dcbw for advice.
 		if (self.recd == None):
 			return
 
