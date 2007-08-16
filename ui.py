@@ -18,17 +18,17 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-#todo: fix... view photo, then fullscreen video.. where is max button?
-
 import gtk
 from gtk import gdk
 import gobject
 import cairo
 import os
+
 #parse svg
 import rsvg
 #parse svg xml with regex
 import re
+
 #we do some image conversion when loading gfx
 import _camera
 import time
@@ -43,6 +43,7 @@ import gst.interfaces
 
 from sugar import profile
 from sugar import util
+
 #to get the toolbox
 from sugar.activity import activity
 from sugar.graphics.radiotoolbutton import RadioToolButton
@@ -438,32 +439,10 @@ class UI:
 	def getRecdPixbuf( self, recd ):
 		#todo: make one of these for thumbs too..
 		pixbuf = None
-		imgPath = self.getRecdMediaPath( recd )
+		imgPath = recd.getMediaFilepath( self.ca.journalPath )
 		if ( os.path.isfile(imgPath) ):
 			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
 		return pixbuf
-
-
-	def getRecdMediaPath( self, recd ):
-		#todo: this needs to be expanded for all other media types
-		#todo: this needs to gracefully yank from the datastore, i suppose
-
-		imgPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		imgPath = os.path.abspath(imgPath)
-
-		if (recd.buddy):
-			imgPath = os.path.join(self.ca.journalPath, "buddies", recd.mediaFilename)
-			imgPath = os.path.abspath(imgPath)
-			if (not os.path.isfile(imgPath)):
-				#use the thumbnail if you can't get the real picture
-				imgPath = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
-				imgPath = os.path.abspath( imgPath )
-				#todo: always re-request?
-				if (self.ca.meshClient != None):
-					self.ca.meshClient.requestPhotoBits( recd )
-
-		return imgPath
-
 
 
 	def showPhoto( self, recd ):
@@ -873,7 +852,10 @@ class UI:
 		#todo: yank from the datastore here, yo
 		#todo: use os.path calls here, see jukebox
 		#~~> urllib.quote(os.path.abspath(file_path))
-		videoUrl = "file://" + str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
+		mediaFilepath = recd.getMediaFilepath( self.ca.journalPath )
+		videoUrl = "file://" + str( mediaFilepath )
+		print( "videoUrl: ", videoUrl )
+		#+ str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
 		self.ca.gplay.setLocation(videoUrl)
 
 		#self.videoScrubPanel.show_all()

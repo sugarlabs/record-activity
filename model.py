@@ -351,25 +351,18 @@ class Model:
 
 
 	def loadMediaFromDatastore( self, recd ):
+		#todo: make sure methods calling this handle None as a response
+
 		if (recd.datastoreId == None):
-			#todo: in practice, who is returning this?
+			print("RecordActivity error -- request for recd from datastore with no datastoreId")
 			return None
 
 		mediaObject = datastore.get( recd.datastoreId )
 		if (mediaObject == None):
-			print("unable to find requested media object from datastore")
-			return None
+				print("RecordActivity error -- request for recd from datastore returning None")
+				return None
 
-		#todo: is mediaObject.file_path a reliable way to reference a file? we'll copy it to make sure we're safe
-		#todo: and if we copy it, then make sure it is really there too
-
-		mediaFilename = os.split( mediaObject.file_path )[1];
-		mediaPath = os.path.join(self.ca.journalPath, mediaFilename )
-		print( mediaObject.file_path, " to mediaPath: ", mediaPath )
-		shutil.copy( mediaObject.file_path, mediaPath )
-
-		recd.mediaFilename = mediaFilename
-		#todo: notify datastore to delete what may be a temp file?
+		recd.datastoreOb = mediaObject
 
 
 	def addPhoto( self, recd ):
@@ -387,7 +380,7 @@ class Model:
 
 	#assign a better name here (name_0.jpg)
 	def createNewRecorded( self, type ):
-		recd = Recorded()
+		recd = Recorded( self.ca )
 
 		nowtime = int(time.time())
 		nowtime_s = str(nowtime)
