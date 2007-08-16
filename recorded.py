@@ -18,6 +18,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
+import os
+
 class Recorded:
 
 	def __init__( self, pca ):
@@ -38,12 +40,13 @@ class Recorded:
 		#todo: and we need to hold onto a reference to the datastore ob, since once we let that go, so goes the file too
 		self.datastoreOb = None
 
-		#transient... when just taken or taken out of the datastore you get these guys
-		self.media = None
-		self.thumb = None
+		#transient... when just taken or taken out of the datastore you get these guys...  also, these should be put away
+		#when they are not being displayed...  also, give these useful names, since some of them are cairo canvases, for example
+		#self.media = None
+		#self.thumb = None #e.g, this is a cairo canvas
 		self.mediaFilename = None
 		self.thumbFilename = None
-		self.thumbPixbuf = None
+		#self.thumbPixbuf = None
 
 		#assume you took the picture
 		self.buddy = False
@@ -87,13 +90,13 @@ class Recorded:
 		if (self.datastoreId == None):
 			if (not self.buddy):
 				#just taken by you, so it is in the tempSessionDir
-				mediaFilepath = os.path.join(tempSessionDir, recd.mediaFilename)
+				mediaFilepath = os.path.join(tempSessionDir, self.mediaFilename)
 				return os.path.abspath(mediaFilepath)
 			else:
 				if (self.mediaFilename != None):
 					#maybe it is here, if it is, it has a filename
 					#todo: drop the buddy filepath nonsense and use md5
-					mediaFilepath = os.path.join(tempSessionDir, "buddies", recd.mediaFilename)
+					mediaFilepath = os.path.join(tempSessionDir, "buddies", self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
 					#you should request it from someone and return None for the request to handle...

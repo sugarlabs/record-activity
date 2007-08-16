@@ -1133,6 +1133,7 @@ class ThumbnailCanvas(gtk.VBox):
 	def loadThumb(self):
 		#todo: either thumbs are going into the main datastore object or they are dynamic.  ask dcbw for advice.
 		if (self.recd == None):
+			#todo: alert error here?
 			return
 
 		thmbPath = os.path.join(self.ui.ca.journalPath, self.recd.thumbFilename)

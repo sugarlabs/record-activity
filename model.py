@@ -55,14 +55,13 @@ class Model:
 		#todo: this might all need to be relocated b/c of datastore
 		self.ca = pca
 		self.setConstants()
-		#self.journalIndex = os.path.join(self.ca.journalPath, 'camera_index.xml')
+
 		self.mediaHashs = {}
-		#self.fillMediaHash( self.journalIndex )
+		self.mediaHashs[self.TYPE_PHOTO] = []
+		self.mediaHashs[self.TYPE_VIDEO] = []
 
 
 	def fillMediaHash( self, index ):
-		self.mediaHashs[self.TYPE_PHOTO] = []
-		self.mediaHashs[self.TYPE_VIDEO] = []
 		if (os.path.exists(index)):
 			doc = parse( os.path.abspath(index) )
 			photos = doc.documentElement.getElementsByTagName('photo')
@@ -75,7 +74,7 @@ class Model:
 
 
 	def loadMedia( self, el, hash ):
-		recd = Recorded()
+		recd = Recorded( self.ca )
 
 		recd.type = int(el.getAttribute('type'))
 		recd.name = el.getAttribute('name')
@@ -304,6 +303,11 @@ class Model:
 
 
 	def saveMediaToDatastore( self, recd ):
+
+		if (recd.datastoreId != None):
+			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
+			return
+
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
 		#therefore this is only called when write_file is called by the activity superclass
 		try:
@@ -314,7 +318,12 @@ class Model:
 				#jobject.metadata['keep'] = '0'
 				#jobject.metadata['buddies'] = ''
 				#todo: is this for setting the thumb?
-				#jobject.metadata['preview'] = ''
+
+				import base64
+				pixbuf = recd.getThumbPixbuf(self.ca.jou)
+				thumbData = _get_base64_pixbuf_data(pixbuf)
+				mediaObject.metadata['preview'] = thumbData
+
 				#todo: if someone else took a picture, can we set their colors with this? is this stroke or fill...
 				#jobject.metadata['icon-color'] = profile.get_color().to_string()
 
@@ -323,7 +332,7 @@ class Model:
 				#todo: other mime types
 
 				#todo: full abs path here
-				mediaFile = os.path.join(self.journalPath, recd.mediaFilename)
+				mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
 				mediaObject.file_path = mediaFile
 				recd.datastoreId = mediaObject.object_id
 				datastore.write(mediaObject)
