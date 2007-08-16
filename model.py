@@ -308,7 +308,6 @@ class Model:
 		#therefore this is only called when write_file is called by the activity superclass
 		try:
 			mediaObject = datastore.create()
-			thumbObject = datastore.create()
 			try:
 				#todo: what other metadata to set?
 				#jobject.metadata['title'] = _('Screenshot')
@@ -316,7 +315,7 @@ class Model:
 				#jobject.metadata['buddies'] = ''
 				#todo: is this for setting the thumb?
 				#jobject.metadata['preview'] = ''
-				#todo: if someone else took a picture, can we set their colors with this? what about other metadata?
+				#todo: if someone else took a picture, can we set their colors with this? is this stroke or fill...
 				#jobject.metadata['icon-color'] = profile.get_color().to_string()
 
 				if (recd.type == self.TYPE_PHOTO):
@@ -329,23 +328,25 @@ class Model:
 				recd.datastoreId = mediaObject.object_id
 				datastore.write(mediaObject)
 
-
 			finally:
 				mediaObject.destroy()
 				del mediaObject
 
 		finally:
 			pass
-		#	don't need to do this here, since we delete our temp before shutdown
-		#	os.remove(file_path)
+			#don't really need to do this here, since we delete our temp before shutdown
+			#os.remove(file_path)
 
 
 	def removeMediaFromDatastore( self, recd ):
+		#before this method is called, the media are removed from the file
 		if (recd.datastoreId == None):
 			return
 
 		try:
 			datastore.delete( recd.datastoreId )
+			recd.datastoreId = None
+			recd.datastoreOb = None
 		finally:
 			pass
 
