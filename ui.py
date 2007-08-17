@@ -437,7 +437,6 @@ class UI:
 
 
 	def getRecdPixbuf( self, recd ):
-		#todo: make one of these for thumbs too..
 		pixbuf = None
 		imgPath = recd.getMediaFilepath( )
 		if ( os.path.isfile(imgPath) ):
