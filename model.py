@@ -317,11 +317,9 @@ class Model:
 				#jobject.metadata['title'] = _('Screenshot')
 				#jobject.metadata['keep'] = '0'
 				#jobject.metadata['buddies'] = ''
-				#todo: is this for setting the thumb?
 
 				pixbuf = recd.getThumbPixbuf()
 				thumbData = self._get_base64_pixbuf_data(pixbuf)
-				print( "thumbData:", thumbData )
 				mediaObject.metadata['preview'] = thumbData
 
 				#todo: if someone else took a picture, can we set their colors with this? is this stroke or fill...
@@ -331,11 +329,11 @@ class Model:
 					mediaObject.metadata['mime_type'] = 'image/jpeg'
 				#todo: other mime types
 
-				#todo: full abs path here
 				mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
 				mediaObject.file_path = mediaFile
-				recd.datastoreId = mediaObject.object_id
+
 				datastore.write(mediaObject)
+				recd.datastoreId = mediaObject.object_id
 
 			finally:
 				mediaObject.destroy()
@@ -349,14 +347,16 @@ class Model:
 
 	def _get_base64_pixbuf_data(self, pixbuf):
 		data = [""]
-		pixbuf.save_to_callback(self._save_data_to_buffer_cb, "jpeg", {"quality":"75"}, data)
+		pixbuf.save_to_callback(self._save_data_to_buffer_cb, "png", {}, data)
 
 		import base64
 		return base64.b64encode(str(data[0]))
 
+
 	def _save_data_to_buffer_cb(self, buf, data):
 		data[0] += buf
 		return True
+
 
 	def removeMediaFromDatastore( self, recd ):
 		#before this method is called, the media are removed from the file
@@ -378,10 +378,13 @@ class Model:
 			print("RecordActivity error -- request for recd from datastore with no datastoreId")
 			return None
 
-		mediaObject = datastore.get( recd.datastoreId )
-		if (mediaObject == None):
-				print("RecordActivity error -- request for recd from datastore returning None")
-				return None
+		mediaObject = None
+		try:
+			mediaObject = datastore.get( recd.datastoreId )
+		finally:
+			if (mediaObject == None):
+					print("RecordActivity error -- request for recd from datastore returning None")
+					return None
 
 		recd.datastoreOb = mediaObject
 

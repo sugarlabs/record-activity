@@ -84,7 +84,6 @@ class Recorded:
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
 			data = base64.b64decode(self.datastoreOb.metadata['preview'])
-			print( "data: " + data )
 			pbl.write(data)
 			return pbl.get_pixbuf()
 
