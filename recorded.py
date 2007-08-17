@@ -19,6 +19,8 @@
 #THE SOFTWARE.
 
 import os
+import gtk
+from gtk import gdk
 
 class Recorded:
 
@@ -43,7 +45,7 @@ class Recorded:
 		#transient... when just taken or taken out of the datastore you get these guys...  also, these should be put away
 		#when they are not being displayed...  also, give these useful names, since some of them are cairo canvases, for example
 		#self.media = None
-		#self.thumb = None #e.g, this is a cairo canvas
+		#self.thumb = None #this is a cairo canvas
 		self.mediaFilename = None
 		self.thumbFilename = None
 		#self.thumbPixbuf = None
@@ -64,14 +66,14 @@ class Recorded:
 	#relaunch, their old thumb -- metadataPixbuf on request (or save to Journal/session..?)
 	#relaunch, their old media -- datastoreObject->file (hold onto the datastore object, delete if deleted) | ([request->]) Journal/session/buddy
 
-	def getThumbPixbuf( self, tempSessionDir ):
+	def getThumbPixbuf( self ):
 		if (self.datastoreId == None):
 			#just taken, so it is in the tempSessionDir
 			#so load file, convert to pixbuf, and return it here...
 			thumbPixbuf = None
-			thumbFilepath = os.path.join(tempSessionDir, recd.thumbFilename)
+			thumbFilepath = os.path.join(self.ca.journalPath, self.thumbFilename)
 			if ( os.path.isfile(thumbFilepath) ):
-				pixbuf = gtk.gdk.pixbuf_new_from_file(thumbFilepath)
+				thumbPixbuf = gtk.gdk.pixbuf_new_from_file(thumbFilepath)
 			return thumbPixbuf
 		else:
 			if (self.datastoreOb == None):
@@ -82,21 +84,22 @@ class Recorded:
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
 			data = base64.b64decode(self.datastoreOb.metadata['preview'])
+			print( "data: " + data )
 			pbl.write(data)
 			return pbl.get_pixbuf()
 
 
-	def getMediaFilepath( self, tempSessionDir ):
+	def getMediaFilepath( self ):
 		if (self.datastoreId == None):
 			if (not self.buddy):
 				#just taken by you, so it is in the tempSessionDir
-				mediaFilepath = os.path.join(tempSessionDir, self.mediaFilename)
+				mediaFilepath = os.path.join(self.ca.journalPath, self.mediaFilename)
 				return os.path.abspath(mediaFilepath)
 			else:
 				if (self.mediaFilename != None):
 					#maybe it is here, if it is, it has a filename
 					#todo: drop the buddy filepath nonsense and use md5
-					mediaFilepath = os.path.join(tempSessionDir, "buddies", self.mediaFilename)
+					mediaFilepath = os.path.join(self.ca.journalPath, "buddies", self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
 					#you should request it from someone and return None for the request to handle...

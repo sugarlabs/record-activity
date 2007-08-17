@@ -319,9 +319,9 @@ class Model:
 				#jobject.metadata['buddies'] = ''
 				#todo: is this for setting the thumb?
 
-				import base64
-				pixbuf = recd.getThumbPixbuf(self.ca.jou)
-				thumbData = _get_base64_pixbuf_data(pixbuf)
+				pixbuf = recd.getThumbPixbuf()
+				thumbData = self._get_base64_pixbuf_data(pixbuf)
+				print( "thumbData:", thumbData )
 				mediaObject.metadata['preview'] = thumbData
 
 				#todo: if someone else took a picture, can we set their colors with this? is this stroke or fill...
@@ -346,6 +346,17 @@ class Model:
 			#don't really need to do this here, since we delete our temp before shutdown
 			#os.remove(file_path)
 
+
+	def _get_base64_pixbuf_data(self, pixbuf):
+		data = [""]
+		pixbuf.save_to_callback(self._save_data_to_buffer_cb, "jpeg", {"quality":"75"}, data)
+
+		import base64
+		return base64.b64encode(str(data[0]))
+
+	def _save_data_to_buffer_cb(self, buf, data):
+		data[0] += buf
+		return True
 
 	def removeMediaFromDatastore( self, recd ):
 		#before this method is called, the media are removed from the file
@@ -462,8 +473,8 @@ class Model:
 		self.removeMediaFromDatastore( recd )
 
 		#clear transients
-		recd.thumb = None
-		recd.media = None
+		#recd.thumb = None
+		#recd.media = None
 
 		#remove files from the filesystem
 		mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)

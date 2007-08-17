@@ -439,7 +439,7 @@ class UI:
 	def getRecdPixbuf( self, recd ):
 		#todo: make one of these for thumbs too..
 		pixbuf = None
-		imgPath = recd.getMediaFilepath( self.ca.journalPath )
+		imgPath = recd.getMediaFilepath( )
 		if ( os.path.isfile(imgPath) ):
 			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
 		return pixbuf
@@ -852,7 +852,7 @@ class UI:
 		#todo: yank from the datastore here, yo
 		#todo: use os.path calls here, see jukebox
 		#~~> urllib.quote(os.path.abspath(file_path))
-		mediaFilepath = recd.getMediaFilepath( self.ca.journalPath )
+		mediaFilepath = recd.getMediaFilepath( )
 		videoUrl = "file://" + str( mediaFilepath )
 		print( "videoUrl: ", videoUrl )
 		#+ str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
@@ -1090,13 +1090,11 @@ class ThumbnailCanvas(gtk.VBox):
 		self.recd = None
 		self.butt = None
 		self.delButt = None
+		self.thumbPixbuf = None
+		self.thumbCanvas = None
 
 		self.butt = ThumbnailButton(self, self.ui)
-		#buttBox = gtk.EventBox()
-		#buttBox.add( self.butt )
-		#self.pack_start(buttBox, expand=True)
 		self.pack_start(self.butt, expand=True)
-
 
 		self.delButt = ThumbnailDeleteButton(self, self.ui)
 		self.delButt.set_size_request( -1, 20 )
@@ -1113,6 +1111,8 @@ class ThumbnailCanvas(gtk.VBox):
 
 	def clear(self):
 		self.recd = None
+		self.thumbPixbuf = None
+		self.thumbCanvas = None
 		self.butt.clear()
 		self.butt.queue_draw()
 		self.delButt.clear()
@@ -1136,17 +1136,9 @@ class ThumbnailCanvas(gtk.VBox):
 			#todo: alert error here?
 			return
 
-		thmbPath = os.path.join(self.ui.ca.journalPath, self.recd.thumbFilename)
-		if (self.recd.buddy):
-			thmbPath = os.path.join(self.ui.ca.journalPath, "buddies", self.recd.thumbFilename)
-
-		thmbPath = os.path.abspath(thmbPath)
-		if ( os.path.isfile(thmbPath) ):
-			pb = gtk.gdk.pixbuf_new_from_file(thmbPath)
-			if (pb != None):
-				self.recd.thumbPixbuf = pb
-				img = _camera.cairo_surface_from_gdk_pixbuf(pb)
-				self.recd.thumb = img
+		self.thumbPixbuf = self.recd.getThumbPixbuf( )
+		#todo: handle None
+		self.thumbCanvas = _camera.cairo_surface_from_gdk_pixbuf( self.thumbPixbuf )
 
 
 class ThumbnailDeleteButton(gtk.Button):
@@ -1286,7 +1278,7 @@ class ThumbnailButton(gtk.Button):
 
 
 	def _dragBeginCb(self, widget, dragCtxt ):
-		self.drag_source_set_icon_pixbuf( self.tc.recd.thumbPixbuf )
+		self.drag_source_set_icon_pixbuf( self.tc.thumbPixbuf )
 
 
 	def _dragDataGetCb(self, widget, drag_context, selection_data, info, timestamp):
@@ -1302,7 +1294,7 @@ class ThumbnailButton(gtk.Button):
 
 		if (self.tc.recd == None):
 			return
-		if (self.tc.recd.thumb == None):
+		if (self.tc.thumbCanvas == None):
 			return
 
 		if (self.recdThumbRenderImg == None):
@@ -1332,7 +1324,7 @@ class ThumbnailButton(gtk.Button):
 
 				rtCtx.translate( 8, 22 )
 
-			rtCtx.set_source_surface(self.tc.recd.thumb, 0, 0)
+			rtCtx.set_source_surface(self.tc.thumbCanvas, 0, 0)
 			rtCtx.paint()
 
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)

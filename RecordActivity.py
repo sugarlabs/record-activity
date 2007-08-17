@@ -194,4 +194,8 @@ class RecordActivity(activity.Activity):
 		self.glive.stop()
 		#todo: clean up / throw away any video you might be recording when you quit the activity
 		self.recreateTemp()
+
+		if (os.path.exists(self.journalPath)):
+			shutil.rmtree( self.journalPath )
+
 		gtk.main_quit()
