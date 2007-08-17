@@ -1,9 +1,10 @@
 23
-* journal integration (jedierikb)
-* delete buddy's photos pushed to you  (jedierikb)
-* audio record & playback (jedierikb, anwar)
-* limited record time for audio and video (~2 minutes)
-* new ui, replete with scrubbers (jedierikb, mikhak, eben, walter)
+* journal integration, replete with individual photos in the journal (jedierikb)
+* correct ogg/theora mimetypes (jedierikb)
+~ delete buddy's photos pushed to you  (jedierikb)
+~ audio record & playback (jedierikb, anwar)
+~ limited record time for audio and video (~2 minutes)
+~ new ui, replete with scrubbers (jedierikb, mikhak, eben, walter)
 
 22
 * fixes fixes to maximize window disappering (jedierikb)

@@ -322,12 +322,16 @@ class Model:
 				thumbData = self._get_base64_pixbuf_data(pixbuf)
 				mediaObject.metadata['preview'] = thumbData
 
-				#todo: if someone else took a picture, can we set their colors with this? is this stroke or fill...
-				#jobject.metadata['icon-color'] = profile.get_color().to_string()
+				colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
+				print( "colors: " + colors )
+				mediaObject.metadata['icon-color'] = colors
 
 				if (recd.type == self.TYPE_PHOTO):
 					mediaObject.metadata['mime_type'] = 'image/jpeg'
-				#todo: other mime types
+				elif (recd.type == self.TYPE_VIDEO):
+					mediaObject.metadata['mime_type'] = 'video/ogg'
+				elif (recd.type == self.TYPE_AUDIO):
+					mediaObject.metadata['mime_type'] = 'audio/ogg'
 
 				mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
 				mediaObject.file_path = mediaFile
@@ -415,7 +419,7 @@ class Model:
 			nowtime_fn = nowtime_s + ".jpg"
 			recd.mediaFilename = nowtime_fn
 		if (type == self.TYPE_VIDEO):
-			nowtime_fn = nowtime_s + ".ogg"
+			nowtime_fn = nowtime_s + ".ogv"
 			recd.mediaFilename = nowtime_fn
 
 		thumb_fn = nowtime_s + "_thumb.jpg"
@@ -570,10 +574,12 @@ class Model:
 		#pics or vids?
 		self.MODE_PHOTO = 0
 		self.MODE_VIDEO = 1
+		self.MODE_AUDIO = 2
 		self.MODE = self.MODE_PHOTO
 
 		self.TYPE_PHOTO = 0
 		self.TYPE_VIDEO = 1
+		self.TYPE_AUDIO = 2
 
 		self.UPDATING = True
 		self.RECORDING = False
