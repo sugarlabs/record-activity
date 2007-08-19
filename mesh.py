@@ -208,14 +208,8 @@ class MeshClient:
 
 
 	def thumbDownloadResultCb(self, getter, tempfile, suggested_name, recd):
-		#todo: better way to disambiguate who took which photo (hash, md5sum)?
-		#dest = os.path.join(os.path.expanduser("~"), suggested_name)
 		#todo: handle empty files here... or errors
-		buddyDirPath = os.path.join( self.ca.journalPath, "buddies" )
-		if (not os.path.exists(buddyDirPath)):
-			os.makedirs(buddyDirPath)
-
-		dest = os.path.join( buddyDirPath, suggested_name )
+		dest = os.path.join( self.ca.journalPath, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 		self.ca.m.addPhoto( recd )
@@ -247,12 +241,7 @@ class MeshClient:
 
 
 	def mediaDownloadResultCb(self, getter, tempfile, suggested_name, recd):
-		#todo: make lazy maker+getter fot buddy dir
-		buddyDirPath = os.path.join( self.ca.journalPath, "buddies" )
-		if (not os.path.exists(buddyDirPath)):
-			os.makedirs(buddyDirPath)
-
-		dest = os.path.join( buddyDirPath, suggested_name )
+		dest = os.path.join( self.ca.journalPath, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 		print( "downloaded media and here it is: " + str(dest) )

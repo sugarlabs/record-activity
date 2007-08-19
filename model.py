@@ -75,13 +75,17 @@ class Model:
 
 	def loadMedia( self, el, hash ):
 		recd = Recorded( self.ca )
+		addToHash = true
 
 		recd.type = int(el.getAttribute('type'))
 		recd.name = el.getAttribute('name')
 		recd.time = int(el.getAttribute('time'))
 		recd.photographer = el.getAttribute('photographer')
-		recd.mediaFilename = el.getAttribute('mediaFilename')
-		recd.thumbFilename = el.getAttribute('thumbFilename')
+		if (recd.hasAttribute('mediaFilename')):
+			recd.mediaFilename = el.getAttribute('mediaFilename')
+		if (recd.hasAttribute('thumbFilename')):
+			recd.thumbFilename = el.getAttribute('thumbFilename')
+
 		colorStrokeHex = el.getAttribute('colorStroke')
 		colorStroke = Color()
 		colorStroke.init_hex( colorStrokeHex )
@@ -90,18 +94,50 @@ class Model:
 		colorFill = Color()
 		colorFill.init_hex( colorFillHex )
 		recd.colorFill = colorFill
+
 		recd.buddy = (el.getAttribute('buddy') == "True")
 		recd.hashKey = el.getAttribute('hashKey')
 		recd.mediaMd5 = el.getAttribute('mediaMd5')
 		recd.thumbMd5 = el.getAttribute('thumbMd5')
-		recd.datastoreId = el.getAttribute('datastoreId')
 
-		hash.append( recd )
+		if (el.hasAttribute('datastoreId')):
+			recd.datastoreId = el.getAttribute('datastoreId')
+			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
+			#todo: find better method here (e.g., datastore.exists(id)
+			self.loadMediaFromDatastore( recd )
+			if (recd.datastoreOb == None):
+				addToHash = false
+			recd.datastoreOb == None
+
+		if (el.hasAttribute('buddyThumb')):
+			buddyThumbString = el.getAttribbute('buddyThumb')
+			#todo: consolidate this code into a function...
+			pbl = gtk.gdk.PixbufLoader()
+			import base64
+			data = base64.b64decode( buddyThumbString )
+			pbl.write(data)
+			thumbImg = pbl.get_pixbuf()
+			#todo: add check for what to do if there is no thumbFilename!
+			thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
+			print("thumbPath:", thumbPath, "img:", thumbImg )
+			thumbImg.write_to_png(thumbPath)
+
+		if (addToHash):
+			hash.append( recd )
 
 
-	def saveMedia( self, el, recd, type, toDatastore ):
-		if (toDatastore):
+	def saveMedia( self, el, recd, type ):
+		doDatastoreMedia = True
+		if ( (recd.buddy == True) and (recd.datastoreId == None) and (recd.mediaFilename == None) ):
+			datastoreMedia = False
+
+		if (doDatastoreMedia):
+			#this gets us a datatoreId we need later to serialize the data
 			self.saveMediaToDatastore( recd )
+		else:
+			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
+			print( buddyThumb )
+			el.setAttribute("buddyThumb", buddyThumb )
 
 		el.setAttribute("type", str(type))
 		el.setAttribute("name", recd.name)
@@ -394,11 +430,8 @@ class Model:
 
 
 	def addPhoto( self, recd ):
-		self.mediaHashs[self.TYPE_PHOTO].append( recd )
-
 		#todo: sort on time-taken, not on their arrival time over the mesh (?)
-		#save index
-		#self.updateMediaIndex()
+		self.mediaHashs[self.TYPE_PHOTO].append( recd )
 
 		#updateUi
 		self.thumbAdded(self.TYPE_PHOTO)
@@ -475,30 +508,25 @@ class Model:
 		index = hash.index(recd)
 		hash.remove( recd )
 
-		#self.updateMediaIndex( )
-		#todo: remove from the datastore here, since once gone, it is gone...
-		self.removeMediaFromDatastore( recd )
+		#remove files from the filesystem if not on the datastore
+		if (recd.datastoreId != None):
+			mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
+			if (os.path.exists(mediaFile)):
+				os.remove(mediaFile)
 
-		#clear transients
-		#recd.thumb = None
-		#recd.media = None
+			thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
+			if (os.path.exists(thumbFile)):
+				os.remove(thumbFile)
+		else:
+			#remove from the datastore here, since once gone, it is gone...
+			self.removeMediaFromDatastore( recd )
 
-		#remove files from the filesystem
-		mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		if (recd.buddy):
-			mediaFile = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
-		if (os.path.exists(mediaFile)):
-			os.remove(mediaFile)
-
-		thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
-		if (recd.buddy):
-			thumbFile = os.path.join(self.ca.journalPath, "buddies", recd.thumbFilename)
-		if (os.path.exists(thumbFile)):
-			os.remove(thumbFile)
-
+		#if it was your photo and you wish you never took it, you can try and delete it...
+		#todo: note, if someone has it and left the activity, this delete command does not queue...
 		if ((not recd.buddy) and (self.ca.meshClient != None)):
 			self.ca.meshClient.notifyBudsofDeleteMedia( recd )
 
+		#update your own ui
 		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
 
 
@@ -514,7 +542,7 @@ class Model:
 					self.ca.ui.removeIfSelectedRecorded( recd )
 
 
-	def updateMediaIndex( self, toDatastore ):
+	def updateMediaIndex( self ):
 		impl = getDOMImplementation()
 		album = impl.createDocument(None, "album", None)
 		root = album.documentElement
@@ -524,7 +552,7 @@ class Model:
 
 			photo = album.createElement('photo')
 			root.appendChild(photo)
-			self.saveMedia(photo, recd, self.TYPE_PHOTO, toDatastore)
+			self.saveMedia(photo, recd, self.TYPE_PHOTO )
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		for i in range (0, len(videoHash)):
@@ -532,7 +560,7 @@ class Model:
 
 			video = album.createElement('video')
 			root.appendChild(video)
-			self.saveMedia(video, recd, self.TYPE_VIDEO, toDatastore)
+			self.saveMedia(video, recd, self.TYPE_VIDEO )
 
 		return album
 

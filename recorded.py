@@ -42,13 +42,10 @@ class Recorded:
 		#todo: and we need to hold onto a reference to the datastore ob, since once we let that go, so goes the file too
 		self.datastoreOb = None
 
-		#transient... when just taken or taken out of the datastore you get these guys...  also, these should be put away
-		#when they are not being displayed...  also, give these useful names, since some of them are cairo canvases, for example
-		#self.media = None
-		#self.thumb = None #this is a cairo canvas
+
+		#if not from the datastore, then your media is here...
 		self.mediaFilename = None
 		self.thumbFilename = None
-		#self.thumbPixbuf = None
 
 		#assume you took the picture
 		self.buddy = False
@@ -96,14 +93,14 @@ class Recorded:
 				return os.path.abspath(mediaFilepath)
 			else:
 				if (self.mediaFilename != None):
-					#maybe it is here, if it is, it has a filename
-					#todo: drop the buddy filepath nonsense and use md5
-					mediaFilepath = os.path.join(self.ca.journalPath, "buddies", self.mediaFilename)
+					#the user has requested the high-res version, and it has downloaded
+					mediaFilepath = os.path.join(self.ca.journalPath, self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
 					#you should request it from someone and return None for the request to handle...
+					#e.g., thumbs for pics, or "coming attractions" for videos ;-)
 					#todo: always re-request?
-					#notify to the user that the request is underway or not possible...
+					#todo: notify to the user that the request is underway or not possible...
 					if (self.ca.meshClient != None):
 						self.ca.meshClient.requestPhotoBits( recd )
 					return None
@@ -114,11 +111,10 @@ class Recorded:
 			#first, get the datastoreObject and hold the reference in this Recorded instance
 			if (self.datastoreOb == None):
 				self.ca.m.loadMediaFromDatastore( self )
-
-			#if, for some reason, the file is not accessible...
-			#todo: get it from the mesh?
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getMediaFilepath")
 				return None
+
+			#if this is a buddy's media and you only ever got a thumbnail, then return null and query for the real deal...
 
 			return self.datastoreOb.file_path
