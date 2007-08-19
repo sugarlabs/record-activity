@@ -62,11 +62,15 @@ class Model:
 
 
 	def fillMediaHash( self, index ):
+		print("fillMediaHash 1")
 		if (os.path.exists(index)):
+			print("fillMediaHash 2")
 			doc = parse( os.path.abspath(index) )
 			photos = doc.documentElement.getElementsByTagName('photo')
 			for each in photos:
+				print("getting photo")
 				self.loadMedia( each, self.mediaHashs[self.TYPE_PHOTO] )
+				print("got photo")
 
 			videos = doc.documentElement.getElementsByTagName('video')
 			for each in videos:
@@ -75,16 +79,14 @@ class Model:
 
 	def loadMedia( self, el, hash ):
 		recd = Recorded( self.ca )
-		addToHash = true
+		addToHash = True
 
 		recd.type = int(el.getAttribute('type'))
 		recd.name = el.getAttribute('name')
 		recd.time = int(el.getAttribute('time'))
 		recd.photographer = el.getAttribute('photographer')
-		if (recd.hasAttribute('mediaFilename')):
-			recd.mediaFilename = el.getAttribute('mediaFilename')
-		if (recd.hasAttribute('thumbFilename')):
-			recd.thumbFilename = el.getAttribute('thumbFilename')
+		recd.mediaFilename = el.getAttribute('mediaFilename')
+		recd.thumbFilename = el.getAttribute('thumbFilename')
 
 		colorStrokeHex = el.getAttribute('colorStroke')
 		colorStroke = Color()
@@ -100,27 +102,37 @@ class Model:
 		recd.mediaMd5 = el.getAttribute('mediaMd5')
 		recd.thumbMd5 = el.getAttribute('thumbMd5')
 
-		if (el.hasAttribute('datastoreId')):
+		print("a")
+		recd.datastoreId = el.getAttribute('datastoreId')
+
+		if (not recd.datastoreId == None):
+			print("b")
 			recd.datastoreId = el.getAttribute('datastoreId')
 			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
 			#todo: find better method here (e.g., datastore.exists(id)
 			self.loadMediaFromDatastore( recd )
 			if (recd.datastoreOb == None):
-				addToHash = false
+				addToHash = False
 			recd.datastoreOb == None
+			print("c:", addToHash)
 
-		if (el.hasAttribute('buddyThumb')):
-			buddyThumbString = el.getAttribbute('buddyThumb')
+		#buddyThumbString = el.getAttribute('buddyThumb')
+		#print("buddyThumbString...", buddyThumbString )
+		bt = el.getAttributeNode('buddyThumb')
+		print( "bt", bt )
+		if (not bt == None):
 			#todo: consolidate this code into a function...
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
-			data = base64.b64decode( buddyThumbString )
+			print( "bt.nodeValue:", bt.nodeValue )
+			data = base64.b64decode( bt.nodeValue )
 			pbl.write(data)
 			thumbImg = pbl.get_pixbuf()
 			#todo: add check for what to do if there is no thumbFilename!
 			thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
 			print("thumbPath:", thumbPath, "img:", thumbImg )
 			thumbImg.write_to_png(thumbPath)
+			print( "buddyThumbString: ", buddyThumbString )
 
 		if (addToHash):
 			hash.append( recd )
@@ -136,7 +148,7 @@ class Model:
 			self.saveMediaToDatastore( recd )
 		else:
 			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
-			print( buddyThumb )
+			print( "buddyThumb", buddyThumb )
 			el.setAttribute("buddyThumb", buddyThumb )
 
 		el.setAttribute("type", str(type))
@@ -302,7 +314,6 @@ class Model:
 			self.ca.glive.play()
 
 		self.setRecording( False )
-
 
 
 	def stoppedRecordingVideo( self ):
@@ -543,6 +554,7 @@ class Model:
 
 
 	def updateMediaIndex( self ):
+		print("updateMediaIndex")
 		impl = getDOMImplementation()
 		album = impl.createDocument(None, "album", None)
 		root = album.documentElement
@@ -553,6 +565,7 @@ class Model:
 			photo = album.createElement('photo')
 			root.appendChild(photo)
 			self.saveMedia(photo, recd, self.TYPE_PHOTO )
+			print("saved photo")
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		for i in range (0, len(videoHash)):
