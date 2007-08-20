@@ -494,21 +494,21 @@ class Model:
 
 	def createNewRecordedMd5Sums( self, recd ):
 		#load the thumbfile
-		thumbFile = os.path.join(self.journalPath, recd.thumbFilename)
+		thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
+		print( thumbFile, os.path.exists(thumbFile))
 		thumbMd5 = self.md5File( thumbFile )
 		recd.thumbMd5 = thumbMd5
 
 		#load the mediafile
-		mediaFile = os.path.join(self.journalPath, recd.mediaFilename)
+		mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		mediaMd5 = self.m5dFile( mediaFile )
 		recd.mediaMd5 = mediaMd5
 
 
-	def md5File( self, file ):
-		os.load( thumbFile )
-
+	def md5File( self, filepath ):
 		md = md5()
-		digest = md.update(file).hex_digest()
+		f = file( filepath, 'rb' )
+		digest = md.update(file.read()).hexdigest()
 		hash = util.printable_hash(digest)
 		return hash
 
