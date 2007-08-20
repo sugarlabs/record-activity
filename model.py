@@ -359,6 +359,7 @@ class Model:
 
 		if (recd.datastoreId != None):
 			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
+			#todo: HOWEVER, they might have changed the name of the file
 			return
 
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
