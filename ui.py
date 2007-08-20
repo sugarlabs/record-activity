@@ -1183,10 +1183,9 @@ class ThumbnailDeleteButton(gtk.Button):
 			rtCtx = cairo.Context(self.recdThumbRenderImg)
 			self.background(rtCtx, self.ui.colorTray, w, h)
 
-			if (not self.tc.recd.buddy):
-				#todo: dynamic query of the delete button size
-				rtCtx.translate( w/2-25/2, 0 )
-				self.ui.closeSvg.render_cairo(rtCtx)
+			#todo: dynamic query of the delete button size
+			rtCtx.translate( w/2-25/2, 0 )
+			self.ui.closeSvg.render_cairo(rtCtx)
 
 
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
@@ -1227,6 +1226,7 @@ class ThumbnailButton(gtk.Button):
 
 
 	def setDraggable( self ):
+		#todo: let you drag your buddy's photos around if they're downloaded...
 		if ( (not self.tc.recd.buddy) and (self.tc.recd.type == self.ui.ca.m.TYPE_PHOTO) ):
 			targets = [('image/jpeg', 0, 0)]
 			self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)

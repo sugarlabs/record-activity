@@ -370,7 +370,6 @@ class Model:
 				mediaObject.metadata['preview'] = thumbData
 
 				colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
-				print( "colors: " + colors )
 				mediaObject.metadata['icon-color'] = colors
 
 				if (recd.type == self.TYPE_PHOTO):
@@ -541,27 +540,10 @@ class Model:
 		index = hash.index(recd)
 		hash.remove( recd )
 
-		#if it was your photo and you wish you never took it, you can try and delete it...
-		#todo: note, if someone has it and left the activity, this delete command does not queue...
-		if ((not recd.buddy) and (self.ca.meshClient != None)):
-			self.ca.meshClient.notifyBudsofDeleteMedia( recd )
-
-
 		#update your own ui
 		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
 		print("deleteRecorded 4")
 
-
-	def deleteBuddyMedia( self, hashKey, time, type ):
-		if (type == self.TYPE_PHOTO or type == self.TYPE_VIDEO):
-			hash = self.mediaHashs[type]
-			for recd in hash:
-				#todo: md5sum
-				if ((recd.hashKey == hashKey) and (recd.time == time)):
-					#todo: pass in -1 since we don't know where it is (or we should find out)
-					self.deleteRecorded( recd, 0 )
-					#todo: remove it in the main ui if showing it
-					self.ca.ui.removeIfSelectedRecorded( recd )
 
 
 	def updateMediaIndex( self ):

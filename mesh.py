@@ -67,10 +67,6 @@ class MeshXMLRPCServer:
 		return "successios"
 
 
-	def deleteMediaNotice( 	self,
-							hashKey, time, type):
-		self.ca.m.deleteBuddyMedia( hashKey, int(time), int(type) )
-		return "deletedPhoto"
 
 class HttpServer(network.GlibTCPServer):
 
@@ -171,27 +167,6 @@ class MeshClient:
 
 
 	def notifyBudsOfNewPhotoErrorCb(self, error, user_data):
-		print "We've a no go erroro! ", user_data
-
-
-	def notifyBudsofDeleteMedia(self, recd):
-		for buddy in self.my_acty.get_joined_buddies():
-			if (not buddy.props.owner):
-				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, self.ca.xmlRpcPort))
-
-				bud.deleteMediaNotice(	recd.hashKey,
-										recd.time,
-										recd.type,
-										reply_handler=self.notifyBudsOfDeleteMediaCb,
-										error_handler=self.notifyBudsOfDeleteMediaErrorCb,
-										user_data=buddy)
-
-
-	def notifyBudsOfDeleteMediaCb(self, response, user_data):
-		print "Response was %s, user_data was %s" % (response, user_data)
-
-
-	def notifyBudsOfDeleteMediaErrorCb(self, error, user_data):
 		print "We've a no go erroro! ", user_data
 
 
