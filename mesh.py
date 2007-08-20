@@ -43,7 +43,7 @@ class MeshXMLRPCServer:
 						ip,
 						mediaFilename, thumbFilename, time, photographer, name, colorStroke, colorFill, hashKey ):
 
-		newRecd = Recorded()
+		newRecd = Recorded( self.ca )
 		newRecd.type = self.ca.m.TYPE_PHOTO
 		newRecd.buddy = True
 		newRecd.mediaFilename = mediaFilename
@@ -194,7 +194,7 @@ class MeshClient:
 		print("thumbDownloadError", getter, err, recd )
 
 
-	#todo: don't request this if requesting this already
+	#todo: don't request this if requesting this already (lock?)
 	def requestPhotoBits(self, recd):
 		print("requestingPhotoBits...", len(self.my_acty.get_joined_buddies()))
 		photoTakingBuddy = None
@@ -202,6 +202,7 @@ class MeshClient:
 			if (not buddy.props.owner):
 				keyHash = util._sha_data(buddy.props.key)
 				hashKey = util.printable_hash(keyHash)
+				#todo: bug dcbw about this...
 				print(hashKey, recd.hashKey)
 				if (hashKey == recd.hashKey):
 					photoTakingBuddy = buddy
@@ -219,7 +220,9 @@ class MeshClient:
 		dest = os.path.join( self.ca.journalPath, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
+
 		print( "downloaded media and here it is: " + str(dest) )
+		print( "and media filename is: " + recd.mediaFilename )
 		self.ca.ui.updateShownPhoto( recd )
 
 

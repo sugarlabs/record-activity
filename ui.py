@@ -436,16 +436,8 @@ class UI:
 		self.doClipboardCopyFinish( data )
 
 
-	def getRecdPixbuf( self, recd ):
-		pixbuf = None
-		imgPath = recd.getMediaFilepath( )
-		if ( os.path.isfile(imgPath) ):
-			pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
-		return pixbuf
-
-
 	def showPhoto( self, recd ):
-		pixbuf = self.getRecdPixbuf( recd )
+		pixbuf = self.getPhotoPixbuf( recd )
 		if (pixbuf != None):
 			self.shownRecd = recd
 
@@ -456,6 +448,23 @@ class UI:
 			self.updateVideoComponents()
 
 			self.showRecdMeta(recd)
+
+
+	def getPhotoPixbuf( self, recd ):
+		pixbuf = None
+		imgPath = recd.getMediaFilepath( )
+		print( "getting photoPixbuf: ", imgPath )
+		if (not imgPath == None):
+			if ( os.path.isfile(imgPath) ):
+				pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
+
+		if (pixbuf == None):
+			#maybe it is not downloaded from the mesh yet...
+			print("showing thumb from pixbuf 1")
+			pixbuf = recd.getThumbPixbuf()
+			print("showing thumb from pixbuf 2")
+
+		return pixbuf
 
 
 	def showLiveVideoTags( self ):
@@ -1262,11 +1271,16 @@ class ThumbnailButton(gtk.Button):
 
 
 	def _buttonClickCb(self, args ):
+		print("buttonClickCb 1")
 		if (self.tc.recd == None):
+			print("buttonClickCb 2")
 			return
 		if (not self.props.sensitive):
+			print("buttonClickCb 3")
 			return
+		print("buttonClickCb 4")
 		self.ui.showThumbSelection( self.tc.recd )
+		print("buttonClickCb 5")
 
 
 	def _exposeEventCb(self, widget, event):

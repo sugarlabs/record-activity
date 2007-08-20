@@ -292,6 +292,8 @@ class Model:
 		thumbImg.write_to_png(thumbPath)
 		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
 		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
+
+		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
 		shutil.move(tempPath, oggPath)
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
@@ -458,6 +460,7 @@ class Model:
 	def createNewRecorded( self, type ):
 		recd = Recorded( self.ca )
 
+		#todo: make this the md5+time
 		nowtime = int(time.time())
 		nowtime_s = str(nowtime)
 		recd.time = nowtime
