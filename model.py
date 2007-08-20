@@ -296,9 +296,11 @@ class Model:
 		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
 		shutil.move(tempPath, oggPath)
 
+		#at this point, we have both video and thumb path, so we can save the recd
+		self.createNewRecordedMd5Sums( recd )
+
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		videoHash.append( recd )
-		#self.updateMediaIndex()
 		self.thumbAdded( self.TYPE_VIDEO )
 
 		self.doPostSaveVideo()
@@ -342,6 +344,8 @@ class Model:
 		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
 		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
+		#now that we've saved both the image and its pixbuf, we get their md5s
+		self.createNewRecordedMd5Sums( recd )
 		self.addPhoto( recd )
 
 		#hey, i just took a cool picture!  let me show you!
@@ -460,7 +464,8 @@ class Model:
 	def createNewRecorded( self, type ):
 		recd = Recorded( self.ca )
 
-		#todo: make this the md5+time
+		#todo: make this the md5+time... can't since we don't necc. have a file at this pt
+		#so use the hardware_id+time *and* check if available or not
 		nowtime = int(time.time())
 		nowtime_s = str(nowtime)
 		recd.time = nowtime

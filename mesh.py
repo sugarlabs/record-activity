@@ -213,6 +213,8 @@ class MeshClient:
 			getter = network.GlibURLDownloader( uri )
 			getter.connect( "finished", self.mediaDownloadResultCb, recd )
 			getter.connect( "error", self.mediaDownloadErrorCb, recd )
+
+			#todo: destfile=fullpath
 			getter.start()
 
 
