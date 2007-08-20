@@ -810,10 +810,11 @@ class UI:
 
 
 	def deleteThumbSelection( self, recd ):
+		print("deleteThumbSelection 1")
 		self.ca.m.deleteRecorded( recd, self.startThumb )
-
+		print("deleteThumbSelection 2")
 		self.removeIfSelectedRecorded( recd )
-
+		print("deleteThumbSelection 3")
 
 	#todo: blank the livePhotoCanvas whenever it is removed
 	def removeIfSelectedRecorded( self, recd ):
@@ -1162,7 +1163,9 @@ class ThumbnailDeleteButton(gtk.Button):
 		if (not self.props.sensitive):
 			return
 
+		print("buttonClickCb 1")
 		self.ui.deleteThumbSelection( self.tc.recd )
+		print("buttonClickCb 2")
 
 	def expose(self, widget, event):
 		ctx = widget.window.cairo_create()

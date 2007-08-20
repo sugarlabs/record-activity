@@ -410,15 +410,20 @@ class Model:
 
 
 	def removeMediaFromDatastore( self, recd ):
+		print("removeMediaFromDatastore 1")
 		#before this method is called, the media are removed from the file
 		if (recd.datastoreId == None):
 			return
 
 		try:
+			recd.datastoreOb.destroy()
+			print("removeMediaFromDatastore 2")
 			datastore.delete( recd.datastoreId )
 			recd.datastoreId = None
 			recd.datastoreOb = None
+			print("removeMediaFromDatastore 3")
 		finally:
+			print("removeMediaFromDatastore 4")
 			pass
 
 
@@ -514,13 +519,11 @@ class Model:
 
 
 	def deleteRecorded( self, recd, mn ):
-		#clear the index
-		hash = self.mediaHashs[recd.type]
-		index = hash.index(recd)
-		hash.remove( recd )
+		print("deleteRecorded 1")
 
 		#remove files from the filesystem if not on the datastore
-		if (recd.datastoreId != None):
+		if (recd.datastoreId == None):
+			print("deleteRecorded 2")
 			mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
 			if (os.path.exists(mediaFile)):
 				os.remove(mediaFile)
@@ -529,16 +532,24 @@ class Model:
 			if (os.path.exists(thumbFile)):
 				os.remove(thumbFile)
 		else:
+			print("deleteRecorded 3")
 			#remove from the datastore here, since once gone, it is gone...
 			self.removeMediaFromDatastore( recd )
+
+		#clear the index
+		hash = self.mediaHashs[recd.type]
+		index = hash.index(recd)
+		hash.remove( recd )
 
 		#if it was your photo and you wish you never took it, you can try and delete it...
 		#todo: note, if someone has it and left the activity, this delete command does not queue...
 		if ((not recd.buddy) and (self.ca.meshClient != None)):
 			self.ca.meshClient.notifyBudsofDeleteMedia( recd )
 
+
 		#update your own ui
 		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
+		print("deleteRecorded 4")
 
 
 	def deleteBuddyMedia( self, hashKey, time, type ):
