@@ -132,15 +132,18 @@ class UI:
 		#todo: internationalize this...
 		nameLabel = gtk.Label("Title:")
 		namePanel.pack_start( nameLabel, expand=False )
+		nameLabel.set_alignment(0, .5)
 		#todo: listen for changes here
 		self.nameTextfield = gtk.Entry(80)
-		self.nameTextfield.set_alignment(0, .5)
+		self.nameTextfield.connect('editing-done', self.nameTextfieldEdited )
+		self.nameTextfield.set_alignment(0)
 		namePanel.pack_start(self.nameTextfield)
 
 		photographerPanel = gtk.VBox(spacing=self.inset)
 		infoBox.pack_start(photographerPanel, expand=False)
 		photographerLabel = gtk.Label("Recorder:")
 		photographerPanel.pack_start(photographerLabel, expand=False)
+		photographerLabel.set_alignment(0, .5)
 		self.photographerNameLabel = gtk.Label("")
 		self.photographerNameLabel.set_alignment(0, .5)
 		photographerPanel.pack_start(self.photographerNameLabel)
@@ -344,6 +347,10 @@ class UI:
 		self.ca.connect('key-press-event', self._keyPressEventCb)
 
 
+	def nameTextfieldEdited(self, widget):
+		print("cell changed to read: " + str( self.nameTextfield.get_text() ))
+
+
 	def _playPauseButtonCb(self, widget):
 		if (self.ca.gplay.is_playing()):
 			self.ca.gplay.pause()
@@ -479,7 +486,8 @@ class UI:
 
 	def showLiveVideoTags( self ):
 		#todo: if this is too long, then live video gets pushed off screen (and ends up at 0x0??!)
-		self.nameTextfield.set_label("Live Video") # + str(self.ca.instanceId ))
+		self.nameTextfield.set_text("Live Video")
+		#("Live Video") # + str(self.ca.instanceId ))
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
@@ -885,7 +893,7 @@ class UI:
 
 	def showRecdMeta( self, recd ):
 		self.photographerNameLabel.set_label( recd.photographer )
-		self.nameTextfield.set_label( recd.name )
+		self.nameTextfield.set_text( recd.title )
 		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
 
 
