@@ -37,6 +37,7 @@ class Recorded:
 		self.mediaMd5 = None
 		self.thumbMd5 = None
 
+
 		#when you are datastore-serialized, you get one of these ids...
 		self.datastoreId = None
 		#todo: and we need to hold onto a reference to the datastore ob, since once we let that go, so goes the file too

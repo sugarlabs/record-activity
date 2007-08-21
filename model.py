@@ -102,11 +102,9 @@ class Model:
 		recd.mediaMd5 = el.getAttribute('mediaMd5')
 		recd.thumbMd5 = el.getAttribute('thumbMd5')
 
-		print("a")
 		recd.datastoreId = el.getAttribute('datastoreId')
 
 		if (not recd.datastoreId == None):
-			print("b")
 			recd.datastoreId = el.getAttribute('datastoreId')
 			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
 			#todo: find better method here (e.g., datastore.exists(id)
@@ -114,7 +112,6 @@ class Model:
 			if (recd.datastoreOb == None):
 				addToHash = False
 			recd.datastoreOb == None
-			print("c:", addToHash)
 
 		#buddyThumbString = el.getAttribute('buddyThumb')
 		#print("buddyThumbString...", buddyThumbString )
@@ -464,22 +461,26 @@ class Model:
 	#assign a better name here (name_0.jpg)
 	def createNewRecorded( self, type ):
 		recd = Recorded( self.ca )
+		recd.hashKey = self.ca.hashedKey
+
 
 		#todo: make this the md5+time... can't since we don't necc. have a file at this pt
 		#so use the hardware_id+time *and* check if available or not
 		nowtime = int(time.time())
-		nowtime_s = str(nowtime)
 		recd.time = nowtime
+
+		mediaThumbFilename = str(recd.hashKey) + "_" + str(recd.time)
+		mediaFilename = mediaThumbFilename
 
 		recd.type = type
 		if (type == self.TYPE_PHOTO):
-			nowtime_fn = nowtime_s + ".jpg"
-			recd.mediaFilename = nowtime_fn
+			mediaFilename = mediaFilename + ".jpg"
 		if (type == self.TYPE_VIDEO):
-			nowtime_fn = nowtime_s + ".ogv"
-			recd.mediaFilename = nowtime_fn
+			mediaFilename = mediaFilename + ".ogv"
+		mediaFilename = getUniqueFilename( mediaFilename )
+		recd.mediaFilename = mediaFilename
 
-		thumb_fn = nowtime_s + "_thumb.jpg"
+		thumbFilename = mediaThumbFilename + "_thumb.jpg"
 		recd.thumbFilename = thumb_fn
 
 		recd.photographer = self.ca.nickName
@@ -487,7 +488,7 @@ class Model:
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill
-		recd.hashKey = self.ca.hashedKey
+
 
 		return recd
 
@@ -501,14 +502,15 @@ class Model:
 
 		#load the mediafile
 		mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		mediaMd5 = self.m5dFile( mediaFile )
+		mediaMd5 = self.md5File( mediaFile )
 		recd.mediaMd5 = mediaMd5
 
 
 	def md5File( self, filepath ):
 		md = md5()
 		f = file( filepath, 'rb' )
-		digest = md.update(file.read()).hexdigest()
+		md.update( f.read() )
+		digest = md.hexdigest()
 		hash = util.printable_hash(digest)
 		return hash
 
