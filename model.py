@@ -497,7 +497,7 @@ class Model:
 
 		thumbFilename = mediaThumbFilename + "_thumb.jpg"
 		thumbFilename = self.getUniqueFilepath( thumbFilename, 0 )
-		recd.thumbFilename = thumb_fn
+		recd.thumbFilename = thumbFilename
 
 		recd.photographer = self.ca.nickName
 
@@ -510,7 +510,7 @@ class Model:
 		return recd
 
 
-	def getUniqueFilepath( path, i ):
+	def getUniqueFilepath( self, path, i ):
 		pathOb = os.path.abspath( path )
 		if (os.path.exists(pathOb)):
 			i = i+1

@@ -91,10 +91,11 @@ class UI:
 		#component spacing
 		self.inset = 10
 		#video size:
-		#todo: dynamically reset this...
+		#todo: dynamically set this...
 		#(03:19:45 PM) eben: jedierikb: bar itself is 75px, tabs take an additional 45px (including gray spacer)
-		self.vw = gtk.gdk.screen_height()-(self.thumbTrayHt+75+45)
-		self.vh = self.vw*.75
+		#(03:23:16 PM) tomeu: jedierikb: you create the toolbar, you can ask him it's height after it has been allocated
+		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+75+45+5)
+		self.vw = int(self.vh/.75)
 
 		#number of thumbs
 		self.numThumbs = 7
@@ -109,7 +110,8 @@ class UI:
 		toolbox = activity.ActivityToolbox(self.ca)
 		self.ca.set_toolbox(toolbox)
 		self.modeToolbar = ModeToolbar(self.ca)
-		toolbox.add_toolbar( ('Mode'), self.modeToolbar )
+		#todo: internationalize this
+		toolbox.add_toolbar( ('Record'), self.modeToolbar )
 		#sToolbar = SearchToolbar(self.ca)
 		#toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
@@ -125,15 +127,17 @@ class UI:
 		infoBox.set_border_width(self.inset)
 		topBox.pack_start(infoBox)
 
-		namePanel = gtk.HBox(spacing=self.inset)
+		namePanel = gtk.VBox(spacing=self.inset)
 		infoBox.pack_start(namePanel, expand=False)
-		nameLabel = gtk.Label("Name:")
+		#todo: internationalize this...
+		nameLabel = gtk.Label("Title:")
 		namePanel.pack_start( nameLabel, expand=False )
-		self.nameTextfield = gtk.Label("")
+		#todo: listen for changes here
+		self.nameTextfield = gtk.Entry(80)
 		self.nameTextfield.set_alignment(0, .5)
 		namePanel.pack_start(self.nameTextfield)
 
-		photographerPanel = gtk.HBox(spacing=self.inset)
+		photographerPanel = gtk.VBox(spacing=self.inset)
 		infoBox.pack_start(photographerPanel, expand=False)
 		photographerLabel = gtk.Label("Recorder:")
 		photographerPanel.pack_start(photographerLabel, expand=False)
@@ -336,6 +340,7 @@ class UI:
 		self.videoScrubPanel.hide_all()
 		self.showLiveVideoTags()
 
+		#listen for ctrl+c
 		self.ca.connect('key-press-event', self._keyPressEventCb)
 
 
