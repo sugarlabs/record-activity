@@ -6,6 +6,7 @@
 * correct ogg/theora mimetypes (jedierikb)
 * delete buddy's photos pushed to you #2722 (jedierikb)
 * new ui (jedierikb, mikhak, eben, walter)
+* all widgets insensitive when shuttingdown and writing to journal (jedierikb) 
 ~ progress bars for mesh downloads (jedierikb, dcbw)
 ~ audio record & playback (jedierikb, anwar)
 ~ limited record time for audio and video (~2 minutes)

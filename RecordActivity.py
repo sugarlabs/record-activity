@@ -83,8 +83,8 @@ class RecordActivity(activity.Activity):
 		self.ui = UI( self )
 
 		#listen for meshins
-		self.connect( "shared", self.sharedCb )
-		self.connect( "destroy", self.destroyCb)
+		self.connect( "shared", self._sharedCb )
+		self.connect( "destroy", self._destroyCb)
 
 		#todo: proper focus listeners to turn camera on / off
 		#self.connect("focus-in-event", self.c.inFocus)
@@ -124,7 +124,7 @@ class RecordActivity(activity.Activity):
 		f.close()
 
 
-	def sharedCb( self, activity ):
+	def _sharedCb( self, activity ):
 		print("1 i am shared")
 		self.startMesh()
 		print("2 i am shared")
@@ -182,16 +182,23 @@ class RecordActivity(activity.Activity):
 
 
 	def close( self ):
-		#extend the sugar close method for rapid shutdown that doesn't litter the
-		activity.Activity.close( self )
-		self.destroyCb( None )
-
-
-	def destroyCb( self, *args ):
+		print("close")
+		self.m.UPDATING = False
+		self.ui.updateButtonSensitivities( )
 		self.ui.hideLiveWindows()
 		self.ui.hidePlayWindows()
 		self.gplay.stop()
 		self.glive.stop()
+
+		self._destroyCb( None )
+		activity.Activity.close( self )
+
+
+	def _destroyCb( self, *args ):
+		#todo: disable the buttons while this is going down
+		print("destroyCb")
+
+		#todo: why recreate temp and destroy journalpath?
 		#todo: clean up / throw away any video you might be recording when you quit the activity
 		self.recreateTemp()
 

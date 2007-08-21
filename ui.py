@@ -490,15 +490,21 @@ class UI:
 		self.shownRecd = None
 
 		#todo: if this is too long, then live video gets pushed off screen (and ends up at 0x0??!)
+		#make this uneditable here
 		self.nameTextfield.set_text("Live Video")
 		#("Live Video") # + str(self.ca.instanceId ))
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
+		self.nameTextfield.hide()
+		self.photographerNameLabel.hide()
+		self.dateDateLabel.hide()
+
 		#self.videoScrubPanel.hide_all()
 
 
 	def updateButtonSensitivities( self ):
+		#todo: make the gtk.entry uneditable
 		self.shutterButton.set_sensitive( not self.ca.m.UPDATING )
 
 		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
@@ -898,6 +904,10 @@ class UI:
 		self.photographerNameLabel.set_label( recd.photographer )
 		self.nameTextfield.set_text( recd.title )
 		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
+
+		self.photographerNameLabel.show()
+		self.nameTextfield.show()
+		self.dateDateLabel.show()
 
 
 	def setWaitCursor( self ):
@@ -1406,12 +1416,23 @@ class ModeToolbar(gtk.Toolbar):
 		self.insert(self.vidButt, -1)
 		self.vidButt.show()
 
+		self.audButt = RadioToolButton( "menubar_video" )
+		self.audButt.set_group( self.picButt )
+		self.audButt.set_tooltip("Video")
+		self.audButt.props.sensitive = True
+		self.audButt.connect('clicked', self.modeAudioCb)
+		self.insert(self.audButt, -1)
+		self.audButt.show()
+
 
 	def modeVideoCb(self, button):
 		self.ca.m.doVideoMode()
 
 	def modePhotoCb(self, button):
 		self.ca.m.doPhotoMode()
+
+	def modeAudioCb(self, button):
+		self.ca.m.doAudioMode()
 
 
 class SearchToolbar(gtk.Toolbar):

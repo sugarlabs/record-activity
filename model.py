@@ -649,6 +649,17 @@ class Model:
 		self.setUpdating(False)
 
 
+	def doAudioMode( self ):
+		if (self.MODE == self.MODE_AUDIO):
+			return
+
+		self.setUpdating(True)
+		self.MODE = self.MODE_AUDIO
+		self.selectLatestThumbs(self.TYPE_AUDIO)
+
+		self.ca.ui.updateModeChange()
+		self.setUpdating(False)
+
 	def setConstants( self ):
 		#pics or vids?
 		self.MODE_PHOTO = 0
