@@ -125,21 +125,46 @@ class MeshClient:
 			print ("a", buddy.props.nick)
 			print ("a", buddy.props.ip4_address)
 			print ("a", buddy.props.owner) #me boolean
-			print ("a", buddy.props.key)
+			if (buddy.props.owner):
+				print ("a1", buddy.props.key)
+			else:
+				print ("a2", self.bytes_to_string(buddy.props.key))
 
 		print("1.6")
+
 
 	def buddyJoinedCb( self, activity, buddy ):
 		print ("b", buddy.props.nick)
 		print ("b", buddy.props.ip4_address)
 		print ("b", buddy.props.owner) #me boolean
-		print ("b", buddy.props.key)
+		if (buddy.props.owner):
+			print ("b1", buddy.props.key)
+		else:
+			print ("b2", self.bytes_to_string(buddy.props.key))
+
 
 	def buddyDepartedCb( self, activity, buddy ):
 		print ("c", buddy.props.nick)
 		print ("c", buddy.props.ip4_address)
 		print ("c", buddy.props.owner) #me boolean
-		print ("c", buddy.props.key)
+		if (buddy.props.owner):
+			print ("c1", buddy.props.key)
+		else:
+			print ("c2", self.bytes_to_string(buddy.props.key))
+
+
+	def bytes_to_string(self, bytes):
+		print("bytes_to_string 1")
+		import dbus
+
+		ret = ''
+		for item in bytes:
+			print( item, "<-->", str(item) )
+			ret = ret + str(item)
+
+		print("bytes_to_string 2")
+		return ret
+
 
 	#herein we notify our buddies of some cool stuff we got going on they mights wants to knows abouts
 	def notifyBudsOfNewPhoto( self, recd ):
@@ -197,13 +222,17 @@ class MeshClient:
 	#todo: don't request this if requesting this already (lock?)
 	def requestPhotoBits(self, recd):
 		print("requestingPhotoBits...", len(self.my_acty.get_joined_buddies()))
+
 		photoTakingBuddy = None
 		for buddy in self.my_acty.get_joined_buddies():
 			if (not buddy.props.owner):
-				keyHash = util._sha_data(buddy.props.key)
-				hashKey = util.printable_hash(keyHash)
+
+				#todo: next!
+				hashKey = util._sha_data( self.bytes_to_string(buddy.props.key) )
+				hashKey = util.printable_hash(hashKey)
+
 				#todo: bug dcbw about this...
-				print(hashKey, recd.hashKey)
+				print("compare:", hashKey, recd.hashKey)
 				if (hashKey == recd.hashKey):
 					photoTakingBuddy = buddy
 
