@@ -35,6 +35,7 @@ import gtk.gdk
 import sugar.env
 import random
 import time
+from time import strftime
 import gobject
 import xml.dom.minidom
 from xml.dom.minidom import getDOMImplementation
@@ -82,7 +83,7 @@ class Model:
 		addToHash = True
 
 		recd.type = int(el.getAttribute('type'))
-		recd.name = el.getAttribute('name')
+		recd.title = el.getAttribute('title')
 		recd.time = int(el.getAttribute('time'))
 		recd.photographer = el.getAttribute('photographer')
 		recd.mediaFilename = el.getAttribute('mediaFilename')
@@ -149,7 +150,7 @@ class Model:
 			el.setAttribute("buddyThumb", buddyThumb )
 
 		el.setAttribute("type", str(type))
-		el.setAttribute("name", recd.name)
+		el.setAttribute("title", recd.title)
 		el.setAttribute("time", str(recd.time))
 		el.setAttribute("photographer", recd.photographer)
 		el.setAttribute("mediaFilename", recd.mediaFilename)
@@ -357,6 +358,15 @@ class Model:
 		if (recd.datastoreId != None):
 			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 			#todo: HOWEVER, they might have changed the name of the file
+			if (recd.titleChange):
+				self.loadMediaFromDatastore( recd )
+				try:
+					recd.datastoreOb.metadata['title'] = recd.title
+					recd.datastoreOb.write(mediaObject)
+				finally:
+					if (recd.datastoreOb != None):
+						recd.datastoreOb.destroy()
+						del recd.datastoreOb
 			return
 
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
@@ -365,7 +375,7 @@ class Model:
 			mediaObject = datastore.create()
 			try:
 				#todo: what other metadata to set?
-				#jobject.metadata['title'] = _('Screenshot')
+				jobject.metadata['title'] = recd.title
 				#jobject.metadata['keep'] = '0'
 				#jobject.metadata['buddies'] = ''
 
@@ -390,8 +400,9 @@ class Model:
 				recd.datastoreId = mediaObject.object_id
 
 			finally:
-				mediaObject.destroy()
-				del mediaObject
+				if (mediaObject != None):
+					mediaObject.destroy()
+					del mediaObject
 
 		finally:
 			pass
@@ -422,10 +433,16 @@ class Model:
 			recd.datastoreOb.destroy()
 			print("removeMediaFromDatastore 2")
 			datastore.delete( recd.datastoreId )
+
+			del recd.datastoreId
 			recd.datastoreId = None
+
+			del recd.datastoreOb
 			recd.datastoreOb = None
+
 			print("removeMediaFromDatastore 3")
 		finally:
+			#todo: add error message here
 			print("removeMediaFromDatastore 4")
 			pass
 
@@ -463,9 +480,7 @@ class Model:
 		recd = Recorded( self.ca )
 		recd.hashKey = self.ca.hashedKey
 
-
-		#todo: make this the md5+time... can't since we don't necc. have a file at this pt
-		#so use the hardware_id+time *and* check if available or not
+		#to create a file, use the hardware_id+time *and* check if available or not
 		nowtime = int(time.time())
 		recd.time = nowtime
 
@@ -477,20 +492,32 @@ class Model:
 			mediaFilename = mediaFilename + ".jpg"
 		if (type == self.TYPE_VIDEO):
 			mediaFilename = mediaFilename + ".ogv"
-		mediaFilename = getUniqueFilename( mediaFilename )
+		mediaFilename = self.getUniqueFilepath( mediaFilename, 0 )
 		recd.mediaFilename = mediaFilename
 
 		thumbFilename = mediaThumbFilename + "_thumb.jpg"
+		thumbFilename = self.getUniqueFilepath( thumbFilename, 0 )
 		recd.thumbFilename = thumb_fn
 
 		recd.photographer = self.ca.nickName
-		recd.name = recd.mediaFilename
+
+		#todo: better title here
+		recd.title = str(recd.photographer) + ", " + strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) )
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill
 
-
 		return recd
+
+
+	def getUniqueFilepath( path, i ):
+		pathOb = os.path.abspath( path )
+		if (os.path.exists(pathOb)):
+			i = i+1
+			newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
+			path = getUniqueFilepath( str(newPath), i )
+		else:
+			return path
 
 
 	def createNewRecordedMd5Sums( self, recd ):

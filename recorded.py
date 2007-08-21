@@ -37,6 +37,8 @@ class Recorded:
 		self.mediaMd5 = None
 		self.thumbMd5 = None
 
+		self.titleChange = False
+
 
 		#when you are datastore-serialized, you get one of these ids...
 		self.datastoreId = None
@@ -51,6 +53,10 @@ class Recorded:
 		#assume you took the picture
 		self.buddy = False
 
+
+	def changeTitle( self, newTitle ):
+		self.name = newTitle
+		self.titleChange = True
 
 
 	#todo: for getting files back from one of these, all is dependent on if the file is local or in the datastore

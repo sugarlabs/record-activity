@@ -179,7 +179,7 @@ class MeshClient:
 				bud.newPhotoNotice(	str(me.props.ip4_address),
 									recd.mediaFilename, recd.thumbFilename,
 									recd.time, recd.photographer,
-									recd.name,
+									recd.title,
 									recd.colorStroke.hex, recd.colorFill.hex,
 									recd.hashKey,
 									reply_handler=self.notifyBudsOfNewPhotoCb,
