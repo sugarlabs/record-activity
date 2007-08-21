@@ -74,27 +74,31 @@ class UI:
 		self.liveMode = True
 
 		#thumb dimensions:
+		self.thumbTrayHt = 150
 		self.tw = 107
 		self.th = 80
 		self.thumbSvgW = 124
 		self.thumbSvgH = 124
-		#video size:
-		self.vw = 640
-		self.vh = 480
 		#pip size:
 		self.pipw = 160
 		self.piph = 120
 		self.pipBorder = 4
 		self.pipBorderW = self.pipw + (self.pipBorder*2)
 		self.pipBorderH = self.piph + (self.pipBorder*2)
-
 		#maximize size:
 		self.maxw = 49
 		self.maxh = 49
-		#number of thumbs
-		self.numThumbs = 7
 		#component spacing
 		self.inset = 10
+		#video size:
+		#todo: dynamically reset this...
+		#(03:19:45 PM) eben: jedierikb: bar itself is 75px, tabs take an additional 45px (including gray spacer)
+		self.vw = gtk.gdk.screen_height()-(self.thumbTrayHt+75+45)
+		self.vh = self.vw*.75
+
+		#number of thumbs
+		self.numThumbs = 7
+
 		#prep for when to show
 		self.exposed = False
 		self.mapped = False
@@ -206,7 +210,7 @@ class UI:
 
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
-		thumbnailsEventBox.set_size_request( -1, 150 )
+		thumbnailsEventBox.set_size_request( -1, self.thumbTrayHt )
 		thumbnailsBox = gtk.HBox( )
 		thumbnailsEventBox.add( thumbnailsBox )
 		self.mainBox.pack_end(thumbnailsEventBox, expand=False)
@@ -223,7 +227,7 @@ class UI:
 		for i in range (0, self.numThumbs):
 			thumbButt = ThumbnailCanvas(self)
 			thumbnailsBox.pack_start( thumbButt, expand=True )
-			self.thumbButts.append(thumbButt)
+			self.thumbButts.append( thumbButt )
 		self.rightThumbButton = gtk.Button()
 		self.rightThumbButton.connect( "clicked", self._rightThumbButton )
 		self.setupThumbButton( self.rightThumbButton, "right-thumb-sensitive" )
@@ -275,6 +279,7 @@ class UI:
 		self.hideLiveWindows()
 
 		#video playback windows
+		#todo: make into an array, replete with constructors, etc.
 		self.playOggWindow = PlayVideoWindow()
 		self.playOggWindow.resize(self.vw, self.vh)
 		self.playOggWindow.set_gplay(self.ca.gplay)
