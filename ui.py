@@ -135,7 +135,7 @@ class UI:
 		nameLabel.set_alignment(0, .5)
 		#todo: listen for changes here
 		self.nameTextfield = gtk.Entry(80)
-		self.nameTextfield.connect('editing-done', self.nameTextfieldEdited )
+		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
 		namePanel.pack_start(self.nameTextfield)
 
@@ -347,8 +347,10 @@ class UI:
 		self.ca.connect('key-press-event', self._keyPressEventCb)
 
 
-	def nameTextfieldEdited(self, widget):
-		print("cell changed to read: " + str( self.nameTextfield.get_text() ))
+	def _nameTextfieldEditedCb(self, widget):
+		if (self.shownRecd != None):
+			if (self.nameTextfield.get_text() != self.shownRecd.title):
+				self.shownRecd.setTitle( self.nameTextfield.get_text() )
 
 
 	def _playPauseButtonCb(self, widget):
@@ -416,9 +418,9 @@ class UI:
 				if (self.shownRecd.type == self.ca.m.TYPE_PHOTO):
 					tempImgPath = self.doClipboardCopyStart( self.shownRecd )
 					gtk.Clipboard().set_with_data( [('text/uri-list', 0, 0)], self._clipboardGetFuncCb, self._clipboardClearFuncCb, tempImgPath )
+					return True
 
-		return True
-
+		return False
 
 	def doClipboardCopyStart( self, recd ):
 		#todo: gracefully make sure you are yanking from the datastore here
@@ -485,6 +487,8 @@ class UI:
 
 
 	def showLiveVideoTags( self ):
+		self.shownRecd = None
+
 		#todo: if this is too long, then live video gets pushed off screen (and ends up at 0x0??!)
 		self.nameTextfield.set_text("Live Video")
 		#("Live Video") # + str(self.ca.instanceId ))
@@ -846,7 +850,6 @@ class UI:
 	#todo: blank the livePhotoCanvas whenever it is removed
 	def removeIfSelectedRecorded( self, recd ):
 		if (recd == self.shownRecd):
-			self.shownRecd = None
 
 			if (recd.type == self.ca.m.TYPE_PHOTO):
 				self.livePhotoCanvas.setImage(None)

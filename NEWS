@@ -1,10 +1,15 @@
 23
-* journal integration, replete with individual photos in the journal (jedierikb)
+* journal integration #1758 (jedierikb):
+** media in the journal
+** re-naming of media in the record.actvity and the journal
+** deleting of media in the record.activity and the journal
 * correct ogg/theora mimetypes (jedierikb)
-~ delete buddy's photos pushed to you  (jedierikb)
+* delete buddy's photos pushed to you #2722 (jedierikb)
+* new ui (jedierikb, mikhak, eben, walter)
+~ progress bars for mesh downloads (jedierikb, dcbw)
 ~ audio record & playback (jedierikb, anwar)
 ~ limited record time for audio and video (~2 minutes)
-~ new ui, replete with scrubbers (jedierikb, mikhak, eben, walter)
+
 
 22
 * fixes fixes to maximize window disappering (jedierikb)

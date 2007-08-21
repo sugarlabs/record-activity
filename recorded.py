@@ -30,7 +30,7 @@ class Recorded:
 		self.type = -1
 		self.time = None
 		self.photographer = None
-		self.name = None
+		self.title = None
 		self.colorStroke = None
 		self.colorFill = None
 		self.hashKey = None
@@ -54,8 +54,8 @@ class Recorded:
 		self.buddy = False
 
 
-	def changeTitle( self, newTitle ):
-		self.name = newTitle
+	def setTitle( self, newTitle ):
+		self.title = newTitle
 		self.titleChange = True
 
 

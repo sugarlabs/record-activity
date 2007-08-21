@@ -108,10 +108,13 @@ class Model:
 		if (not recd.datastoreId == None):
 			recd.datastoreId = el.getAttribute('datastoreId')
 			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
-			#todo: find better method here (e.g., datastore.exists(id)
+			#todo: find better method here (e.g., datastore.exists(id))
 			self.loadMediaFromDatastore( recd )
 			if (recd.datastoreOb == None):
 				addToHash = False
+			else:
+				#name might have been changed in the journal, so reflect that here
+				recd.title = recd.datastoreOb.metadata['title']
 			recd.datastoreOb == None
 
 		#buddyThumbString = el.getAttribute('buddyThumb')
@@ -361,8 +364,12 @@ class Model:
 			if (recd.titleChange):
 				self.loadMediaFromDatastore( recd )
 				try:
-					recd.datastoreOb.metadata['title'] = recd.title
-					recd.datastoreOb.write(mediaObject)
+					if (recd.datastoreOb.metadata['title'] != recd.title):
+						recd.datastoreOb.metadata['title'] = recd.title
+						datastore.write(recd.datastoreOb)
+						if (recd.datastoreOb != None):
+							recd.datastoreOb.destroy()
+							del recd.datastoreOb
 				finally:
 					if (recd.datastoreOb != None):
 						recd.datastoreOb.destroy()
@@ -375,7 +382,7 @@ class Model:
 			mediaObject = datastore.create()
 			try:
 				#todo: what other metadata to set?
-				jobject.metadata['title'] = recd.title
+				mediaObject.metadata['title'] = recd.title
 				#jobject.metadata['keep'] = '0'
 				#jobject.metadata['buddies'] = ''
 

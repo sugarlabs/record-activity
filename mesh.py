@@ -41,7 +41,7 @@ class MeshXMLRPCServer:
 
 	def newPhotoNotice(	self,
 						ip,
-						mediaFilename, thumbFilename, time, photographer, name, colorStroke, colorFill, hashKey ):
+						mediaFilename, thumbFilename, time, photographer, title, colorStroke, colorFill, hashKey ):
 
 		newRecd = Recorded( self.ca )
 		newRecd.type = self.ca.m.TYPE_PHOTO
@@ -50,7 +50,7 @@ class MeshXMLRPCServer:
 		newRecd.thumbFilename = thumbFilename
 		newRecd.time = time
 		newRecd.photographer = photographer
-		newRecd.name = name
+		newRecd.title = title
 		newRecd.hashKey = hashKey
 
 		colorStrokeHex = colorStroke
