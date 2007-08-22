@@ -347,6 +347,46 @@ class UI:
 		#listen for ctrl+c
 		self.ca.connect('key-press-event', self._keyPressEventCb)
 
+		#overlay widgets can go away after they've been on screen for a while
+		self.hiddenWidgets = False
+		self.resetWidgetFadeTimer()
+
+
+	def resetWidgetFadeTimer( self ):
+		#only show the clutter when the mouse moves
+		self.mx = -1
+		self.my = -1
+		self.hideWidgetsTimer = 0
+		if (self.hiddenWidgets):
+			print("reshow widgets")
+		#todo: how do you stop a gobject.timeout_add?
+		self.hideWidgetTimeout = gobject.timeout_add( 500, self._mouseMightaMovedCb )
+
+
+	def _mouseMightaMovedCb( self ):
+
+		x, y = self.ca.get_pointer()
+		if (x != self.mx or y != self.my):
+			self.hideWidgetsTimer = 0
+			#todo: be sure to show the widgets here iff hidden
+			if (self.hiddenWidgets):
+				self.hiddenWidgets = False
+				print("reshow widgets")
+		else:
+			#todo: use time here?
+			self.hideWidgetsTimer = self.hideWidgetsTimer + 500
+
+		if (self.hideWidgetsTimer > 7500):
+			if (not self.hiddenWidgets):
+				print("hide widgets")
+			self.hiddenWidgets = True
+
+
+
+		self.mx = x
+		self.my = y
+		return True
+
 
 	def _nameTextfieldEditedCb(self, widget):
 		if (self.shownRecd != None):
@@ -414,6 +454,7 @@ class UI:
 	def _keyPressEventCb( self, widget, event):
 		#we listen here for CTRL+C events
 		keyname = gtk.gdk.keyval_name(event.keyval)
+		print( "keyname:", keyname )
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.shownRecd == None):
 				if (self.shownRecd.type == self.ca.m.TYPE_PHOTO):
@@ -493,10 +534,11 @@ class UI:
 		#todo: if this is too long, then live video gets pushed off screen (and ends up at 0x0??!)
 		#make this uneditable here
 		self.nameTextfield.set_text("Live Video")
-		#("Live Video") # + str(self.ca.instanceId ))
+		self.nameTextfield.set_sensitive( False )
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
+		#todo: figure this out without the ui collapsing around it
 		self.namePanel.hide()
 		self.photographerPanel.hide()
 		self.datePanel.hide()
@@ -645,6 +687,7 @@ class UI:
 		else:
 			win.resize( self.vw, self.vh )
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
+			print( vPos[0], vPos[1] )
 			win.move( vPos[0], vPos[1] )
 
 		#win.show_all()
@@ -904,6 +947,7 @@ class UI:
 	def showRecdMeta( self, recd ):
 		self.photographerNameLabel.set_label( recd.photographer )
 		self.nameTextfield.set_text( recd.title )
+		self.nameTextfield.set_sensitive( True )
 		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
 
 		self.photographerPanel.show()
