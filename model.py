@@ -141,7 +141,9 @@ class Model:
 
 	def saveMedia( self, el, recd, type ):
 		doDatastoreMedia = True
-		if ( (recd.buddy == True) and (recd.datastoreId == None) and (recd.mediaFilename == None) ):
+		if ( (recd.buddy == True) and (recd.datastoreId == None) ):
+			#from your buddy and you've not saved it before...
+			#todo: but also need to save the 
 			datastoreMedia = False
 
 		if (doDatastoreMedia):
@@ -659,6 +661,7 @@ class Model:
 
 		self.ca.ui.updateModeChange()
 		self.setUpdating(False)
+
 
 	def setConstants( self ):
 		#pics or vids?

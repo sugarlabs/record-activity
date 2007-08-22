@@ -69,7 +69,6 @@ class UI:
 		self.loadGfx()
 
 		#ui modes
-		self.photoMode = True
 		self.fullScreen = False
 		self.liveMode = True
 
@@ -291,17 +290,20 @@ class UI:
 		self.audioWindow = AudioWindow(self)
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh )
 
+		self.hideAudioWindows()
+
 		#only show the floating windows once everything is exposed and has a layout position
 		#todo: need to listen to size-request signal on the widget that i overlay with a connect_after
-		#self.exposeId = self.ca.connect("expose-event", self.exposeEvent)
+		#todo: rename exposeId
 		self.exposeId = self.ca.connect_after("size-request", self.expostEvent)
 		self.ca.show_all()
 
 
 		self.livePhotoWindow.show_all()
 		self.livePipBgdWindow.show_all()
-		self.liveVideoWindow.show_all()
 		self.mapId = self.liveVideoWindow.connect("map-event", self.mapEvent)
+		self.liveVideoWindow.show_all()
+
 		self.liveMaxWindow.show_all()
 
 		self.playOggWindow.show_all()
@@ -561,6 +563,10 @@ class UI:
 		self.moveWinOffscreen( self.playMaxWindow )
 
 
+	def hideAudioWindows( self ):
+		self.moveWinOffscreen( self.playAudioWindow )
+
+
 	def liveButtonReleaseCb(self, widget, event):
 		self.livePhotoCanvas.setImage(None)
 		if (self.liveMode != True):
@@ -589,6 +595,7 @@ class UI:
 		#show the clock while this gets set up
 		self.hideLiveWindows()
 		self.hidePlayWindows()
+		self.hideAudioWindows()
 
 		self.stopPlayVideoToRecord()
 
@@ -618,13 +625,17 @@ class UI:
 
 		self.hideLiveWindows()
 		self.hidePlayWindows()
+		self.hideAudioWindows()
 
 		#set up the x & xv x-ition (if need be)
 		if (self.photoMode):
 			self.ca.gplay.stop()
 			self.startLiveXV( self.liveVideoWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
-		else:
+		elif (self.videoMode):
 			self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+		elif (self.audioMode):
+			pass
+
 
 		self.showLiveVideoTags()
 		self.updateVideoComponents()
@@ -757,15 +768,11 @@ class UI:
 
 	def updateVideoComponents( self ):
 
-#		self.livePhotoWindow.hide()
-#		self.livePipBgdWindow.hide()
-#		self.liveVideoWindow.hide()
-#		self.liveMaxWindow.hide()
-#		self.playOggWindow.hide()
-#		self.playLivePipBgdWindow.hide()
-#		self.playLiveWindow.hide()
-#		self.playMaxWindow.hide()
+		#todo: working with dcbw on solution for this one... avoiding video flicker when switching modes
+#		for i in range (0, len(self.windowStack)):
+#			self.windowStack[i].hide()
 
+		#todo: use the modes from MODEL
 		if (self.photoMode):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.livePipBgdWindow )
@@ -778,7 +785,7 @@ class UI:
 				self.setPipBgdLocDim( self.livePipBgdWindow )
 				self.setPipLocDim( self.liveVideoWindow )
 				self.setMaxLocDim( self.liveMaxWindow )
-		else:
+		elif (self.videoMode):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.playOggWindow )
 				self.moveWinOffscreen( self.playLivePipBgdWindow )
@@ -790,47 +797,18 @@ class UI:
 				self.setMaxLocDim( self.playMaxWindow )
 				self.setPipBgdLocDim( self.playLivePipBgdWindow )
 				self.setPipLocDim( self.playLiveWindow )
+		elif (self.audioMode):
+			pass
 
+#		for i in range (0, len(self.windowStack)):
+#			self.windowStack[i].realize()
+#			if (i == 0):
+#				self.windowStack[i].set_transient_for( self.ca )
+#			else:
+#				self.windowStack[i].set_transient_for( self.windowStack[i-1])
+#			self.windowStack[i].raise_()
+#			self.windowStack[i].show_all()
 
-#		self.livePhotoWindow.realize()
-#		self.livePhotoWindow.set_transient_for(self.ca)
-#		self.livePhotoWindow.window.raise_()
-#		self.livePhotoWindow.show_all()
-
-#		self.livePipBgdWindow.realize()
-#		self.livePipBgdWindow.set_transient_for(self.livePhotoWindow)
-#		self.livePipBgdWindow.window.raise_()
-#		self.livePipBgdWindow.show_all()
-
-#		self.liveVideoWindow.realize()
-#		self.liveVideoWindow.set_transient_for(self.livePipBgdWindow)
-#		self.liveVideoWindow.window.raise_()
-#		self.liveVideoWindow.show_all()
-
-#		self.liveMaxWindow.realize()
-#		self.liveMaxWindow.set_transient_for(self.liveVideoWindow)
-#		self.liveMaxWindow.window.raise_()
-#		self.liveMaxWindow.show_all()
-
-#		self.playOggWindow.realize()
-#		self.playOggWindow.set_transient_for(self.liveMaxWindow)
-#		self.playOggWindow.window.raise_()
-#		self.playOggWindow.show_all()
-
-#		self.playLivePipBgdWindow.realize()
-#		self.playLivePipBgdWindow.set_transient_for(self.playOggWindow)
-#		self.playLivePipBgdWindow.window.raise_()
-#		self.playLivePipBgdWindow.show_all()
-
-#		self.playLiveWindow.realize()
-#		self.playLiveWindow.set_transient_for(self.playLivePipBgdWindow)
-#		self.playLiveWindow.window.raise_()
-#		self.playLiveWindow.show_all()
-
-#		self.playMaxWindow.realize()
-#		self.playMaxWindow.set_transient_for(self.playLiveWindow)
-#		self.playMaxWindow.window.raise_()
-#		self.playMaxWindow.show_all()
 
 	#todo: cache buttons which we can reuse
 	def updateThumbs( self, addToTrayArray, left, start, right ):
@@ -1424,6 +1402,11 @@ class ThumbnailButton(gtk.Button):
 		else:
 			ctx.set_source_rgb( col._r, col._g, col._b )
 
+
+class AudioWindow(gtk.Window):
+	def __init__(self, ui):
+		gtk.Window.__init__(self)
+		self.ui = ui
 
 
 class ModeToolbar(gtk.Toolbar):

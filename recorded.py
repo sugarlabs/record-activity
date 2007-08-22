@@ -52,6 +52,7 @@ class Recorded:
 
 		#assume you took the picture
 		self.buddy = False
+		self.downloadedFromBuddy = False
 
 
 	def setTitle( self, newTitle ):
@@ -102,7 +103,7 @@ class Recorded:
 				return os.path.abspath(mediaFilepath)
 			else:
 				print("getMediaFilepath 3")
-				if (os.path.exists(self.mediaFilename)):
+				if (os.path.exists(self.mediaFilepath) and recd.downloadedFromBuddy ):
 					print("getMediaFilepath 4")
 					#the user has requested the high-res version, and it has downloaded
 					return os.path.abspath(mediaFilepath)

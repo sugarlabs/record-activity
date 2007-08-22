@@ -252,6 +252,9 @@ class MeshClient:
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 
+		recd.mediaFilename = suggested_name
+		recd.downloadedFromBuddy = True
+
 		print( "downloaded media and here it is: " + str(dest) )
 		print( "and media filename is: " + recd.mediaFilename )
 		self.ca.ui.updateShownPhoto( recd )
