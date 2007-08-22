@@ -127,35 +127,36 @@ class UI:
 		infoBox.set_border_width(self.inset)
 		topBox.pack_start(infoBox)
 
-		namePanel = gtk.VBox(spacing=self.inset)
-		infoBox.pack_start(namePanel, expand=False)
+		self.namePanel = gtk.VBox(spacing=self.inset)
+		infoBox.pack_start(self.namePanel, expand=False)
 		#todo: internationalize this...
 		nameLabel = gtk.Label("Title:")
-		namePanel.pack_start( nameLabel, expand=False )
+		self.namePanel.pack_start( nameLabel, expand=False )
 		nameLabel.set_alignment(0, .5)
 		#todo: listen for changes here
 		self.nameTextfield = gtk.Entry(80)
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
-		namePanel.pack_start(self.nameTextfield)
+		self.namePanel.pack_start(self.nameTextfield)
 
-		photographerPanel = gtk.VBox(spacing=self.inset)
-		infoBox.pack_start(photographerPanel, expand=False)
+		self.photographerPanel = gtk.VBox(spacing=self.inset)
+		infoBox.pack_start(self.photographerPanel, expand=False)
 		photographerLabel = gtk.Label("Recorder:")
-		photographerPanel.pack_start(photographerLabel, expand=False)
+		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
 		self.photographerNameLabel = gtk.Label("")
 		self.photographerNameLabel.set_alignment(0, .5)
-		photographerPanel.pack_start(self.photographerNameLabel)
+		self.photographerPanel.pack_start(self.photographerNameLabel)
 
-		datePanel = gtk.HBox(spacing=self.inset)
-		infoBox.pack_start(datePanel, expand=False)
+		self.datePanel = gtk.HBox(spacing=self.inset)
+		infoBox.pack_start(self.datePanel, expand=False)
 		dateLabel = gtk.Label("Date:")
-		datePanel.pack_start(dateLabel, expand=False)
+		self.datePanel.pack_start(dateLabel, expand=False)
 		self.dateDateLabel = gtk.Label("")
 		self.dateDateLabel.set_alignment(0, .5)
-		datePanel.pack_start(self.dateDateLabel)
+		self.datePanel.pack_start(self.dateDateLabel)
 
+		#todo: move this into its own window
 		self.shutterButton = gtk.Button()
 		self.shutterButton.set_image( self.shutterImg )
 		#todo: insensitive at launch?
@@ -496,9 +497,9 @@ class UI:
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
 		self.dateDateLabel.set_label( "Today" )
 
-		self.nameTextfield.hide()
-		self.photographerNameLabel.hide()
-		self.dateDateLabel.hide()
+		self.namePanel.hide()
+		self.photographerPanel.hide()
+		self.datePanel.hide()
 
 		#self.videoScrubPanel.hide_all()
 
@@ -905,9 +906,9 @@ class UI:
 		self.nameTextfield.set_text( recd.title )
 		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
 
-		self.photographerNameLabel.show()
-		self.nameTextfield.show()
-		self.dateDateLabel.show()
+		self.photographerPanel.show()
+		self.namePanel.show()
+		self.datePanel.show()
 
 
 	def setWaitCursor( self ):
