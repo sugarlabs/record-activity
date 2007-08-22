@@ -435,7 +435,14 @@ class UI:
 	def _keyPressEventCb( self, widget, event):
 		#we listen here for CTRL+C events
 		keyname = gtk.gdk.keyval_name(event.keyval)
+
+		#xev...
 		print( "keyname:", keyname )
+		#check: KP_End
+		#check: KP_Next
+		#square: KP_Home
+		#zero: KP_Prior
+		#"KP_Up, Down, Left, Right
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.shownRecd == None):
 				if (self.shownRecd.type == self.ca.m.TYPE_PHOTO):
