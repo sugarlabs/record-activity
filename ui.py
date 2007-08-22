@@ -246,90 +246,58 @@ class UI:
 		rightThumbEventBox.add( self.rightThumbButton )
 		thumbnailsBox.pack_start( rightThumbEventBox, expand=False )
 
+
 		#image windows
+		self.windowStack = []
+
+		#live video windows
 		self.livePhotoWindow = PhotoCanvasWindow(self)
-		self.livePhotoWindow.resize( self.vw, self.vh )
+		self.addToWindowStack( self.livePhotoWindow, self.vw, self.vh, self.ca )
 		self.livePhotoCanvas = PhotoCanvas(self)
 		self.livePhotoWindow.setPhotoCanvas(self.livePhotoCanvas)
-		self.livePhotoWindow.set_transient_for(self.ca)
-		self.livePhotoWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.livePhotoWindow.set_decorated(False)
-		self.livePhotoWindow.set_focus_on_map(False)
-		self.livePhotoWindow.set_property("accept-focus", False)
 
-		#pipbackground here
 		self.livePipBgdWindow = PipWindow(self)
-		self.livePipBgdWindow.resize( self.pipBorderW, self.pipBorderH )
-		self.livePipBgdWindow.set_transient_for(self.livePhotoWindow)
-		self.livePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.livePipBgdWindow.set_decorated(False)
-		self.livePipBgdWindow.set_focus_on_map(False)
-		self.livePipBgdWindow.set_property("accept-focus", False)
+		self.addToWindowStack( self.livePipBgdWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
 		self.liveVideoWindow = LiveVideoWindow()
-		self.liveVideoWindow.resize( self.vw, self.vh )
-		self.liveVideoWindow.set_transient_for(self.livePipBgdWindow)
-		self.liveVideoWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.liveVideoWindow.set_decorated(False)
-		self.liveVideoWindow.set_glive(self.ca.glive)
+		self.addToWindowStack( self.liveVideoWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
-		self.liveVideoWindow.set_focus_on_map(False)
-		self.liveVideoWindow.set_property("accept-focus", False)
 
 		self.liveMaxWindow = MaxWindow(self, True)
-		self.liveMaxWindow.resize( self.maxw, self.maxh )
-		self.liveMaxWindow.set_transient_for(self.liveVideoWindow)
-		self.liveMaxWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.liveMaxWindow.set_decorated(False)
-		self.liveMaxWindow.set_focus_on_map(False)
-		self.liveMaxWindow.set_property("accept-focus", False)
+		self.addToWindowStack( self.liveMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.hideLiveWindows()
 
 		#video playback windows
-		#todo: make into an array, replete with constructors, etc.
 		self.playOggWindow = PlayVideoWindow()
-		self.playOggWindow.resize(self.vw, self.vh)
+		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 		self.playOggWindow.set_gplay(self.ca.gplay)
-		self.playOggWindow.set_transient_for(self.liveMaxWindow)
-		self.playOggWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.playOggWindow.set_decorated(False)
-		self.playOggWindow.set_focus_on_map(False)
-		self.playOggWindow.set_property("accept-focus", False) 
 
 		#pipbackground here
 		self.playLivePipBgdWindow = PipWindow(self)
-		self.playLivePipBgdWindow.resize( self.pipBorderW, self.pipBorderH )
-		self.playLivePipBgdWindow.set_transient_for(self.playOggWindow)
-		self.playLivePipBgdWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.playLivePipBgdWindow.set_decorated(False)
-		self.playLivePipBgdWindow.set_focus_on_map(False)
-		self.playLivePipBgdWindow.set_property("accept-focus", False)
+		self.addToWindowStack( self.playLivePipBgdWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
 		self.playLiveWindow = LiveVideoWindow()
-		self.playLiveWindow.resize( self.pipw, self.piph )
-		self.playLiveWindow.set_transient_for(self.playLivePipBgdWindow)
-		self.playLiveWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.playLiveWindow.set_decorated(False)
+		self.addToWindowStack( self.playLiveWindow, self.pipw, self.piph, self.windowStack[len(self.windowStack)-1] )
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self.playLiveButtonReleaseCb)
-		self.playLiveWindow.set_focus_on_map(False)
-		self.playLiveWindow.set_property("accept-focus", False)
 
 		self.playMaxWindow = MaxWindow(self, False)
-		self.playMaxWindow.resize( self.maxw, self.maxh )
-		self.playMaxWindow.set_transient_for(self.playLiveWindow)
-		self.playMaxWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.playMaxWindow.set_decorated(False)
-		self.playMaxWindow.set_focus_on_map(False)
-		self.playMaxWindow.set_property("accept-focus", False)
+		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.hidePlayWindows()
 
+		self.audioWindow = AudioWindow(self)
+		self.addToWindowStack( self.audioWindow, self.vw, self.vh )
+
 		#only show the floating windows once everything is exposed and has a layout position
+		#todo: need to listen to size-request signal on the widget that i overlay with a connect_after
+		#self.exposeId = self.ca.connect("expose-event", self.exposeEvent)
+		self.exposeId = self.ca.connect_after("size-request", self.expostEvent)
 		self.ca.show_all()
-		self.exposeId = self.ca.connect("expose-event", self.exposeEvent)
+
+
 		self.livePhotoWindow.show_all()
 		self.livePipBgdWindow.show_all()
 		self.liveVideoWindow.show_all()
@@ -345,12 +313,22 @@ class UI:
 		self.videoScrubPanel.hide_all()
 		self.showLiveVideoTags()
 
-		#listen for ctrl+c
+		#listen for ctrl+c & game key buttons
 		self.ca.connect('key-press-event', self._keyPressEventCb)
 
 		#overlay widgets can go away after they've been on screen for a while
 		self.hiddenWidgets = False
 		self.resetWidgetFadeTimer()
+
+
+	def addToWindowStack( win, w, h, parent ):
+		self.windowStack.append( win )
+		win.resize( w, h )
+		win.set_transient_for( parent )
+		win.set_type_hint( gtk.gdk.WINDOW_TYPE_HINT_DIALOG )
+		win.set_decorated( False )
+		win.set_focus_on_map( False )
+		win.set_property("accept-focus", False)
 
 
 	def resetWidgetFadeTimer( self ):
@@ -601,7 +579,7 @@ class UI:
 
 		self.ca.gplay.stop()
 		self.liveMode = True
-		self.startXV( self.playLiveWindow )
+		self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 
 		#might need to hide video components here
 		self.updateVideoComponents()
@@ -627,7 +605,7 @@ class UI:
 		if (not self.ca.ui.liveMode):
 			#stop the movie
 			self.ca.gplay.stop()
-			self.startXV( self.playLiveWindow )
+			self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 
 
 	def updateModeChange(self):
@@ -644,20 +622,22 @@ class UI:
 		#set up the x & xv x-ition (if need be)
 		if (self.photoMode):
 			self.ca.gplay.stop()
-			self.startXV( self.liveVideoWindow )
+			self.startLiveXV( self.liveVideoWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 		else:
-			self.startXV( self.playLiveWindow )
+			self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 
 		self.showLiveVideoTags()
 		self.updateVideoComponents()
 
 
-	def startXV(self, window):
+	def startLiveXV(self, window, pipetype):
+		#We need to know which window and which pipe here
+
 		#if returning from another activity, active won't be false and needs to be to get started
-		if (self.ca.glive.xv and self.ca.glive.window == window and self.ca.ACTIVE):
+		if (self.ca.glive.PIPETYPE == pipetype and self.ca.glive.window == window and self.ca.ACTIVE):
 			return
 
-		self.ca.glive.xv = True
+		self.ca.glive.PIPETYPE = pipetype #self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
 		window.set_glive(self.ca.glive)
 		self.ca.glive.stop()
 		self.ca.glive.play()
@@ -898,15 +878,17 @@ class UI:
 		self.removeIfSelectedRecorded( recd )
 		print("deleteThumbSelection 3")
 
-	#todo: blank the livePhotoCanvas whenever it is removed
+
 	def removeIfSelectedRecorded( self, recd ):
+		#todo: blank the livePhotoCanvas whenever it is removed
 		if (recd == self.shownRecd):
 
+			#todo: should be using modes here to check which mode to switch to
 			if (recd.type == self.ca.m.TYPE_PHOTO):
 				self.livePhotoCanvas.setImage(None)
 			elif (recd.type == self.ca.m.TYPE_VIDEO):
 				self.ca.gplay.stop()
-				self.startXV( self.playLiveWindow )
+				self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 
 			self.liveMode = True
 			self.updateVideoComponents()
@@ -920,8 +902,10 @@ class UI:
 
 
 	def showVideo( self, recd ):
-		if (self.ca.glive.xv):
-			self.ca.glive.xv = False
+
+		#todo: think this through, this is not a complete thought.
+		if (self.ca.glive.isXv()):
+			self.ca.glive.PIPE_TYPE = self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY
 			#redundant (?)
 			#self.playLiveWindow.set_glive(self.ca.glive)
 			self.ca.glive.stop()

@@ -4,11 +4,13 @@
 ** re-naming of media in the record.actvity and the journal
 ** deleting of media in the record.activity and the journal
 * correct ogg/theora mimetypes (jedierikb)
-* delete buddy's photos pushed to you #2722 (jedierikb)
+* you can delete buddy's photos pushed to you #2722 (jedierikb)
 * new ui (jedierikb, mikhak, eben, walter)
-* all widgets insensitive when shuttingdown and writing to journal (jedierikb) 
+* all widgets insensitive when shuttingdown and writing to journal (jedierikb)
+* better pipeline switching to allow for n pipelines in a target window (jedierikb)
 ~ progress bars for mesh downloads (jedierikb, dcbw)
-~ audio record & playback (jedierikb, anwar)
+~ audio record & playback (jedierikb)
+~ audio record visualization (anwar)
 ~ limited record time for audio and video (~2 minutes)
 
 

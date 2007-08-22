@@ -37,7 +37,15 @@ class Glive:
 		self.window = None
 		self.ca = pca
 		self.pipes = []
-		self.xv = True
+
+		self.PIPETYPE_SUGAR_JHBUILD = -1
+		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 0
+		self.PIPETYPE_X_VIDEO_DISPLAY = 1
+		self.PIPETYPE_AUDIO_RECORD = 2
+		self.PIPETYPE = self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
+		#todo: create a key mapping here of what pipetypes have, e.g., "v4l2", "video", etc.
+		#self.xv = True
+
 		self.thumbPipes = []
 		self.muxPipes = []
 		self.nextPipe()
@@ -78,24 +86,12 @@ class Glive:
 
 		n = str(len(self.pipes))
 
-		testInJhbuild = False
-		if (not testInJhbuild):
-			if (self.xv):
-				pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
-			else:
-				pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 
-			v4l2src = pipeline.get_by_name('v4l2src_'+n)
-			try:
-				v4l2src.set_property("queue-size", 2)
-			except:
-				pass
-		else:
-			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
-			self.xv = False
+		v4l2 = False
+		if (self.PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
+			v4l2 = True
 
-		#todo: go through the code and add this conditional throughout
-		if (self.xv):
 			videoTee = pipeline.get_by_name('videoTee_'+n)
 
 			picQueue = pipeline.get_by_name('picQueue_'+n)
@@ -121,10 +117,31 @@ class Glive:
 			videoTee.unlink(movieQueue)
 			videoTee.unlink(picQueue)
 
-		bus = pipeline.get_bus()
-		bus.enable_sync_message_emission()
-		bus.add_signal_watch()
-		self.SYNC_ID = bus.connect('sync-message::element', self.onSyncMessage)
+		elif (self.PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
+			v4l2 = True
+		elif (self.PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+			pipeline = gst.parse_launch("alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
+		elif (self.PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
+			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
+
+		if (pipeline == None):
+			#todo: handle this?
+			print("no pipeline error!")
+
+		if (v4l2):
+			v4l2src = pipeline.get_by_name('v4l2src_'+n)
+			try:
+				v4l2src.set_property("queue-size", 2)
+			except:
+				pass
+
+		#todo: this should be checked with an attribute hash
+		if ((self.PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self.PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
+			bus = pipeline.get_bus()
+			bus.enable_sync_message_emission()
+			bus.add_signal_watch()
+			self.SYNC_ID = bus.connect('sync-message::element', self.onSyncMessage)
 
 		self.pipes.append(pipeline)
 
@@ -145,11 +162,12 @@ class Glive:
 			del pic
 
 			self.el("videoTee").unlink(self.el("picQueue"))
-
 			gobject.idle_add(self.savePhoto, pixBuf)
+
 
 	def savePhoto(self, pixbuf):
 		self.ca.m.savePhoto(pixbuf)
+
 
 	def startRecordingVideo(self):
 		self.pipe().set_state(gst.STATE_READY)
@@ -177,7 +195,7 @@ class Glive:
 		f = str(len(self.pipes)-2)
 		oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogv" )
 
-		#todo: test ~~> need to check *exists* and the filesize here to prevent stalling...
+		#todo: test ~~> need to check *exists* and the filesize here to prevent stalling... & maybe earlier?
 		if (not os.path.exists(oggFilepath)):
 			self.record = False
 			self.ca.m.cannotSaveVideo()
@@ -260,7 +278,6 @@ class Glive:
 			self.ca.m.stoppedRecordingVideo()
 
 
-
 	def onSyncMessage(self, bus, message):
 		if message.structure is None:
 			return
@@ -268,11 +285,17 @@ class Glive:
 			self.window.set_sink(message.src)
 			message.src.set_property('force-aspect-ratio', True)
 
+
 	def showLiveVideo(self):
 		self.el('audioTee').unlink(self.el('audioWavenc'))
 		self.el('videoTee').unlink(self.el('movieQueue'))
 		self.el('videoTee').unlink(self.el('picQueue'))
 		self.pipe().set_state(gst.STATE_PLAYED)
+
+
+	def isXv(self):
+		return self.PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
+
 
 class LiveVideoWindow(gtk.Window):
 	def __init__(self):

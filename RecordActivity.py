@@ -193,9 +193,10 @@ class RecordActivity(activity.Activity):
 		self.gplay.stop()
 		self.glive.stop()
 
-		self._destroyCb( None )
-		activity.Activity.close( self )
 
+		activity.Activity.close( self )
+		#todo: check if moving tihs down allows for saving
+		self._destroyCb( None )
 
 	def _destroyCb( self, *args ):
 		#todo: disable the buttons while this is going down
