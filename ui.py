@@ -360,6 +360,7 @@ class UI:
 		if (self.hiddenWidgets):
 			print("reshow widgets")
 		#todo: how do you stop a gobject.timeout_add?
+		#answer: gobject.source_remove(source_id)
 		self.hideWidgetTimeout = gobject.timeout_add( 500, self._mouseMightaMovedCb )
 
 
