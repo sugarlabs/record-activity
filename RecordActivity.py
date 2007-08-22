@@ -182,6 +182,9 @@ class RecordActivity(activity.Activity):
 
 
 	def close( self ):
+		#todo: fix ~~> close, destroyCb, write_file
+
+
 		print("close")
 		self.m.UPDATING = False
 		self.ui.updateButtonSensitivities( )

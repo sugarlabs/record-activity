@@ -120,12 +120,12 @@ class UI:
 		self.ca.set_canvas(self.mainBox)
 
 		topBox = gtk.HBox()
-		self.mainBox.pack_start(topBox)
+		self.mainBox.pack_start(topBox, expand=True)
 
 		#insert entry fields on left
 		infoBox = gtk.VBox(spacing=self.inset)
 		infoBox.set_border_width(self.inset)
-		topBox.pack_start(infoBox)
+		topBox.pack_start(infoBox, expand=True)
 
 		self.namePanel = gtk.VBox(spacing=self.inset)
 		infoBox.pack_start(self.namePanel, expand=False)
@@ -157,19 +157,20 @@ class UI:
 		self.datePanel.pack_start(self.dateDateLabel)
 
 		#todo: move this into its own window
+		self.tagsPanel = gtk.VBox(spacing=self.inset)
+		tagsLabel = gtk.Label("Tags:")
+		tagsLabel.set_alignment(0, .5)
+		self.tagsPanel.pack_start(tagsLabel, expand=False)
 		self.shutterButton = gtk.Button()
 		self.shutterButton.set_image( self.shutterImg )
-		#todo: insensitive at launch?
 		self.shutterButton.connect("clicked", self.shutterClickCb)
+		#this is insensitive until we're all set up
+		self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
 		shutterBox.add( self.shutterButton )
-		shutterBox.set_border_width( 50 )
-		infoBox.pack_start(shutterBox, expand=True)
+		self.tagsPanel.pack_start( shutterBox, expand=True )
+		infoBox.pack_start( self.tagsPanel, expand=True)
 
-		#todo: dynamically query/set size
-		spaceTaker = gtk.HBox()
-		spaceTaker.set_size_request( -1, 25 )
-		infoBox.pack_start(spaceTaker, expand=True)
 
 		#video, scrubber etc on right
 		videoBox = gtk.VBox()
@@ -381,8 +382,6 @@ class UI:
 			if (not self.hiddenWidgets):
 				print("hide widgets")
 			self.hiddenWidgets = True
-
-
 
 		self.mx = x
 		self.my = y
@@ -757,6 +756,7 @@ class UI:
 
 	def checkReadyToSetup(self):
 		if (self.exposed and self.mapped):
+			self.shutterButton.set_sensitive(True)
 			self.updateVideoComponents()
 			self.ca.glive.play()
 
