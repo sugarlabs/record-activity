@@ -260,6 +260,7 @@ class UI:
 
 		self.liveVideoWindow = LiveVideoWindow()
 		self.addToWindowStack( self.liveVideoWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
+		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
 
@@ -288,14 +289,14 @@ class UI:
 		self.hidePlayWindows()
 
 		self.audioWindow = AudioWindow(self)
-		self.addToWindowStack( self.audioWindow, self.vw, self.vh )
+		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
 		self.hideAudioWindows()
 
 		#only show the floating windows once everything is exposed and has a layout position
 		#todo: need to listen to size-request signal on the widget that i overlay with a connect_after
 		#todo: rename exposeId
-		self.exposeId = self.ca.connect_after("size-request", self.expostEvent)
+		self.exposeId = self.backgdCanvas.connect_after("size-allocate", self.exposeEvent)
 		self.ca.show_all()
 
 
@@ -323,7 +324,7 @@ class UI:
 		self.resetWidgetFadeTimer()
 
 
-	def addToWindowStack( win, w, h, parent ):
+	def addToWindowStack( self, win, w, h, parent ):
 		self.windowStack.append( win )
 		win.resize( w, h )
 		win.set_transient_for( parent )
@@ -564,7 +565,7 @@ class UI:
 
 
 	def hideAudioWindows( self ):
-		self.moveWinOffscreen( self.playAudioWindow )
+		self.moveWinOffscreen( self.audioWindow )
 
 
 	def liveButtonReleaseCb(self, widget, event):
@@ -621,19 +622,18 @@ class UI:
 		#this is called when a menubar button is clicked
 		self.liveMode = True
 		self.fullScreen = False
-		self.photoMode = (self.ca.m.MODE == self.ca.m.MODE_PHOTO)
 
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 		self.hideAudioWindows()
 
 		#set up the x & xv x-ition (if need be)
-		if (self.photoMode):
+		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			self.ca.gplay.stop()
 			self.startLiveXV( self.liveVideoWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
-		elif (self.videoMode):
+		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
-		elif (self.audioMode):
+		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			pass
 
 
@@ -761,7 +761,7 @@ class UI:
 
 	def exposeEvent( self, widget, event):
 		#initial setup of the panels
-		self.ca.disconnect(self.exposeId)
+		self.backgdCanvas.disconnect(self.exposeId)
 		self.exposed = True
 		self.checkReadyToSetup( )
 
@@ -773,7 +773,7 @@ class UI:
 #			self.windowStack[i].hide()
 
 		#todo: use the modes from MODEL
-		if (self.photoMode):
+		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.livePipBgdWindow )
 
@@ -785,7 +785,7 @@ class UI:
 				self.setPipBgdLocDim( self.livePipBgdWindow )
 				self.setPipLocDim( self.liveVideoWindow )
 				self.setMaxLocDim( self.liveMaxWindow )
-		elif (self.videoMode):
+		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.playOggWindow )
 				self.moveWinOffscreen( self.playLivePipBgdWindow )
@@ -797,7 +797,7 @@ class UI:
 				self.setMaxLocDim( self.playMaxWindow )
 				self.setPipBgdLocDim( self.playLivePipBgdWindow )
 				self.setPipLocDim( self.playLiveWindow )
-		elif (self.audioMode):
+		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			pass
 
 #		for i in range (0, len(self.windowStack)):

@@ -103,14 +103,15 @@ class Model:
 		recd.mediaMd5 = el.getAttribute('mediaMd5')
 		recd.thumbMd5 = el.getAttribute('thumbMd5')
 
-		recd.datastoreId = el.getAttribute('datastoreId')
-
-		if (not recd.datastoreId == None):
-			recd.datastoreId = el.getAttribute('datastoreId')
+		recd.datastoreNode = el.getAttributeNode("datastoreId")
+		#recd.datastoreId = el.getAttribute('datastoreId')
+		if (recd.datastoreNode != None):
+			recd.datastoreId = recd.datastoreNode.nodeValue
 			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
 			#todo: find better method here (e.g., datastore.exists(id))
 			self.loadMediaFromDatastore( recd )
 			if (recd.datastoreOb == None):
+				print("~~> recd.datastoreId", recd.datastoreId )
 				addToHash = False
 			else:
 				#name might have been changed in the journal, so reflect that here
@@ -125,31 +126,33 @@ class Model:
 			#todo: consolidate this code into a function...
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
-			print( "bt.nodeValue:", bt.nodeValue )
 			data = base64.b64decode( bt.nodeValue )
 			pbl.write(data)
 			thumbImg = pbl.get_pixbuf()
 			#todo: add check for what to do if there is no thumbFilename!
 			thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
-			print("thumbPath:", thumbPath, "img:", thumbImg )
-			thumbImg.write_to_png(thumbPath)
-			print( "buddyThumbString: ", buddyThumbString )
+			print("thumbPath:", thumbPath)
+			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
+			print("yahoobees! ", addToHash)
 
+		print("before added")
 		if (addToHash):
+			print("added to hash...")
 			hash.append( recd )
 
 
 	def saveMedia( self, el, recd, type ):
 		doDatastoreMedia = True
-		if ( (recd.buddy == True) and (recd.datastoreId == None) ):
+		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
 			#from your buddy and you've not saved it before...
 			#todo: but also need to save the 
-			datastoreMedia = False
+			doDatastoreMedia = False
 
 		if (doDatastoreMedia):
 			#this gets us a datatoreId we need later to serialize the data
 			self.saveMediaToDatastore( recd )
 		else:
+			pixbuf = recd.getThumbPixbuf( )
 			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
 			print( "buddyThumb", buddyThumb )
 			el.setAttribute("buddyThumb", buddyThumb )
