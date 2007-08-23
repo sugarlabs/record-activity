@@ -182,6 +182,10 @@ class UI:
 #		self.videoScrubPanel = gtk.EventBox()
 #		videoBox.pack_end(self.videoScrubPanel, expand=True)
 
+		self.backgdCanvas = BackgroundCanvas(self)
+		self.backgdCanvas.set_size_request(self.vw, -1)
+		topBox.pack_start( self.backgdCanvas, expand=True )
+
 
 		##
 		##
@@ -268,6 +272,9 @@ class UI:
 		self.liveMaxWindow = MaxWindow(self, True)
 		self.addToWindowStack( self.liveMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
+		self.liveRecordWindow = RecordWindow(self)
+		self.addToWindowStack( self.liveRecordWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+
 		self.hideLiveWindows()
 
 		#video playback windows
@@ -292,6 +299,9 @@ class UI:
 		self.audioWindow = AudioWindow(self)
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
+		self.audioControlWindow = AudioControlWindow(self)
+		self.addToWindowStack( self.audioControlWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+
 		self.hideAudioWindows()
 
 		#only show the floating windows once everything is exposed and has a layout position
@@ -302,7 +312,7 @@ class UI:
 
 		self.mapId = self.liveVideoWindow.connect("map-event", self.mapEvent)
 		for i in range (0, len(self.windowStack)):
-			win.show_all()
+			self.windowStack[i].show_all()
 
 		#actually, we're not showing you just yet
 		#self.videoScrubPanel.hide_all()
@@ -426,20 +436,22 @@ class UI:
 
 
 	def _keyPressEventCb( self, widget, event):
-		#we listen here for CTRL+C events
+		#we listen here for CTRL+C events and game keys, and pass on events to gtk.Entry fields
 		keyname = gtk.gdk.keyval_name(event.keyval)
 
 		#xev...
 		print( "keyname:", keyname )
 
 		#check: KP_End
-		if (keyname == gtk.keysyms.Page_Up):
-			print("up!!")
+		if (keyname == 'KP_Page_Up'):
+			print("gamekey O")
+		elif (keyname == 'KP_Page_Down'):
+			print("gamekey X")
+		elif (keyname == 'KP_End'):
+			print("gamekey CHECK")
+		elif (keyname == 'KP_Home'):
+			print("gamekey SQUARE")
 
-		#check: KP_Next
-		#square: KP_Home
-		#zero: KP_Prior
-		#"KP_Up, Down, Left, Right
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.shownRecd == None):
 				if (self.shownRecd.type == self.ca.m.TYPE_PHOTO):
@@ -559,6 +571,7 @@ class UI:
 		self.moveWinOffscreen( self.livePipBgdWindow )
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.liveMaxWindow )
+		self.moveWinOffscreen( self.liveRecordWindow )
 
 
 	def hidePlayWindows( self ):
@@ -570,6 +583,7 @@ class UI:
 
 	def hideAudioWindows( self ):
 		self.moveWinOffscreen( self.audioWindow )
+		self.moveWinOffscreen( self.audioControlWindow )
 
 
 	def liveButtonReleaseCb(self, widget, event):
@@ -775,7 +789,7 @@ class UI:
 #		for i in range (0, len(self.windowStack)):
 #			self.windowStack[i].hide()
 
-		#todo: use the modes from MODEL
+		#todo: only one max window needed, really, as is only one pipBgdWindow
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.livePipBgdWindow )
@@ -783,7 +797,10 @@ class UI:
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setImgLocDim( self.liveVideoWindow )
 				self.setMaxLocDim( self.liveMaxWindow )
+				self.setPipBgdLocDim( self.liveRecordWindow )
 			else:
+				self.moveWinOffscreen( self.liveRecordWindow )
+
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setPipBgdLocDim( self.livePipBgdWindow )
 				self.setPipLocDim( self.liveVideoWindow )
@@ -795,16 +812,21 @@ class UI:
 
 				self.setImgLocDim( self.playLiveWindow )
 				self.setMaxLocDim( self.playMaxWindow )
+				self.setPipBgdLocDim( self.liveRecordWindow )
 			else:
+				self.moveWinOffscreen( self.liveRecordWindow )
+
 				self.setImgLocDim( self.playOggWindow )
 				self.setMaxLocDim( self.playMaxWindow )
 				self.setPipBgdLocDim( self.playLivePipBgdWindow )
 				self.setPipLocDim( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (self.liveMode):
-				self.setPipBgdLocDim( self.audioWindow )
+				self.setImgLocDim( self.audioWindow )
+				self.setPipBgdLocDim( self.playLivePipBgdWindow )
 			else:
-				self.setPipBgdLocDim( self.audioWindow )
+				self.setImgLocDim( self.audioWindow )
+				self.setPipBgdLocDim( self.playLivePipBgdWindow )
 
 #		for i in range (0, len(self.windowStack)):
 #			self.windowStack[i].realize()
@@ -1416,7 +1438,6 @@ class AudioWindow(gtk.Window):
 		self.audCanvas = AudioCanvas(self.ui)
 		self.add( self.audCanvas )
 
-
 class AudioCanvas(P5):
 	def __init__(self, ui):
 		P5.__init__(self)
@@ -1425,6 +1446,35 @@ class AudioCanvas(P5):
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorBlue, w, h )
 
+
+class AudioControlWindow(gtk.Window):
+	def __init__(self, ui):
+		gtk.Window.__init__(self)
+		self.ui = ui
+		self.audCanvas = AudioControlCanvas(self.ui)
+		self.add( self.audCanvas )
+
+class AudioControlCanvas(P5):
+	def __init__(self, ui):
+		P5.__init__(self)
+		self.ui = ui
+
+	def draw(self, ctx, w, h):
+		self.background( ctx, self.ui.colorGreen, w, h )
+
+class RecordWindow(gtk.Window):
+	def __init__(self,ui):
+		gtk.Window.__init__(self)
+		self.ui = ui
+
+		self.shutterButton = gtk.Button()
+		self.shutterButton.set_image( self.ui.shutterImg )
+		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
+		#todo: this is insensitive until we're all set up
+		#self.shutterButton.set_sensitive(False)
+		shutterBox = gtk.EventBox()
+		shutterBox.add( self.shutterButton )
+		self.add( shutterBox )
 
 class ModeToolbar(gtk.Toolbar):
 	def __init__(self, pc):
