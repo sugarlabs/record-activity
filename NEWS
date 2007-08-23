@@ -5,9 +5,12 @@
 ** deleting of media in the record.activity and the journal
 * correct ogg/theora mimetypes (jedierikb)
 * you can delete buddy's photos pushed to you #2722 (jedierikb)
+* you can view buddy's photos when you re-open an activity #2439 (jedierikb)
+** note that you can't access undownloaded media on re-connect because of #2977
 * new ui (jedierikb, mikhak, eben, walter)
 * all widgets insensitive when shuttingdown and writing to journal (jedierikb)
-* better pipeline switching to allow for n pipelines in a target window (jedierikb)
+* better pipeline to window switching (jedierikb)
+* workaround for #2299 --> matches on buddy nicks to confirm mesh downloads (jedierikb, dcbw) 
 ~ progress bars for mesh downloads (jedierikb, dcbw)
 ~ audio record & playback (jedierikb)
 ~ audio record visualization (anwar)

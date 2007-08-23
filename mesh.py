@@ -125,10 +125,10 @@ class MeshClient:
 			print ("a", buddy.props.nick)
 			print ("a", buddy.props.ip4_address)
 			print ("a", buddy.props.owner) #me boolean
-			if (buddy.props.owner):
-				print ("a1", buddy.props.key)
-			else:
-				print ("a2", self.bytes_to_string(buddy.props.key))
+#			if (buddy.props.owner):
+#				print ("a1", buddy.props.key)
+#			else:
+#				print ("a2", self.bytes_to_string(buddy.props.key))
 
 		print("1.6")
 
@@ -137,34 +137,32 @@ class MeshClient:
 		print ("b", buddy.props.nick)
 		print ("b", buddy.props.ip4_address)
 		print ("b", buddy.props.owner) #me boolean
-		if (buddy.props.owner):
-			print ("b1", buddy.props.key)
-		else:
-			print ("b2", self.bytes_to_string(buddy.props.key))
+#		if (buddy.props.owner):
+#			print ("b1", buddy.props.key)
+#		else:
+#			print ("b2", self.bytes_to_string(buddy.props.key))
 
 
 	def buddyDepartedCb( self, activity, buddy ):
 		print ("c", buddy.props.nick)
 		print ("c", buddy.props.ip4_address)
 		print ("c", buddy.props.owner) #me boolean
-		if (buddy.props.owner):
-			print ("c1", buddy.props.key)
-		else:
-			print ("c2", self.bytes_to_string(buddy.props.key))
+#		if (buddy.props.owner):
+#			print ("c1", buddy.props.key)
+#		else:
+#			print ("c2", self.bytes_to_string(buddy.props.key))
 
 
 	def bytes_to_string(self, bytes):
-		print("bytes_to_string 1")
-		import dbus
-
-		ret = ''
-		for item in bytes:
-			print( item, "<-->", str(item) )
-			ret = ret + str(item)
-
-		print("bytes_to_string 2")
-		return ret
-
+#		print("bytes_to_string 1")
+#		import dbus
+#		ret = ''
+#		for item in bytes:
+#			print( item, "<-->", str(item) )
+#			ret = ret + str(item)
+#		print("bytes_to_string 2")
+#		return ret
+		return bytes
 
 	#herein we notify our buddies of some cool stuff we got going on they mights wants to knows abouts
 	def notifyBudsOfNewPhoto( self, recd ):
@@ -227,13 +225,12 @@ class MeshClient:
 		for buddy in self.my_acty.get_joined_buddies():
 			if (not buddy.props.owner):
 
-				#todo: next!
+				#todo: this is buggy presenceservice stuff, dcbw is on it.
+				#todo: revert this once the bug is fixed
 				hashKey = util._sha_data( self.bytes_to_string(buddy.props.key) )
 				hashKey = util.printable_hash(hashKey)
-
-				#todo: bug dcbw about this...
-				print("compare:", hashKey, recd.hashKey)
-				if (hashKey == recd.hashKey):
+				#if (hashKey == recd.hashKey):
+				if (buddy.props.nick == recd.photographer):
 					photoTakingBuddy = buddy
 
 		print("photoTakingBuddy...", photoTakingBuddy)

@@ -121,7 +121,6 @@ class Model:
 		#buddyThumbString = el.getAttribute('buddyThumb')
 		#print("buddyThumbString...", buddyThumbString )
 		bt = el.getAttributeNode('buddyThumb')
-		print( "bt", bt )
 		if (not bt == None):
 			#todo: consolidate this code into a function...
 			pbl = gtk.gdk.PixbufLoader()
@@ -131,13 +130,9 @@ class Model:
 			thumbImg = pbl.get_pixbuf()
 			#todo: add check for what to do if there is no thumbFilename!
 			thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
-			print("thumbPath:", thumbPath)
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
-			print("yahoobees! ", addToHash)
 
-		print("before added")
 		if (addToHash):
-			print("added to hash...")
 			hash.append( recd )
 
 
@@ -154,7 +149,6 @@ class Model:
 		else:
 			pixbuf = recd.getThumbPixbuf( )
 			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
-			print( "buddyThumb", buddyThumb )
 			el.setAttribute("buddyThumb", buddyThumb )
 
 		el.setAttribute("type", str(type))
@@ -608,7 +602,6 @@ class Model:
 			photo = album.createElement('photo')
 			root.appendChild(photo)
 			self.saveMedia(photo, recd, self.TYPE_PHOTO )
-			print("saved photo")
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		for i in range (0, len(videoHash)):

@@ -103,7 +103,7 @@ class Recorded:
 				return os.path.abspath(mediaFilepath)
 			else:
 				print("getMediaFilepath 3")
-				if (os.path.exists(mediaFilepath) and recd.downloadedFromBuddy ):
+				if (os.path.exists(mediaFilepath) and self.downloadedFromBuddy):
 					print("getMediaFilepath 4")
 					#the user has requested the high-res version, and it has downloaded
 					return os.path.abspath(mediaFilepath)

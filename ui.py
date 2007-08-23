@@ -438,7 +438,11 @@ class UI:
 
 		#xev...
 		print( "keyname:", keyname )
+
 		#check: KP_End
+		if (keyname == "KP_End"):
+			print("check!")
+
 		#check: KP_Next
 		#square: KP_Home
 		#zero: KP_Prior
@@ -685,7 +689,6 @@ class UI:
 		else:
 			win.resize( self.vw, self.vh )
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			print( vPos[0], vPos[1] )
 			win.move( vPos[0], vPos[1] )
 
 		#win.show_all()
