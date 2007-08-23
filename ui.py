@@ -826,10 +826,10 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (self.liveMode):
 				self.setImgLocDim( self.audioWindow )
-				self.setPipBgdLocDim( self.playLivePipBgdWindow )
+				self.setPipBgdLocDim( self.audioControlWindow )
 			else:
 				self.setImgLocDim( self.audioWindow )
-				self.setPipBgdLocDim( self.playLivePipBgdWindow )
+				self.setPipBgdLocDim( self.audioControlWindow )
 
 #		for i in range (0, len(self.windowStack)):
 #			self.windowStack[i].realize()
@@ -902,7 +902,7 @@ class UI:
 				self.livePhotoCanvas.setImage(None)
 			elif (recd.type == self.ca.m.TYPE_VIDEO):
 				self.ca.gplay.stop()
-				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 			elif (recd.type == self.ca.m.TYPE_AUDIO):
 				self.ca.gplay.stop()
 				self.startLiveAudio()
@@ -923,9 +923,9 @@ class UI:
 
 	def showVideo( self, recd ):
 
-		#todo: think this through, this is not a complete thought.
+		#todo: this can be cleaned up for when playing subsequent videos
 		if (self.ca.glive.isXv()):
-			self.ca.glive.PIPE_TYPE = self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY
+			self.ca.glive.PIPETYPE = self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY
 			#redundant (?)
 			#self.playLiveWindow.set_glive(self.ca.glive)
 			self.ca.glive.stop()
