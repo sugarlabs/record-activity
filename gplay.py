@@ -80,9 +80,9 @@ class Gplay:
 
 	def seek(self, location):
 		event = gst.event_new_seek(1.0, gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE, gst.SEEK_TYPE_SET, location, gst.SEEK_TYPE_NONE, 0)
-		res = self.player.send_event(event)
+		res = self.getPlayer().send_event(event)
 		if res:
-			self.player.set_new_stream_time(0L)
+			self.getPlayer().set_new_stream_time(0L)
 
 	def pause(self):
 		self.playing = False
