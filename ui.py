@@ -156,19 +156,16 @@ class UI:
 		self.dateDateLabel.set_alignment(0, .5)
 		self.datePanel.pack_start(self.dateDateLabel)
 
-		#todo: move this into its own window
 		self.tagsPanel = gtk.VBox(spacing=self.inset)
 		tagsLabel = gtk.Label("Tags:")
 		tagsLabel.set_alignment(0, .5)
 		self.tagsPanel.pack_start(tagsLabel, expand=False)
-		self.shutterButton = gtk.Button()
-		self.shutterButton.set_image( self.shutterImg )
-		self.shutterButton.connect("clicked", self.shutterClickCb)
-		#this is insensitive until we're all set up
-		self.shutterButton.set_sensitive(False)
-		shutterBox = gtk.EventBox()
-		shutterBox.add( self.shutterButton )
-		self.tagsPanel.pack_start( shutterBox, expand=True )
+
+		self.tagsBuffer = gtk.TextBuffer()
+		self.tagsField = gtk.TextView( self.tagsBuffer )
+		#self.tagsField.set_sensitive(False)
+		self.tagsPanel.pack_start( self.tagsField, expand=True )
+
 		infoBox.pack_start( self.tagsPanel, expand=True)
 
 
@@ -182,9 +179,13 @@ class UI:
 #		self.videoScrubPanel = gtk.EventBox()
 #		videoBox.pack_end(self.videoScrubPanel, expand=True)
 
+		backgdCanvasBox = gtk.VBox()
+		backgdCanvasBox.set_size_request(self.vw, -1)
+		topBox.pack_start( backgdCanvasBox, expand=False )
+
 		self.backgdCanvas = BackgroundCanvas(self)
-		self.backgdCanvas.set_size_request(self.vw, -1)
-		topBox.pack_start( self.backgdCanvas, expand=True )
+		self.backgdCanvas.set_size_request(self.vw, self.vh)
+		backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
 
 
 		##
@@ -272,11 +273,6 @@ class UI:
 		self.liveMaxWindow = MaxWindow(self, True)
 		self.addToWindowStack( self.liveMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
-		self.liveRecordWindow = RecordWindow(self)
-		self.addToWindowStack( self.liveRecordWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
-
-		self.hideLiveWindows()
-
 		#video playback windows
 		self.playOggWindow = PlayVideoWindow()
 		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
@@ -294,14 +290,18 @@ class UI:
 		self.playMaxWindow = MaxWindow(self, False)
 		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
-		self.hidePlayWindows()
-
 		self.audioWindow = AudioWindow(self)
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
 		self.audioControlWindow = AudioControlWindow(self)
 		self.addToWindowStack( self.audioControlWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
+		self.recordWindow = RecordWindow(self)
+		self.addToWindowStack( self.recordWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+
+
+		self.hideLiveWindows()
+		self.hidePlayWindows()
 		self.hideAudioWindows()
 
 		#only show the floating windows once everything is exposed and has a layout position
@@ -539,13 +539,15 @@ class UI:
 		self.namePanel.hide()
 		self.photographerPanel.hide()
 		self.datePanel.hide()
-
-		#self.videoScrubPanel.hide_all()
+		self.tagsPanel.hide()
+		self.tagsBuffer.set_text("")
 
 
 	def updateButtonSensitivities( self ):
+
 		#todo: make the gtk.entry uneditable
-		self.shutterButton.set_sensitive( not self.ca.m.UPDATING )
+		#todo: change this button which is now in a window
+		self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING )
 
 		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
 
@@ -561,9 +563,9 @@ class UI:
 			self.ca.ui.setDefaultCursor( )
 
 		if (self.ca.m.RECORDING):
-			self.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
 		else:
-			self.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
+			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
 
 	def hideLiveWindows( self ):
@@ -571,7 +573,7 @@ class UI:
 		self.moveWinOffscreen( self.livePipBgdWindow )
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.liveMaxWindow )
-		self.moveWinOffscreen( self.liveRecordWindow )
+		self.moveWinOffscreen( self.recordWindow )
 
 
 	def hidePlayWindows( self ):
@@ -579,6 +581,7 @@ class UI:
 		self.moveWinOffscreen( self.playLivePipBgdWindow )
 		self.moveWinOffscreen( self.playLiveWindow )
 		self.moveWinOffscreen( self.playMaxWindow )
+		self.moveWinOffscreen( self.recordWindow )
 
 
 	def hideAudioWindows( self ):
@@ -604,7 +607,7 @@ class UI:
 
 		self.ca.gplay.stop()
 		self.liveMode = True
-		self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 
 		#might need to hide video components here
 		self.updateVideoComponents()
@@ -631,7 +634,7 @@ class UI:
 		if (not self.ca.ui.liveMode):
 			#stop the movie
 			self.ca.gplay.stop()
-			self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 
 
 	def updateModeChange(self):
@@ -648,9 +651,9 @@ class UI:
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			self.startLiveXV( self.liveVideoWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY )
+			self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY )
+			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			pass
 
@@ -659,14 +662,14 @@ class UI:
 		self.updateVideoComponents()
 
 
-	def startLiveXV(self, window, pipetype):
+	def startLiveVideo(self, window, pipetype):
 		#We need to know which window and which pipe here
 
 		#if returning from another activity, active won't be false and needs to be to get started
 		if (self.ca.glive.PIPETYPE == pipetype and self.ca.glive.window == window and self.ca.ACTIVE):
 			return
 
-		self.ca.glive.PIPETYPE = pipetype #self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
+		self.ca.glive.PIPETYPE = pipetype
 		window.set_glive(self.ca.glive)
 		self.ca.glive.stop()
 		self.ca.glive.play()
@@ -764,7 +767,7 @@ class UI:
 
 	def checkReadyToSetup(self):
 		if (self.exposed and self.mapped):
-			self.shutterButton.set_sensitive(True)
+			self.recordWindow.shutterButton.set_sensitive(True)
 			self.updateVideoComponents()
 			self.ca.glive.play()
 
@@ -797,9 +800,9 @@ class UI:
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setImgLocDim( self.liveVideoWindow )
 				self.setMaxLocDim( self.liveMaxWindow )
-				self.setPipBgdLocDim( self.liveRecordWindow )
+				self.setPipBgdLocDim( self.recordWindow )
 			else:
-				self.moveWinOffscreen( self.liveRecordWindow )
+				self.moveWinOffscreen( self.recordWindow )
 
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setPipBgdLocDim( self.livePipBgdWindow )
@@ -812,9 +815,9 @@ class UI:
 
 				self.setImgLocDim( self.playLiveWindow )
 				self.setMaxLocDim( self.playMaxWindow )
-				self.setPipBgdLocDim( self.liveRecordWindow )
+				self.setPipBgdLocDim( self.recordWindow )
 			else:
-				self.moveWinOffscreen( self.liveRecordWindow )
+				self.moveWinOffscreen( self.recordWindow )
 
 				self.setImgLocDim( self.playOggWindow )
 				self.setMaxLocDim( self.playMaxWindow )
@@ -873,9 +876,14 @@ class UI:
 		#do we need to know the type, since we're showing based on the mode of the app?
 		if (recd.type == self.ca.m.TYPE_PHOTO):
 			self.showPhoto( recd )
-		if (recd.type == self.ca.m.TYPE_VIDEO):
+		elif (recd.type == self.ca.m.TYPE_VIDEO):
 			self.showVideo( recd )
+		elif (recd.type == self.ca.m.TYPE_AUDIO):
+			self.showAudio( recd )
 
+
+	def showAudio( self, recd ):
+		print("show audio")
 
 	def deleteThumbSelection( self, recd ):
 		print("deleteThumbSelection 1")
@@ -894,13 +902,19 @@ class UI:
 				self.livePhotoCanvas.setImage(None)
 			elif (recd.type == self.ca.m.TYPE_VIDEO):
 				self.ca.gplay.stop()
-				self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+			elif (recd.type == self.ca.m.TYPE_AUDIO):
+				self.ca.gplay.stop()
+				self.startLiveAudio()
 
 			self.liveMode = True
 			self.updateVideoComponents()
 
 			self.showLiveVideoTags()
 
+
+	def startLiveAudio( self ):
+		print("starting live audio")
 
 	def updateShownPhoto( self, recd ):
 		if (self.shownRecd == recd):
@@ -944,6 +958,8 @@ class UI:
 		self.photographerPanel.show()
 		self.namePanel.show()
 		self.datePanel.show()
+		self.tagsPanel.show()
+		self.tagsBuffer.set_text("")
 
 
 	def setWaitCursor( self ):
@@ -1397,6 +1413,8 @@ class ThumbnailButton(gtk.Button):
 					self.ui.thumbPhotoSvg.render_cairo(rtCtx)
 
 				rtCtx.translate( 8, 8 )
+				rtCtx.set_source_surface(self.tc.thumbCanvas, 0, 0)
+				rtCtx.paint()
 
 			elif (self.tc.recd.type == self.ui.ca.m.TYPE_VIDEO):
 				if (self.tc.recd.buddy):
@@ -1406,9 +1424,17 @@ class ThumbnailButton(gtk.Button):
 					self.ui.thumbVideoSvg.render_cairo(rtCtx)
 
 				rtCtx.translate( 8, 22 )
+				rtCtx.set_source_surface(self.tc.thumbCanvas, 0, 0)
+				rtCtx.paint()
 
-			rtCtx.set_source_surface(self.tc.thumbCanvas, 0, 0)
-			rtCtx.paint()
+
+			elif (self.tc.recd.type == self.ui.ca.m.TYPE_AUDIO):
+				if (self.tc.recd.buddy):
+					thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.tc.recd.colorStroke.hex, self.tc.recd.colorFill.hex)
+					thumbVideoSvg.render_cairo(rtCtx)
+				else:
+					self.ui.thumbVideoSvg.render_cairo(rtCtx)
+
 
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
 		ctx.paint()
@@ -1498,7 +1524,7 @@ class ModeToolbar(gtk.Toolbar):
 
 		self.audButt = RadioToolButton( "menubar_video" )
 		self.audButt.set_group( self.picButt )
-		self.audButt.set_tooltip("Video")
+		self.audButt.set_tooltip("Audio")
 		self.audButt.props.sensitive = True
 		self.audButt.connect('clicked', self.modeAudioCb)
 		self.insert(self.audButt, -1)

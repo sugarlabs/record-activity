@@ -60,6 +60,7 @@ class Model:
 		self.mediaHashs = {}
 		self.mediaHashs[self.TYPE_PHOTO] = []
 		self.mediaHashs[self.TYPE_VIDEO] = []
+		self.mediaHashs[self.TYPE_AUDIO] = []
 
 
 	def fillMediaHash( self, index ):
@@ -67,15 +68,18 @@ class Model:
 		if (os.path.exists(index)):
 			print("fillMediaHash 2")
 			doc = parse( os.path.abspath(index) )
+
 			photos = doc.documentElement.getElementsByTagName('photo')
 			for each in photos:
-				print("getting photo")
 				self.loadMedia( each, self.mediaHashs[self.TYPE_PHOTO] )
-				print("got photo")
 
 			videos = doc.documentElement.getElementsByTagName('video')
 			for each in videos:
 				self.loadMedia( each, self.mediaHashs[self.TYPE_VIDEO] )
+
+			audios = doc.documentElement.getElementsByTagName('audio')
+			for each in audios:
+				self.loadMedia( each, self.mediaHashs[self.TYPE_AUDIO] )
 
 
 	def loadMedia( self, el, hash ):
@@ -231,6 +235,8 @@ class Model:
 			type = self.ca.m.TYPE_PHOTO
 		if (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			type = self.ca.m.TYPE_VIDEO
+		if (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			type = self.ca.m.TYPE_AUDIO
 
 		if (type != -1):
 			return self.mediaHashs[type]
@@ -249,6 +255,8 @@ class Model:
 				self.startRecordingVideo()
 			else:
 				self.stopRecordingVideo()
+		elif (self.MODE == self.MODE_AUDIO):
+			print( "start/stop recording audio")
 
 
 	def startRecordingVideo( self ):
@@ -610,6 +618,14 @@ class Model:
 			video = album.createElement('video')
 			root.appendChild(video)
 			self.saveMedia(video, recd, self.TYPE_VIDEO )
+
+		audioHash = self.mediaHashs[self.TYPE_AUDIO]
+		for i in range (0, len(audioHash)):
+			recd = audioHash[i]
+
+			audio = album.createElement('audio')
+			root.appendChild(audio)
+			self.saveMedia(audio, recd, self.TYPE_AUDIO )
 
 		return album
 
