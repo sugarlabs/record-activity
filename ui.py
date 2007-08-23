@@ -133,7 +133,6 @@ class UI:
 		nameLabel = gtk.Label("Title:")
 		self.namePanel.pack_start( nameLabel, expand=False )
 		nameLabel.set_alignment(0, .5)
-		#todo: listen for changes here
 		self.nameTextfield = gtk.Entry(80)
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
@@ -285,7 +284,7 @@ class UI:
 		self.playLiveWindow = LiveVideoWindow()
 		self.addToWindowStack( self.playLiveWindow, self.pipw, self.piph, self.windowStack[len(self.windowStack)-1] )
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.playLiveWindow.connect("button_release_event", self.playLiveButtonReleaseCb)
+		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
 
 		self.playMaxWindow = MaxWindow(self, False)
 		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
@@ -598,7 +597,7 @@ class UI:
 			self.updateVideoComponents()
 
 
-	def playLiveButtonReleaseCb(self, widget, event):
+	def _playLiveButtonReleaseCb(self, widget, event):
 		#if you are big on the screen, don't go changing anything, ok?
 		if (self.liveMode):
 			return
@@ -607,7 +606,7 @@ class UI:
 
 		self.ca.gplay.stop()
 		self.liveMode = True
-		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 
 		#might need to hide video components here
 		self.updateVideoComponents()
