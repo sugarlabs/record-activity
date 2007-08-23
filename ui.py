@@ -654,7 +654,7 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			pass
+			self.startLiveAudio( )
 
 
 		self.showLiveVideoTags()
@@ -882,7 +882,7 @@ class UI:
 
 
 	def showAudio( self, recd ):
-		print("show audio")
+		print("show audio recd")
 
 	def deleteThumbSelection( self, recd ):
 		print("deleteThumbSelection 1")
@@ -914,6 +914,7 @@ class UI:
 
 	def startLiveAudio( self ):
 		print("starting live audio")
+
 
 	def updateShownPhoto( self, recd ):
 		if (self.shownRecd == recd):
