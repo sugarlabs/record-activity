@@ -20,6 +20,7 @@
 
 import gtk
 from gtk import gdk
+from gtk import keysyms
 import gobject
 import cairo
 import os
@@ -171,49 +172,49 @@ class UI:
 		infoBox.pack_start( self.tagsPanel, expand=True)
 
 
-		#video, scrubber etc on right
-		videoBox = gtk.VBox()
-		videoBox.set_size_request(self.vw, -1)
-		topBox.pack_start(videoBox, expand=False)
-		self.backgdCanvas = BackgroundCanvas(self)
-		self.backgdCanvas.set_size_request(self.vw, self.vh)
-		videoBox.pack_start(self.backgdCanvas, expand=False)
-		self.videoScrubPanel = gtk.EventBox()
-		videoBox.pack_end(self.videoScrubPanel, expand=True)
+#		#video, scrubber etc on right
+#		videoBox = gtk.VBox()
+#		videoBox.set_size_request(self.vw, -1)
+#		topBox.pack_start(videoBox, expand=False)
+#		self.backgdCanvas = BackgroundCanvas(self)
+#		self.backgdCanvas.set_size_request(self.vw, self.vh)
+#		videoBox.pack_start(self.backgdCanvas, expand=False)
+#		self.videoScrubPanel = gtk.EventBox()
+#		videoBox.pack_end(self.videoScrubPanel, expand=True)
 
 
 		##
 		##
 		#the video scrubber
-		self.videoScrubBox = gtk.HBox()
-		self.videoScrubPanel.add( self.videoScrubBox )
+#		self.videoScrubBox = gtk.HBox()
+#		self.videoScrubPanel.add( self.videoScrubBox )
 
-		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-		self.pause_image.show()
-		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
-		self.play_image.show()
+#		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
+#		self.pause_image.show()
+#		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
+#		self.play_image.show()
 
-		self.playPauseButton = gtk.ToolButton()
-		self.playPauseButton.set_icon_widget(self.play_image)
-		self.playPauseButton.set_property('can-default', True)
-		self.playPauseButton.show()
-		self.playPauseButton.connect('clicked', self._playPauseButtonCb)
+#		self.playPauseButton = gtk.ToolButton()
+#		self.playPauseButton.set_icon_widget(self.play_image)
+#		self.playPauseButton.set_property('can-default', True)
+#		self.playPauseButton.show()
+#		self.playPauseButton.connect('clicked', self._playPauseButtonCb)
 
-		self.videoScrubBox.pack_start(self.playPauseButton, expand=False)
+#		self.videoScrubBox.pack_start(self.playPauseButton, expand=False)
 
-		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
-		self.hscale = gtk.HScale(self.adjustment)
-		self.hscale.set_draw_value(False)
-		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
-		self.hscale.connect('button-press-event', self._scrubberPressCb)
-		self.hscale.connect('button-release-event', self._scrubberReleaseCb)
+#		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
+#		self.hscale = gtk.HScale(self.adjustment)
+#		self.hscale.set_draw_value(False)
+#		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+#		self.hscale.connect('button-press-event', self._scrubberPressCb)
+#		self.hscale.connect('button-release-event', self._scrubberReleaseCb)
 
-		self.scale_item = gtk.ToolItem()
-		self.scale_item.set_expand(True)
-		self.scale_item.add(self.hscale)
-		self.videoScrubBox.pack_start(self.scale_item, expand=True)
-		##
-		##
+#		self.scale_item = gtk.ToolItem()
+#		self.scale_item.set_expand(True)
+#		self.scale_item.add(self.hscale)
+#		self.videoScrubBox.pack_start(self.scale_item, expand=True)
+#		##
+#		##
 
 
 		thumbnailsEventBox = gtk.EventBox()
@@ -299,21 +300,13 @@ class UI:
 		self.exposeId = self.backgdCanvas.connect_after("size-allocate", self.exposeEvent)
 		self.ca.show_all()
 
-
-		self.livePhotoWindow.show_all()
-		self.livePipBgdWindow.show_all()
 		self.mapId = self.liveVideoWindow.connect("map-event", self.mapEvent)
-		self.liveVideoWindow.show_all()
-
-		self.liveMaxWindow.show_all()
-
-		self.playOggWindow.show_all()
-		self.playLivePipBgdWindow.show_all()
-		self.playLiveWindow.show_all()
-		self.playMaxWindow.show_all()
+		for i in range (0, len(self.windowStack)):
+			win.show_all()
 
 		#actually, we're not showing you just yet
-		self.videoScrubPanel.hide_all()
+		#self.videoScrubPanel.hide_all()
+
 		self.showLiveVideoTags()
 
 		#listen for ctrl+c & game key buttons
@@ -440,8 +433,8 @@ class UI:
 		print( "keyname:", keyname )
 
 		#check: KP_End
-		if (keyname == "KP_End"):
-			print("check!")
+		if (keyname == gtk.keysyms.Page_Up):
+			print("up!!")
 
 		#check: KP_Next
 		#square: KP_Home
@@ -639,11 +632,11 @@ class UI:
 		self.hideAudioWindows()
 
 		#set up the x & xv x-ition (if need be)
+		self.ca.gplay.stop()
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			self.ca.gplay.stop()
-			self.startLiveXV( self.liveVideoWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+			self.startLiveXV( self.liveVideoWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+			self.startLiveXV( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			pass
 
@@ -808,7 +801,10 @@ class UI:
 				self.setPipBgdLocDim( self.playLivePipBgdWindow )
 				self.setPipLocDim( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			pass
+			if (self.liveMode):
+				self.setPipBgdLocDim( self.audioWindow )
+			else:
+				self.setPipBgdLocDim( self.audioWindow )
 
 #		for i in range (0, len(self.windowStack)):
 #			self.windowStack[i].realize()
@@ -1417,6 +1413,17 @@ class AudioWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
+		self.audCanvas = AudioCanvas(self.ui)
+		self.add( self.audCanvas )
+
+
+class AudioCanvas(P5):
+	def __init__(self, ui):
+		P5.__init__(self)
+		self.ui = ui
+
+	def draw(self, ctx, w, h):
+		self.background( ctx, self.ui.colorBlue, w, h )
 
 
 class ModeToolbar(gtk.Toolbar):

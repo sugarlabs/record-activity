@@ -116,6 +116,7 @@ class RecordActivity(activity.Activity):
 
 
 	def write_file(self, file):
+		#todo: thread this, and the delete method called after it
 		print("write_file")
 		#todo: just pass the file over to the method in m
 		f = open( file, "w" )
@@ -152,6 +153,7 @@ class RecordActivity(activity.Activity):
 			self.stopPipes()
 		elif (self.props.active and not self.ACTIVE):
 			self.restartPipes()
+			print("should restart pipes")
 
 		self.ACTIVE = self.props.active
 
@@ -182,9 +184,6 @@ class RecordActivity(activity.Activity):
 
 
 	def close( self ):
-		#todo: fix ~~> close, destroyCb, write_file
-
-
 		print("close")
 		self.m.UPDATING = False
 		self.ui.updateButtonSensitivities( )
@@ -194,8 +193,9 @@ class RecordActivity(activity.Activity):
 		self.glive.stop()
 
 
+		#todo: put this into a gobject.freetime thing to update the ui first?
 		activity.Activity.close( self )
-		#todo: check if moving tihs down allows for saving
+		#this deletes all the temp files after the call above saves them...
 		self._destroyCb( None )
 
 	def _destroyCb( self, *args ):
