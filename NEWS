@@ -10,7 +10,8 @@
 * new ui (jedierikb, mikhak, eben, walter)
 * all widgets insensitive when shuttingdown and writing to journal (jedierikb)
 * better pipeline to window switching (jedierikb)
-* workaround for #2299 --> matches on buddy nicks to confirm mesh downloads (jedierikb, dcbw) 
+* workaround for #2299 --> matches on buddy nicks to confirm mesh downloads (jedierikb, dcbw)
+~ take photos, switch modes with game buttons
 ~ progress bars for mesh downloads (jedierikb, dcbw)
 ~ audio record & playback (jedierikb)
 ~ audio record visualization (anwar)

@@ -665,10 +665,10 @@ class UI:
 		#We need to know which window and which pipe here
 
 		#if returning from another activity, active won't be false and needs to be to get started
-		if (self.ca.glive.PIPETYPE == pipetype and self.ca.glive.window == window and self.ca.ACTIVE):
+		if (self.ca.glive.getPipeType() == pipetype and self.ca.glive.window == window and self.ca.ACTIVE):
 			return
 
-		self.ca.glive.PIPETYPE = pipetype
+		self.ca.glive.setPipeType( pipetype )
 		window.set_glive(self.ca.glive)
 		self.ca.glive.stop()
 		self.ca.glive.play()
@@ -925,7 +925,7 @@ class UI:
 
 		#todo: this can be cleaned up for when playing subsequent videos
 		if (self.ca.glive.isXv()):
-			self.ca.glive.PIPETYPE = self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY
+			self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 			#redundant (?)
 			#self.playLiveWindow.set_glive(self.ca.glive)
 			self.ca.glive.stop()
