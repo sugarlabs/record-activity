@@ -178,7 +178,6 @@ class Glive:
 
 
 	def _audioBufferCb(self, element, buffer, pad):
-		print("_abcb")
 		gobject.timeout_add( 30, self._audioBufferNew, str(buffer) )
 		return True
 

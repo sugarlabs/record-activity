@@ -291,6 +291,8 @@ class UI:
 		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.audioCanvas = DrawWaveform()
+		self.audioCanvas.w = self.vw
+		self.audioCanvas.h = self.vh
 		self.audioWindow = AudioWindow(self.audioCanvas)
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
@@ -640,6 +642,7 @@ class UI:
 
 	def updateModeChange(self):
 		#todo: move the video offscreen when switching modes until the video comes on and is playng
+		#todo: return from this if we're already in this mode?
 
 		#this is called when a menubar button is clicked
 		self.liveMode = True
@@ -648,6 +651,8 @@ class UI:
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 		self.hideAudioWindows()
+
+		self.audioCanvas.stopWaveformDraws()
 
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
@@ -917,6 +922,7 @@ class UI:
 	def startLiveAudio( self ):
 		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		self.ca.glive.stop()
+		self.audioCanvas.startWaveformDraws()
 		self.ca.glive.play()
 
 

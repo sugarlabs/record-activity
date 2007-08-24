@@ -21,21 +21,24 @@ import audioop
 from Numeric import *
 from FFT import *
 
-#Waveform drawing area dimensions
-WINDOW_W=1050.0
-WINDOW_H=800.0
 
-#In milliseconds, the delay interval after which the waveform draw function will be queued"
-REFRESH_TIME = 30
 
-#Multiplied with width and height to set placement of text
-TEXT_X_M = 0.55
-TEXT_Y_M = 0.83
 
 
 class DrawWaveform(gtk.DrawingArea):
 	def __init__(self):
 		gtk.DrawingArea.__init__(self)
+
+		self.WAVEFORM_TIMEOUT_ID = 0
+
+		self.w = 640
+		self.h = 480
+		#In milliseconds, the delay interval after which the waveform draw function will be queued"
+		self.refreshTime = 30
+		#Multiplied with width and height to set placement of text
+		self.TEXT_X_M = 0.55
+		self.TEXT_Y_M = 0.83
+
 
 		self.connect("expose_event", self.expose)
 		self.buffers = []
@@ -53,8 +56,8 @@ class DrawWaveform(gtk.DrawingArea):
 		self.pp=''
 		self.count=0
 
-		self.param1= WINDOW_H/65536.0
-		self.param2= WINDOW_H/2.0
+		self.param1= self.h/65536.0
+		self.param2= self.h/2.0
 
 		self.y_mag = 0.7
 		self.freq_range=50
@@ -81,12 +84,13 @@ class DrawWaveform(gtk.DrawingArea):
 
 
 	def startWaveformDraws( self ):
-		self.WAVEFORM_TIMEOUT_ID = gobject.timeout_add(REFRESH_TIME, self.waveform_refresh)
+		self.WAVEFORM_TIMEOUT_ID = gobject.timeout_add( self.refreshTime, self.waveformRefresh )
 
 
 	def stopWaveformDraws( self ):
-		#todo: remove the timeout here...
-		pass
+		if (self.WAVEFORM_TIMEOUT_ID != 0):
+			gobject.source_remove(self.WAVEFORM_TIMEOUT_ID)
+			self.WAVEFORM_TIMEOUT_ID = 0
 
 
 	def waveformRefresh( self ):
@@ -161,7 +165,7 @@ class DrawWaveform(gtk.DrawingArea):
 					self.fftx = fft(self.integer_buffer, 256,-1)
 
 					self.fftx=self.fftx[0:self.freq_range*2]
-					self.draw_interval = WINDOW_W/(self.freq_range*2)
+					self.draw_interval = self.w/(self.freq_range*2)
 
 					NumUniquePts = ceil((nfft+1)/2)
 					self.buffers=abs(self.fftx)*0.02
@@ -177,8 +181,8 @@ class DrawWaveform(gtk.DrawingArea):
 		for i in self.buffers:
 			temp_val_float = float(self.param1*i*self.y_mag) + self.y_mag_bias_multiplier * self.param2
 
-			if(temp_val_float >= WINDOW_H):
-				temp_val_float = WINDOW_H
+			if(temp_val_float >= self.h):
+				temp_val_float = self.h
 			if(temp_val_float<=0):
 				temp_val_float= 0
 			val.append( temp_val_float  )
@@ -200,7 +204,7 @@ class DrawWaveform(gtk.DrawingArea):
 
 		###########background#######################
 		self.context.set_source_rgb(0,0,0)
-		self.context.rectangle(0, 0, WINDOW_W, WINDOW_H)
+		self.context.rectangle(0, 0, self.w, self.h)
 		self.context.fill()
 		#############################################
 
@@ -213,7 +217,7 @@ class DrawWaveform(gtk.DrawingArea):
 		y=0
 		for j in range(1,22):
 			self.context.move_to(x,y)
-			self.context.rel_line_to(0, WINDOW_H)
+			self.context.rel_line_to(0, self.h)
 			x=x+50
 
 		self.context.set_line_width(1.0)
@@ -221,7 +225,7 @@ class DrawWaveform(gtk.DrawingArea):
 		y=0
 		for j in range(1,17):
 			self.context.move_to(x,y)
-			self.context.rel_line_to( WINDOW_W, 0 )
+			self.context.rel_line_to( self.w, 0 )
 			y=y+50
 
 
@@ -232,7 +236,7 @@ class DrawWaveform(gtk.DrawingArea):
 		############Draw the waveform##############
 		count = 0
 		for peak in self.peaks:
-			self.context.line_to(count, WINDOW_H - peak)
+			self.context.line_to(count, self.h - peak)
 			count=count + self.draw_interval
 		self.context.set_line_width(2.0)
 		self.context.set_source_rgb(0, 1, 0)
@@ -255,7 +259,7 @@ class DrawWaveform(gtk.DrawingArea):
 			layout = pango.Layout(self.pango_context)
 			layout.set_font_description(font_desc)
 
-			self.context.move_to((int)( TEXT_X_M* WINDOW_W), (int)( TEXT_Y_M* WINDOW_H))
+			self.context.move_to((int)( self.TEXT_X_M* self.w), (int)( self.TEXT_Y_M* self.h))
 			layout.set_text("RMS: "+ self.rms +"  AVG: "+ self.avg + "  PK-PK: " + self.pp)
 
 			self.context.set_source_rgb(0,0,1)
