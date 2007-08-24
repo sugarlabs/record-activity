@@ -256,7 +256,46 @@ class Model:
 			else:
 				self.stopRecordingVideo()
 		elif (self.MODE == self.MODE_AUDIO):
-			print( "start/stop recording audio")
+			if (not self.RECORDING):
+				self.startRecordingAudio()
+			else:
+				self.stopRecordingAudio()
+
+
+	def startRecordingAudio( self ):
+		print("start recording video")
+		self.setUpdating( True )
+		self.setRecording( True )
+
+
+
+	def stopRecordingAudio( self ):
+		print("stop recording audio")
+		self.setUpdating( True )
+
+		#todo: necc?
+		self.ca.ui.hideLiveWindows()
+		self.ca.ui.hidePlayWindows()
+
+		recd = self.createNewRecorded( self.TYPE_AUDIO )
+		oggPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
+		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
+
+		#todo: create something here...
+		thumbImg = self.generateThumbnail(pixbuf, float(.66875) )
+		thumbImg.write_to_png(thumbPath)
+
+		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
+		shutil.move(tempPath, oggPath)
+
+		#at this point, we have both video and thumb path, so we can save the recd
+		self.createNewRecordedMd5Sums( recd )
+
+		audioHash = self.mediaHashs[self.TYPE_AUDIO]
+		audioHash.append( recd )
+		self.thumbAdded( self.TYPE_AUDIO )
+
+		self.doPostSaveVideo()
 
 
 	def startRecordingVideo( self ):
@@ -566,6 +605,11 @@ class Model:
 		tctx.scale(scale, scale)
 		tctx.set_source_surface(img, 0, 0)
 		tctx.paint()
+		return thumbImg
+
+
+	def generateEmptyThumbnail( self ):
+		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.tw, self.ca.ui.th)
 		return thumbImg
 
 

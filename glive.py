@@ -98,6 +98,7 @@ class Glive:
 				bus.remove_signal_watch()
 				bus.disable_sync_message_emission()
 				if (self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
+					print("getting rid of an xv with " + n )
 					pipe.get_by_name("picFakesink_"+n).disconnect(self.HANDOFF_ID)
 			elif (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
 				pipe.get_by_name("audioFakesink_"+n).disconnect(self.AUDIOBUFFER_ID)
@@ -119,6 +120,8 @@ class Glive:
 			self.HANDOFF_ID = picFakesink.connect("handoff", self.copyPic)
 			picFakesink.set_property("signal-handoffs", True)
 			self.picExposureOpen = False
+
+			print("making an xv with " + n )
 
 			movieQueue = pipeline.get_by_name("movieQueue_"+n)
 			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
@@ -167,7 +170,7 @@ class Glive:
 			except:
 				pass
 
-		#todo: this should be checked with an attribute hash
+		#todo: this should be checked with an attribute library
 		if ((self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
 			bus = pipeline.get_bus()
 			bus.enable_sync_message_emission()
@@ -220,6 +223,16 @@ class Glive:
 				self.el("audioTee").link(self.el("audioWavenc"))
 
 		self.pipe().set_state(gst.STATE_PLAYING)
+
+
+	def startRecordingAudio(self):
+		self.pipe().set_state(gst.STATE_READY)
+		self.record = True
+		#todo: not really needed, is it :-)
+		self.audio = True
+		if (self.record):
+			self.el("audioTee").link(self.el("audioAudioconvert"))
+
 
 
 	def stopRecordingVideo(self):

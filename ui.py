@@ -290,10 +290,9 @@ class UI:
 		self.playMaxWindow = MaxWindow(self, False)
 		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
-		self.audioCanvas = DrawWaveform()
-		self.audioCanvas.w = self.vw
-		self.audioCanvas.h = self.vh
-		self.audioWindow = AudioWindow(self.audioCanvas)
+		self.audioCanvas = DrawWaveform( )
+		self.audioCanvas.setDimension( self.vw, self.vh )
+		self.audioWindow = AudioWindow(  self.audioCanvas )
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
 		self.audioControlWindow = AudioControlWindow(self)
@@ -632,12 +631,35 @@ class UI:
 		self.updateVideoComponents()
 
 
+
+	def recordAudio( self ):
+		#show the clock while this gets set up
+		self.hideLiveWindows()
+		self.hidePlayWindows()
+		self.hideAudioWindows()
+
+		self.stopPlayAudioToRecord()
+
+		self.ca.glive.startRecordingAudio()
+
+		#setting liveMode on in case we were listening to 8track earlier
+		self.liveMode = True
+		self.updateVideoComponents()
+
+
 	def stopPlayVideoToRecord( self ):
 		#if we're watching a movie...
 		if (not self.ca.ui.liveMode):
 			#stop the movie
 			self.ca.gplay.stop()
 			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+
+
+	def stopPlayAudioToRecord( self ):
+		#if we're watching a movie...
+		if (not self.ca.ui.liveMode):
+			#stop the movie
+			self.ca.gplay.stop()
 
 
 	def updateModeChange(self):

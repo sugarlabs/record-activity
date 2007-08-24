@@ -64,8 +64,8 @@ class DrawWaveform(gtk.DrawingArea):
 		self.draw_interval = 10
 		self.num_of_points = 6200
 
-		self.details_show = False
-		self.logging_status=False
+		self.details_show = True
+		self.logging_status = False
 
 		self.stop=False
 
@@ -75,12 +75,21 @@ class DrawWaveform(gtk.DrawingArea):
 		self.y_mag_bias_multiplier = 1	#constant to multiply with self.param2 while scaling values
 
 
+
 	def queueDisplayOfNewAudioBuffer( self, buf ):
 		self.str_buffer = buf
 		self.integer_buffer = list(unpack( str(int(len(buf))/2)+'h' , buf))
 		if(len(self.main_buffers)>=24600):
 			del self.main_buffers[0:(len(self.main_buffers)-12601)]
 		self.main_buffers += self.integer_buffer
+
+
+	def setDimensions( self, w, h ):
+		#todo: replace with a callback to SIZE_ALLOCATE
+		self.w = w
+		self.h = h
+		self.param1= self.h/65536.0
+		self.param2= self.h/2.0
 
 
 	def startWaveformDraws( self ):
@@ -203,7 +212,7 @@ class DrawWaveform(gtk.DrawingArea):
 		#self.context.paint()
 
 		###########background#######################
-		self.context.set_source_rgb(0,0,0)
+		self.context.set_source_rgb( 0, 0, 0 )
 		self.context.rectangle(0, 0, self.w, self.h)
 		self.context.fill()
 		#############################################
