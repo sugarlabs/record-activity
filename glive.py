@@ -140,10 +140,18 @@ class Glive:
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			pipeline = gst.parse_launch("alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! audioconvert name=audioAudioConvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
+			pipeline = gst.parse_launch("alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! audioconvert name=audioAudioconvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
 			audioFakesink = pipeline.get_by_name("audioFakesink_"+n)
 			self.AUDIOBUFFER_ID = audioFakesink.connect( "handoff", self._audioBufferCb)
-			audioFakesink.set_property("signal-handoffs",True)
+			audioFakesink.set_property("signal-handoffs", True)
+
+			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
+			audioFilepath = os.path.join(self.ca.tempPath, "output_"+n+".wav")
+			audioFilesink.set_property("location", audioFilepath )
+
+			audioTee = pipeline.get_by_name('audioTee_'+n)
+			audioAudioconvert = pipeline.get_by_name('audioAudioconvert_'+n)
+			audioTee.unlink(audioAudioconvert)
 
 		elif (self._PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
 			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
@@ -170,6 +178,7 @@ class Glive:
 
 
 	def _audioBufferCb(self, element, buffer, pad):
+		print("_abcb")
 		gobject.timeout_add( 30, self._audioBufferNew, str(buffer) )
 		return True
 
