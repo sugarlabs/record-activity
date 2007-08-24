@@ -167,12 +167,14 @@ class Glive:
 
 
 	def _audioBufferCb(self, element, buffer, pad):
-		gobject.timeout_add(30, self._audioBufferNew, str(buffer) )
+		gobject.timeout_add( 30, self._audioBufferNew, str(buffer) )
 		return True
 
 	def _audioBufferNew( self, bufferString ):
-		self.emit("new-buffer", bufferString, self.draw_graph_status, self.f)
+		#self.emit("new-buffer", bufferString, self.draw_graph_status )
+		self.ca.ui.audioCanvas.queueDisplayOfNewAudioBuffer( bufferString )
 		return False
+
 
 	def takePhoto(self):
 		if not(self.picExposureOpen):

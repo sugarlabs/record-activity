@@ -21,11 +21,23 @@ import audioop
 from Numeric import *
 from FFT import *
 
-class DrawWaveform(gtk.DrawingArea):
-	def __init__(self, grabber):
+#Waveform drawing area dimensions
+WINDOW_W=1050.0
+WINDOW_H=800.0
 
+#In milliseconds, the delay interval after which the waveform draw function will be queued"
+REFRESH_TIME = 30
+
+#Multiplied with width and height to set placement of text
+TEXT_X_M = 0.55
+TEXT_Y_M = 0.83
+
+
+class DrawWaveform(gtk.DrawingArea):
+	def __init__(self):
 		gtk.DrawingArea.__init__(self)
-		self.connect("expose_event",self.expose)
+
+		self.connect("expose_event", self.expose)
 		self.buffers = []
 		self.str_buffer=''
 		self.buffers_temp=[]
@@ -49,14 +61,8 @@ class DrawWaveform(gtk.DrawingArea):
 		self.draw_interval = 10
 		self.num_of_points = 6200
 
-		#self.overlay_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,1200,800)
-		#self.overlay_context = cairo.Context(self.overlay_surface)
-		#self.overlay_surface = cairo.ImageSurface.create_from_png("/home/olpc/Desktop/Screenshot.png")
-		#self.overlay_context.save() # save as blank!
-
 		self.details_show = False
 		self.logging_status=False
-		self.f=None
 
 		self.stop=False
 
@@ -66,16 +72,26 @@ class DrawWaveform(gtk.DrawingArea):
 		self.y_mag_bias_multiplier = 1	#constant to multiply with self.param2 while scaling values
 
 
-	def _new_buffer(self, obj, buf, status, f):
+	def queueDisplayOfNewAudioBuffer( self, buf ):
 		self.str_buffer = buf
 		self.integer_buffer = list(unpack( str(int(len(buf))/2)+'h' , buf))
 		if(len(self.main_buffers)>=24600):
 			del self.main_buffers[0:(len(self.main_buffers)-12601)]
 		self.main_buffers += self.integer_buffer
-		self.logging_status=status
-		self.f=f
-		return True
 
+
+	def startWaveformDraws( self ):
+		self.WAVEFORM_TIMEOUT_ID = gobject.timeout_add(config.REFRESH_TIME, self.waveform_refresh)
+
+
+	def stopWaveformDraws( self ):
+		#todo: remove the timeout here...
+		pass
+
+
+	def waveformRefresh( self ):
+		self.queue_draw()
+		return True
 
 	#######################################################################
 	# This function is the "expose" event handler and does all the drawing
@@ -151,16 +167,6 @@ class DrawWaveform(gtk.DrawingArea):
 					self.buffers=abs(self.fftx)*0.02
 					self.y_mag_bias_multiplier=0.1
 					##################################
-
-		###########################drawing from a file#################################
-		else:
-			if(self.f.closed==False):
-				self.buffers = []
-				for line in self.f.readlines():
-					self.buffers.append(float(line))
-				self.f.close()
-		################################################################################
-
 
 		if(len(self.buffers)==0):
 			return False
@@ -257,10 +263,4 @@ class DrawWaveform(gtk.DrawingArea):
 		############################################
 
 		return True
-
-
-	#A very approximate smoothing algorithm
-	def __smooth(self, l):
-		return rl
-
 

@@ -56,6 +56,7 @@ from p5_button import Polygon
 from p5_button import Button
 from glive import LiveVideoWindow
 from gplay import PlayVideoWindow
+from drawWaveform import DrawWaveform
 
 #for debug testing
 from recorded import Recorded
@@ -289,7 +290,8 @@ class UI:
 		self.playMaxWindow = MaxWindow(self, False)
 		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
-		self.audioWindow = AudioWindow(self)
+		self.audioCanvas = DrawingArea()
+		self.audioWindow = AudioWindow(self, self.audioCanvas)
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
 		self.audioControlWindow = AudioControlWindow(self)
@@ -1458,19 +1460,19 @@ class ThumbnailButton(gtk.Button):
 
 
 class AudioWindow(gtk.Window):
-	def __init__(self, ui):
+	def __init__( self, audioCanvas ):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.audCanvas = AudioCanvas(self.ui)
-		self.add( self.audCanvas )
+		self.audioCanvas = audioCanvas
+		self.add( audioCanvas )
 
-class AudioCanvas(P5):
-	def __init__(self, ui):
-		P5.__init__(self)
-		self.ui = ui
+#class AudioCanvas(P5):
+#	def __init__(self, ui):
+#		P5.__init__(self)
+#		self.ui = ui
 
-	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorBlue, w, h )
+#	def draw(self, ctx, w, h):
+#		self.background( ctx, self.ui.colorBlue, w, h )
 
 
 class AudioControlWindow(gtk.Window):
