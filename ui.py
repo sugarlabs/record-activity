@@ -290,8 +290,8 @@ class UI:
 		self.playMaxWindow = MaxWindow(self, False)
 		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
-		self.audioCanvas = DrawingArea()
-		self.audioWindow = AudioWindow(self, self.audioCanvas)
+		self.audioCanvas = DrawWaveform()
+		self.audioWindow = AudioWindow(self.audioCanvas)
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
 		self.audioControlWindow = AudioControlWindow(self)
@@ -915,7 +915,9 @@ class UI:
 
 
 	def startLiveAudio( self ):
-		print("starting live audio")
+		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
+		self.ca.glive.stop()
+		self.ca.glive.play()
 
 
 	def updateShownPhoto( self, recd ):
@@ -1462,7 +1464,6 @@ class ThumbnailButton(gtk.Button):
 class AudioWindow(gtk.Window):
 	def __init__( self, audioCanvas ):
 		gtk.Window.__init__(self)
-		self.ui = ui
 		self.audioCanvas = audioCanvas
 		self.add( audioCanvas )
 

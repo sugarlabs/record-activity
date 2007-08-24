@@ -43,7 +43,7 @@ class Glive:
 		self.PIPETYPE_X_VIDEO_DISPLAY = 1
 		self.PIPETYPE_AUDIO_RECORD = 2
 		self._PIPETYPE = self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
-		self._LAST_PIPETYPE = self.PIPETYPE
+		self._LAST_PIPETYPE = self._PIPETYPE
 		#todo: create a dictionary here of what pipetypes have, e.g., "v4l2", "video", etc.
 		#self.xv = True
 
@@ -52,11 +52,11 @@ class Glive:
 		self.nextPipe()
 
 	def setPipeType( self, type ):
-		self.LAST_PIPETYPE = self.PIPETYPE
-		self.PIPETYPE = type
+		self._LAST_PIPETYPE = self._PIPETYPE
+		self._PIPETYPE = type
 
 	def getPipeType( self ):
-		return self.PIPETYPE
+		return self._PIPETYPE
 
 	def pipe(self):
 		return self.pipes[ len(self.pipes)-1 ]
@@ -88,22 +88,25 @@ class Glive:
 	def nextPipe(self):
 		if ( len(self.pipes) > 0 ):
 			#todo: only disconnect what was connected based on the last pipetype
-			bus = self.pipe().get_bus()
+			pipe = self.pipe()
+			bus = pipe.get_bus()
+			n = len(self.pipes)-1
+			n = str(n)
 
-			if ((self.LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self.LAST_PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
+			if ((self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self._LAST_PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
 				bus.disconnect(self.SYNC_ID)
 				bus.remove_signal_watch()
 				bus.disable_sync_message_emission()
-				if (self.LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
-					self.pipe().get_by_name("picFakesink_"+n).disconnect(self.HANDOFF_ID)
-			elif (self.LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-				self.pipe().get_by_name("audioFakesink_"+n).disconnect(self.AUDIOBUFFER_ID)
+				if (self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
+					pipe.get_by_name("picFakesink_"+n).disconnect(self.HANDOFF_ID)
+			elif (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+				pipe.get_by_name("audioFakesink_"+n).disconnect(self.AUDIOBUFFER_ID)
 
 		n = str(len(self.pipes))
 
 
 		v4l2 = False
-		if (self.PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
+		if (self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
 			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
 			v4l2 = True
 
@@ -132,17 +135,17 @@ class Glive:
 			videoTee.unlink(movieQueue)
 			videoTee.unlink(picQueue)
 
-		elif (self.PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
+		elif (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
 			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 			v4l2 = True
 
-		elif (self.PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			pipeline = gst.parse_launch("alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
+		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+			pipeline = gst.parse_launch("alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! audioconvert name=audioAudioConvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
 			audioFakesink = pipeline.get_by_name("audioFakesink_"+n)
 			self.AUDIOBUFFER_ID = audioFakesink.connect( "handoff", self._audioBufferCb)
 			audioFakesink.set_property("signal-handoffs",True)
 
-		elif (self.PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
+		elif (self._PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
 			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 
 		if (pipeline == None):
@@ -157,7 +160,7 @@ class Glive:
 				pass
 
 		#todo: this should be checked with an attribute hash
-		if ((self.PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self.PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
+		if ((self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
 			bus = pipeline.get_bus()
 			bus.enable_sync_message_emission()
 			bus.add_signal_watch()
@@ -324,7 +327,7 @@ class Glive:
 
 
 	def isXv(self):
-		return self.PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
+		return self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
 
 
 class LiveVideoWindow(gtk.Window):

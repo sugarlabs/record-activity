@@ -14,7 +14,7 @@ import pango
 
 import os
 
-import config  	#This has all the globals
+#import config  	#This has all the globals
 
 import audioop
 
@@ -53,8 +53,8 @@ class DrawWaveform(gtk.DrawingArea):
 		self.pp=''
 		self.count=0
 
-		self.param1= config.WINDOW_H/65536.0
-		self.param2= config.WINDOW_H/2.0
+		self.param1= WINDOW_H/65536.0
+		self.param2= WINDOW_H/2.0
 
 		self.y_mag = 0.7
 		self.freq_range=50
@@ -81,7 +81,7 @@ class DrawWaveform(gtk.DrawingArea):
 
 
 	def startWaveformDraws( self ):
-		self.WAVEFORM_TIMEOUT_ID = gobject.timeout_add(config.REFRESH_TIME, self.waveform_refresh)
+		self.WAVEFORM_TIMEOUT_ID = gobject.timeout_add(REFRESH_TIME, self.waveform_refresh)
 
 
 	def stopWaveformDraws( self ):
@@ -161,7 +161,7 @@ class DrawWaveform(gtk.DrawingArea):
 					self.fftx = fft(self.integer_buffer, 256,-1)
 
 					self.fftx=self.fftx[0:self.freq_range*2]
-					self.draw_interval=config.WINDOW_W/(self.freq_range*2)
+					self.draw_interval = WINDOW_W/(self.freq_range*2)
 
 					NumUniquePts = ceil((nfft+1)/2)
 					self.buffers=abs(self.fftx)*0.02
@@ -177,8 +177,8 @@ class DrawWaveform(gtk.DrawingArea):
 		for i in self.buffers:
 			temp_val_float = float(self.param1*i*self.y_mag) + self.y_mag_bias_multiplier * self.param2
 
-			if(temp_val_float>=config.WINDOW_H):
-				temp_val_float= config.WINDOW_H
+			if(temp_val_float >= WINDOW_H):
+				temp_val_float = WINDOW_H
 			if(temp_val_float<=0):
 				temp_val_float= 0
 			val.append( temp_val_float  )
@@ -200,7 +200,7 @@ class DrawWaveform(gtk.DrawingArea):
 
 		###########background#######################
 		self.context.set_source_rgb(0,0,0)
-		self.context.rectangle(0,0,config.WINDOW_W ,config.WINDOW_H)
+		self.context.rectangle(0, 0, WINDOW_W, WINDOW_H)
 		self.context.fill()
 		#############################################
 
@@ -213,7 +213,7 @@ class DrawWaveform(gtk.DrawingArea):
 		y=0
 		for j in range(1,22):
 			self.context.move_to(x,y)
-			self.context.rel_line_to(0,config.WINDOW_H)
+			self.context.rel_line_to(0, WINDOW_H)
 			x=x+50
 
 		self.context.set_line_width(1.0)
@@ -221,7 +221,7 @@ class DrawWaveform(gtk.DrawingArea):
 		y=0
 		for j in range(1,17):
 			self.context.move_to(x,y)
-			self.context.rel_line_to(config.WINDOW_W,0)
+			self.context.rel_line_to( WINDOW_W, 0 )
 			y=y+50
 
 
@@ -232,7 +232,7 @@ class DrawWaveform(gtk.DrawingArea):
 		############Draw the waveform##############
 		count = 0
 		for peak in self.peaks:
-			self.context.line_to(count,config.WINDOW_H - peak)
+			self.context.line_to(count, WINDOW_H - peak)
 			count=count + self.draw_interval
 		self.context.set_line_width(2.0)
 		self.context.set_source_rgb(0, 1, 0)
@@ -255,7 +255,7 @@ class DrawWaveform(gtk.DrawingArea):
 			layout = pango.Layout(self.pango_context)
 			layout.set_font_description(font_desc)
 
-			self.context.move_to((int)(config.TEXT_X_M*config.WINDOW_W), (int)(config.TEXT_Y_M*config.WINDOW_H))
+			self.context.move_to((int)( TEXT_X_M* WINDOW_W), (int)( TEXT_Y_M* WINDOW_H))
 			layout.set_text("RMS: "+ self.rms +"  AVG: "+ self.avg + "  PK-PK: " + self.pp)
 
 			self.context.set_source_rgb(0,0,1)
