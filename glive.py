@@ -98,7 +98,6 @@ class Glive:
 				bus.remove_signal_watch()
 				bus.disable_sync_message_emission()
 				if (self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
-					print("getting rid of an xv with " + n )
 					pipe.get_by_name("picFakesink_"+n).disconnect(self.HANDOFF_ID)
 			elif (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
 				pipe.get_by_name("audioFakesink_"+n).disconnect(self.AUDIOBUFFER_ID)
@@ -234,6 +233,11 @@ class Glive:
 			self.el("audioTee").link(self.el("audioAudioconvert"))
 
 
+	def stopAudioHandoffs( self ):
+		#todo: do this when switching pipelines too!
+		if self._PIPE_TYPE == self.PIPE_TYPE_AUDIO_RECORD:
+			thumbFakesink = self.el( "thumbFakesink_"+n )
+			thumbFakesink.set_property( "signal-handoffs", False )
 
 	def stopRecordingVideo(self):
 		#sometimes we hang here because we're trying to open an empty file or nonexistant file

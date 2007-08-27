@@ -190,6 +190,7 @@ class RecordActivity(activity.Activity):
 		self.ui.hideLiveWindows()
 		self.ui.hidePlayWindows()
 		self.gplay.stop()
+		self.glive.stopAudioHandoffs()
 		self.glive.stop()
 
 
