@@ -46,7 +46,6 @@ class Glive:
 		self._LAST_PIPETYPE = self._PIPETYPE
 		self._NEXT_PIPETYPE = -1
 		#todo: create a dictionary here of what pipetypes have, e.g., "v4l2", "video", etc.
-		#self.xv = True
 
 		self.thumbPipes = []
 		self.muxPipes = []

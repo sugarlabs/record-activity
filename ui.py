@@ -163,21 +163,10 @@ class UI:
 
 		self.tagsBuffer = gtk.TextBuffer()
 		self.tagsField = gtk.TextView( self.tagsBuffer )
-		#self.tagsField.set_sensitive(False)
 		self.tagsPanel.pack_start( self.tagsField, expand=True )
 
 		infoBox.pack_start( self.tagsPanel, expand=True)
 
-
-#		#video, scrubber etc on right
-#		videoBox = gtk.VBox()
-#		videoBox.set_size_request(self.vw, -1)
-#		topBox.pack_start(videoBox, expand=False)
-#		self.backgdCanvas = BackgroundCanvas(self)
-#		self.backgdCanvas.set_size_request(self.vw, self.vh)
-#		videoBox.pack_start(self.backgdCanvas, expand=False)
-#		self.videoScrubPanel = gtk.EventBox()
-#		videoBox.pack_end(self.videoScrubPanel, expand=True)
 
 		backgdCanvasBox = gtk.VBox()
 		backgdCanvasBox.set_size_request(self.vw, -1)
@@ -261,8 +250,9 @@ class UI:
 		self.livePhotoCanvas = PhotoCanvas(self)
 		self.livePhotoWindow.setPhotoCanvas(self.livePhotoCanvas)
 
-		self.livePipBgdWindow = PipWindow(self)
-		self.addToWindowStack( self.livePipBgdWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+		#border behind 
+		self.pipBgdWindow = PipWindow(self)
+		self.addToWindowStack( self.pipBgdWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
 		self.liveVideoWindow = LiveVideoWindow()
 		self.addToWindowStack( self.liveVideoWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
@@ -270,25 +260,15 @@ class UI:
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
 
-		self.liveMaxWindow = MaxWindow(self, True)
-		self.addToWindowStack( self.liveMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
-
 		#video playback windows
 		self.playOggWindow = PlayVideoWindow()
 		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 		self.playOggWindow.set_gplay(self.ca.gplay)
 
-		#pipbackground here
-		self.playLivePipBgdWindow = PipWindow(self)
-		self.addToWindowStack( self.playLivePipBgdWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
-
 		self.playLiveWindow = LiveVideoWindow()
 		self.addToWindowStack( self.playLiveWindow, self.pipw, self.piph, self.windowStack[len(self.windowStack)-1] )
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
-
-		self.playMaxWindow = MaxWindow(self, False)
-		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.audioCanvas = DrawWaveform( )
 		#todo: just connect a listener to set these variables...
@@ -296,12 +276,18 @@ class UI:
 		self.audioWindow = AudioWindow(  self.audioCanvas )
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
-		self.audioControlWindow = AudioControlWindow( self )
-		self.addToWindowStack( self.audioControlWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+		self.audioMiniCanvas = DrawWaveform( )
+		self.audioMiniCanvas.setDimensions( self.pipw, self.piph )
+		self.audioMiniCanvas.connect("button_release_event", self._audioButtonReleaseCb)
+		self.audioMiniWindow = gtk.Window()
+		self.audioMiniWindow.add( self.audioMiniCanvas )
+		self.addToWindowStack( self.audioMiniWindow, self.pipw, self.piph, self.windowStack[len(self.windowStack)-1] )
 
 		self.recordWindow = RecordWindow(self)
 		self.addToWindowStack( self.recordWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
+		self.maxWindow = MaxWindow(self )
+		self.addToWindowStack( self.maxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.hideLiveWindows()
 		self.hidePlayWindows()
@@ -373,6 +359,10 @@ class UI:
 		self.mx = x
 		self.my = y
 		return True
+
+
+	def _audioButtonReleaseCb( self, widget ):
+		print( "audioButton pressed, y'all" )
 
 
 	def _nameTextfieldEditedCb(self, widget):
@@ -568,30 +558,30 @@ class UI:
 		if (self.ca.m.RECORDING):
 			#todo: change on mode
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
-			self.audioControlWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
 		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
-			self.audioControlWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
 	def hideLiveWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
-		self.moveWinOffscreen( self.livePipBgdWindow )
+		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.liveVideoWindow )
-		self.moveWinOffscreen( self.liveMaxWindow )
+		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
 
 
 	def hidePlayWindows( self ):
 		self.moveWinOffscreen( self.playOggWindow )
-		self.moveWinOffscreen( self.playLivePipBgdWindow )
+		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.playLiveWindow )
-		self.moveWinOffscreen( self.playMaxWindow )
+		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
 
 
 	def hideAudioWindows( self ):
 		self.moveWinOffscreen( self.audioWindow )
-		self.moveWinOffscreen( self.audioControlWindow )
+		self.moveWinOffscreen( self.audioMiniWindow )
+		self.moveWinOffscreen( self.recordWindow )
+
 
 
 	def liveButtonReleaseCb(self, widget, event):
@@ -819,48 +809,48 @@ class UI:
 
 	def updateVideoComponents( self ):
 
-		#todo: working with dcbw on solution for this one... avoiding video flicker when switching modes
+		#todo: working with dcbw on solution for this one... avoiding video flicker when switching modes, #3046
 #		for i in range (0, len(self.windowStack)):
 #			self.windowStack[i].hide()
 
 		#todo: only one max window needed, really, as is only one pipBgdWindow
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (self.liveMode):
-				self.moveWinOffscreen( self.livePipBgdWindow )
+				self.moveWinOffscreen( self.pipBgdWindow )
 
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setImgLocDim( self.liveVideoWindow )
-				self.setMaxLocDim( self.liveMaxWindow )
+				self.setMaxLocDim( self.maxWindow )
 				self.setPipBgdLocDim( self.recordWindow )
 			else:
 				self.moveWinOffscreen( self.recordWindow )
 
 				self.setImgLocDim( self.livePhotoWindow )
-				self.setPipBgdLocDim( self.livePipBgdWindow )
+				self.setPipBgdLocDim( self.pipBgdWindow )
 				self.setPipLocDim( self.liveVideoWindow )
-				self.setMaxLocDim( self.liveMaxWindow )
+				self.setMaxLocDim( self.maxWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.playOggWindow )
-				self.moveWinOffscreen( self.playLivePipBgdWindow )
+				self.moveWinOffscreen( self.pipBgdWindow )
 
 				self.setImgLocDim( self.playLiveWindow )
-				self.setMaxLocDim( self.playMaxWindow )
+				self.setMaxLocDim( self.maxWindow )
 				self.setPipBgdLocDim( self.recordWindow )
 			else:
 				self.moveWinOffscreen( self.recordWindow )
 
 				self.setImgLocDim( self.playOggWindow )
-				self.setMaxLocDim( self.playMaxWindow )
-				self.setPipBgdLocDim( self.playLivePipBgdWindow )
+				self.setMaxLocDim( self.maxWindow )
+				self.setPipBgdLocDim( self.pipBgdWindow )
 				self.setPipLocDim( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (self.liveMode):
 				self.setImgLocDim( self.audioWindow )
-				self.setPipBgdLocDim( self.audioControlWindow )
+				self.setPipBgdLocDim( self.recordWindow )
 			else:
 				self.setImgLocDim( self.audioWindow )
-				self.setPipBgdLocDim( self.audioControlWindow )
+				self.setPipBgdLocDim( self.recordWindow )
 
 #		for i in range (0, len(self.windowStack)):
 #			self.windowStack[i].realize()
@@ -1167,17 +1157,16 @@ class PipCanvas(P5):
 
 
 class MaxWindow(gtk.Window):
-	def __init__(self, ui, play):
+	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.maxButton = MaxButton(self.ui, play)
+		self.maxButton = MaxButton(self.ui)
 		self.add( self.maxButton )
 
 class MaxButton(P5Button):
-	def __init__(self, ui, play):
+	def __init__(self, ui):
 		P5Button.__init__(self)
 		self.ui = ui
-		self.play = play
 		xs = []
 		ys = []
 		xs.append(0)
@@ -1492,26 +1481,6 @@ class AudioWindow(gtk.Window):
 		self.add( audioCanvas )
 
 
-class AudioControlWindow(gtk.Window):
-	def __init__(self, ui):
-		gtk.Window.__init__(self)
-		self.ui = ui
-		self.shutterButton = gtk.Button()
-		self.add( self.shutterButton )
-		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
-		#self.audCanvas = AudioControlCanvas(self.ui)
-		#self.add( self.audCanvas )
-
-
-class AudioControlCanvas(P5):
-	def __init__(self, ui):
-		P5.__init__(self)
-		self.ui = ui
-
-
-	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorGreen, w, h )
-
 
 class RecordWindow(gtk.Window):
 	def __init__(self,ui):
@@ -1519,6 +1488,7 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
+		#todo: make a method to change between eyes and lips
 		self.shutterButton.set_image( self.ui.shutterImg )
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		#todo: this is insensitive until we're all set up
