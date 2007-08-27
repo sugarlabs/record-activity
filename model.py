@@ -263,13 +263,21 @@ class Model:
 
 
 	def startRecordingAudio( self ):
-		print("start recording video")
+		print("start recording audio")
 		self.setUpdating( True )
 		self.setRecording( True )
-
+		self.ca.glive.startRecordingAudio( )
+		self.setUpdating( False )
 
 
 	def stopRecordingAudio( self ):
+		self.setUpdating( True )
+		self.ca.glive.stopRecordingAudio( )
+		self.setRecording( False )
+		self.ca.glive.stop
+
+
+	def saveAudio( self, tempPath ):
 		print("stop recording audio")
 		self.setUpdating( True )
 
@@ -282,7 +290,7 @@ class Model:
 		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
 
 		#todo: create something here...
-		thumbImg = self.generateThumbnail(pixbuf, float(.66875) )
+		thumbImg = self.generateEmptyThumbnail( )
 		thumbImg.write_to_png(thumbPath)
 
 		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
@@ -365,6 +373,7 @@ class Model:
 			self.ca.glive.play()
 
 		self.setRecording( False )
+		self.setUpdating( False )
 
 
 	def stoppedRecordingVideo( self ):

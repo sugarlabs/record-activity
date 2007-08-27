@@ -566,10 +566,12 @@ class UI:
 			self.ca.ui.setDefaultCursor( )
 
 		if (self.ca.m.RECORDING):
+			#todo: change on mode
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+			self.audioControlWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
 		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
-
+			self.audioControlWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
 	def hideLiveWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
@@ -914,12 +916,10 @@ class UI:
 	def showAudio( self, recd ):
 		print("show audio recd")
 
+
 	def deleteThumbSelection( self, recd ):
-		print("deleteThumbSelection 1")
 		self.ca.m.deleteRecorded( recd, self.startThumb )
-		print("deleteThumbSelection 2")
 		self.removeIfSelectedRecorded( recd )
-		print("deleteThumbSelection 3")
 
 
 	def removeIfSelectedRecorded( self, recd ):
@@ -1496,14 +1496,18 @@ class AudioControlWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.audCanvas = AudioControlCanvas(self.ui)
-		self.add( self.audCanvas )
+		self.shutterButton = gtk.Button()
+		self.add( self.shutterButton )
+		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
+		#self.audCanvas = AudioControlCanvas(self.ui)
+		#self.add( self.audCanvas )
 
 
 class AudioControlCanvas(P5):
 	def __init__(self, ui):
 		P5.__init__(self)
 		self.ui = ui
+
 
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorGreen, w, h )
