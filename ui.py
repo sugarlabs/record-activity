@@ -291,11 +291,12 @@ class UI:
 		self.addToWindowStack( self.playMaxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.audioCanvas = DrawWaveform( )
-		self.audioCanvas.setDimension( self.vw, self.vh )
+		#todo: just connect a listener to set these variables...
+		self.audioCanvas.setDimensions( self.vw, self.vh )
 		self.audioWindow = AudioWindow(  self.audioCanvas )
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
-		self.audioControlWindow = AudioControlWindow(self)
+		self.audioControlWindow = AudioControlWindow( self )
 		self.addToWindowStack( self.audioControlWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
 		self.recordWindow = RecordWindow(self)
@@ -1386,16 +1387,11 @@ class ThumbnailButton(gtk.Button):
 
 
 	def _buttonClickCb(self, args ):
-		print("buttonClickCb 1")
 		if (self.tc.recd == None):
-			print("buttonClickCb 2")
 			return
 		if (not self.props.sensitive):
-			print("buttonClickCb 3")
 			return
-		print("buttonClickCb 4")
 		self.ui.showThumbSelection( self.tc.recd )
-		print("buttonClickCb 5")
 
 
 	def _exposeEventCb(self, widget, event):
@@ -1495,14 +1491,6 @@ class AudioWindow(gtk.Window):
 		self.audioCanvas = audioCanvas
 		self.add( audioCanvas )
 
-#class AudioCanvas(P5):
-#	def __init__(self, ui):
-#		P5.__init__(self)
-#		self.ui = ui
-
-#	def draw(self, ctx, w, h):
-#		self.background( ctx, self.ui.colorBlue, w, h )
-
 
 class AudioControlWindow(gtk.Window):
 	def __init__(self, ui):
@@ -1511,6 +1499,7 @@ class AudioControlWindow(gtk.Window):
 		self.audCanvas = AudioControlCanvas(self.ui)
 		self.add( self.audCanvas )
 
+
 class AudioControlCanvas(P5):
 	def __init__(self, ui):
 		P5.__init__(self)
@@ -1518,6 +1507,7 @@ class AudioControlCanvas(P5):
 
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorGreen, w, h )
+
 
 class RecordWindow(gtk.Window):
 	def __init__(self,ui):

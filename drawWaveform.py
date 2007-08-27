@@ -22,9 +22,6 @@ from Numeric import *
 from FFT import *
 
 
-
-
-
 class DrawWaveform(gtk.DrawingArea):
 	def __init__(self):
 		gtk.DrawingArea.__init__(self)

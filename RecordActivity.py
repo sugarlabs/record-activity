@@ -187,9 +187,12 @@ class RecordActivity(activity.Activity):
 		print("close")
 		self.m.UPDATING = False
 		self.ui.updateButtonSensitivities( )
+		#todo: stop the mouse listener i suppose
 		self.ui.hideLiveWindows()
 		self.ui.hidePlayWindows()
+		self.ui.audioCanvas.stopWaveformDraws()
 		self.gplay.stop()
+		self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
 		self.glive.stopAudioHandoffs()
 		self.glive.stop()
 

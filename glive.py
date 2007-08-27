@@ -92,6 +92,7 @@ class Glive:
 			bus = pipe.get_bus()
 			n = len(self.pipes)-1
 			n = str(n)
+			print("removing n:", n)
 
 			if ((self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self._LAST_PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
 				bus.disconnect(self.SYNC_ID)
@@ -103,8 +104,7 @@ class Glive:
 				pipe.get_by_name("audioFakesink_"+n).disconnect(self.AUDIOBUFFER_ID)
 
 		n = str(len(self.pipes))
-
-
+		print("next n:", n )
 		v4l2 = False
 		if (self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
 			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
@@ -138,10 +138,14 @@ class Glive:
 			videoTee.unlink(picQueue)
 
 		elif (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
+			print("making an x with " + n )
+
 			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+			print("making an audio with " + n )
+
 			pipeline = gst.parse_launch("alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! audioconvert name=audioAudioconvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
 			audioFakesink = pipeline.get_by_name("audioFakesink_"+n)
 			self.AUDIOBUFFER_ID = audioFakesink.connect( "handoff", self._audioBufferCb)
@@ -235,8 +239,8 @@ class Glive:
 
 	def stopAudioHandoffs( self ):
 		#todo: do this when switching pipelines too!
-		if self._PIPE_TYPE == self.PIPE_TYPE_AUDIO_RECORD:
-			thumbFakesink = self.el( "thumbFakesink_"+n )
+		if self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD:
+			thumbFakesink = self.el( "audioFakesink" )
 			thumbFakesink.set_property( "signal-handoffs", False )
 
 	def stopRecordingVideo(self):

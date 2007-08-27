@@ -11,10 +11,20 @@
 * all widgets insensitive when shuttingdown and writing to journal (jedierikb)
 * better pipeline to window switching (jedierikb)
 * workaround for #2299 --> matches on buddy nicks to confirm mesh downloads (jedierikb, dcbw)
+* audio record & playback (jedierikb)
+* audio record visualization (anwar)
+~ drag and drop of all media types for all media (jedierikb, tomeu)
+~ graphic overlay windows fade away when not used to reveal photo, revealed with mouse movement (jedierikb)
+
+* bugs:
+** can't reconnect to a shared mesh instance (#xxxx)
+** missing final grapics (#xxxx)
+** graphic flashes on the reshuffling of video windows (#xxxx)
+** xv video resizes incorrectly occasionally (#xxxx)
+
+
 ~ take photos, switch modes with game buttons
 ~ progress bars for mesh downloads (jedierikb, dcbw)
-~ audio record & playback (jedierikb)
-~ audio record visualization (anwar)
 ~ limited record time for audio and video (~2 minutes)
 
 
