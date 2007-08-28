@@ -307,6 +307,7 @@ class UI:
 		self.ca.connect('key-press-event', self._keyPressEventCb)
 
 		#overlay widgets can go away after they've been on screen for a while
+		self.HIDE_WIDGET_TIMEOUT_ID = 0
 		self.hiddenWidgets = False
 		self.resetWidgetFadeTimer()
 
@@ -782,7 +783,7 @@ class UI:
 
 
 	def shutterClickCb( self, arg ):
-		if ( (self.m.MODE == self.m.MODE_AUDIO) and (not self.liveMode) ):
+		if ( (self.ca.m.MODE == self.ca.m.MODE_AUDIO) and (not self.liveMode) ):
 			self.liveMode = not self.liveMode
 			self.startLiveAudio()
 		else:

@@ -38,6 +38,10 @@ from mesh import HttpServer
 from glive import Glive
 from gplay import Gplay
 
+import xml.dom.minidom
+from xml.dom.minidom import getDOMImplementation
+from xml.dom.minidom import parse
+
 class RecordActivity(activity.Activity):
 
 	def __init__(self, handle):
