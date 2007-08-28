@@ -448,7 +448,7 @@ class UI:
 			print("gamekey SQUARE")
 
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
-			if (not self.shownRecd == None):
+			if (self.shownRecd != None):
 				if (self.shownRecd.isClipboardCopyable( )):
 					tempImgPath = self.doClipboardCopyStart( self.shownRecd )
 					gtk.Clipboard().set_with_data( [('text/uri-list', 0, 0)], self._clipboardGetFuncCb, self._clipboardClearFuncCb, tempImgPath )
@@ -462,7 +462,8 @@ class UI:
 		#todo: truly unique filenames for temp... #and check they're not taken..
 		tempImgPath = os.path.join("tmp", recd.mediaFilename)
 		tempImgPath = os.path.abspath(tempImgPath)
-		shutil.copyfile(imgPath_s, tempImgPath)
+		print( imgPath_s, " -- ", tempImgPath )
+		shutil.copyfile( imgPath_s, tempImgPath )
 		return tempImgPath
 
 

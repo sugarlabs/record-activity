@@ -104,7 +104,7 @@ class DrawWaveform(gtk.DrawingArea):
 
 
 	def waveformRefresh( self ):
-		self.queue_draw()
+		#self.queue_draw()
 		return True
 
 

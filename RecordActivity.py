@@ -414,4 +414,4 @@ class RecordActivity(activity.Activity):
 			if (os.path.exists(self.journalPath)):
 				shutil.rmtree( self.journalPath )
 
-			activity.Activity.destroy()
+			activity.Activity.destroy( self )

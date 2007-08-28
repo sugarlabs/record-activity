@@ -463,10 +463,16 @@ class Model:
 		mediaFilename = mediaThumbFilename
 
 		recd.type = type
+		titleStarter = ""
 		if (type == self.TYPE_PHOTO):
 			mediaFilename = mediaFilename + ".jpg"
+			titleStarter = "Photo"
 		if (type == self.TYPE_VIDEO):
 			mediaFilename = mediaFilename + ".ogv"
+			titleStarter = "Video"
+		if (type == self.TYPE_AUDIO):
+			mediaFilename = mediaFilename + ".ogg"
+			titleStarter = "Audio"
 		mediaFilename = self.getUniqueFilepath( mediaFilename, 0 )
 		recd.mediaFilename = mediaFilename
 
@@ -475,9 +481,7 @@ class Model:
 		recd.thumbFilename = thumbFilename
 
 		recd.photographer = self.ca.nickName
-
-		#todo: better title here
-		recd.title = str(recd.photographer) + ", " + strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) )
+		recd.title = titleStarter + " by " + str(recd.photographer)
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill
@@ -532,6 +536,12 @@ class Model:
 
 	def generateEmptyThumbnail( self ):
 		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.tw, self.ca.ui.th)
+		tctx = cairo.Context(thumbImg)
+		tctx.set_source_rgb( 0, 1, 1 )
+		tctx.rectangle(0, 0, self.ca.ui.tw, self.ca.ui.th)
+		tctx.fill()
+		tctx.paint()
+
 		return thumbImg
 
 
