@@ -163,6 +163,7 @@ class RecordActivity(activity.Activity):
 		#todo: if recording a movie when you leave, stop.  also make sure not to put the video back on display when done.
 		print("stop pipes")
 		self.gplay.stop()
+		self.ui.doMouseListener( False )
 
 		if (self.m.RECORDING):
 			self.m.stopRecordingVideo()
@@ -174,6 +175,7 @@ class RecordActivity(activity.Activity):
 		print("restart pipes")
 		if (not self.m.UPDATING):
 			self.ui.updateModeChange()
+			self.doMouseListener( True )
 
 
 	def recreateTemp( self ):
@@ -187,14 +189,16 @@ class RecordActivity(activity.Activity):
 		print("close")
 		self.m.UPDATING = False
 		self.ui.updateButtonSensitivities( )
-		#todo: stop the mouse listener i suppose
-		self.ui.hideLiveWindows()
-		self.ui.hidePlayWindows()
-		self.ui.audioCanvas.stopWaveformDraws()
-		self.gplay.stop()
+
+		self.ui.doMouseListener( False )
+
+		self.ui.hideLiveWindows( )
+		self.ui.hidePlayWindows( )
+		self.ui.audioCanvas.stopWaveformDraws( )
+		self.gplay.stop( )
 		self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
-		self.glive.stopAudioHandoffs()
-		self.glive.stop()
+		self.glive.stopAudioHandoffs( )
+		self.glive.stop( )
 
 
 		#todo: put this into a gobject.freetime thing to update the ui first?

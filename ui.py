@@ -333,9 +333,19 @@ class UI:
 		self.hideWidgetsTimer = 0
 		if (self.hiddenWidgets):
 			print("reshow widgets")
-		#todo: how do you stop a gobject.timeout_add?
-		#answer: gobject.source_remove(source_id)
-		self.hideWidgetTimeout = gobject.timeout_add( 500, self._mouseMightaMovedCb )
+
+		#remove, then add
+		self.doMouseListener( False )
+		self.HIDE_WIDGET_TIMEOUT_ID = gobject.timeout_add( 500, self._mouseMightaMovedCb )
+
+
+	def doMouseListener( self, listen ):
+		if (listen):
+			self.resetWidgetFadeTimer()
+		else:
+			if (self.HIDE_WIDGET_TIMEOUT_ID != None):
+				if (self.HIDE_WIDGET_TIMEOUT_ID != 0):
+					gobject.source_remove( self.HIDE_WIDGET_TIMEOUT_ID )
 
 
 	def _mouseMightaMovedCb( self ):
@@ -676,6 +686,7 @@ class UI:
 			self.startLiveAudio( )
 
 
+		self.doMouseListener( True )
 		self.showLiveVideoTags()
 		self.updateVideoComponents()
 
