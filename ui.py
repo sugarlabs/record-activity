@@ -276,12 +276,7 @@ class UI:
 		self.audioWindow = AudioWindow(  self.audioCanvas )
 		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
-		self.audioMiniCanvas = DrawWaveform( )
-		self.audioMiniCanvas.setDimensions( self.pipw, self.piph )
-		self.audioMiniCanvas.connect("button_release_event", self._audioButtonReleaseCb)
-		self.audioMiniWindow = gtk.Window()
-		self.audioMiniWindow.add( self.audioMiniCanvas )
-		self.addToWindowStack( self.audioMiniWindow, self.pipw, self.piph, self.windowStack[len(self.windowStack)-1] )
+
 
 		self.recordWindow = RecordWindow(self)
 		self.addToWindowStack( self.recordWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
@@ -369,10 +364,6 @@ class UI:
 		self.mx = x
 		self.my = y
 		return True
-
-
-	def _audioButtonReleaseCb( self, widget ):
-		print( "audioButton pressed, y'all" )
 
 
 	def _nameTextfieldEditedCb(self, widget):
@@ -586,7 +577,6 @@ class UI:
 
 	def hideAudioWindows( self ):
 		self.moveWinOffscreen( self.audioWindow )
-		self.moveWinOffscreen( self.audioMiniWindow )
 		self.moveWinOffscreen( self.recordWindow )
 
 
@@ -791,7 +781,11 @@ class UI:
 
 
 	def shutterClickCb( self, arg ):
-		self.ca.m.doShutter()
+		if ( (self.m.MODE == self.m.MODE_AUDIO) and (not self.liveMode) ):
+			self.liveMode = not self.liveMode
+			self.startLiveAudio()
+		else:
+			self.ca.m.doShutter()
 
 
 	def checkReadyToSetup(self):
@@ -943,6 +937,7 @@ class UI:
 	def startLiveAudio( self ):
 		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		self.ca.glive.stop()
+		self.audioCanvas.setLiveWaveforms( True )
 		self.audioCanvas.startWaveformDraws()
 		self.ca.glive.play()
 
@@ -1501,7 +1496,7 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
-		#todo: make a method to change between eyes and lips
+		#todo: make a method to change between eyes and lips and state
 		self.shutterButton.set_image( self.ui.shutterImg )
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		#todo: this is insensitive until we're all set up
@@ -1509,6 +1504,7 @@ class RecordWindow(gtk.Window):
 		shutterBox = gtk.EventBox()
 		shutterBox.add( self.shutterButton )
 		self.add( shutterBox )
+
 
 class ModeToolbar(gtk.Toolbar):
 	def __init__(self, pc):

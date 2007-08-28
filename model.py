@@ -140,37 +140,6 @@ class Model:
 			hash.append( recd )
 
 
-	def saveMedia( self, el, recd, type ):
-		doDatastoreMedia = True
-		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
-			#from your buddy and you've not saved it before...
-			#todo: but also need to save the 
-			doDatastoreMedia = False
-
-		if (doDatastoreMedia):
-			#this gets us a datatoreId we need later to serialize the data
-			self.saveMediaToDatastore( recd )
-		else:
-			pixbuf = recd.getThumbPixbuf( )
-			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
-			el.setAttribute("buddyThumb", buddyThumb )
-
-		el.setAttribute("type", str(type))
-		el.setAttribute("title", recd.title)
-		el.setAttribute("time", str(recd.time))
-		el.setAttribute("photographer", recd.photographer)
-		el.setAttribute("mediaFilename", recd.mediaFilename)
-		el.setAttribute("thumbFilename", recd.thumbFilename)
-		el.setAttribute("colorStroke", str(recd.colorStroke.hex) )
-		el.setAttribute("colorFill", str(recd.colorFill.hex) )
-		el.setAttribute("hashKey", str(recd.hashKey))
-		el.setAttribute("buddy", str(recd.buddy))
-		el.setAttribute("mediaMd5", str(recd.mediaMd5))
-		el.setAttribute("thumbMd5", str(recd.thumbMd5))
-		if (recd.datastoreId != None):
-			el.setAttribute("datastoreId", str(recd.datastoreId))
-
-
 	def selectLatestThumbs( self, type ):
 		p_mx = len(self.mediaHashs[type])
 		p_mn = max(p_mx-self.ca.ui.numThumbs, 0)
@@ -411,67 +380,6 @@ class Model:
 
 
 
-	def saveMediaToDatastore( self, recd ):
-
-		if (recd.datastoreId != None):
-			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
-			#todo: HOWEVER, they might have changed the name of the file
-			if (recd.titleChange):
-				self.loadMediaFromDatastore( recd )
-				try:
-					if (recd.datastoreOb.metadata['title'] != recd.title):
-						recd.datastoreOb.metadata['title'] = recd.title
-						datastore.write(recd.datastoreOb)
-						if (recd.datastoreOb != None):
-							recd.datastoreOb.destroy()
-							del recd.datastoreOb
-				finally:
-					if (recd.datastoreOb != None):
-						recd.datastoreOb.destroy()
-						del recd.datastoreOb
-			return
-
-		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
-		#therefore this is only called when write_file is called by the activity superclass
-		try:
-			mediaObject = datastore.create()
-			try:
-				#todo: what other metadata to set?
-				mediaObject.metadata['title'] = recd.title
-				#jobject.metadata['keep'] = '0'
-				#jobject.metadata['buddies'] = ''
-
-				pixbuf = recd.getThumbPixbuf()
-				thumbData = self._get_base64_pixbuf_data(pixbuf)
-				mediaObject.metadata['preview'] = thumbData
-
-				colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
-				mediaObject.metadata['icon-color'] = colors
-
-				if (recd.type == self.TYPE_PHOTO):
-					mediaObject.metadata['mime_type'] = 'image/jpeg'
-				elif (recd.type == self.TYPE_VIDEO):
-					mediaObject.metadata['mime_type'] = 'video/ogg'
-				elif (recd.type == self.TYPE_AUDIO):
-					mediaObject.metadata['mime_type'] = 'audio/ogg'
-
-				mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
-				mediaObject.file_path = mediaFile
-
-				datastore.write(mediaObject)
-				recd.datastoreId = mediaObject.object_id
-
-			finally:
-				if (mediaObject != None):
-					mediaObject.destroy()
-					del mediaObject
-
-		finally:
-			pass
-			#don't really need to do this here, since we delete our temp before shutdown
-			#os.remove(file_path)
-
-
 	def _get_base64_pixbuf_data(self, pixbuf):
 		data = [""]
 		pixbuf.save_to_callback(self._save_data_to_buffer_cb, "png", {}, data)
@@ -650,37 +558,6 @@ class Model:
 		print("deleteRecorded 4")
 
 
-
-	def updateMediaIndex( self ):
-		print("updateMediaIndex")
-		impl = getDOMImplementation()
-		album = impl.createDocument(None, "album", None)
-		root = album.documentElement
-		photoHash = self.mediaHashs[self.TYPE_PHOTO]
-		for i in range (0, len(photoHash)):
-			recd = photoHash[i]
-
-			photo = album.createElement('photo')
-			root.appendChild(photo)
-			self.saveMedia(photo, recd, self.TYPE_PHOTO )
-
-		videoHash = self.mediaHashs[self.TYPE_VIDEO]
-		for i in range (0, len(videoHash)):
-			recd = videoHash[i]
-
-			video = album.createElement('video')
-			root.appendChild(video)
-			self.saveMedia(video, recd, self.TYPE_VIDEO )
-
-		audioHash = self.mediaHashs[self.TYPE_AUDIO]
-		for i in range (0, len(audioHash)):
-			recd = audioHash[i]
-
-			audio = album.createElement('audio')
-			root.appendChild(audio)
-			self.saveMedia(audio, recd, self.TYPE_AUDIO )
-
-		return album
 
 
 	#todo: if you are not at the end of the list, do we want to force you to the end?
