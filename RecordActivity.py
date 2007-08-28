@@ -88,11 +88,7 @@ class RecordActivity(activity.Activity):
 
 		#listen for meshins
 		self.connect( "shared", self._sharedCb )
-
-		#todo: proper focus listeners to turn camera on / off
-		#self.connect("focus-in-event", self.c.inFocus)
-		#self.connect("focus-out-event", self.c.outFocus)
-		self.connect( "notify::active", self.activeCb )
+		self.connect( "notify::active", self._activeCb )
 
 		#share, share alike
 		#if the prsc knows about an act with my id on the network...
@@ -342,7 +338,7 @@ class RecordActivity(activity.Activity):
 		print( "4 startMesh" );
 
 
-	def activeCb( self, widget, pspec ):
+	def _activeCb( self, widget, pspec ):
 		print("active?", self.props.active, self.ACTIVE )
 		if (not self.props.active and self.ACTIVE):
 			self.stopPipes()
