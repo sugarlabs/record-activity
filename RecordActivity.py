@@ -315,7 +315,7 @@ class RecordActivity(activity.Activity):
 
 		if (allDone):
 			self.I_AM_SAVED = True
-		#todo: reset all the saved flags or just let them take care of themselves?
+		#todo: reset all the saved flags or just let them take care of themselves on the next save?
 		if (self.I_AM_SAVED and self.I_AM_CLOSING):
 			self.destroy()
 
