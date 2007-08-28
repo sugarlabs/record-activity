@@ -151,7 +151,7 @@ class RecordActivity(activity.Activity):
 			if (savingFile):
 				SAVING_AT_LEAST_ONE = True
 
-		audioHash = self.mediaHashs[self.m.TYPE_AUDIO]
+		audioHash = self.m.mediaHashs[self.m.TYPE_AUDIO]
 		for i in range (0, len(audioHash)):
 			recd = audioHash[i]
 

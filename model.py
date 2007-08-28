@@ -144,7 +144,8 @@ class Model:
 		print("selectLatestThumbs", type)
 		p_mx = len(self.mediaHashs[type])
 		p_mn = max(p_mx-self.ca.ui.numThumbs, 0)
-		gobject.idle_add(self.setupThumbs, type, p_mn, p_mx)
+		#gobject.idle_add(self.setupThumbs, type, p_mn, p_mx)
+		self.setupThumbs( type, p_mn, p_mx )
 
 
 	def isVideoMode( self ):

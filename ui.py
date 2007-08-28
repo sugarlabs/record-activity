@@ -545,6 +545,7 @@ class UI:
 
 		self.modeToolbar.picButt.set_sensitive( switchStuff )
 		self.modeToolbar.vidButt.set_sensitive( switchStuff )
+		self.modeToolbar.audButt.set_sensitive( switchStuff )
 
 		for i in range (0, len(self.thumbButts)):
 			self.thumbButts[i].set_sensitive( switchStuff )
