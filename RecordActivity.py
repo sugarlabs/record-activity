@@ -178,7 +178,9 @@ class RecordActivity(activity.Activity):
 			pixbuf = recd.getThumbPixbuf( )
 			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
 			el.setAttribute("buddyThumb", buddyThumb )
+			recd.saved = True
 		else:
+			recd.saved = False
 			needToDatastoreMedia = self.saveMediaToDatastore( recd )
 
 		el.setAttribute("type", str(type))
@@ -200,9 +202,13 @@ class RecordActivity(activity.Activity):
 
 
 	def saveMediaToDatastore( self, recd ):
-		#TODO: update the recds that go through here to how they would look on a fresh load from file since this won't just happen on close()
+		# note that we update the recds that go through here to how they would
+		#look on a fresh load from file since this won't just happen on close()
 
 		if (recd.datastoreId != None):
+			#okay, actually already saved here...
+			recd.saved = True
+
 			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 			#However, they might have changed the name of the file
 			if (recd.titleChange):
@@ -250,15 +256,18 @@ class RecordActivity(activity.Activity):
 				mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
 				mediaObject.file_path = mediaFile
 
-				datastore.write(mediaObject, reply_handler=self._mediaSaveCb, error_handler=self._mediaSaveErrorCb )
-				#todo: verify that object_id is set even with callbacks
-				print( "datastoreId: ", mediaObject.object_id )
+				datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
+												error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
 				recd.datastoreId = mediaObject.object_id
+
+				if (not self.I_AM_CLOSING):
+					recd.datastoreOb = mediaObject
 
 			finally:
 				if (mediaObject != None):
-					mediaObject.destroy()
-					del mediaObject
+					if (not self.I_AM_CLOSING):
+						mediaObject.destroy()
+						del mediaObject
 					return True
 				else:
 					return False
@@ -270,37 +279,43 @@ class RecordActivity(activity.Activity):
 			#os.remove(file_path)
 
 
-	def _mediaSaveCb( self ):
-		self.doPostMediaSave()
+	def _mediaSaveCb( self, recd ):
+		self.doPostMediaSave( recd )
 
 
-	def _mediaSaveErrorCb( self ):
-		self.doPostMediaSave()
+	def _mediaSaveErrorCb( self, recd ):
+		self.doPostMediaSave( recd )
 
 
-	def doPostMediaSave( self ):
+	def doPostMediaSave( self, recd ):
+		#clear these, they are not needed (but no real need to re-serialize now, if it happens, great, otherwise, nbd
+		recd.mediaFilename = None
+		recd.thumbFilename = None
+		recd.datastoreSaved = True
+
 		allDone = True
 
 		photoHash = self.m.mediaHashs[self.m.TYPE_PHOTO]
 		for i in range (0, len(photoHash)):
 			recd = photoHash[i]
-			if (recd.dirty):
+			if (not recd.saved):
 				allDone = False
 
 		videoHash = self.m.mediaHashs[self.m.TYPE_VIDEO]
 		for i in range (0, len(videoHash)):
 			recd = videoHash[i]
-			if (recd.dirty):
+			if (not recd.saved):
 				allDone = False
 
 		audioHash = self.mediaHashs[self.m.TYPE_AUDIO]
 		for i in range (0, len(audioHash)):
 			recd = audioHash[i]
-			if (recd.dirty):
+			if (not recd.saved):
 				allDone = False
 
 		if (allDone):
 			self.I_AM_SAVED = True
+		#todo: reset all the saved flags or just let them take care of themselves?
 		if (self.I_AM_SAVED and self.I_AM_CLOSING):
 			self.destroy()
 

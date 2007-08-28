@@ -37,14 +37,12 @@ class Recorded:
 		self.mediaMd5 = None
 		self.thumbMd5 = None
 
+		#flag to alert need to re-datastore the title
 		self.titleChange = False
-
 
 		#when you are datastore-serialized, you get one of these ids...
 		self.datastoreId = None
-		#todo: and we need to hold onto a reference to the datastore ob, since once we let that go, so goes the file too
 		self.datastoreOb = None
-
 
 		#if not from the datastore, then your media is here...
 		self.mediaFilename = None
@@ -53,6 +51,10 @@ class Recorded:
 		#assume you took the picture
 		self.buddy = False
 		self.downloadedFromBuddy = False
+
+		#for flagging when you are being saved to the datastore for the first time...
+		#and just because you have an id, doesn't mean you're
+		self.saved = False
 
 
 	def setTitle( self, newTitle ):
@@ -67,7 +69,7 @@ class Recorded:
 				return False
 		return copyme
 
-	#todo: for getting files back from one of these, all is dependent on if the file is local or in the datastore
+
 	#scenarios:
 	#launch, your new thumb    -- Journal/session
 	#launch, your new media    -- Journal/session
