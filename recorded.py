@@ -60,6 +60,13 @@ class Recorded:
 		self.titleChange = True
 
 
+	def isClipboardCopyable( self ):
+		copyme = True
+		if (self.buddy):
+			if (not self.downloadedFromBuddy):
+				return False
+		return copyme
+
 	#todo: for getting files back from one of these, all is dependent on if the file is local or in the datastore
 	#scenarios:
 	#launch, your new thumb    -- Journal/session

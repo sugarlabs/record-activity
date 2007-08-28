@@ -447,19 +447,16 @@ class UI:
 
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.shownRecd == None):
-				if (self.shownRecd.type == self.ca.m.TYPE_PHOTO):
+				if (self.shownRecd.isClipboardCopyable( )):
 					tempImgPath = self.doClipboardCopyStart( self.shownRecd )
 					gtk.Clipboard().set_with_data( [('text/uri-list', 0, 0)], self._clipboardGetFuncCb, self._clipboardClearFuncCb, tempImgPath )
 					return True
 
 		return False
 
-	def doClipboardCopyStart( self, recd ):
-		#todo: gracefully make sure you are yanking from the datastore here
-		imgPath_s = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		imgPath_s = os.path.abspath(imgPath_s)
-		#todo: get alternate path for buddies pics...
 
+	def doClipboardCopyStart( self, recd ):
+		imgPath_s = recd.getMediaFilepath( )
 		#todo: truly unique filenames for temp... #and check they're not taken..
 		tempImgPath = os.path.join("tmp", recd.mediaFilename)
 		tempImgPath = os.path.abspath(tempImgPath)
@@ -1340,17 +1337,24 @@ class ThumbnailButton(gtk.Button):
 
 
 	def setDraggable( self ):
-		#todo: let you drag your buddy's photos around if they're downloaded...
-		if ( (not self.tc.recd.buddy) and (self.tc.recd.type == self.ui.ca.m.TYPE_PHOTO) ):
-			targets = [('image/jpeg', 0, 0)]
-			self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
-			self.dragBeginConnection = self.connect("drag_begin", self._dragBeginCb)
-			self.dragDataGetConnection = self.connect("drag_data_get", self._dragDataGetCb)
-			self.dragEndConnection = self.connect("drag_end", self._dragEndCb)
+		#todo: update when the media has been downloaded
 
+		if ( self.tc.recd.isClipboardCopyable() ):
+			targets =[]
+			#todo: make an array for all the mimes we support for these calls
+			if ( self.tc.recd.type == self.ui.ca.m.TYPE_PHOTO ):
+				targets = [('image/jpeg', 0, 0)]
+			elif ( self.tc.recd.type == self.ui.ca.m.TYPE_VIDEO ):
+				targets = [('video/ogg', 0, 0)]
+			elif ( self.tc.recd.type == self.ui.ca.m.TYPE_AUDIO ):
+				targets = [('audio/ogg', 0, 0)]
 
-#	def set_sensitive( self, sen ):
-#		gtk.Button.se
+			if ( len(targets) > 0 ):
+				self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
+				self.dragBeginConnection = self.connect("drag_begin", self._dragBeginCb)
+				self.dragDataGetConnection = self.connect("drag_data_get", self._dragDataGetCb)
+				self.dragEndConnection = self.connect("drag_end", self._dragEndCb)
+
 
 	def clear( self ):
 		#todo: no dragging if insensitive either, why not?
@@ -1361,15 +1365,12 @@ class ThumbnailButton(gtk.Button):
 		#todo: remove the tempImagePath file..
 		self.tempImgPath = None
 
-		#todo: disconnect the dragConnections
-		#print( "self.dragBeginConnection: ", self.dragBeginConnection )
+		#disconnect the dragConnections
 		if (self.dragBeginConnection != None):
-			#todo: check what a connect signal becomes after it is disconnected
-			if (self.dragBeginConnection != -1):
+			if (self.dragBeginConnection != 0):
 				self.disconnect(self.dragBeginConnection)
 				self.disconnect(self.dragDataGetConnection)
 				self.disconnect(self.dragEndConnection)
-				#print( "2 self.dragBeginConnection: ", self.dragBeginConnection )
 				self.dragBeginConnection = None
 				self.dragDataGetConnection = None
 				self.dragEndConnection = None
@@ -1398,8 +1399,9 @@ class ThumbnailButton(gtk.Button):
 
 
 	def _dragDataGetCb(self, widget, drag_context, selection_data, info, timestamp):
-		#todo: is this the proper way to handle returning None if file deleted from another xo..?
-		if (selection_data.target == 'image/jpeg'):
+		if (	(selection_data.target == 'image/jpeg') or
+				(selection_data.target == 'video/ogg' ) or
+				(selection_data.target == 'audio/ogg')	):
 			self.tempImgPath = self.ui.doClipboardCopyStart( self.tc.recd )
 			self.ui.doClipboardCopyCopy( self.tempImgPath, selection_data )
 
