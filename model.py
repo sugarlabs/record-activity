@@ -141,6 +141,7 @@ class Model:
 
 
 	def selectLatestThumbs( self, type ):
+		print("selectLatestThumbs", type)
 		p_mx = len(self.mediaHashs[type])
 		p_mn = max(p_mx-self.ca.ui.numThumbs, 0)
 		gobject.idle_add(self.setupThumbs, type, p_mn, p_mx)
@@ -155,10 +156,11 @@ class Model:
 
 
 	def setupThumbs( self, type, mn, mx ):
-
+		print("setupThumbs 1", type)
 		if (not type == self.MODE):
 			return
 
+		print("setupThumbs 2", type)
 		self.setUpdating( True )
 
 		hash = self.mediaHashs[type]
@@ -194,18 +196,20 @@ class Model:
 		for i in range (mn, mx):
 			addToTray.append( hash[i] )
 
+		print("setupThumbs 3", type)
 		self.ca.ui.updateThumbs( addToTray, left, mn, rigt  )
+		print("setupThumbs 4", type)
 		self.setUpdating( False )
 
 
 	def getHash( self ):
 		type = -1
-		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			type = self.ca.m.TYPE_PHOTO
-		if (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			type = self.ca.m.TYPE_VIDEO
-		if (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			type = self.ca.m.TYPE_AUDIO
+		if (self.MODE == self.MODE_PHOTO):
+			type = self.TYPE_PHOTO
+		if (self.MODE == self.MODE_VIDEO):
+			type = self.TYPE_VIDEO
+		if (self.MODE == self.MODE_AUDIO):
+			type = self.TYPE_AUDIO
 
 		if (type != -1):
 			return self.mediaHashs[type]
