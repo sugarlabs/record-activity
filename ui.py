@@ -554,10 +554,11 @@ class UI:
 			self.ca.ui.setDefaultCursor( )
 
 		if (self.ca.m.RECORDING):
-			#todo: change on mode
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+			self.audioCanvas.setWaveformColor( self.colorRed )
 		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
+			self.audioCanvas.setWaveformColor( self.colorGreen )
 
 	def hideLiveWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
@@ -906,7 +907,26 @@ class UI:
 
 
 	def showAudio( self, recd ):
-		print("show audio recd")
+		#todo: necc?
+		self.liveMode = False
+		self.updateVideoComponents()
+		self.ca.glive.stop()
+
+		mediaFilepath = recd.getMediaFilepath( )
+		videoUrl = "file://" + str( mediaFilepath )
+		print( "audioUrl: ", videoUrl )
+		self.audioCanvas.setWaveformColor( self.colorBlue )
+		self.ca.gplay.setLocation(videoUrl)
+		self.shownRecd = recd
+		self.showRecdMeta(recd)
+
+
+	def startLiveAudio( self ):
+		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
+		self.ca.glive.stop()
+		self.audioCanvas.setWaveformColor( self.colorGreen )
+		self.audioCanvas.startWaveformDraws()
+		self.ca.glive.play()
 
 
 	def deleteThumbSelection( self, recd ):
@@ -933,13 +953,6 @@ class UI:
 
 			self.showLiveVideoTags()
 
-
-	def startLiveAudio( self ):
-		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
-		self.ca.glive.stop()
-		self.audioCanvas.setLiveWaveforms( True )
-		self.audioCanvas.startWaveformDraws()
-		self.ca.glive.play()
 
 
 	def updateShownPhoto( self, recd ):

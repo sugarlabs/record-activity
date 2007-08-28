@@ -14,19 +14,20 @@ import pango
 
 import os
 
-#import config  	#This has all the globals
-
 import audioop
 
 from Numeric import *
 from FFT import *
 
+from color import Color
 
 class DrawWaveform(gtk.DrawingArea):
 	def __init__(self):
 		gtk.DrawingArea.__init__(self)
 
 		self.WAVEFORM_TIMEOUT_ID = 0
+		self.waveColor = Color( )
+		self.waveColor.init_rgba( 0, 255, 0, 255 )
 
 		self.w = 640
 		self.h = 480
@@ -99,9 +100,14 @@ class DrawWaveform(gtk.DrawingArea):
 			self.WAVEFORM_TIMEOUT_ID = 0
 
 
+	def setWaveformColor( self, color ):
+		self.waveColor = color
+
+
 	def waveformRefresh( self ):
 		self.queue_draw()
 		return True
+
 
 	#######################################################################
 	# This function is the "expose" event handler and does all the drawing
@@ -216,8 +222,8 @@ class DrawWaveform(gtk.DrawingArea):
 
 
 		############grid#############################
-		self.context.set_line_width(0.4)
-		self.context.set_source_rgb(0.2,0.2,0.2)
+		self.context.set_line_width( 0.4 )
+		self.context.set_source_rgb( 0.2, 0.2, 0.2 )
 
 		x=0
 		y=0
@@ -245,7 +251,9 @@ class DrawWaveform(gtk.DrawingArea):
 			self.context.line_to(count, self.h - peak)
 			count=count + self.draw_interval
 		self.context.set_line_width(2.0)
-		self.context.set_source_rgb(0, 1, 0)
+		self.context.set_source_rgb( self.waveColor.r, self.waveColor.g, self.waveColor.b )
+
+
 		self.context.stroke()
 		############################################
 
