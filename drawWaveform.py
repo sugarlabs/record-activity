@@ -62,7 +62,6 @@ class DrawWaveform(gtk.DrawingArea):
 		self.draw_interval = 10
 		self.num_of_points = 6200
 
-		self.details_show = True
 		self.logging_status = False
 
 		self.stop=False
@@ -222,26 +221,28 @@ class DrawWaveform(gtk.DrawingArea):
 
 
 		############grid#############################
-		self.context.set_line_width( 0.4 )
-		self.context.set_source_rgb( 0.2, 0.2, 0.2 )
+		grid = False
+		if (grid):
+			self.context.set_line_width( 0.4 )
+			self.context.set_source_rgb( 0.2, 0.2, 0.2 )
 
-		x=0
-		y=0
-		for j in range(1,22):
-			self.context.move_to(x,y)
-			self.context.rel_line_to(0, self.h)
-			x=x+50
+			x=0
+			y=0
+			for j in range(1,22):
+				self.context.move_to(x,y)
+				self.context.rel_line_to(0, self.h)
+				x=x+50
 
-		self.context.set_line_width(1.0)
-		x=0
-		y=0
-		for j in range(1,17):
-			self.context.move_to(x,y)
-			self.context.rel_line_to( self.w, 0 )
-			y=y+50
+			self.context.set_line_width(1.0)
+			x=0
+			y=0
+			for j in range(1,17):
+				self.context.move_to(x,y)
+				self.context.rel_line_to( self.w, 0 )
+				y=y+50
 
 
-		self.context.stroke()
+			self.context.stroke()
 		#############################################
 
 
@@ -251,7 +252,7 @@ class DrawWaveform(gtk.DrawingArea):
 			self.context.line_to(count, self.h - peak)
 			count=count + self.draw_interval
 		self.context.set_line_width(2.0)
-		self.context.set_source_rgb( self.waveColor.r, self.waveColor.g, self.waveColor.b )
+		self.context.set_source_rgb( self.waveColor._r, self.waveColor._g, self.waveColor._b )
 
 
 		self.context.stroke()
@@ -259,7 +260,8 @@ class DrawWaveform(gtk.DrawingArea):
 
 
 		###########Text Display#####################
-		if (self.details_show == True):
+		text = False
+		if (text):
 			if(self.count%65==0):
 				self.rms=str( audioop.rms( self.str_buffer,2) )
 				self.avg=str(audioop.avg( self.str_buffer,2))
