@@ -618,13 +618,14 @@ class UI:
 
 	def recordAudio( self ):
 		#show the clock while this gets set up
-		self.hideLiveWindows()
-		self.hidePlayWindows()
-		self.hideAudioWindows()
+#		self.hideLiveWindows()
+#		self.hidePlayWindows()
+#		self.hideAudioWindows()
 
-		self.liveMode = True
-		self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
-		self.updateVideoComponents()
+#		self.liveMode = True
+#		self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
+
+#		self.updateVideoComponents()
 
 		self.ca.glive.startRecordingAudio()
 
@@ -658,8 +659,7 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			self.startLiveAudio( )
-
+			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD )
 
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
@@ -770,7 +770,7 @@ class UI:
 		if ( (self.ca.m.MODE == self.ca.m.MODE_AUDIO) and (not self.liveMode) ):
 			print("shutterClick 2")
 			self.liveMode = not self.liveMode
-			self.startLiveAudio()
+			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		else:
 			self.ca.m.doShutter()
 
@@ -838,6 +838,8 @@ class UI:
 				self.setImgLocDim( self.liveVideoWindow )
 				self.setPipBgdLocDim( self.recordWindow )
 			else:
+				self.moveWinOffscreen( self.liveVideoWindow )
+
 				self.setImgLocDim( self.livePhotoWindow )
 				self.setPipBgdLocDim( self.recordWindow )
 
@@ -897,9 +899,10 @@ class UI:
 
 		pixbuf = recd.getThumbPixbuf()
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-
 		self.livePhotoCanvas.setImage( img )
+
 		self.updateVideoComponents()
+
 		self.ca.glive.stop()
 
 		mediaFilepath = recd.getMediaFilepath( )
@@ -909,13 +912,6 @@ class UI:
 		self.shownRecd = recd
 		self.showRecdMeta(recd)
 
-
-	def startLiveAudio( self ):
-#		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
-		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
-
-		self.ca.glive.stop()
-		self.ca.glive.play()
 
 
 	def deleteThumbSelection( self, recd ):
@@ -936,7 +932,7 @@ class UI:
 			elif (recd.type == self.ca.m.TYPE_AUDIO):
 				self.livePhotoCanvas.setImage(None)
 				self.ca.gplay.stop()
-				self.startLiveAudio()
+				self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
 
 			self.liveMode = True
 			self.updateVideoComponents()
