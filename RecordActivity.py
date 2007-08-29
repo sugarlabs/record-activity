@@ -260,8 +260,11 @@ class RecordActivity(activity.Activity):
 		mediaFile = os.path.join(self.journalPath, recd.mediaFilename)
 		mediaObject.file_path = mediaFile
 
-		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
-										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
+#		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
+#										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
+		datastore.write(mediaObject, 	reply_handler=(lambda: self._mediaSaveCb(recd)),
+										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
+		print("datastore.write...", recd.datastoreId)
 		recd.datastoreId = mediaObject.object_id
 
 		if (not self.I_AM_CLOSING):
@@ -301,7 +304,7 @@ class RecordActivity(activity.Activity):
 		#clear these, they are not needed (but no real need to re-serialize now, if it happens, great, otherwise, nbd
 		recd.mediaFilename = None
 		recd.thumbFilename = None
-		recd.datastoreSaved = True
+		recd.saved = True
 
 		allDone = True
 

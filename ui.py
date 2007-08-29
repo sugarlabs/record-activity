@@ -771,6 +771,7 @@ class UI:
 			print("shutterClick 2")
 			self.liveMode = not self.liveMode
 			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
+			self.updateVideoComponents()
 		else:
 			self.ca.m.doShutter()
 
