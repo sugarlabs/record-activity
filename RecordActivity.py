@@ -119,7 +119,7 @@ class RecordActivity(activity.Activity):
 
 
 	def write_file(self, file):
-		print("write_file")
+		print("write_file 1")
 		self.I_AM_SAVED = False
 		SAVING_AT_LEAST_ONE = False
 
@@ -140,6 +140,7 @@ class RecordActivity(activity.Activity):
 			savingFile = self.saveMedia( photo, recd, self.m.TYPE_PHOTO )
 			if (savingFile):
 				SAVING_AT_LEAST_ONE = True
+				print("saving at least one photo!")
 
 		videoHash = self.m.mediaHashs[self.m.TYPE_VIDEO]
 		for i in range (0, len(videoHash)):
@@ -161,7 +162,6 @@ class RecordActivity(activity.Activity):
 			if (saving_file):
 				SAVING_AT_LEAST_ONE = True
 
-
 		album.writexml(f)
 		f.close()
 
@@ -170,8 +170,11 @@ class RecordActivity(activity.Activity):
 		#else:
 		#	self.I_AM_SAVED = True
 		self.I_AM_SAVED = not SAVING_AT_LEAST_ONE
+		#todo: handle the off, off case that the callbacks beat us to this point
+		print( "write_file 2; I_AM_SAVED:", self.I_AM_SAVED )
 
 	def saveMedia( self, el, recd, type ):
+		print("saveMedia 1")
 		needToDatastoreMedia = False
 
 		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
@@ -198,10 +201,12 @@ class RecordActivity(activity.Activity):
 		if (recd.datastoreId != None):
 			el.setAttribute("datastoreId", str(recd.datastoreId))
 
+		print("saveMedia 1; needToDatastoreMedia ", needToDatastoreMedia )
 		return needToDatastoreMedia
 
 
 	def saveMediaToDatastore( self, recd ):
+		print("saveMediaToDatastore 1")
 		# note that we update the recds that go through here to how they would
 		#look on a fresh load from file since this won't just happen on close()
 
@@ -229,54 +234,43 @@ class RecordActivity(activity.Activity):
 				recd.titleChange = False
 			return False
 
-		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
-		#therefore this is only called when write_file is called by the activity superclass
-		try:
+			#this will remove the media from being accessed on the local disk since it puts it away into cold storage
+			#therefore this is only called when write_file is called by the activity superclass
 			mediaObject = datastore.create()
-			try:
-				#todo: what other metadata to set?
-				mediaObject.metadata['title'] = recd.title
-				#jobject.metadata['keep'] = '0'
-				#jobject.metadata['buddies'] = ''
+			#todo: what other metadata to set?
+			mediaObject.metadata['title'] = recd.title
+			#jobject.metadata['keep'] = '0'
+			#jobject.metadata['buddies'] = ''
 
-				pixbuf = recd.getThumbPixbuf()
-				thumbData = self._get_base64_pixbuf_data(pixbuf)
-				mediaObject.metadata['preview'] = thumbData
+			pixbuf = recd.getThumbPixbuf()
+			thumbData = self._get_base64_pixbuf_data(pixbuf)
+			mediaObject.metadata['preview'] = thumbData
 
-				colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
-				mediaObject.metadata['icon-color'] = colors
+			colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
+			mediaObject.metadata['icon-color'] = colors
 
-				if (recd.type == self.TYPE_PHOTO):
-					mediaObject.metadata['mime_type'] = 'image/jpeg'
-				elif (recd.type == self.TYPE_VIDEO):
-					mediaObject.metadata['mime_type'] = 'video/ogg'
-				elif (recd.type == self.TYPE_AUDIO):
-					mediaObject.metadata['mime_type'] = 'audio/ogg'
+			if (recd.type == self.TYPE_PHOTO):
+				mediaObject.metadata['mime_type'] = 'image/jpeg'
+			elif (recd.type == self.TYPE_VIDEO):
+				mediaObject.metadata['mime_type'] = 'video/ogg'
+			elif (recd.type == self.TYPE_AUDIO):
+				mediaObject.metadata['mime_type'] = 'audio/ogg'
 
-				mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
-				mediaObject.file_path = mediaFile
+			mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
+			mediaObject.file_path = mediaFile
 
-				datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
-												error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
-				recd.datastoreId = mediaObject.object_id
+			datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
+											error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
+			recd.datastoreId = mediaObject.object_id
 
-				if (not self.I_AM_CLOSING):
-					recd.datastoreOb = mediaObject
+			if (not self.I_AM_CLOSING):
+				recd.datastoreOb = mediaObject
 
-			finally:
-				if (mediaObject != None):
-					if (not self.I_AM_CLOSING):
-						mediaObject.destroy()
-						del mediaObject
-					return True
-				else:
-					return False
+			if (not self.I_AM_CLOSING):
+				mediaObject.destroy()
+				del mediaObject
 
-		finally:
-			#unable to create a mediaObject, so nothing to save, return False
-			return False
-			#todo: don't really need to do this here, since we delete our temp before shutdown, but what about other write_files?
-			#os.remove(file_path)
+			return True
 
 
 	def _mediaSaveCb( self, recd ):
@@ -288,6 +282,8 @@ class RecordActivity(activity.Activity):
 
 
 	def doPostMediaSave( self, recd ):
+		print("doPostMediaSave 1")
+
 		#clear these, they are not needed (but no real need to re-serialize now, if it happens, great, otherwise, nbd
 		recd.mediaFilename = None
 		recd.thumbFilename = None
@@ -313,12 +309,17 @@ class RecordActivity(activity.Activity):
 			if (not recd.saved):
 				allDone = False
 
+		print("doPostMediaSave 2; allDone: ", allDone )
+
 		if (allDone):
 			self.I_AM_SAVED = True
-		#todo: reset all the saved flags or just let them take care of themselves on the next save?
-		if (self.I_AM_SAVED and self.I_AM_CLOSING):
-			self.destroy()
 
+		#todo: reset all the saved flags or just let them take care of themselves on the next save?
+		print("doPostMediaSave 3; allDone: ", self.I_AM_SAVED )
+		if (self.I_AM_SAVED and self.I_AM_CLOSING):
+			print("doPostMediaSave 1")
+			self.destroy()
+			print("doPostMediaSave 2")
 
 	def _sharedCb( self, activity ):
 		print("1 i am shared")
@@ -382,7 +383,7 @@ class RecordActivity(activity.Activity):
 
 
 	def close( self ):
-		print("close")
+		print("close 1")
 		self.I_AM_CLOSING = True
 		self.m.UPDATING = False
 		self.ui.updateButtonSensitivities( )
@@ -395,11 +396,12 @@ class RecordActivity(activity.Activity):
 		self.glive.stopAudioHandoffs( )
 		self.glive.stop( )
 
+		print("close 2")
 		activity.Activity.close( self )
 
 
 	def destroy( self ):
-		print( "destroy and I_AM_CLO", self.I_AM_CLOSING, "sav..", self.I_AM_SAVED )
+		print( "destroy and I_AM_CLOSING:", self.I_AM_CLOSING, "I_AM_SAVED:", self.I_AM_SAVED )
 
 		if self.I_AM_CLOSING:
 			self.hide()
@@ -410,7 +412,6 @@ class RecordActivity(activity.Activity):
 			#todo: why recreate temp and destroy journalpath?
 			#todo: clean up / throw away any video you might be recording when you quit the activity
 			self.recreateTemp()
-
 			if (os.path.exists(self.journalPath)):
 				shutil.rmtree( self.journalPath )
 

@@ -96,14 +96,17 @@ class Glive:
 			n = len(self.pipes)-1
 			n = str(n)
 
-			if ((self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self._LAST_PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
+			if ((self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD)
+			or (self._LAST_PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)
+			or (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD) ):
 				bus.disconnect(self.SYNC_ID)
 				bus.remove_signal_watch()
 				bus.disable_sync_message_emission()
 				if (self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
 					pipe.get_by_name("picFakesink_"+n).disconnect(self.HANDOFF_ID)
-			elif (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-				pipe.get_by_name("audioFakesink_"+n).disconnect(self.AUDIOBUFFER_ID)
+				if (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+					pipe.get_by_name("picFakesink_"+n).disconnect(self.HANDOFF_ID)
+
 
 		n = str(len(self.pipes))
 		v4l2 = False
@@ -141,18 +144,28 @@ class Glive:
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			pipeline = gst.parse_launch("alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! audioconvert name=audioAudioconvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
-			audioFakesink = pipeline.get_by_name("audioFakesink_"+n)
-			self.AUDIOBUFFER_ID = audioFakesink.connect( "handoff", self._audioBufferCb)
-			audioFakesink.set_property("signal-handoffs", True)
-
-			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
-			audioFilepath = os.path.join(self.ca.tempPath, "output_"+n+".wav")
-			audioFilesink.set_property("location", audioFilepath )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! audioconvert name=audioAudioconvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n )
+			v4l2 = True
 
 			audioTee = pipeline.get_by_name('audioTee_'+n)
 			audioAudioconvert = pipeline.get_by_name('audioAudioconvert_'+n)
 			audioTee.unlink(audioAudioconvert)
+
+
+			videoTee = pipeline.get_by_name('videoTee_'+n)
+			picQueue = pipeline.get_by_name('picQueue_'+n)
+			picQueue.set_property("leaky", True)
+			picQueue.set_property("max-size-buffers", 1)
+			picFakesink = pipeline.get_by_name("picFakesink_"+n)
+			self.HANDOFF_ID = picFakesink.connect("handoff", self.copyPic)
+			picFakesink.set_property("signal-handoffs", True)
+			self.picExposureOpen = False
+			videoTee.unlink(picQueue)
+
+			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
+			audioFilepath = os.path.join(self.ca.tempPath, "output_"+n+".ogg")
+			audioFilesink.set_property("location", audioFilepath )
+
 
 		elif (self._PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
 			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
@@ -169,24 +182,15 @@ class Glive:
 				pass
 
 		#todo: this should be checked with an attribute library
-		if ((self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD) or (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)):
+		if ((self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD)
+		or (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)
+		or (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD)):
 			bus = pipeline.get_bus()
 			bus.enable_sync_message_emission()
 			bus.add_signal_watch()
 			self.SYNC_ID = bus.connect('sync-message::element', self.onSyncMessage)
 
 		self.pipes.append(pipeline)
-
-
-	def _audioBufferCb(self, element, buffer, pad):
-		gobject.timeout_add( 30, self._audioBufferNew, str(buffer) )
-		return True
-
-
-	def _audioBufferNew( self, bufferString ):
-		#self.emit("new-buffer", bufferString, self.draw_graph_status )
-		self.ca.ui.audioCanvas.queueDisplayOfNewAudioBuffer( bufferString )
-		return False
 
 
 
@@ -196,7 +200,7 @@ class Glive:
 		print("audioFile:", audioFile )
 		self.record = False
 		self.audio = False
-		self.ca.m.saveAudio( audioFile)
+		self.ca.m.saveAudio(audioFile)
 
 
 	def takePhoto(self):

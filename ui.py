@@ -56,7 +56,6 @@ from p5_button import Polygon
 from p5_button import Button
 from glive import LiveVideoWindow
 from gplay import PlayVideoWindow
-from drawWaveform import DrawWaveform
 
 #for debug testing
 from recorded import Recorded
@@ -270,12 +269,8 @@ class UI:
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
 
-		self.audioCanvas = DrawWaveform( )
-		#todo: just connect a listener to set these variables...
-		self.audioCanvas.setDimensions( self.vw, self.vh )
-		self.audioWindow = AudioWindow(  self.audioCanvas )
-		self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
-
+		#self.audioWindow = AudioWindow(  self.audioCanvas )
+		#self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 
 
 		self.recordWindow = RecordWindow(self)
