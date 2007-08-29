@@ -269,10 +269,6 @@ class UI:
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
 
-		#self.audioWindow = AudioWindow(  self.audioCanvas )
-		#self.addToWindowStack( self.audioWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
-
-
 		self.recordWindow = RecordWindow(self)
 		self.addToWindowStack( self.recordWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
@@ -553,10 +549,8 @@ class UI:
 
 		if (self.ca.m.RECORDING):
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
-			self.audioCanvas.setWaveformColor( self.colorRed )
 		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
-			self.audioCanvas.setWaveformColor( self.colorGreen )
 
 	def hideLiveWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
@@ -575,7 +569,8 @@ class UI:
 
 
 	def hideAudioWindows( self ):
-		self.moveWinOffscreen( self.audioWindow )
+		self.moveWinOffscreen( self.livePhotoWindow )
+		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.recordWindow )
 
 
@@ -627,13 +622,11 @@ class UI:
 		self.hidePlayWindows()
 		self.hideAudioWindows()
 
-		self.stopPlayAudioToRecord()
+		self.liveMode = True
+		self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
+		self.updateVideoComponents()
 
 		self.ca.glive.startRecordingAudio()
-
-		#setting liveMode on in case we were listening to 8track earlier
-		self.liveMode = True
-		self.updateVideoComponents()
 
 
 	def stopPlayVideoToRecord( self ):
@@ -643,12 +636,6 @@ class UI:
 			self.ca.gplay.stop()
 			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 
-
-	def stopPlayAudioToRecord( self ):
-		#if we're watching a movie...
-		if (not self.ca.ui.liveMode):
-			#stop the movie
-			self.ca.gplay.stop()
 
 
 	def updateModeChange(self):
@@ -662,8 +649,6 @@ class UI:
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 		self.hideAudioWindows()
-
-		self.audioCanvas.stopWaveformDraws()
 
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
@@ -847,10 +832,10 @@ class UI:
 				self.setPipLocDim( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (self.liveMode):
-				self.setImgLocDim( self.audioWindow )
+				self.setImgLocDim( self.liveVideoWindow )
 				self.setPipBgdLocDim( self.recordWindow )
 			else:
-				self.setImgLocDim( self.audioWindow )
+				self.setImgLocDim( self.livePhotoWindow )
 				self.setPipBgdLocDim( self.recordWindow )
 
 #		for i in range (0, len(self.windowStack)):
@@ -905,15 +890,15 @@ class UI:
 
 
 	def showAudio( self, recd ):
-		#todo: necc?
 		self.liveMode = False
+		#todo: set this
+		self.livePhotoCanvas.setImage(None)
 		self.updateVideoComponents()
 		self.ca.glive.stop()
 
 		mediaFilepath = recd.getMediaFilepath( )
 		videoUrl = "file://" + str( mediaFilepath )
 		print( "audioUrl: ", videoUrl )
-		self.audioCanvas.setWaveformColor( self.colorBlue )
 		self.ca.gplay.setLocation(videoUrl)
 		self.shownRecd = recd
 		self.showRecdMeta(recd)
@@ -922,8 +907,6 @@ class UI:
 	def startLiveAudio( self ):
 		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		self.ca.glive.stop()
-		self.audioCanvas.setWaveformColor( self.colorGreen )
-		self.audioCanvas.startWaveformDraws()
 		self.ca.glive.play()
 
 
@@ -943,6 +926,7 @@ class UI:
 				self.ca.gplay.stop()
 				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 			elif (recd.type == self.ca.m.TYPE_AUDIO):
+				self.livePhotoCanvas.setImage(None)
 				self.ca.gplay.stop()
 				self.startLiveAudio()
 
@@ -1491,13 +1475,6 @@ class ThumbnailButton(gtk.Button):
 			ctx.set_source_rgba( col._r, col._g, col._b, col._a )
 		else:
 			ctx.set_source_rgb( col._r, col._g, col._b )
-
-
-class AudioWindow(gtk.Window):
-	def __init__( self, audioCanvas ):
-		gtk.Window.__init__(self)
-		self.audioCanvas = audioCanvas
-		self.add( audioCanvas )
 
 
 

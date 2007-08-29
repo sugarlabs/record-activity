@@ -255,8 +255,6 @@ class Glive:
 		gobject.idle_add( self.takePhoto )
 
 
-
-
 	def stopRecordingVideo(self):
 		#sometimes we hang here because we're trying to open an empty file or nonexistant file
 		self.stop()

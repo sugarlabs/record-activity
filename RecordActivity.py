@@ -390,7 +390,6 @@ class RecordActivity(activity.Activity):
 		self.ui.doMouseListener( False )
 		self.ui.hideLiveWindows( )
 		self.ui.hidePlayWindows( )
-		self.ui.audioCanvas.stopWaveformDraws( )
 		self.gplay.stop( )
 		self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
 		self.glive.stop( )
