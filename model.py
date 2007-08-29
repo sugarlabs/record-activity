@@ -369,7 +369,7 @@ class Model:
 
 		#now that we've saved both the image and its pixbuf, we get their md5s
 		self.createNewRecordedMd5Sums( recd )
-		self.addPhoto( recd )
+		self.addRecd( recd )
 
 		#hey, i just took a cool picture!  let me show you!
 		if (self.ca.meshClient != None):
@@ -420,12 +420,12 @@ class Model:
 		recd.datastoreOb = mediaObject
 
 
-	def addPhoto( self, recd ):
+	def addRecd( self, recd ):
 		#todo: sort on time-taken, not on their arrival time over the mesh (?)
-		self.mediaHashs[self.TYPE_PHOTO].append( recd )
+		self.mediaHashs[recd.type].append( recd )
 
 		#updateUi
-		self.thumbAdded(self.TYPE_PHOTO)
+		self.thumbAdded( recd.type )
 
 		self.setUpdating( False )
 

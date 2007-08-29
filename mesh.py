@@ -39,19 +39,21 @@ class MeshXMLRPCServer:
 		self.server = network.GlibXMLRPCServer(("", self.ca.xmlRpcPort))
 		self.server.register_instance(self) #anything witout an _ is callable by all the hos and joes out there
 
-	def newPhotoNotice(	self,
+	def newThumbNotice(	self,
 						ip,
-						mediaFilename, thumbFilename, time, photographer, title, colorStroke, colorFill, hashKey ):
+						mediaMd5, thumbMd5, time, photographer, title, colorStroke, colorFill, hashKey ):
 
 		newRecd = Recorded( self.ca )
 		newRecd.type = self.ca.m.TYPE_PHOTO
 		newRecd.buddy = True
-		newRecd.mediaFilename = mediaFilename
-		newRecd.thumbFilename = thumbFilename
+
+
 		newRecd.time = time
 		newRecd.photographer = photographer
 		newRecd.title = title
 		newRecd.hashKey = hashKey
+		newRecd.mediaMd5 = mediaMd5
+		newRecd.thumbMd5 = mediaMd5
 
 		colorStrokeHex = colorStroke
 		colorStroke = Color()
@@ -93,13 +95,22 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		for i in range (0, len(allParams)):
 			parama.append(allParams[i].split('='))
 
+		#todo: narrow our search to media and thumbs.
 		print( "http parama...", parama )
+
 		#todo: test to make sure file still here and not deleted... and what to return if not there?
 		#should be abs path... check it 1st
-		ff = parama[0][1]
-		fileToSend = os.path.join( self.server.ca.journalPath, ff )
-		return fileToSend
+		md5 = parama[0][1]
+		recd = self.ca.m.getByMd5(md5)
+		if (recd == None):
+			print("could not find media, returning md5")
+			return None
 
+		#todo: use journal calls here
+#		fileToSend = os.path.join( self.server.ca.journalPath, ff )
+
+#		return fileToSend
+		return None
 
 class MeshClient:
 
@@ -174,8 +185,8 @@ class MeshClient:
 			if (not buddy.props.owner):
 				bud = network.GlibServerProxy( "http://%s:%d" % (buddy.props.ip4_address, self.ca.xmlRpcPort))
 
-				bud.newPhotoNotice(	str(me.props.ip4_address),
-									recd.mediaFilename, recd.thumbFilename,
+				bud.newThumbNotice(	str(me.props.ip4_address),
+									recd.mediaMd5, recd.thumbMd5,
 									recd.time, recd.photographer,
 									recd.title,
 									recd.colorStroke.hex, recd.colorFill.hex,
@@ -197,8 +208,7 @@ class MeshClient:
 		ps = presenceservice.get_instance()
 		me = ps.get_owner()
 
-		#todo: differentiate which session in case many cameras are running
-		uri = "http://" + str(ip) + ":" + str(self.ca.httpPort) + "/thumb?thumbFilename=" + str(recd.thumbFilename)
+		uri = "http://" + str(ip) + ":" + str(self.ca.httpPort) + "/thumb?md5=" + str(recd.thumbMd5)
 		getter = network.GlibURLDownloader( uri )
 		getter.connect( "finished", self.thumbDownloadResultCb, recd )
 		getter.connect( "error", self.thumbDownloadErrorCb, recd )
@@ -210,7 +220,9 @@ class MeshClient:
 		dest = os.path.join( self.ca.journalPath, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
-		self.ca.m.addPhoto( recd )
+
+		recd.thumbFilename = suggested_name
+		self.ca.m.addRecd( recd )
 
 
 	def thumbDownloadErrorCb(self, getter, err, recd):
@@ -218,7 +230,7 @@ class MeshClient:
 
 
 	#todo: don't request this if requesting this already (lock?)
-	def requestPhotoBits(self, recd):
+	def requestMediaBits(self, recd):
 		print("requestingPhotoBits...", len(self.my_acty.get_joined_buddies()))
 
 		photoTakingBuddy = None
@@ -235,7 +247,7 @@ class MeshClient:
 
 		print("photoTakingBuddy...", photoTakingBuddy)
 		if (photoTakingBuddy != None):
-			uri = "http://" + str(photoTakingBuddy.props.ip4_address) + ":" + str(self.ca.httpPort) + "/media?mediaFilename=" + str(recd.mediaFilename)
+			uri = "http://" + str(photoTakingBuddy.props.ip4_address) + ":" + str(self.ca.httpPort) + "/media?mediaMd5=" + str(recd.mediaMd5)
 			getter = network.GlibURLDownloader( uri )
 			getter.connect( "finished", self.mediaDownloadResultCb, recd )
 			getter.connect( "error", self.mediaDownloadErrorCb, recd )
@@ -245,16 +257,18 @@ class MeshClient:
 
 
 	def mediaDownloadResultCb(self, getter, tempfile, suggested_name, recd):
+		#can this temp file be the same as that temp file?
 		dest = os.path.join( self.ca.journalPath, suggested_name )
-		shutil.copyfile(tempfile, dest)
-		os.remove(tempfile)
+		shutil.copyfile( tempfile, dest )
+		os.remove( tempfile )
 
 		recd.mediaFilename = suggested_name
 		recd.downloadedFromBuddy = True
 
 		print( "downloaded media and here it is: " + str(dest) )
 		print( "and media filename is: " + recd.mediaFilename )
-		self.ca.ui.updateShownPhoto( recd )
+
+		self.ca.ui.updateShownMedia( recd )
 
 
 	def mediaDownloadErrorCb(self, getter, err, recd):

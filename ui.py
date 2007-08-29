@@ -941,9 +941,10 @@ class UI:
 
 
 
-	def updateShownPhoto( self, recd ):
+	def updateShownMedia( self, recd ):
 		if (self.shownRecd == recd):
-			self.showPhoto( recd )
+			#todo: better method name
+			self.updateThumbSelection( recd )
 
 
 	def showVideo( self, recd ):
@@ -970,12 +971,10 @@ class UI:
 			mediaFilepath = os.path.join(self.ca.journalPath, recd.thumbFilename)
 			thumbImg.save(mediaFilepath, "jpeg", {"quality":"85"} )
 
+		#todo: might need to pause the player...
 		videoUrl = "file://" + str( mediaFilepath )
 		print( "videoUrl: ", videoUrl )
-		#+ str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
 		self.ca.gplay.setLocation(videoUrl)
-
-		#self.videoScrubPanel.show_all()
 
 		self.shownRecd = recd
 		self.showRecdMeta(recd)
