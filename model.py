@@ -99,8 +99,8 @@ class Model:
 		recd.title = el.getAttribute('title')
 		recd.time = int(el.getAttribute('time'))
 		recd.photographer = el.getAttribute('photographer')
-		recd.mediaFilename = el.getAttribute('mediaFilename')
-		recd.thumbFilename = el.getAttribute('thumbFilename')
+		#recd.mediaFilename = el.getAttribute('mediaFilename')
+		#recd.thumbFilename = el.getAttribute('thumbFilename')
 
 		colorStrokeHex = el.getAttribute('colorStroke')
 		colorStroke = Color()

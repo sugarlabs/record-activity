@@ -186,12 +186,13 @@ class RecordActivity(activity.Activity):
 			recd.saved = False
 			needToDatastoreMedia = self.saveMediaToDatastore( recd )
 
+		print( type, recd.title, recd.time, recd.photographer, recd.mediaFilename, recd.thumbFilename, recd.colorStroke.hex, recd.colorFill.hex, recd.hashKey, recd.buddy, recd.mediaMd5, recd.thumbMd5)
 		el.setAttribute("type", str(type))
 		el.setAttribute("title", recd.title)
 		el.setAttribute("time", str(recd.time))
 		el.setAttribute("photographer", recd.photographer)
-		el.setAttribute("mediaFilename", recd.mediaFilename)
-		el.setAttribute("thumbFilename", recd.thumbFilename)
+		#el.setAttribute("mediaFilename", recd.mediaFilename)
+		#el.setAttribute("thumbFilename", recd.thumbFilename)
 		el.setAttribute("colorStroke", str(recd.colorStroke.hex) )
 		el.setAttribute("colorFill", str(recd.colorFill.hex) )
 		el.setAttribute("hashKey", str(recd.hashKey))
@@ -273,7 +274,7 @@ class RecordActivity(activity.Activity):
 #										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
 
 		datastore.write(mediaObject)
-		self.doPostMediaSaved( recd )
+		self.doPostMediaSave( recd )
 
 		print("saveMediaToDatastore 5")
 		recd.datastoreId = mediaObject.object_id
@@ -316,10 +317,11 @@ class RecordActivity(activity.Activity):
 		#clear these, they are not needed (but no real need to re-serialize now, if it happens, great, otherwise, nbd
 		recd.mediaFilename = None
 		recd.thumbFilename = None
-		recd.saved = True
 
+		recd.saved = True
 		allDone = True
 
+		#TODO: iterate through the mediaHashs
 		photoHash = self.m.mediaHashs[self.m.TYPE_PHOTO]
 		for i in range (0, len(photoHash)):
 			recd = photoHash[i]
@@ -332,7 +334,7 @@ class RecordActivity(activity.Activity):
 			if (not recd.saved):
 				allDone = False
 
-		audioHash = self.mediaHashs[self.m.TYPE_AUDIO]
+		audioHash = self.m.mediaHashs[self.m.TYPE_AUDIO]
 		for i in range (0, len(audioHash)):
 			recd = audioHash[i]
 			if (not recd.saved):

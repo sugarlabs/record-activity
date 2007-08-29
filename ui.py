@@ -552,6 +552,7 @@ class UI:
 		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
+
 	def hideLiveWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
@@ -683,11 +684,13 @@ class UI:
 		self.fullScreen = not self.fullScreen
 		self.updateVideoComponents()
 
+
 	def moveWinOffscreen( self, win ):
 		#we move offscreen to resize or else we get flashes on screen, and setting hide() doesn't allow resize & moves
 		offW = (gtk.gdk.screen_width() + 100)
 		offH = (gtk.gdk.screen_height() + 100)
 		win.move(offW, offH)
+
 
 	def setImgLocDim( self, win ):
 		#this is *very* annoying... this call makes the video not show up at launch
@@ -769,8 +772,8 @@ class UI:
 		print("shutterClick 1 ", self.ca.m.MODE, self.liveMode )
 		if ( (self.ca.m.MODE == self.ca.m.MODE_AUDIO) and (not self.liveMode) ):
 			print("shutterClick 2")
-			self.liveMode = not self.liveMode
-			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
+			self.liveMode = True
+			self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
 			self.updateVideoComponents()
 		else:
 			self.ca.m.doShutter()
@@ -836,6 +839,8 @@ class UI:
 				self.setPipLocDim( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (self.liveMode):
+				self.moveWinOffscreen( self.livePhotoWindow )
+
 				self.setImgLocDim( self.liveVideoWindow )
 				self.setPipBgdLocDim( self.recordWindow )
 			else:
