@@ -263,10 +263,18 @@ class RecordActivity(activity.Activity):
 		mediaObject.file_path = mediaFile
 
 		print("saveMediaToDatastore 4")
-		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
-										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
+
+#		dcbw:
+#		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
+#										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
+
+#		jedierikb:
 #		datastore.write(mediaObject, 	reply_handler=(lambda: self._mediaSaveCb(recd)),
 #										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
+
+		datastore.write(mediaObject)
+		self.doPostMediaSaved( recd )
+
 		print("saveMediaToDatastore 5")
 		recd.datastoreId = mediaObject.object_id
 		print("datastore.write...", recd.datastoreId)
@@ -342,6 +350,7 @@ class RecordActivity(activity.Activity):
 			self.destroy()
 			print("doPostMediaSave 2 -- pre destroy()")
 
+
 	def _sharedCb( self, activity ):
 		print("1 i am shared")
 		self.startMesh()
@@ -405,6 +414,9 @@ class RecordActivity(activity.Activity):
 	def close( self ):
 		print("close 1")
 		self.I_AM_CLOSING = True
+		#quicker we look like we're gone, the better
+		self.hide()
+
 		self.m.UPDATING = False
 		self.ui.updateButtonSensitivities( )
 		self.ui.doMouseListener( False )
