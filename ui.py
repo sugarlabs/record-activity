@@ -903,15 +903,14 @@ class UI:
 		self.livePhotoCanvas.setImage( img )
 
 		self.updateVideoComponents()
-
 		self.ca.glive.stop()
 
 		mediaFilepath = recd.getMediaFilepath( )
-		videoUrl = "file://" + str( mediaFilepath )
-		print( "audioUrl: ", videoUrl )
-		self.ca.gplay.setLocation(videoUrl)
-		self.shownRecd = recd
-		self.showRecdMeta(recd)
+		if (mediaFilepath != None):
+			videoUrl = "file://" + str( mediaFilepath )
+			self.ca.gplay.setLocation(videoUrl)
+			self.shownRecd = recd
+			self.showRecdMeta(recd)
 
 
 
@@ -963,7 +962,14 @@ class UI:
 		#todo: yank from the datastore here, yo
 		#todo: use os.path calls here, see jukebox
 		#~~> urllib.quote(os.path.abspath(file_path))
+
 		mediaFilepath = recd.getMediaFilepath( )
+		if (mediaFilepath == None):
+			thumbImg = recd.getThumbPixbuf()
+			#todo: check for unique filename
+			mediaFilepath = os.path.join(self.ca.journalPath, recd.thumbFilename)
+			thumbImg.save(mediaFilepath, "jpeg", {"quality":"85"} )
+
 		videoUrl = "file://" + str( mediaFilepath )
 		print( "videoUrl: ", videoUrl )
 		#+ str(self.ca.journalPath) +"/"+ str(recd.mediaFilename)
