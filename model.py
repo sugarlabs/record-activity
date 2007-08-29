@@ -249,7 +249,6 @@ class Model:
 	def saveAudio( self, tempPath, pixbuf ):
 		print("stop recording audio")
 		self.setUpdating( True )
-
 		#todo: necc?
 		self.ca.ui.hideLiveWindows()
 		self.ca.ui.hidePlayWindows()
@@ -257,15 +256,14 @@ class Model:
 		recd = self.createNewRecorded( self.TYPE_AUDIO )
 		oggPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
+		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 
-		#todo: create something here...
-		thumbImg = self.generateEmptyThumbnail( )
-		thumbImg.write_to_png(thumbPath)
+		#todo: need to save the fullpixbuf to the xml only for display
 
 		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
 		shutil.move(tempPath, oggPath)
 
-		#at this point, we have both video and thumb path, so we can save the recd
+		#at this point, we have both audio and thumb path, so we can save the recd
 		self.createNewRecordedMd5Sums( recd )
 
 		audioHash = self.mediaHashs[self.TYPE_AUDIO]
@@ -378,9 +376,6 @@ class Model:
 			#todo: md5?
 			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
 
-
-	def saveAudioPhoto( self, pixbuf ):
-		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 
 
 	def _get_base64_pixbuf_data(self, pixbuf):
