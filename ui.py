@@ -766,7 +766,9 @@ class UI:
 
 
 	def shutterClickCb( self, arg ):
+		print("shutterClick 1 ", self.ca.m.MODE, self.liveMode )
 		if ( (self.ca.m.MODE == self.ca.m.MODE_AUDIO) and (not self.liveMode) ):
+			print("shutterClick 2")
 			self.liveMode = not self.liveMode
 			self.startLiveAudio()
 		else:
@@ -892,8 +894,11 @@ class UI:
 
 	def showAudio( self, recd ):
 		self.liveMode = False
-		#todo: set this
-		self.livePhotoCanvas.setImage(None)
+
+		pixbuf = recd.getThumbPixbuf()
+		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+
+		self.livePhotoCanvas.setImage( img )
 		self.updateVideoComponents()
 		self.ca.glive.stop()
 
@@ -906,7 +911,9 @@ class UI:
 
 
 	def startLiveAudio( self ):
-		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
+#		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
+		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
+
 		self.ca.glive.stop()
 		self.ca.glive.play()
 
