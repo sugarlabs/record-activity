@@ -630,11 +630,12 @@ class UI:
 
 
 	def stopPlayVideoToRecord( self ):
-		#if we're watching a movie...
-		if (not self.ca.ui.liveMode):
-			#stop the movie
-			self.ca.gplay.stop()
-			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+		pass
+#		#if we're watching a movie...
+#		if (not self.ca.ui.liveMode):
+#			#stop the movie
+#			self.ca.gplay.stop()
+#			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 
 
 

@@ -258,7 +258,7 @@ class Model:
 		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
 		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 
-		#todo: need to save the fullpixbuf to the xml only for display
+		#todo: need to save the fullpixbuf to the xml only for display (for now, thumbnail)
 
 		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
 		shutil.move(tempPath, oggPath)
