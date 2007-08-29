@@ -243,11 +243,10 @@ class Model:
 		self.setUpdating( True )
 		self.ca.glive.stopRecordingAudio( )
 		self.setRecording( False )
-		self.ca.glive.stop
 
 
 	def saveAudio( self, tempPath, pixbuf ):
-		print("stop recording audio")
+		print("save audio")
 		self.setUpdating( True )
 		#todo: necc?
 		self.ca.ui.hideLiveWindows()
@@ -257,6 +256,7 @@ class Model:
 		oggPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
 		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
+		thumbImg.write_to_png(thumbPath)
 
 		#todo: need to save the fullpixbuf to the xml only for display (for now, thumbnail)
 
@@ -376,19 +376,6 @@ class Model:
 			#todo: md5?
 			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
 
-
-
-	def _get_base64_pixbuf_data(self, pixbuf):
-		data = [""]
-		pixbuf.save_to_callback(self._save_data_to_buffer_cb, "png", {}, data)
-
-		import base64
-		return base64.b64encode(str(data[0]))
-
-
-	def _save_data_to_buffer_cb(self, buf, data):
-		data[0] += buf
-		return True
 
 
 	def removeMediaFromDatastore( self, recd ):

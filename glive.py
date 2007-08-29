@@ -144,12 +144,12 @@ class Glive:
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! audioconvert name=audioAudioconvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! queue name=audioQueue_"+n+ " ! audioconvert name=audioAudioconvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n )
 			v4l2 = True
 
-			audioTee = pipeline.get_by_name('audioTee_'+n)
+			audioQueue = pipeline.get_by_name('audioQueue_'+n)
 			audioAudioconvert = pipeline.get_by_name('audioAudioconvert_'+n)
-			audioTee.unlink(audioAudioconvert)
+			audioQueue.unlink(audioAudioconvert)
 
 
 			videoTee = pipeline.get_by_name('videoTee_'+n)
@@ -200,14 +200,18 @@ class Glive:
 		print("audioFile:", audioFile )
 		self.record = False
 		self.audio = False
+		print( "self.audioPixbuf:", self.audioPixbuf )
 		self.ca.m.saveAudio(audioFile, self.audioPixbuf)
 		#todo: dispose of the audioPixbuf?
 
 
 	def takePhoto(self):
+		print("takePhoto 1")
 		if not(self.picExposureOpen):
+			print("takePhoto 2")
 			self.picExposureOpen = True
 			self.el("videoTee").link(self.el("picQueue"))
+			print("takePhoto 3")
 
 
 	def copyPic(self, fsink, buffer, pad, user_data=None):
@@ -224,13 +228,17 @@ class Glive:
 
 
 	def savePhoto(self, pixbuf):
+		print("savePhoto 1")
 		if (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+			print("savePhoto 2")
 			self.audioPixbuf = pixbuf
 		else:
 			self.ca.m.savePhoto(pixbuf)
 
 
 	def startRecordingVideo(self):
+		#todo: gobject idle the start of the stream for nice starts with full frames
+
 		self.pipe().set_state(gst.STATE_READY)
 		self.record = True
 		self.audio = True
@@ -243,16 +251,22 @@ class Glive:
 
 
 	def startRecordingAudio(self):
+		print("startRecordingAudio 1")
 		self.pipe().set_state(gst.STATE_READY)
-		self.record = True
-		#todo: not really needed, is it :-)
-		self.audio = True
-		if (self.record):
-			self.el("audioTee").link(self.el("audioAudioconvert"))
 
-		self.pipe().set_state(gst.STATE_PLAYING)
+
 		#take the picture at the start
-		gobject.idle_add( self.takePhoto )
+#		gobject.idle_add( self.takePhoto )
+		print("startRecordingAudio 3")
+		self.takePhoto()
+		print("startRecordingAudio 4")
+
+		self.record = True
+		if (self.record):
+			self.el("audioQueue").link(self.el("audioAudioconvert"))
+
+		print("startRecordingAudio 2")
+		self.pipe().set_state(gst.STATE_PLAYING)
 
 
 	def stopRecordingVideo(self):

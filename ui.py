@@ -1456,6 +1456,9 @@ class ThumbnailButton(gtk.Button):
 				else:
 					self.ui.thumbVideoSvg.render_cairo(rtCtx)
 
+				rtCtx.translate( 8, 22 )
+				rtCtx.set_source_surface(self.tc.thumbCanvas, 0, 0)
+				rtCtx.paint()
 
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
 		ctx.paint()

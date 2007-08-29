@@ -232,45 +232,59 @@ class RecordActivity(activity.Activity):
 
 				#reset for the next title change if not closing...
 				recd.titleChange = False
-			return False
+				return False
 
-			#this will remove the media from being accessed on the local disk since it puts it away into cold storage
-			#therefore this is only called when write_file is called by the activity superclass
-			mediaObject = datastore.create()
-			#todo: what other metadata to set?
-			mediaObject.metadata['title'] = recd.title
-			#jobject.metadata['keep'] = '0'
-			#jobject.metadata['buddies'] = ''
+		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
+		#therefore this is only called when write_file is called by the activity superclass
+		mediaObject = datastore.create()
+		#todo: what other metadata to set?
+		mediaObject.metadata['title'] = recd.title
+		#jobject.metadata['keep'] = '0'
+		#jobject.metadata['buddies'] = ''
 
-			pixbuf = recd.getThumbPixbuf()
-			thumbData = self._get_base64_pixbuf_data(pixbuf)
-			mediaObject.metadata['preview'] = thumbData
+		pixbuf = recd.getThumbPixbuf()
+		thumbData = self._get_base64_pixbuf_data(pixbuf)
+		mediaObject.metadata['preview'] = thumbData
 
-			colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
-			mediaObject.metadata['icon-color'] = colors
+		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
+		mediaObject.metadata['icon-color'] = colors
 
-			if (recd.type == self.TYPE_PHOTO):
-				mediaObject.metadata['mime_type'] = 'image/jpeg'
-			elif (recd.type == self.TYPE_VIDEO):
-				mediaObject.metadata['mime_type'] = 'video/ogg'
-			elif (recd.type == self.TYPE_AUDIO):
-				mediaObject.metadata['mime_type'] = 'audio/ogg'
+		if (recd.type == self.m.TYPE_PHOTO):
+			mediaObject.metadata['mime_type'] = 'image/jpeg'
+		elif (recd.type == self.m.TYPE_VIDEO):
+			mediaObject.metadata['mime_type'] = 'video/ogg'
+		elif (recd.type == self.m.TYPE_AUDIO):
+			mediaObject.metadata['mime_type'] = 'audio/ogg'
 
-			mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
-			mediaObject.file_path = mediaFile
+		#todo: use recd.getMediaFilepath with option to not request mesh bits
+		mediaFile = os.path.join(self.journalPath, recd.mediaFilename)
+		mediaObject.file_path = mediaFile
 
-			datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
-											error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
-			recd.datastoreId = mediaObject.object_id
+		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
+										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
+		recd.datastoreId = mediaObject.object_id
 
-			if (not self.I_AM_CLOSING):
-				recd.datastoreOb = mediaObject
+		if (not self.I_AM_CLOSING):
+			recd.datastoreOb = mediaObject
 
-			if (not self.I_AM_CLOSING):
-				mediaObject.destroy()
-				del mediaObject
+		if (not self.I_AM_CLOSING):
+			mediaObject.destroy()
+			del mediaObject
 
-			return True
+		return True
+
+
+	def _get_base64_pixbuf_data(self, pixbuf):
+		data = [""]
+		pixbuf.save_to_callback(self._save_data_to_buffer_cb, "png", {}, data)
+
+		import base64
+		return base64.b64encode(str(data[0]))
+
+
+	def _save_data_to_buffer_cb(self, buf, data):
+		data[0] += buf
+		return True
 
 
 	def _mediaSaveCb( self, recd ):
