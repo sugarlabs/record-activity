@@ -660,11 +660,14 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			print("updateModeChange 1")
 			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD )
+			print("updateModeChange 2")
 
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
 		self.updateVideoComponents()
+		print("updateModeChange 3")
 
 
 	def startLiveVideo(self, window, pipetype):
@@ -772,9 +775,9 @@ class UI:
 		print("shutterClick 1 ", self.ca.m.MODE, self.liveMode )
 		if ( (self.ca.m.MODE == self.ca.m.MODE_AUDIO) and (not self.liveMode) ):
 			print("shutterClick 2")
-			self.liveMode = True
-			self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
-			self.updateVideoComponents()
+			self.restartLiveAudio()
+
+			print("shutterClick 3")
 		else:
 			self.ca.m.doShutter()
 
@@ -937,13 +940,24 @@ class UI:
 			elif (recd.type == self.ca.m.TYPE_AUDIO):
 				self.livePhotoCanvas.setImage(None)
 				self.ca.gplay.stop()
-				self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
+				self.restartLiveAudio()
 
 			self.liveMode = True
 			self.updateVideoComponents()
 
 			self.showLiveVideoTags()
 
+
+	def restartLiveAudio( self ):
+		#todo: updating
+		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
+		self.liveVideoWindow.set_glive(self.ca.glive)
+		self.ca.glive.stop()
+		self.ca.glive.play()
+
+		self.showLiveVideoTags()
+		self.liveMode = True
+		self.updateVideoComponents()
 
 
 	def updateShownMedia( self, recd ):
