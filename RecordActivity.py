@@ -233,7 +233,8 @@ class RecordActivity(activity.Activity):
 
 				#reset for the next title change if not closing...
 				recd.titleChange = False
-				return False
+
+			return False
 
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
 		#therefore this is only called when write_file is called by the activity superclass
@@ -402,7 +403,7 @@ class RecordActivity(activity.Activity):
 	def restartPipes(self):
 		print("restart pipes")
 		if (not self.m.UPDATING):
-			self.ui.updateModeChange()
+			self.ui.updateModeChange( )
 			self.doMouseListener( True )
 
 
