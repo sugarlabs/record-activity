@@ -236,7 +236,9 @@ class RecordActivity(activity.Activity):
 
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
 		#therefore this is only called when write_file is called by the activity superclass
+		print("saveMediaToDatastore 2")
 		mediaObject = datastore.create()
+		print("saveMediaToDatastore 3")
 		#todo: what other metadata to set?
 		mediaObject.metadata['title'] = recd.title
 		#jobject.metadata['keep'] = '0'
@@ -260,12 +262,14 @@ class RecordActivity(activity.Activity):
 		mediaFile = os.path.join(self.journalPath, recd.mediaFilename)
 		mediaObject.file_path = mediaFile
 
-#		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
-#										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
-		datastore.write(mediaObject, 	reply_handler=(lambda: self._mediaSaveCb(recd)),
-										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
-		print("datastore.write...", recd.datastoreId)
+		print("saveMediaToDatastore 4")
+		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
+										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
+#		datastore.write(mediaObject, 	reply_handler=(lambda: self._mediaSaveCb(recd)),
+#										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
+		print("saveMediaToDatastore 5")
 		recd.datastoreId = mediaObject.object_id
+		print("datastore.write...", recd.datastoreId)
 
 		if (not self.I_AM_CLOSING):
 			recd.datastoreOb = mediaObject
