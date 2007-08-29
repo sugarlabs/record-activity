@@ -331,9 +331,9 @@ class RecordActivity(activity.Activity):
 		#todo: reset all the saved flags or just let them take care of themselves on the next save?
 		print("doPostMediaSave 3; allDone: ", self.I_AM_SAVED )
 		if (self.I_AM_SAVED and self.I_AM_CLOSING):
-			print("doPostMediaSave 1")
+			print("doPostMediaSave 1 -- pre destroy()")
 			self.destroy()
-			print("doPostMediaSave 2")
+			print("doPostMediaSave 2 -- pre destroy()")
 
 	def _sharedCb( self, activity ):
 		print("1 i am shared")
@@ -366,7 +366,6 @@ class RecordActivity(activity.Activity):
 			print("should restart pipes")
 
 		self.ACTIVE = self.props.active
-
 
 
 	def stopPipes(self):
@@ -409,17 +408,18 @@ class RecordActivity(activity.Activity):
 		self.glive.stop( )
 
 		print("close 2")
+		#this calls write_file
 		activity.Activity.close( self )
-
+		print("close 3")
 
 	def destroy( self ):
-		print( "destroy and I_AM_CLOSING:", self.I_AM_CLOSING, "I_AM_SAVED:", self.I_AM_SAVED )
+		print( "destroy and I_AM_CLOSING:", self.I_AM_CLOSING, "I_AM_SAVED:", self.I_AM_SAVED, "self._updating_jobject:", self._updating_jobject )
 
 		if self.I_AM_CLOSING:
 			self.hide()
 
 		if self.I_AM_SAVED:
-			print("total Destruction")
+			print("total Destruction 1")
 
 			#todo: why recreate temp and destroy journalpath?
 			#todo: clean up / throw away any video you might be recording when you quit the activity
@@ -427,4 +427,6 @@ class RecordActivity(activity.Activity):
 			if (os.path.exists(self.journalPath)):
 				shutil.rmtree( self.journalPath )
 
+			print("total Destruction 2")
 			activity.Activity.destroy( self )
+			print("total Destruction 3")
