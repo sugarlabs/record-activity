@@ -393,7 +393,6 @@ class RecordActivity(activity.Activity):
 		self.ui.audioCanvas.stopWaveformDraws( )
 		self.gplay.stop( )
 		self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
-		self.glive.stopAudioHandoffs( )
 		self.glive.stop( )
 
 		print("close 2")

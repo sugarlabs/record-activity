@@ -200,7 +200,8 @@ class Glive:
 		print("audioFile:", audioFile )
 		self.record = False
 		self.audio = False
-		self.ca.m.saveAudio(audioFile)
+		self.ca.m.saveAudio(audioFile, self.audioPixbuf)
+		#todo: dispose of the audioPixbuf?
 
 
 	def takePhoto(self):
@@ -223,7 +224,10 @@ class Glive:
 
 
 	def savePhoto(self, pixbuf):
-		self.ca.m.savePhoto(pixbuf)
+		if (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+			self.audioPixbuf = pixbuf
+		else:
+			self.ca.m.savePhoto(pixbuf)
 
 
 	def startRecordingVideo(self):
@@ -247,13 +251,10 @@ class Glive:
 			self.el("audioTee").link(self.el("audioAudioconvert"))
 
 		self.pipe().set_state(gst.STATE_PLAYING)
+		#take the picture at the start
+		gobject.idle_add( self.takePhoto )
 
 
-	def stopAudioHandoffs( self ):
-		#todo: do this when switching pipelines too!
-		if self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD:
-			thumbFakesink = self.el( "audioFakesink" )
-			thumbFakesink.set_property( "signal-handoffs", False )
 
 
 	def stopRecordingVideo(self):

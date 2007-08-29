@@ -246,7 +246,7 @@ class Model:
 		self.ca.glive.stop
 
 
-	def saveAudio( self, tempPath ):
+	def saveAudio( self, tempPath, pixbuf ):
 		print("stop recording audio")
 		self.setUpdating( True )
 
@@ -378,6 +378,9 @@ class Model:
 			#todo: md5?
 			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
 
+
+	def saveAudioPhoto( self, pixbuf ):
+		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 
 
 	def _get_base64_pixbuf_data(self, pixbuf):
