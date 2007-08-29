@@ -103,10 +103,12 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		md5 = parama[0][1]
 		recd = self.ca.m.getByMd5(md5)
 		if (recd == None):
-			print("could not find media, returning md5")
+			print( "could not find media returning md5" )
 			return None
+		else:
+			print( "found the md5: ", recd )
 
-		#todo: use journal calls here
+		#todo: use journal calls here, but need to know what we're asking for...
 #		fileToSend = os.path.join( self.server.ca.journalPath, ff )
 
 #		return fileToSend
@@ -227,10 +229,12 @@ class MeshClient:
 
 	def thumbDownloadErrorCb(self, getter, err, recd):
 		print("thumbDownloadError", getter, err, recd )
+		#todo: delete that thumb?
 
 
-	#todo: don't request this if requesting this already (lock?)
+
 	def requestMediaBits(self, recd):
+	#todo: don't request this if requesting this already (lock?)
 		print("requestingPhotoBits...", len(self.my_acty.get_joined_buddies()))
 
 		photoTakingBuddy = None

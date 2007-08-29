@@ -81,6 +81,15 @@ class Model:
 			for each in audios:
 				self.loadMedia( each, self.mediaHashs[self.TYPE_AUDIO] )
 
+	def getByMd5( self, md5 ):
+		for mh in range (0, len(self.mediaHashs)):
+			for r in range (0, len(self.mediaHashs[mh])):
+				if (r.thumbMd5 == md5):
+					return r
+				elif (r.mediaMd5 == md5):
+					return r
+
+		return None
 
 	def loadMedia( self, el, hash ):
 		recd = Recorded( self.ca )
