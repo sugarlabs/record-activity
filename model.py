@@ -84,10 +84,11 @@ class Model:
 	def getByMd5( self, md5 ):
 		for mh in range (0, len(self.mediaHashs)):
 			for r in range (0, len(self.mediaHashs[mh])):
-				if (r.thumbMd5 == md5):
-					return r
-				elif (r.mediaMd5 == md5):
-					return r
+				recd = self.mediaHashs[mh][r]
+				if (recd.thumbMd5 == md5):
+					return recd
+				elif (recd.mediaMd5 == md5):
+					return recd
 
 		return None
 
@@ -281,6 +282,8 @@ class Model:
 
 		self.doPostSaveVideo()
 
+		self.meshShareRecd( recd )
+
 
 	def startRecordingVideo( self ):
 		print("start recording video")
@@ -335,6 +338,14 @@ class Model:
 		self.thumbAdded( self.TYPE_VIDEO )
 
 		self.doPostSaveVideo()
+		self.meshShareRecd( recd )
+
+
+
+	def meshShareRecd( self, recd ):
+		#hey, i just took a cool video.audio.photo!  let me show you!
+		if (self.ca.meshClient != None):
+			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
 
 
 	def cannotSaveVideo( self ):
@@ -380,10 +391,7 @@ class Model:
 		self.createNewRecordedMd5Sums( recd )
 		self.addRecd( recd )
 
-		#hey, i just took a cool picture!  let me show you!
-		if (self.ca.meshClient != None):
-			#todo: md5?
-			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
+		self.meshShareRecd( recd )
 
 
 
@@ -540,11 +548,11 @@ class Model:
 		#remove files from the filesystem if not on the datastore
 		if (recd.datastoreId == None):
 			print("deleteRecorded 2")
-			mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
+			mediaFile = recd.getMediaFilepath()
 			if (os.path.exists(mediaFile)):
 				os.remove(mediaFile)
 
-			thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
+			thumbFile = recd.getThumbFilepath()
 			if (os.path.exists(thumbFile)):
 				os.remove(thumbFile)
 		else:

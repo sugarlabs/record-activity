@@ -111,22 +111,31 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 			valid = True
 
 		if (not valid):
-			return None
+			#todo: better response here?
+			return "not_available"
 
 		md5 = parama[0][1]
 		print("thumb", thumb, "md5", md5 )
 		recd = self.server.ca.m.getByMd5(md5)
 		if (recd == None):
 			print( "could not find media returning md5" )
-			return None
+			return "not_available"
 		else:
 			print( "found the md5: ", recd )
+			if (thumb):
+				path = recd.getThumbFilepath()
+			else:
+				path = recd.getMediaFilepath()
 
-		#todo: use journal calls here, but need to know what we're asking for...
-#		fileToSend = os.path.join( self.server.ca.journalPath, ff )
+			if (path == None):
+				return "not_available"
+			else:
+				if (not os.path.exists(path)):
+					return "not_available"
+				else:
+					return path
 
-#		return fileToSend
-		return None
+		return "not_available"
 
 class MeshClient:
 
@@ -233,6 +242,8 @@ class MeshClient:
 
 	def thumbDownloadResultCb(self, getter, tempfile, suggested_name, recd):
 		#todo: handle empty files here... or errors
+		print( "thumb says: ", tempfile, suggested_name )
+
 		dest = os.path.join( self.ca.journalPath, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)

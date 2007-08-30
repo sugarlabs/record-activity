@@ -102,17 +102,45 @@ class Recorded:
 			return pbl.get_pixbuf()
 
 
+
+
+	def getThumbFilepath( self ):
+		#todo: make sure this is used everywhere
+		if (self.datastoreId == None):
+			#just taken, so it is in the tempSessionDir
+			#so load file, convert to pixbuf, and return it here...
+			thumbPixbuf = None
+			thumbFilepath = os.path.join(self.ca.journalPath, self.thumbFilename)
+			if ( os.path.isfile(thumbFilepath) ):
+				return thumbFilepath
+		else:
+			if (self.datastoreOb == None):
+				self.ca.m.loadMediaFromDatastore( self )
+			if (self.datastoreOb == None):
+				print("RecordActivity error -- unable to get datastore object in getThumbPixbuf")
+				return None
+			pbl = gtk.gdk.PixbufLoader()
+			import base64
+			data = base64.b64decode(self.datastoreOb.metadata['preview'])
+			pbl.write(data)
+			#todo: write to tmp (rainbow?) and random unused filename...
+			thumbFilepath = os.path.join(self.ca.journalPath, "thumb.png")
+			thumbImg.save(thumbFilepath, "png", {} )
+			return thumbFilepath
+
+		return None
+
+
 	def getMediaFilepath( self ):
 		print("getMediaFilepath 1")
 		if (self.datastoreId == None):
-			print("getMediaFilepath 2")
-			mediaFilepath = os.path.join(self.ca.journalPath, self.mediaFilename)
 			if (not self.buddy):
 				#just taken by you, so it is in the tempSessionDir
+				print("getMediaFilepath 3")
+				mediaFilepath = os.path.join(self.ca.journalPath, self.mediaFilename)
 				return os.path.abspath(mediaFilepath)
 			else:
-				print("getMediaFilepath 3")
-				if (os.path.exists(mediaFilepath) and self.downloadedFromBuddy):
+				if (self.downloadedFromBuddy):
 					print("getMediaFilepath 4")
 					#the user has requested the high-res version, and it has downloaded
 					return os.path.abspath(mediaFilepath)
