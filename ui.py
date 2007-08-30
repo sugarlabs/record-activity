@@ -259,6 +259,10 @@ class UI:
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
 
+		#border behind
+		self.pipBgdWindow2 = PipWindow(self)
+		self.addToWindowStack( self.pipBgdWindow2, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+
 		#video playback windows
 		self.playOggWindow = PlayVideoWindow()
 		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
@@ -319,7 +323,7 @@ class UI:
 		self.my = -1
 		self.hideWidgetsTimer = 0
 		if (self.hiddenWidgets):
-			print("reshow widgets")
+			self.showWidgets()
 
 		#remove, then add
 		self.doMouseListener( False )
@@ -335,6 +339,25 @@ class UI:
 					gobject.source_remove( self.HIDE_WIDGET_TIMEOUT_ID )
 
 
+	def showWidgets( self ):
+		self.updateVideoComponents()
+
+
+	def hideWidgets( self ):
+		self.moveWinOffscreen( self.recordWindow )
+		self.moveWinOffscreen( self.maxWindow )
+		self.moveWinOffscreen( self.pipBgdWindow )
+		self.moveWinOffscreen( self.pipBgdWindow2 )
+		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			if (not self.liveMode):
+				self.moveWinOffscreen( self.liveVideoWindow )
+		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+			if (not self.liveMode):
+				self.moveWinOffscreen( self.playLiveWindow )
+		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			pass
+
+
 	def _mouseMightaMovedCb( self ):
 
 		x, y = self.ca.get_pointer()
@@ -343,14 +366,14 @@ class UI:
 			#todo: be sure to show the widgets here iff hidden
 			if (self.hiddenWidgets):
 				self.hiddenWidgets = False
-				print("reshow widgets")
+				self.showWidgets()
 		else:
 			#todo: use time here?
 			self.hideWidgetsTimer = self.hideWidgetsTimer + 500
 
 		if (self.hideWidgetsTimer > 7500):
 			if (not self.hiddenWidgets):
-				print("hide widgets")
+				self.hideWidgets()
 			self.hiddenWidgets = True
 
 		self.mx = x
@@ -567,7 +590,7 @@ class UI:
 
 	def hidePlayWindows( self ):
 		self.moveWinOffscreen( self.playOggWindow )
-		self.moveWinOffscreen( self.pipBgdWindow )
+		self.moveWinOffscreen( self.pipBgdWindow2 )
 		self.moveWinOffscreen( self.playLiveWindow )
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
@@ -832,7 +855,7 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.playOggWindow )
-				self.moveWinOffscreen( self.pipBgdWindow )
+				self.moveWinOffscreen( self.pipBgdWindow2 )
 
 				self.setImgLocDim( self.playLiveWindow )
 				self.setMaxLocDim( self.maxWindow )
@@ -842,7 +865,7 @@ class UI:
 
 				self.setImgLocDim( self.playOggWindow )
 				self.setMaxLocDim( self.maxWindow )
-				self.setPipBgdLocDim( self.pipBgdWindow )
+				self.setPipBgdLocDim( self.pipBgdWindow2 )
 				self.setPipLocDim( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (self.liveMode):
