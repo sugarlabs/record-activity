@@ -260,8 +260,9 @@ class RecordActivity(activity.Activity):
 		elif (recd.type == self.m.TYPE_AUDIO):
 			mediaObject.metadata['mime_type'] = 'audio/ogg'
 
+		#todo: make sure the file is available before you ever get to this point...
 		#todo: use recd.getMediaFilepath with option to not request mesh bits
-		mediaFile = os.path.join(self.journalPath, recd.mediaFilename)
+		mediaFile = recd.getMediaFilepath(False)#os.path.join(self.journalPath, recd.mediaFilename)
 		mediaObject.file_path = mediaFile
 
 		print("saveMediaToDatastore 4")

@@ -548,11 +548,11 @@ class Model:
 		#remove files from the filesystem if not on the datastore
 		if (recd.datastoreId == None):
 			print("deleteRecorded 2")
-			mediaFile = recd.getMediaFilepath()
+			mediaFile = recd.getMediaFilepath( False )
 			if (os.path.exists(mediaFile)):
 				os.remove(mediaFile)
 
-			thumbFile = recd.getThumbFilepath()
+			thumbFile = recd.getThumbFilepath( False )
 			if (os.path.exists(thumbFile)):
 				os.remove(thumbFile)
 		else:

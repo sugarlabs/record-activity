@@ -449,7 +449,11 @@ class UI:
 
 
 	def doClipboardCopyStart( self, recd ):
-		imgPath_s = recd.getMediaFilepath( )
+		imgPath_s = recd.getMediaFilepath(False)
+		if (imgPath_s == None):
+			#todo: make sure this is handled correctly
+			return None
+
 		#todo: truly unique filenames for temp... #and check they're not taken..
 		tempImgPath = os.path.join("tmp", recd.mediaFilename)
 		tempImgPath = os.path.abspath(tempImgPath)
@@ -494,7 +498,7 @@ class UI:
 
 	def getPhotoPixbuf( self, recd ):
 		pixbuf = None
-		imgPath = recd.getMediaFilepath( )
+		imgPath = recd.getMediaFilepath( True )
 		print( "getting photoPixbuf: ", imgPath )
 		if (not imgPath == None):
 			if ( os.path.isfile(imgPath) ):
@@ -913,7 +917,7 @@ class UI:
 		self.updateVideoComponents()
 		self.ca.glive.stop()
 
-		mediaFilepath = recd.getMediaFilepath( )
+		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath != None):
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
@@ -983,12 +987,9 @@ class UI:
 		#todo: use os.path calls here, see jukebox
 		#~~> urllib.quote(os.path.abspath(file_path))
 
-		mediaFilepath = recd.getMediaFilepath( )
+		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath == None):
-			thumbImg = recd.getThumbPixbuf()
-			#todo: check for unique filename
-			mediaFilepath = os.path.join(self.ca.journalPath, recd.thumbFilename)
-			thumbImg.save(mediaFilepath, "jpeg", {"quality":"85"} )
+			mediaFilepath = recd.getThumbFilepath( True )
 
 		#todo: might need to pause the player...
 		videoUrl = "file://" + str( mediaFilepath )

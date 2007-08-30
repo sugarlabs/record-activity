@@ -123,9 +123,9 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 		else:
 			print( "found the md5: ", recd )
 			if (thumb):
-				path = recd.getThumbFilepath()
+				path = recd.getThumbFilepath(False)
 			else:
-				path = recd.getMediaFilepath()
+				path = recd.getMediaFilepath(False)
 
 			if (path == None):
 				return "not_available"
@@ -260,7 +260,7 @@ class MeshClient:
 
 	def requestMediaBits(self, recd):
 	#todo: don't request this if requesting this already (lock?)
-		print("requestingPhotoBits...", len(self.my_acty.get_joined_buddies()))
+		print("requestingMediaBits...", len(self.my_acty.get_joined_buddies()))
 
 		photoTakingBuddy = None
 		for buddy in self.my_acty.get_joined_buddies():
@@ -286,6 +286,10 @@ class MeshClient:
 
 
 	def mediaDownloadResultCb(self, getter, tempfile, suggested_name, recd):
+		print ( "mediaDownloadResultCb...", tempfile, suggested_name )
+
+		#todo: on error, handle the following differently:
+
 		#can this temp file be the same as that temp file?
 		dest = os.path.join( self.ca.journalPath, suggested_name )
 		shutil.copyfile( tempfile, dest )

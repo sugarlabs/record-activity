@@ -104,7 +104,7 @@ class Recorded:
 
 
 
-	def getThumbFilepath( self ):
+	def getThumbFilepath( self, meshReq ):
 		#todo: make sure this is used everywhere
 		if (self.datastoreId == None):
 			#just taken, so it is in the tempSessionDir
@@ -131,7 +131,7 @@ class Recorded:
 		return None
 
 
-	def getMediaFilepath( self ):
+	def getMediaFilepath( self, meshReq ):
 		print("getMediaFilepath 1")
 		if (self.datastoreId == None):
 			if (not self.buddy):
@@ -150,9 +150,9 @@ class Recorded:
 					#e.g., thumbs for pics, or "coming attractions" for videos ;-)
 					#todo: always re-request?
 					#todo: notify to the user that the request is underway or not possible...
-					if (self.ca.meshClient != None):
+					if ( (self.ca.meshClient != None) and meshReq):
 						print("getMediaFilepath 6")
-						self.ca.meshClient.requestPhotoBits( self )
+						self.ca.meshClient.requestMediaBits( self )
 						print("getMediaFilepath 7")
 					return None
 
