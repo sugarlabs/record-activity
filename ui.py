@@ -731,10 +731,10 @@ class UI:
 		#self.moveWinOffscreen( win )
 
 		if (self.fullScreen):
-			self.smartResize( gtk.gdk.screen_width(), gtk.gdk.screen_height() )
+			self.smartResize( win, gtk.gdk.screen_width(), gtk.gdk.screen_height() )
 			self.smartMove( win, 0, 0 )
 		else:
-			self.smartResize( self.vw, self.vh )
+			self.smartResize( win, self.vw, self.vh )
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			self.smartMove( win, vPos[0], vPos[1] )
 
@@ -772,23 +772,24 @@ class UI:
 
 	def smartResize( self, win, w, h ):
 		winSize = win.get_size()
-		if ( (win[0] != w) or (win[1] != h) ):
+		if ( (winSize[0] != w) or (winSize[1] != h) ):
 			win.resize( w, h )
 
 
 	def smartMove( self, win, x, y ):
 		winLoc = win.get_position()
-		if ( (win[0] != x) or (win[1] != y) ):
+		if ( (winLoc[0] != x) or (winLoc[1] != y) ):
 			win.move( x, y )
+
 
 	def setMaxLocDim( self, win ):
 		#win.hide()
 
 		if (self.fullScreen):
-			self.smartMove( self, gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
+			self.smartMove( win, gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			self.smartMove( self, (vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset)
+			self.smartMove( win, (vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset)
 
 		#win.show_all()
 
