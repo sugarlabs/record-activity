@@ -100,13 +100,13 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 
 		#todo: test to make sure file still here and not deleted... and what to return if not there?
 		#should be abs path... check it 1st
-		thumbParam = parama[0][0]
+		reqParam = parama[0][0]
 		valid = False
 		thumb = False
-		if (thumbParam == "mediaMd5"):
+		if (reqParam == "mediaMd5"):
 			thumb = False
 			valid = True
-		elif (thumbParam == "thumbMd5"):
+		elif (reqParam == "thumbMd5"):
 			thumb = True
 			valid = True
 
@@ -224,7 +224,7 @@ class MeshClient:
 		ps = presenceservice.get_instance()
 		me = ps.get_owner()
 
-		uri = "http://" + str(ip) + ":" + str(self.ca.httpPort) + "/thumb?md5=" + str(recd.thumbMd5)
+		uri = "http://" + str(ip) + ":" + str(self.ca.httpPort) + "/media?thumbMd5=" + str(recd.thumbMd5)
 		getter = network.GlibURLDownloader( uri )
 		getter.connect( "finished", self.thumbDownloadResultCb, recd )
 		getter.connect( "error", self.thumbDownloadErrorCb, recd )
