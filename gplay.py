@@ -58,8 +58,10 @@ class Gplay:
 		self.SYNC_ID = bus.connect('sync-message::element', self.onSyncMessage)
 		self.players.append(player)
 
+
 	def getPlayer(self):
 		return self.players[len(self.players)-1]
+
 
 	def onSyncMessage(self, bus, message):
 		if message.structure is None:
@@ -68,6 +70,7 @@ class Gplay:
 			self.window.set_sink(message.src)
 			message.src.set_property('force-aspect-ratio', True)
 
+
 	def setLocation(self, location):
 		if (self.getPlayer().get_property('uri') == location):
 			self.seek(gst.SECOND*0)
@@ -75,7 +78,10 @@ class Gplay:
 
 		self.getPlayer().set_state(gst.STATE_READY)
 		self.getPlayer().set_property('uri', location)
-		self.play()
+		if (location[len(location):] == "jpg"):
+			self.pause()
+		else:
+			self.play()
 
 
 	def seek(self, location):
@@ -84,24 +90,30 @@ class Gplay:
 		if res:
 			self.getPlayer().set_new_stream_time(0L)
 
+
 	def pause(self):
 		self.playing = False
 		self.getPlayer().set_state(gst.STATE_PAUSED)
 
+
 	def play(self):
 		self.playing = True
 		self.getPlayer().set_state(gst.STATE_PLAYING)
+
 
 	def stop(self):
 		self.playing = False
 		self.getPlayer().set_state(gst.STATE_NULL)
 		self.nextMovie()
 
+
 	def get_state(self, timeout=1):
 		return self.getPlayer().get_state(timeout=timeout)
 
+
 	def is_playing(self):
 		return self.playing
+
 
 class PlayVideoWindow(gtk.Window):
 	def __init__(self):

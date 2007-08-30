@@ -908,11 +908,14 @@ class UI:
 
 
 	def showAudio( self, recd ):
+		print("showing Audio 1")
+
 		self.liveMode = False
 
 		pixbuf = recd.getThumbPixbuf()
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.livePhotoCanvas.setImage( img )
+		self.shownRecd = recd
 
 		self.updateVideoComponents()
 		self.ca.glive.stop()
@@ -921,9 +924,8 @@ class UI:
 		if (mediaFilepath != None):
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
-			self.shownRecd = recd
 			self.showRecdMeta(recd)
-
+			print("showing Audio 2")
 
 
 	def deleteThumbSelection( self, recd ):
@@ -965,9 +967,11 @@ class UI:
 
 
 	def updateShownMedia( self, recd ):
+		print("updateShownMedia 1")
 		if (self.shownRecd == recd):
+			print("updateShownMedia 2")
 			#todo: better method name
-			self.updateThumbSelection( recd )
+			self.showThumbSelection( recd )
 
 
 	def showVideo( self, recd ):

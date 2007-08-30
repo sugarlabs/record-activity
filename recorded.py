@@ -143,6 +143,7 @@ class Recorded:
 				if (self.downloadedFromBuddy):
 					print("getMediaFilepath 4")
 					#the user has requested the high-res version, and it has downloaded
+					mediaFilepath = os.path.join(self.ca.journalPath, self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
 					print("getMediaFilepath 5")
