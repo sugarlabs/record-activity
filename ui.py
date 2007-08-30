@@ -259,14 +259,14 @@ class UI:
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
 
-		#border behind
-		self.pipBgdWindow2 = PipWindow(self)
-		self.addToWindowStack( self.pipBgdWindow2, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
-
 		#video playback windows
 		self.playOggWindow = PlayVideoWindow()
 		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 		self.playOggWindow.set_gplay(self.ca.gplay)
+
+		#border behind
+		self.pipBgdWindow2 = PipWindow(self)
+		self.addToWindowStack( self.pipBgdWindow2, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
 		self.playLiveWindow = LiveVideoWindow()
 		self.addToWindowStack( self.playLiveWindow, self.pipw, self.piph, self.windowStack[len(self.windowStack)-1] )
@@ -371,7 +371,7 @@ class UI:
 			#todo: use time here?
 			self.hideWidgetsTimer = self.hideWidgetsTimer + 500
 
-		if (self.hideWidgetsTimer > 7500):
+		if (self.hideWidgetsTimer > 2000):
 			if (not self.hiddenWidgets):
 				self.hideWidgets()
 			self.hiddenWidgets = True
@@ -719,7 +719,7 @@ class UI:
 		#we move offscreen to resize or else we get flashes on screen, and setting hide() doesn't allow resize & moves
 		offW = (gtk.gdk.screen_width() + 100)
 		offH = (gtk.gdk.screen_height() + 100)
-		win.move(offW, offH)
+		self.smartMove(win, offW, offH)
 
 
 	def setImgLocDim( self, win ):
@@ -728,15 +728,15 @@ class UI:
 
 		#win.hide()
 
-		self.moveWinOffscreen( win )
+		#self.moveWinOffscreen( win )
 
 		if (self.fullScreen):
-			win.resize( gtk.gdk.screen_width(), gtk.gdk.screen_height() )
-			win.move( 0, 0 )
+			self.smartResize( gtk.gdk.screen_width(), gtk.gdk.screen_height() )
+			self.smartMove( win, 0, 0 )
 		else:
-			win.resize( self.vw, self.vh )
+			self.smartResize( self.vw, self.vh )
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			win.move( vPos[0], vPos[1] )
+			self.smartMove( win, vPos[0], vPos[1] )
 
 		#win.show_all()
 
@@ -745,15 +745,15 @@ class UI:
 		#this order of operations prevents video flicker
 		#win.hide()
 
-		self.moveWinOffscreen( win )
+		#self.moveWinOffscreen( win )
 
-		win.resize( self.pipw, self.piph )
+		self.smartResize( win, self.pipw, self.piph )
 
 		if (self.fullScreen):
-			win.move( self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
+			self.smartMove( win, self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			win.move( vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
+			self.smartMove( win, vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
 
 		#win.show_all()
 
@@ -762,22 +762,33 @@ class UI:
 		#win.hide()
 
 		if (self.fullScreen):
-			win.move( self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder))
+			self.smartMove( win, self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder))
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			win.move( vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder) )
+			self.smartMove( win, vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder) )
 
 		#win.show_all()
 
+
+	def smartResize( self, win, w, h ):
+		winSize = win.get_size()
+		if ( (win[0] != w) or (win[1] != h) ):
+			win.resize( w, h )
+
+
+	def smartMove( self, win, x, y ):
+		winLoc = win.get_position()
+		if ( (win[0] != x) or (win[1] != y) ):
+			win.move( x, y )
 
 	def setMaxLocDim( self, win ):
 		#win.hide()
 
 		if (self.fullScreen):
-			win.move( gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
+			self.smartMove( self, gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			win.move( (vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset)
+			self.smartMove( self, (vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset)
 
 		#win.show_all()
 
