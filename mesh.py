@@ -53,7 +53,7 @@ class MeshXMLRPCServer:
 		newRecd.title = title
 		newRecd.hashKey = hashKey
 		newRecd.mediaMd5 = mediaMd5
-		newRecd.thumbMd5 = mediaMd5
+		newRecd.thumbMd5 = thumbMd5
 
 		colorStrokeHex = colorStroke
 		colorStroke = Color()
@@ -100,8 +100,22 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 
 		#todo: test to make sure file still here and not deleted... and what to return if not there?
 		#should be abs path... check it 1st
+		thumbParam = parama[0][0]
+		valid = False
+		thumb = False
+		if (thumbParam == "mediaMd5"):
+			thumb = False
+			valid = True
+		elif (thumbParam == "thumbMd5"):
+			thumb = True
+			valid = True
+
+		if (not valid):
+			return None
+
 		md5 = parama[0][1]
-		recd = self.ca.m.getByMd5(md5)
+		print("thumb", thumb, "md5", md5 )
+		recd = self.server.ca.m.getByMd5(md5)
 		if (recd == None):
 			print( "could not find media returning md5" )
 			return None
