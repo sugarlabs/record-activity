@@ -438,6 +438,8 @@ class Model:
 
 
 	def addRecd( self, recd ):
+		print( "1 adding recd... ", recd.type, recd )
+
 		#todo: sort on time-taken, not on their arrival time over the mesh (?)
 		self.mediaHashs[recd.type].append( recd )
 
@@ -445,7 +447,7 @@ class Model:
 		self.thumbAdded( recd.type )
 
 		self.setUpdating( False )
-
+		print( "2 adding recd... ", self.mediaHashs[recd.type] )
 
 	#assign a better name here (name_0.jpg)
 	def createNewRecorded( self, type ):
@@ -530,16 +532,6 @@ class Model:
 		tctx.paint()
 		return thumbImg
 
-
-	def generateEmptyThumbnail( self ):
-		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.tw, self.ca.ui.th)
-		tctx = cairo.Context(thumbImg)
-		tctx.set_source_rgb( 0, 1, 1 )
-		tctx.rectangle(0, 0, self.ca.ui.tw, self.ca.ui.th)
-		tctx.fill()
-		tctx.paint()
-
-		return thumbImg
 
 
 	def deleteRecorded( self, recd, mn ):

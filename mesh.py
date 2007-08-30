@@ -41,10 +41,10 @@ class MeshXMLRPCServer:
 
 	def newThumbNotice(	self,
 						ip,
-						mediaMd5, thumbMd5, time, photographer, title, colorStroke, colorFill, hashKey ):
+						mediaMd5, thumbMd5, time, photographer, title, colorStroke, colorFill, hashKey, type ):
 
 		newRecd = Recorded( self.ca )
-		newRecd.type = self.ca.m.TYPE_PHOTO
+		newRecd.type = type
 		newRecd.buddy = True
 
 
@@ -216,6 +216,7 @@ class MeshClient:
 									recd.title,
 									recd.colorStroke.hex, recd.colorFill.hex,
 									recd.hashKey,
+									recd.type,
 									reply_handler=self.notifyBudsOfNewPhotoCb,
 									error_handler=self.notifyBudsOfNewPhotoErrorCb,
 									user_data=buddy)
