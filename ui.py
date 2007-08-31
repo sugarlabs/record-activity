@@ -318,12 +318,15 @@ class UI:
 
 
 	def resetWidgetFadeTimer( self ):
+		print("resetWidgetFadeTimer")
+
 		#only show the clutter when the mouse moves
 		self.mx = -1
 		self.my = -1
 		self.hideWidgetsTimer = 0
 		if (self.hiddenWidgets):
 			self.showWidgets()
+			self.hiddenWidgets = False
 
 		#remove, then add
 		self.doMouseListener( False )
@@ -331,6 +334,8 @@ class UI:
 
 
 	def doMouseListener( self, listen ):
+		print("doMouseListener ", listen )
+
 		if (listen):
 			self.resetWidgetFadeTimer()
 		else:
@@ -360,22 +365,24 @@ class UI:
 
 
 	def _mouseMightaMovedCb( self ):
-
 		x, y = self.ca.get_pointer()
 		if (x != self.mx or y != self.my):
 			self.hideWidgetsTimer = 0
-			#todo: be sure to show the widgets here iff hidden
 			if (self.hiddenWidgets):
-				self.hiddenWidgets = False
 				self.showWidgets()
+				self.hiddenWidgets = False
 		else:
 			#todo: use time here?
 			self.hideWidgetsTimer = self.hideWidgetsTimer + 500
 
+
+		if (self.ca.m.RECORDING):
+			self.hideWidgetsTimer = 0
+
 		if (self.hideWidgetsTimer > 2000):
 			if (not self.hiddenWidgets):
 				self.hideWidgets()
-			self.hiddenWidgets = True
+				self.hiddenWidgets = True
 
 		self.mx = x
 		self.my = y
@@ -512,7 +519,7 @@ class UI:
 			self.shownRecd = recd
 
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-			self.livePhotoCanvas.setImage(img)
+			self.livePhotoCanvas.setImage( img )
 
 			self.liveMode = False
 			self.updateVideoComponents()
@@ -553,6 +560,8 @@ class UI:
 		self.datePanel.hide()
 		self.tagsPanel.hide()
 		self.tagsBuffer.set_text("")
+
+		self.resetWidgetFadeTimer()
 
 
 	def updateButtonSensitivities( self ):
@@ -694,7 +703,7 @@ class UI:
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
 		self.updateVideoComponents()
-
+		self.resetWidgetFadeTimer()
 
 	def startLiveVideo(self, window, pipetype):
 		#We need to know which window and which pipe here
@@ -935,6 +944,8 @@ class UI:
 		elif (recd.type == self.ca.m.TYPE_AUDIO):
 			self.showAudio( recd )
 
+		self.resetWidgetFadeTimer()
+
 
 	def showAudio( self, recd ):
 		print("showing Audio 1")
@@ -967,12 +978,12 @@ class UI:
 
 			#todo: should be using modes here to check which mode to switch to
 			if (recd.type == self.ca.m.TYPE_PHOTO):
-				self.livePhotoCanvas.setImage(None)
+				self.livePhotoCanvas.setImage( None )
 			elif (recd.type == self.ca.m.TYPE_VIDEO):
 				self.ca.gplay.stop()
 				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 			elif (recd.type == self.ca.m.TYPE_AUDIO):
-				self.livePhotoCanvas.setImage(None)
+				self.livePhotoCanvas.setImage( None )
 				self.ca.gplay.stop()
 				self.restartLiveAudio()
 
@@ -1157,6 +1168,7 @@ class PhotoCanvas(P5):
 		self.scalingImageCb = 0
 		self.cacheWid = -1
 
+
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorBg, w, h )
 		if (self.img != None):
@@ -1168,6 +1180,7 @@ class PhotoCanvas(P5):
 			#only scale images when you need to, otherwise you're wasting cycles, fool!
 			if (self.cacheWid != w):
 				if (self.scalingImageCb == 0):
+					self.drawImg = None
 					self.scalingImageCb = gobject.idle_add( self.resizeImage, w, h )
 
 			if (self.drawImg != None):
@@ -1181,8 +1194,11 @@ class PhotoCanvas(P5):
 	def setImage(self, img):
 		self.cacheWid = -1
 		self.img = img
-		if (self.img == None):
-			self.drawImg = None
+
+#		if (self.img == None):
+#			self.drawImg = None
+		self.drawImg = None
+
 		self.queue_draw()
 
 
