@@ -127,9 +127,16 @@ class Glive:
 			self.picExposureOpen = False
 
 			movieQueue = pipeline.get_by_name("movieQueue_"+n)
+#			movieQueue.set_property("leaky", False)
+#			movieQueue.set_property("max-size-buffers", 10)
+#			movieQueue.connect( "overrun", self._movieQueueOverrunCb )
+#			movieQueue.connect( "running", self._movieQueueRunningCb )
+
 			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
 			movieFilepath = os.path.join(self.ca.tempPath, "output_"+n+".ogv" )
 			movieFilesink.set_property("location", movieFilepath )
+
+
 
 			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
 			audioFilepath = os.path.join(self.ca.tempPath, "output_"+n+".wav")
@@ -146,13 +153,12 @@ class Glive:
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! queue name=audioQueue_"+n+ " ! audioconvert name=audioAudioconvert_"+n +" ! vorbisenc name=audioVorbisenc_"+n+" ! oggmux name=audioOggmux_"+n+" ! filesink name=audioFilesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! queue name=audioQueue_"+n+ " ! audioconvert name=audioAudioconvert_"+n +" ! wavenc name=audioVorbisenc_"+n+" ! filesink name=audioFilesink_"+n )
 			v4l2 = True
 
 			audioQueue = pipeline.get_by_name('audioQueue_'+n)
 			audioAudioconvert = pipeline.get_by_name('audioAudioconvert_'+n)
 			audioQueue.unlink(audioAudioconvert)
-
 
 			videoTee = pipeline.get_by_name('videoTee_'+n)
 			picQueue = pipeline.get_by_name('picQueue_'+n)
@@ -165,9 +171,8 @@ class Glive:
 			videoTee.unlink(picQueue)
 
 			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
-			audioFilepath = os.path.join(self.ca.tempPath, "output_"+n+".ogg")
+			audioFilepath = os.path.join(self.ca.tempPath, "output_"+n+".wav")
 			audioFilesink.set_property("location", audioFilepath )
-
 
 		elif (self._PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
 			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
@@ -194,6 +199,16 @@ class Glive:
 
 		self.pipes.append(pipeline)
 
+
+	def _movieQueueOverrunCb( self, q ):
+		print("100 buffers!!")
+		#empty the Filled Queue to the stained earth below
+		self.el("movieQueue").set_property( "leaky", True )
+		self.el("movieQueue").set_property( "max-size-buffers", 0 )
+
+
+	def _movieQueueRunningCb( self, q ):
+		print("running!!", self.el("movieQueue").get_property("current-level-buffers"))
 
 
 	def stopRecordingAudio( self ):
@@ -232,6 +247,10 @@ class Glive:
 				gobject.idle_add(self.savePhoto, pixBuf)
 
 
+	def videoBuffer(self, fsink, buffer, pad, user_data=None):
+		self.startVideoBufferBuffer = self.startVideoBufferBuffer + 1
+
+
 	def savePhoto(self, pixbuf):
 		if (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
 			self.audioPixbuf = pixbuf
@@ -240,8 +259,6 @@ class Glive:
 
 
 	def startRecordingVideo(self):
-		#todo: gobject idle? the start of the stream for nice starts with full frames
-
 		self.pipe().set_state(gst.STATE_READY)
 
 		self.record = True
@@ -258,15 +275,12 @@ class Glive:
 	def startRecordingAudio(self):
 		self.pipe().set_state(gst.STATE_READY)
 
-		#take the picture at the start
-#		gobject.idle_add( self.takePhoto )
 		self.takePhoto()
 
 		self.record = True
 		if (self.record):
 			self.el("audioQueue").link(self.el("audioAudioconvert"))
 
-		self.pipe().set_state(gst.STATE_PAUSED)
 		self.pipe().set_state(gst.STATE_PLAYING)
 
 
