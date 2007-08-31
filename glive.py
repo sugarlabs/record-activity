@@ -113,7 +113,9 @@ class Glive:
 		n = str(len(self.pipes))
 		v4l2 = False
 		if (self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
+#			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
+#			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! fakesink name=movieFakesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! fakesink name=movieFakesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
 			v4l2 = True
 
 			videoTee = pipeline.get_by_name('videoTee_'+n)
@@ -126,17 +128,16 @@ class Glive:
 			picFakesink.set_property("signal-handoffs", True)
 			self.picExposureOpen = False
 
-			movieQueue = pipeline.get_by_name("movieQueue_"+n)
-#			movieQueue.set_property("leaky", False)
-#			movieQueue.set_property("max-size-buffers", 10)
+#			movieQueue = pipeline.get_by_name("movieQueue_"+n)
+#			movieQueue.set_property("min-threshold-buffers", 10)
 #			movieQueue.connect( "overrun", self._movieQueueOverrunCb )
 #			movieQueue.connect( "running", self._movieQueueRunningCb )
 
-			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
-			movieFilepath = os.path.join(self.ca.tempPath, "output_"+n+".ogv" )
-			movieFilesink.set_property("location", movieFilepath )
-
-
+			movieFilesink = pipeline.get_by_name("movieFakesink_"+n)
+			#movieFilepath = os.path.join(self.ca.tempPath, "output_"+n+".ogv" )
+			#movieFilesink.set_property("location", movieFilepath )
+			movieFilesink.connect("handoff", self.copyPicc)
+			movieFilesink.set_property("signal-handoffs", True)
 
 			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
 			audioFilepath = os.path.join(self.ca.tempPath, "output_"+n+".wav")
@@ -145,7 +146,7 @@ class Glive:
 			audioWavenc = pipeline.get_by_name('audioWavenc_'+n)
 
 			audioTee.unlink(audioWavenc)
-			videoTee.unlink(movieQueue)
+			videoTee.unlink(movieFilesink) #movieQueue)
 			videoTee.unlink(picQueue)
 
 		elif (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
@@ -200,11 +201,24 @@ class Glive:
 		self.pipes.append(pipeline)
 
 
+	def copyPicc(self, fsink, buffer, pad, user_data=None):
+		print("copy picc", buffer)
+
+
 	def _movieQueueOverrunCb( self, q ):
-		print("100 buffers!!")
+		print("a over 10 buffers!!")
+
 		#empty the Filled Queue to the stained earth below
-		self.el("movieQueue").set_property( "leaky", True )
-		self.el("movieQueue").set_property( "max-size-buffers", 0 )
+		fStart = gst.event_new_flush_start()
+		self.el("movieQueue").get_pad("src").push_event(fStart)
+		fStop = gst.event_new_flush_stop()
+		self.el("movieQueue").get_pad("src").push_event(fStop)
+
+		#ok, we though out the trash, now resume
+		#self.el("movieQueue").set_property( "leaky", False )
+		self.el("movieQueue").set_property( "min-threshold-buffers", 0 )
+
+		print("b over 10 buffers!!")
 
 
 	def _movieQueueRunningCb( self, q ):
@@ -264,8 +278,9 @@ class Glive:
 		self.record = True
 		self.audio = False
 		if (self.record):
-			self.el("videoTee").link(self.el("movieQueue"))
+			self.el("videoTee").link(self.el("movieFakesink"))
 
+			#todo: move this to post queue filling
 			if (self.audio):
 				self.el("audioTee").link(self.el("audioWavenc"))
 

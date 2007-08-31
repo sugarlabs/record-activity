@@ -263,14 +263,14 @@ class Model:
 
 		#todo: need to save the fullpixbuf to the xml only for display (for now, thumbnail)
 		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
-		thumbImg = self.generateRealBigThumbnail(pixbuf)
+		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 		thumbImg.write_to_png(thumbPath)
 
 
 		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
 		shutil.move(tempPath, oggPath)
 
-		#at this point, we have both audio and thumb path, so we can save the recd
+		#at this point, we have both audio and thumb sapath, so we can save the recd
 		self.createNewRecordedMd5Sums( recd )
 
 		audioHash = self.mediaHashs[self.TYPE_AUDIO]
@@ -537,16 +537,6 @@ class Model:
 		tctx.paint()
 		return thumbImg
 
-
-	def generateRealBigThumbnail( self, pixbuf ):
-		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.vw, self.ca.ui.vh)
-
-		tctx = cairo.Context(thumbImg)
-		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-
-		tctx.set_source_surface(img, 0, 0)
-		tctx.paint()
-		return thumbImg
 
 
 	def deleteRecorded( self, recd, mn ):

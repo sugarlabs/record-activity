@@ -47,6 +47,8 @@ class Recorded:
 		#if not from the datastore, then your media is here...
 		self.mediaFilename = None
 		self.thumbFilename = None
+		#todo: use this too
+		self.audioImageFilename = None
 
 		#assume you took the picture
 		self.buddy = False
@@ -103,8 +105,6 @@ class Recorded:
 			return pbl.get_pixbuf()
 
 
-
-
 	def getThumbFilepath( self, meshReq ):
 		#todo: make sure this is used everywhere
 		if (self.datastoreId == None):
@@ -124,9 +124,38 @@ class Recorded:
 			import base64
 			data = base64.b64decode(self.datastoreOb.metadata['preview'])
 			pbl.write(data)
+
 			#todo: write to tmp (rainbow?) and random unused filename...
 			thumbFilepath = os.path.join(self.ca.journalPath, "thumb.png")
-			thumbImg.save(thumbFilepath, "png", {} )
+			pbl.get_pixbuf().save(thumbFilepath, "png", {} )
+
+			return thumbFilepath
+
+		return None
+
+
+	def getAudioImage( self ):
+		#todo: implement this
+		if (self.datastoreId == None):
+			#just taken, so it is in the tempSessionDir
+			#so load file, convert to pixbuf, and return it here...
+			audioPixbuf = None
+			audioFilepath = os.path.join(self.ca.journalPath, self.audioImageFilename)
+			if ( os.path.isfile(audioFilepath) ):
+				return audioFilepath
+		else:
+			if (self.datastoreOb == None):
+				self.ca.m.loadMediaFromDatastore( self )
+			if (self.datastoreOb == None):
+				print("RecordActivity error -- unable to get datastore object in getAudioImage")
+				return None
+			pbl = gtk.gdk.PixbufLoader()
+			import base64
+			data = base64.b64decode(self.datastoreOb.metadata['audioImage'])
+			pbl.write(data)
+			#todo: write to tmp (rainbow?) and random unused filename...
+			audioImageFilepath = os.path.join(self.ca.journalPath, "audioImage.png")
+			thumbImg.save(audioImageFilepath, "png", {} )
 			return thumbFilepath
 
 		return None
