@@ -273,6 +273,7 @@ class MeshClient:
 
 	#todo: how to cancel?
 	#getter.cancel()
+	#os.close()
 
 	#todo: how to set the filelocation for the download to avoid copies at completion
 	#from tempfile import mkstemp
@@ -310,9 +311,10 @@ class MeshClient:
 
 			try:
 				#todo: destfile=fullpath filedescriptor=
-				getter.start( destfile )
+				getter.start( )
 			except IOError, e:
 				print( "yikes", e )
+				#close fd here
 
 
 	def mediaProgressCb( self, getter, bytes, recd ):
@@ -340,3 +342,4 @@ class MeshClient:
 
 	def mediaDownloadErrorCb(self, getter, err, recd):
 		print("mediaDownloadError", getter, err, recd)
+		#fd.close()
