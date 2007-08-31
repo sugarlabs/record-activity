@@ -101,7 +101,7 @@ class UI:
 		self.numThumbs = 7
 
 		#prep for when to show
-		self.exposed = False
+		self.allocated = False
 		self.mapped = False
 
 		self.shownRecd = None
@@ -286,7 +286,7 @@ class UI:
 		#only show the floating windows once everything is exposed and has a layout position
 		#todo: need to listen to size-request signal on the widget that i overlay with a connect_after
 		#todo: rename exposeId
-		self.exposeId = self.backgdCanvas.connect_after("size-allocate", self.exposeEvent)
+		self.SIZE_ALLOCATE_ID = self.backgdCanvas.connect_after("size-allocate", self._sizeAllocateCb)
 		self.ca.show_all()
 
 		self.mapId = self.liveVideoWindow.connect("map-event", self.mapEvent)
@@ -316,8 +316,6 @@ class UI:
 
 
 	def resetWidgetFadeTimer( self ):
-		print("resetWidgetFadeTimer")
-
 		#only show the clutter when the mouse moves
 		self.mx = -1
 		self.my = -1
@@ -354,12 +352,16 @@ class UI:
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (not self.liveMode):
 				self.moveWinOffscreen( self.liveVideoWindow )
+			else:
+				self.moveWinOffscreen( self.livePhotoWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			if (not self.liveMode):
 				self.moveWinOffscreen( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (not self.liveMode):
 				self.moveWinOffscreen( self.liveVideoWindow )
+			else:
+				self.moveWinOffscreen( self.livePhotoWindow )
 
 
 	def _mouseMightaMovedCb( self ):
@@ -559,6 +561,8 @@ class UI:
 		self.tagsPanel.hide()
 		self.tagsBuffer.set_text("")
 
+
+		self.livePhotoCanvas.setImage( None )
 		self.resetWidgetFadeTimer()
 
 
@@ -821,7 +825,7 @@ class UI:
 
 
 	def checkReadyToSetup(self):
-		if (self.exposed and self.mapped):
+		if (self.allocated and self.mapped):
 			self.recordWindow.shutterButton.set_sensitive(True)
 			self.updateVideoComponents()
 			self.ca.glive.play()
@@ -834,10 +838,10 @@ class UI:
 		self.checkReadyToSetup()
 
 
-	def exposeEvent( self, widget, event):
+	def _sizeAllocateCb( self, widget, event ):
 		#initial setup of the panels
-		self.backgdCanvas.disconnect(self.exposeId)
-		self.exposed = True
+		self.backgdCanvas.disconnect(self.SIZE_ALLOCATE_ID)
+		self.allocated = True
 		self.checkReadyToSetup( )
 
 
@@ -847,12 +851,13 @@ class UI:
 #		for i in range (0, len(self.windowStack)):
 #			self.windowStack[i].hide()
 
+
 		#todo: only one max window needed, really, as is only one pipBgdWindow
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.pipBgdWindow )
+				self.moveWinOffscreen( self.livePhotoWindow )
 
-				self.setImgLocDim( self.livePhotoWindow )
 				self.setImgLocDim( self.liveVideoWindow )
 				self.setMaxLocDim( self.maxWindow )
 				self.setPipBgdLocDim( self.recordWindow )
@@ -1169,6 +1174,8 @@ class PhotoCanvas(P5):
 
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorBg, w, h )
+
+
 		if (self.img != None):
 
 			if (w == self.img.get_width()):
@@ -1352,9 +1359,7 @@ class ThumbnailDeleteButton(gtk.Button):
 		if (not self.props.sensitive):
 			return
 
-		print("buttonClickCb 1")
 		self.ui.deleteThumbSelection( self.tc.recd )
-		print("buttonClickCb 2")
 
 	def expose(self, widget, event):
 		ctx = widget.window.cairo_create()
