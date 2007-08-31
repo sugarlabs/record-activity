@@ -1,15 +1,14 @@
 23
 * journal integration (closes #1758) (jedierikb):
-** media in the journal
-** re-naming of media in the record.actvity and the journal
-** deleting of media in the record.activity and the journal
-* correct ogg/theora mimetypes (addresses #) (jedierikb)
-* sharing of all recorded media on the mesh (closes #2436)
+** media saved to the the journal
+** re-naming of media in the record actvity and the journal
+** deleting of media in the record activity and the journal
+* correct ogg/theora mimetypes (addresses #2653) (jedierikb)
+* sharing of all recorded media on the mesh (closes #2436) (jedierikb)
 * you can delete buddy's photos pushed to you (closes #2722) (jedierikb)
 * you can view buddy's photos when you re-open an activity (closes #2439) (jedierikb)
 * all widgets insensitive when shuttingdown and writing to journal (jedierikb)
-* better pipeline to window switching (jedierikb)
-* #2299 workaround --> matches on buddy nicks to confirm mesh downloads (jedierikb, dcbw)
+* better pipeline to window hot swapping (jedierikb)
 * audio record and playback (jedierikb)
 * drag and drop of all media types for all media (closes #2345)(jedierikb, tomeu)
 * graphic overlay windows fade away when not used to reveal photo, revealed with mouse movement (jedierikb)
@@ -18,6 +17,7 @@ bugs:
 * xv video resizes incorrectly occasionally (#2127)
 * prevents async datastore saves, so the activity appears to hang when closing (#3071)
 * prevents reconnecting to a buddy to download media after leaving the activity (#2977)
+* matches on buddy nicks to confirm mesh downloads, not their ids (as a workaround to #2299) (jedierikb, dcbw)
 next:
 * missing final graphics (#2585), layout
 * display information to user about progress of mesh downloads and media encodings
