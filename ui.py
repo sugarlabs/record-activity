@@ -330,7 +330,6 @@ class UI:
 
 
 	def doMouseListener( self, listen ):
-		print("doMouseListener ", listen )
 
 		if (listen):
 			self.resetWidgetFadeTimer()
@@ -453,6 +452,8 @@ class UI:
 
 
 	def _keyPressEventCb( self, widget, event):
+		self.resetWidgetFadeTimer()
+
 		#we listen here for CTRL+C events and game keys, and pass on events to gtk.Entry fields
 		keyname = gtk.gdk.keyval_name(event.keyval)
 
@@ -641,44 +642,10 @@ class UI:
 
 
 	def recordVideo( self ):
-		#show the clock while this gets set up
-		self.hideLiveWindows()
-		self.hidePlayWindows()
-		self.hideAudioWindows()
-
-		self.stopPlayVideoToRecord()
-
 		#this blocks while recording gets started
 		self.ca.glive.startRecordingVideo()
-
-		#and now we show the live/recorded video at 640x480, setting liveMode on in case we were watching vhs earlier
 		self.liveMode = True
 		self.updateVideoComponents()
-
-
-
-	def recordAudio( self ):
-		#show the clock while this gets set up
-#		self.hideLiveWindows()
-#		self.hidePlayWindows()
-#		self.hideAudioWindows()
-
-#		self.liveMode = True
-#		self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_AUDIO_RECORD )
-
-#		self.updateVideoComponents()
-
-		self.ca.glive.startRecordingAudio()
-
-
-	def stopPlayVideoToRecord( self ):
-		pass
-#		#if we're watching a movie...
-#		if (not self.ca.ui.liveMode):
-#			#stop the movie
-#			self.ca.gplay.stop()
-#			self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
-
 
 
 	def updateModeChange(self):
