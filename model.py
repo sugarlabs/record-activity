@@ -266,6 +266,10 @@ class Model:
 		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 		thumbImg.write_to_png(thumbPath)
 
+		imagePath = os.path.join(self.ca.journalPath, "audioPicture.jpg")
+		imagePath = self.getUniqueFilepath( imagePath, 0 )
+		pixbuf.save( imagePath, "png", {} )
+		recd.
 
 		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
 		shutil.move(tempPath, oggPath)
