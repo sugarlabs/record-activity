@@ -100,9 +100,6 @@ class Model:
 		recd.title = el.getAttribute('title')
 		recd.time = int(el.getAttribute('time'))
 		recd.photographer = el.getAttribute('photographer')
-		#recd.mediaFilename = el.getAttribute('mediaFilename')
-		#recd.thumbFilename = el.getAttribute('thumbFilename')
-
 		colorStrokeHex = el.getAttribute('colorStroke')
 		colorStroke = Color()
 		colorStroke.init_hex( colorStrokeHex )
@@ -118,7 +115,6 @@ class Model:
 		recd.thumbMd5 = el.getAttribute('thumbMd5')
 
 		recd.datastoreNode = el.getAttributeNode("datastoreId")
-		#recd.datastoreId = el.getAttribute('datastoreId')
 		if (recd.datastoreNode != None):
 			recd.datastoreId = recd.datastoreNode.nodeValue
 			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
@@ -132,8 +128,7 @@ class Model:
 				recd.title = recd.datastoreOb.metadata['title']
 			recd.datastoreOb == None
 
-		#buddyThumbString = el.getAttribute('buddyThumb')
-		#print("buddyThumbString...", buddyThumbString )
+
 		bt = el.getAttributeNode('buddyThumb')
 		if (not bt == None):
 			#todo: consolidate this code into a function...
@@ -142,8 +137,9 @@ class Model:
 			data = base64.b64decode( bt.nodeValue )
 			pbl.write(data)
 			thumbImg = pbl.get_pixbuf()
-			#todo: add check for what to do if there is no thumbFilename!
-			thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
+
+			thumbPath = os.path.join(self.ca.journalPath, "datastoreThumb.jpg")
+			thumbPath = self.getUniqueFilepath( thumbPath, 0 )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 
 		if (addToHash):
@@ -266,10 +262,10 @@ class Model:
 		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 		thumbImg.write_to_png(thumbPath)
 
-		imagePath = os.path.join(self.ca.journalPath, "audioPicture.jpg")
+		imagePath = os.path.join(self.ca.journalPath, "audioPicture.png")
 		imagePath = self.getUniqueFilepath( imagePath, 0 )
 		pixbuf.save( imagePath, "png", {} )
-		recd.
+		recd.audioImageFilename = imagePath
 
 		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
 		shutil.move(tempPath, oggPath)

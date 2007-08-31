@@ -186,13 +186,15 @@ class RecordActivity(activity.Activity):
 			recd.saved = False
 			needToDatastoreMedia = self.saveMediaToDatastore( recd )
 
-		print( type, recd.title, recd.time, recd.photographer, recd.mediaFilename, recd.thumbFilename, recd.colorStroke.hex, recd.colorFill.hex, recd.hashKey, recd.buddy, recd.mediaMd5, recd.thumbMd5)
 		el.setAttribute("type", str(type))
+		if (type == self.m.TYPE_AUDIO):
+			pixbuf = recd.getAudioImagePixbuf( )
+			pixbufString = str( self._get_base64_pixbuf_data(pixbuf) )
+			el.setAttribute("audioImage", pixbufString )
+
 		el.setAttribute("title", recd.title)
 		el.setAttribute("time", str(recd.time))
 		el.setAttribute("photographer", recd.photographer)
-		#el.setAttribute("mediaFilename", recd.mediaFilename)
-		#el.setAttribute("thumbFilename", recd.thumbFilename)
 		el.setAttribute("colorStroke", str(recd.colorStroke.hex) )
 		el.setAttribute("colorFill", str(recd.colorFill.hex) )
 		el.setAttribute("hashKey", str(recd.hashKey))

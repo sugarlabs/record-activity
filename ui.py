@@ -923,7 +923,7 @@ class UI:
 
 		self.liveMode = False
 
-		pixbuf = recd.getThumbPixbuf()
+		pixbuf = recd.getAudioImagePixbuf()
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.livePhotoCanvas.setImage( img )
 		self.shownRecd = recd

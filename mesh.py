@@ -34,19 +34,17 @@ from color import Color
 class MeshXMLRPCServer:
 	def __init__( self, pca ):
 		self.ca = pca
-		#this is ye olde xmlrpc server
-		#listen to and talk through this port for xmlrpc, using this here info
 		self.server = network.GlibXMLRPCServer(("", self.ca.xmlRpcPort))
-		self.server.register_instance(self) #anything witout an _ is callable by all the hos and joes out there
+		self.server.register_instance(self)
 
 	def newThumbNotice(	self,
 						ip,
 						mediaMd5, thumbMd5, time, photographer, title, colorStroke, colorFill, hashKey, type ):
+		#todo: filesize send...
 
 		newRecd = Recorded( self.ca )
 		newRecd.type = type
 		newRecd.buddy = True
-
 
 		newRecd.time = time
 		newRecd.photographer = photographer
@@ -260,7 +258,34 @@ class MeshClient:
 
 
 	def requestMediaBits(self, recd):
+
 	#todo: don't request this if requesting this already (lock?)
+	#erik
+
+	#todo: %download?
+	#note the progress handler below
+	#http://docs.python.org/lib/os-fd-ops.html
+	#and man statd, get the 7th item in the tuple
+	#f = os.open( "/path/img", os.O_R_DONLY)
+	#a = os.fstatd(f)
+	#bytes = a[7]
+	#f.close()
+
+	#todo: how to cancel?
+	#getter.cancel()
+
+	#todo: how to set the filelocation for the download to avoid copies at completion
+	#from tempfile import mkstemp
+	#fd, tmpfl = mkstemp()
+	#getter.start( destfile=tmpfl, destfd=fd )
+	#...
+	#os.write(...)
+	#os.close(fd)
+
+	#todo: how to gracefully handle errors from the server (e.g., None)
+	#IOError and "error" callback...
+
+
 		print("requestingMediaBits...", len(self.my_acty.get_joined_buddies()))
 
 		photoTakingBuddy = None
@@ -281,10 +306,18 @@ class MeshClient:
 			getter = network.GlibURLDownloader( uri )
 			getter.connect( "finished", self.mediaDownloadResultCb, recd )
 			getter.connect( "error", self.mediaDownloadErrorCb, recd )
+			getter.connect( "progress", self.mediaProgressCb, recd )
 
-			#todo: destfile=fullpath
-			getter.start()
+			try:
+				#todo: destfile=fullpath filedescriptor=
+				getter.start( destfile )
+			except IOError, e:
+				print( "yikes", e )
 
+
+	def mediaProgressCb( self, getter, bytes, recd ):
+		f.get_bytes()
+		print( "bytes: ", bytes )
 
 	def mediaDownloadResultCb(self, getter, tempfile, suggested_name, recd):
 		print ( "mediaDownloadResultCb...", tempfile, suggested_name )
