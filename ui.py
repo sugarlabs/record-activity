@@ -257,7 +257,7 @@ class UI:
 		self.addToWindowStack( self.liveVideoWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.liveVideoWindow.connect("button_release_event", self.liveButtonReleaseCb)
+		self.liveVideoWindow.connect("button_release_event", self._liveButtonReleaseCb)
 
 		#video playback windows
 		self.playOggWindow = PlayVideoWindow()
@@ -355,7 +355,8 @@ class UI:
 			if (not self.liveMode):
 				self.moveWinOffscreen( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			pass
+			if (not self.liveMode):
+				self.moveWinOffscreen( self.liveVideoWindow )
 
 
 	def _mouseMightaMovedCb( self ):
@@ -600,11 +601,12 @@ class UI:
 		self.moveWinOffscreen( self.livePhotoWindow )
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.recordWindow )
+		self.moveWinOffscreen( self.pipBgdWindow )
 
 
+	def _liveButtonReleaseCb(self, widget, event):
+		self.livePhotoCanvas.setImage( None )
 
-	def liveButtonReleaseCb(self, widget, event):
-		self.livePhotoCanvas.setImage(None)
 		if (self.liveMode != True):
 			#todo: updating here?
 			self.showLiveVideoTags()
@@ -687,14 +689,11 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			print("updateModeChange 1")
 			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD )
-			print("updateModeChange 2")
 
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
 		self.updateVideoComponents()
-		print("updateModeChange 3")
 
 
 	def startLiveVideo(self, window, pipetype):
@@ -811,14 +810,7 @@ class UI:
 
 
 	def shutterClickCb( self, arg ):
-		print("shutterClick 1 ", self.ca.m.MODE, self.liveMode )
-		if ( (self.ca.m.MODE == self.ca.m.MODE_AUDIO) and (not self.liveMode) ):
-			print("shutterClick 2")
-			self.restartLiveAudio()
-
-			print("shutterClick 3")
-		else:
-			self.ca.m.doShutter()
+		self.ca.m.doShutter()
 
 
 	def checkReadyToSetup(self):
@@ -882,14 +874,16 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (self.liveMode):
 				self.moveWinOffscreen( self.livePhotoWindow )
+				self.moveWinOffscreen( self.pipBgdWindow )
 
 				self.setImgLocDim( self.liveVideoWindow )
 				self.setPipBgdLocDim( self.recordWindow )
 			else:
-				self.moveWinOffscreen( self.liveVideoWindow )
+				self.moveWinOffscreen( self.recordWindow )
 
 				self.setImgLocDim( self.livePhotoWindow )
-				self.setPipBgdLocDim( self.recordWindow )
+				self.setPipBgdLocDim( self.pipBgdWindow )
+				self.setPipLocDim( self.liveVideoWindow )
 
 #		for i in range (0, len(self.windowStack)):
 #			self.windowStack[i].realize()
@@ -953,7 +947,6 @@ class UI:
 		self.shownRecd = recd
 
 		self.updateVideoComponents()
-		self.ca.glive.stop()
 
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath != None):
@@ -993,8 +986,9 @@ class UI:
 		#todo: updating
 		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		self.liveVideoWindow.set_glive(self.ca.glive)
-		self.ca.glive.stop()
-		self.ca.glive.play()
+
+		#self.ca.glive.stop()
+		#self.ca.glive.play()
 
 		self.showLiveVideoTags()
 		self.liveMode = True
