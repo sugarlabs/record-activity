@@ -57,6 +57,7 @@ class Recorded:
 		self.saved = False
 
 
+
 	def setTitle( self, newTitle ):
 		self.title = newTitle
 		self.titleChange = True

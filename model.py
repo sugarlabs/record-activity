@@ -258,12 +258,14 @@ class Model:
 		self.ca.ui.hidePlayWindows()
 
 		recd = self.createNewRecorded( self.TYPE_AUDIO )
+
 		oggPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
-		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
-		thumbImg.write_to_png(thumbPath)
 
 		#todo: need to save the fullpixbuf to the xml only for display (for now, thumbnail)
+		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
+		thumbImg = self.generateRealBigThumbnail(pixbuf)
+		thumbImg.write_to_png(thumbPath)
+
 
 		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
 		shutil.move(tempPath, oggPath)
@@ -296,6 +298,7 @@ class Model:
 		self.setRecording( True )
 		self.ca.ui.recordAudio()
 		self.setUpdating( False )
+
 
 	def setUpdating( self, upd ):
 		self.UPDATING = upd
@@ -535,13 +538,20 @@ class Model:
 		return thumbImg
 
 
+	def generateRealBigThumbnail( self, pixbuf ):
+		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.vw, self.ca.ui.vh)
+
+		tctx = cairo.Context(thumbImg)
+		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+
+		tctx.set_source_surface(img, 0, 0)
+		tctx.paint()
+		return thumbImg
+
 
 	def deleteRecorded( self, recd, mn ):
-		print("deleteRecorded 1")
-
 		#remove files from the filesystem if not on the datastore
 		if (recd.datastoreId == None):
-			print("deleteRecorded 2")
 			mediaFile = recd.getMediaFilepath( False )
 			if (os.path.exists(mediaFile)):
 				os.remove(mediaFile)
@@ -550,7 +560,6 @@ class Model:
 			if (os.path.exists(thumbFile)):
 				os.remove(thumbFile)
 		else:
-			print("deleteRecorded 3")
 			#remove from the datastore here, since once gone, it is gone...
 			self.removeMediaFromDatastore( recd )
 
@@ -561,9 +570,6 @@ class Model:
 
 		#update your own ui
 		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
-		print("deleteRecorded 4")
-
-
 
 
 	#todo: if you are not at the end of the list, do we want to force you to the end?
