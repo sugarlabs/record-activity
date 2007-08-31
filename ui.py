@@ -293,18 +293,16 @@ class UI:
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].show_all()
 
-		#actually, we're not showing you just yet
-		#self.videoScrubPanel.hide_all()
-
-		self.showLiveVideoTags()
 
 		#listen for ctrl+c & game key buttons
 		self.ca.connect('key-press-event', self._keyPressEventCb)
-
 		#overlay widgets can go away after they've been on screen for a while
 		self.HIDE_WIDGET_TIMEOUT_ID = 0
 		self.hiddenWidgets = False
 		self.resetWidgetFadeTimer()
+
+		self.showLiveVideoTags()
+
 
 
 	def addToWindowStack( self, win, w, h, parent ):
