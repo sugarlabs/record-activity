@@ -241,12 +241,7 @@ class Model:
 				self.stopRecordingAudio()
 
 
-	def startRecordingAudio( self ):
-		print("start recording audio")
-		self.setUpdating( True )
-		self.setRecording( True )
-		self.ca.glive.startRecordingAudio( )
-		self.setUpdating( False )
+
 
 
 	def stopRecordingAudio( self ):
@@ -294,6 +289,13 @@ class Model:
 
 		self.setUpdating( False )
 
+
+	def startRecordingAudio( self ):
+		print("start recording audio")
+		self.setUpdating( True )
+		self.setRecording( True )
+		self.ca.ui.recordAudio()
+		self.setUpdating( False )
 
 	def setUpdating( self, upd ):
 		self.UPDATING = upd

@@ -642,10 +642,11 @@ class UI:
 
 
 	def recordVideo( self ):
-		#this blocks while recording gets started
-		self.ca.glive.startRecordingVideo()
-		self.liveMode = True
-		self.updateVideoComponents()
+		self.ca.glive.startRecordingVideo( )
+
+
+	def recordAudio( self ):
+		self.ca.glive.startRecordingAudio( )
 
 
 	def updateModeChange(self):

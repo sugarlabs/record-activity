@@ -18,6 +18,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
+#todo: tags into ogg files http://gstreamer.freedesktop.org/data/doc/gstreamer/head/manual/html/section-tags-write.html
+
 import os
 import gtk
 import pygtk
@@ -197,53 +199,56 @@ class Glive:
 	def stopRecordingAudio( self ):
 		audioFile = self.el("audioFilesink").get_property("location")
 		self.stop()
-		print("audioFile:", audioFile )
 		self.record = False
 		self.audio = False
-		print( "self.audioPixbuf:", self.audioPixbuf )
 		self.ca.m.saveAudio(audioFile, self.audioPixbuf)
-		#todo: dispose of the audioPixbuf?
 
 
 	def takePhoto(self):
-		print("takePhoto 1")
+		self.takePhotoBufferBuffer = 0
+
 		if not(self.picExposureOpen):
-			print("takePhoto 2")
 			self.picExposureOpen = True
 			self.el("videoTee").link(self.el("picQueue"))
-			print("takePhoto 3")
 
 
 	def copyPic(self, fsink, buffer, pad, user_data=None):
 		if (self.picExposureOpen):
-			self.picExposureOpen = False
-			pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
-			pic.write( buffer )
-			pic.close()
-			pixBuf = pic.get_pixbuf()
-			del pic
 
-			self.el("videoTee").unlink(self.el("picQueue"))
-			gobject.idle_add(self.savePhoto, pixBuf)
+			self.takePhotoBufferBuffer = self.takePhotoBufferBuffer + 1
+			takePhotoBuffered = 0
+			if (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+				takePhotoBuffered = 10
+
+			if (self.takePhotoBufferBuffer >= takePhotoBuffered):
+				self.picExposureOpen = False
+				pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
+				pic.write( buffer )
+				pic.close()
+				pixBuf = pic.get_pixbuf()
+				del pic
+
+				self.el("videoTee").unlink(self.el("picQueue"))
+				gobject.idle_add(self.savePhoto, pixBuf)
 
 
 	def savePhoto(self, pixbuf):
-		print("savePhoto 1")
 		if (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			print("savePhoto 2")
 			self.audioPixbuf = pixbuf
 		else:
 			self.ca.m.savePhoto(pixbuf)
 
 
 	def startRecordingVideo(self):
-		#todo: gobject idle the start of the stream for nice starts with full frames
+		#todo: gobject idle? the start of the stream for nice starts with full frames
 
 		self.pipe().set_state(gst.STATE_READY)
+
 		self.record = True
-		self.audio = True
+		self.audio = False
 		if (self.record):
 			self.el("videoTee").link(self.el("movieQueue"))
+
 			if (self.audio):
 				self.el("audioTee").link(self.el("audioWavenc"))
 
@@ -251,21 +256,17 @@ class Glive:
 
 
 	def startRecordingAudio(self):
-		print("startRecordingAudio 1")
 		self.pipe().set_state(gst.STATE_READY)
-
 
 		#take the picture at the start
 #		gobject.idle_add( self.takePhoto )
-		print("startRecordingAudio 3")
 		self.takePhoto()
-		print("startRecordingAudio 4")
 
 		self.record = True
 		if (self.record):
 			self.el("audioQueue").link(self.el("audioAudioconvert"))
 
-		print("startRecordingAudio 2")
+		self.pipe().set_state(gst.STATE_PAUSED)
 		self.pipe().set_state(gst.STATE_PLAYING)
 
 
