@@ -323,7 +323,7 @@ class MeshClient:
 
 	def mediaProgressCb( self, getter, bytes, recd ):
 		f.get_bytes()
-		print( "bytes: ", bytes )
+		print( "bytes: ", bytes, " of", recd.mediaBytes )
 
 	def mediaDownloadResultCb(self, getter, tempfile, suggested_name, recd):
 		print ( "mediaDownloadResultCb...", tempfile, suggested_name )
