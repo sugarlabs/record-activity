@@ -18,7 +18,6 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-#todo: tags into ogg files http://gstreamer.freedesktop.org/data/doc/gstreamer/head/manual/html/section-tags-write.html
 
 import os
 import gtk
@@ -49,6 +48,8 @@ class Glive:
 		self._NEXT_PIPETYPE = -1
 		#todo: create a dictionary here of what pipetypes have, e.g., "v4l2", "video", etc.
 
+		self.TRANSCODE_UPDATE_INTERVAL = 200
+
 		self.thumbPipes = []
 		self.muxPipes = []
 		self._nextPipe()
@@ -76,6 +77,10 @@ class Glive:
 	def muxPipe(self):
 		return self.muxPipes[ len(self.muxPipes)-1 ]
 
+	def muxEl(self, name):
+		n = str(len(self.muxPipes)-1)
+		return self.muxPipe().get_by_name(name+"_"+n)
+
 	def play(self):
 		self.pipe().set_state(gst.STATE_PLAYING)
 
@@ -92,12 +97,13 @@ class Glive:
 
 	def _nextPipe(self):
 		if ( len(self.pipes) > 0 ):
-			#todo: only disconnect what was connected based on the last pipetype
+
 			pipe = self.pipe()
 			bus = pipe.get_bus()
 			n = len(self.pipes)-1
 			n = str(n)
 
+			#only disconnect what was connected based on the last pipetype
 			if ((self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD)
 			or (self._LAST_PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)
 			or (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD) ):
@@ -228,10 +234,6 @@ class Glive:
 				gobject.idle_add(self.savePhoto, pixBuf)
 
 
-	def videoBuffer(self, fsink, buffer, pad, user_data=None):
-		self.startVideoBufferBuffer = self.startVideoBufferBuffer + 1
-
-
 	def savePhoto(self, pixbuf):
 		if (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
 			self.audioPixbuf = pixbuf
@@ -276,6 +278,7 @@ class Glive:
 
 		n = str(len(self.thumbPipes))
 		f = str(len(self.pipes)-2)
+		#todo: use the sessionid as part of the filename to diffentiate if multiple camera activities are going on
 		oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogv" )
 
 		#todo: test ~~> need to check *exists* and the filesize here to prevent stalling... & maybe earlier?
@@ -326,14 +329,24 @@ class Glive:
 					self.muxPipe().get_bus().disconnect(self.MUX_MESSAGE_ID)
 					self.muxPipe().get_bus().remove_signal_watch()
 
+				#todo: write to rainbow tmp
 				wavFilepath = os.path.join(self.ca.tempPath, "output_"+f+".wav")
 				muxFilepath = os.path.join(self.ca.tempPath, "mux.ogv")
+				#todo: ensure that decoding is required
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
 				muxBus = muxline.get_bus()
 				muxBus.enable_sync_message_emission()
 				muxBus.add_signal_watch()
 				self.MUX_MESSAGE_ID = muxBus.connect('message', self.onMuxedMessage)
 				self.muxPipes.append(muxline)
+
+				#todo: find python syntax for tags
+				#todo: add tags to any other media we generated (transcode the wav files)
+				#http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-good-plugins/html/gst-plugins-good-plugins-id3v2mux.html
+
+				#add a listener here to monitor % of transcoding...
+				self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
+
 				muxline.set_state(gst.STATE_PLAYING)
 			else:
 				self.record = False
@@ -342,11 +355,37 @@ class Glive:
 				self.ca.m.stoppedRecordingVideo()
 
 
+	def _transcodeUpdateCb( self ):
+		position, duration = self.queryPosition( self.muxPipe() )
+		if position != gst.CLOCK_TIME_NONE:
+			value = position * 100.0 / duration
+			print( "transcoding: " + str( value ) + "%" )
+		return True
+
+
+	def queryPosition( self, pipe ):
+		"Returns a (position, duration) tuple"
+		try:
+			position, format = self.player.query_position(gst.FORMAT_TIME)
+		except:
+			position = gst.CLOCK_TIME_NONE
+
+		try:
+			duration, format = self.player.query_duration(gst.FORMAT_TIME)
+		except:
+			duration = gst.CLOCK_TIME_NONE
+
+		return (position, duration)
+
+
 	def onMuxedMessage(self, bus, message):
 		t = message.type
 		if (t == gst.MESSAGE_EOS):
 			self.record = False
 			self.audio = False
+			gobject.source_remove( self.TRANSCODE_ID )
+			self.TRANSCODE_ID = 0
+
 			self.muxPipe().set_state(gst.STATE_NULL)
 
 			n = str(len(self.muxPipes)-1)

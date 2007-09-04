@@ -201,6 +201,8 @@ class RecordActivity(activity.Activity):
 		el.setAttribute("buddy", str(recd.buddy))
 		el.setAttribute("mediaMd5", str(recd.mediaMd5))
 		el.setAttribute("thumbMd5", str(recd.thumbMd5))
+		el.setAttribute("mediaBytes", str(recd.mediaBytes))
+		el.setAttribute("thumbBytes", str(recd.thumbBytes))
 		if (recd.datastoreId != None):
 			el.setAttribute("datastoreId", str(recd.datastoreId))
 

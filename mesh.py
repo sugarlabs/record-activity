@@ -39,7 +39,9 @@ class MeshXMLRPCServer:
 
 	def newThumbNotice(	self,
 						ip,
-						mediaMd5, thumbMd5, time, photographer, title, colorStroke, colorFill, hashKey, type ):
+						mediaMd5, thumbMd5,
+						mediaBytes, thumbBytes,
+						time, photographer, title, colorStroke, colorFill, hashKey, type ):
 		#todo: filesize send...
 
 		newRecd = Recorded( self.ca )
@@ -210,6 +212,7 @@ class MeshClient:
 
 				bud.newThumbNotice(	str(me.props.ip4_address),
 									recd.mediaMd5, recd.thumbMd5,
+									recd.mediaBytes, recd.thumbBytes,
 									recd.time, recd.photographer,
 									recd.title,
 									recd.colorStroke.hex, recd.colorFill.hex,
@@ -263,13 +266,6 @@ class MeshClient:
 	#erik
 
 	#todo: %download?
-	#note the progress handler below
-	#http://docs.python.org/lib/os-fd-ops.html
-	#and man statd, get the 7th item in the tuple
-	#f = os.open( "/path/img", os.O_R_DONLY)
-	#a = os.fstatd(f)
-	#bytes = a[7]
-	#f.close()
 
 	#todo: how to cancel?
 	#getter.cancel()

@@ -113,6 +113,8 @@ class Model:
 		recd.hashKey = el.getAttribute('hashKey')
 		recd.mediaMd5 = el.getAttribute('mediaMd5')
 		recd.thumbMd5 = el.getAttribute('thumbMd5')
+		recd.mediaBytes = int( el.getAttribute('mediaBytes') )
+		recd.thumbBytes = int( el.getAttribute('thumbBytes') )
 
 		recd.datastoreNode = el.getAttributeNode("datastoreId")
 		if (recd.datastoreNode != None):
@@ -506,14 +508,21 @@ class Model:
 	def createNewRecordedMd5Sums( self, recd ):
 		#load the thumbfile
 		thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
-		print( thumbFile, os.path.exists(thumbFile))
 		thumbMd5 = self.md5File( thumbFile )
 		recd.thumbMd5 = thumbMd5
+		t = os.open( thumbFile, os.O_R_DONLY )
+		tBytes = t.os.fstadt[7]
+		recd.thumbBytes = tBytes
+		t.close()
 
 		#load the mediafile
 		mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		mediaMd5 = self.md5File( mediaFile )
 		recd.mediaMd5 = mediaMd5
+		m = os.open( mediaFile, os.O_R_DONLY )
+		mBytes = m.os.fstadt[7]
+		recd.mediaBytes = mBytes
+		m.close()
 
 
 	def md5File( self, filepath ):
@@ -523,6 +532,7 @@ class Model:
 		digest = md.hexdigest()
 		hash = util.printable_hash(digest)
 		return hash
+
 
 
 	#outdated?

@@ -36,6 +36,8 @@ class Recorded:
 		self.hashKey = None
 		self.mediaMd5 = None
 		self.thumbMd5 = None
+		self.mediaBytes = None
+		self.thumbBytes = None
 
 		#flag to alert need to re-datastore the title
 		self.titleChange = False
