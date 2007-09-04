@@ -199,7 +199,7 @@ class Glive:
 			except:
 				pass
 
-		#todo: this should be checked with an attribute library
+		#todo: this should be checked with an attribute dictionary
 		if ((self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD)
 		or (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)
 		or (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD)):
@@ -258,7 +258,7 @@ class Glive:
 		self.pipe().set_state(gst.STATE_READY)
 
 		self.record = True
-		self.audio = False
+		self.audio = True
 		if (self.record):
 			self.el("videoTee").link(self.el("movieQueue"))
 

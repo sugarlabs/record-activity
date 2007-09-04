@@ -57,7 +57,6 @@ class Model:
 		self.setConstants()
 
 		self.mediaTypes = {}
-		#todo: dictionary?
 		self.mediaTypes[0] = {"name":"photo", "type":self.TYPE_PHOTO}
 		self.mediaTypes[1] = {"name":"video", "type":self.TYPE_VIDEO}
 		self.mediaTypes[2] = {"name":"audio", "type":self.TYPE_AUDIO}
