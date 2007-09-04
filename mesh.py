@@ -125,7 +125,16 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 			if (thumb):
 				path = recd.getThumbFilepath(False)
 			else:
-				path = recd.getMediaFilepath(False)
+				if (recd.type == recd.server.ca.m.TYPE_AUDIO):
+					import zipfile
+					#todo: again, rainbow...
+					zile = zipfile.ZipFile("/tmp/audio.zip", "w")
+					zile.write( "audio", recd.getMediaFilepath(False), zipfile.ZIP_STORED )
+					zile.write( "image", recd.getAudioImagePixbuf(), zipfile.ZIP_STORED )
+					zile.close()
+					path = "/tmp/audio.zip"
+				else:
+					path = recd.getMediaFilepath(False)
 
 			if (path == None):
 				return "not_available"
@@ -282,7 +291,6 @@ class MeshClient:
 	#todo: how to gracefully handle errors from the server (e.g., None)
 	#IOError and "error" callback...
 
-
 		print("requestingMediaBits...", len(self.my_acty.get_joined_buddies()))
 
 		photoTakingBuddy = None
@@ -329,6 +337,21 @@ class MeshClient:
 
 		recd.mediaFilename = suggested_name
 		recd.downloadedFromBuddy = True
+
+		if (recd.type == self.ca.TYPE_AUDIO):
+			import zipfile
+			zf = zipfile.ZipFile( dest )
+
+			aoutfile = open(os.path.join("/tmp", "audio.wav"), 'wb')
+			aoutfile.write( zf.read("audio") )
+			aoutfile.flush()
+			aoutfile.close()
+
+			ioutfile = open(os.path.join("/tmp", "image.jpg"), 'wb')
+			ioutfile.write( zf.read("image") )
+			ioutfile.flush()
+			ioutfile.close()
+
 
 		print( "downloaded media and here it is: " + str(dest) )
 		print( "and media filename is: " + recd.mediaFilename )

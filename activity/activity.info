@@ -1,8 +1,7 @@
 [Activity]
 name = Record
-activity_version = 23
-host_version = 1
-icon = activity-record
 service_name = org.laptop.RecordActivity
 class = RecordActivity.RecordActivity
-show_launcher = 1
+icon = activity-record
+activity_version = 23
+show_launcher = yes

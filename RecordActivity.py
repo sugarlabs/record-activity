@@ -46,13 +46,17 @@ class RecordActivity(activity.Activity):
 
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
+		print("1 boot")
 		self.activityName = "Record"
 		self.set_title( self.activityName )
+		print("2 boot")
 
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
+		print("3 boot")
 
 	def _initme( self, userdata=None ):
+		print("4 boot")
 		self.instanceId = self._activity_id
 		self.ACTIVE = True
 
@@ -110,6 +114,8 @@ class RecordActivity(activity.Activity):
 
 		print("leaving constructor")
 		self.m.selectLatestThumbs(self.m.TYPE_PHOTO)
+
+		print("100 boot")
 		return False
 
 
