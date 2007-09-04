@@ -342,6 +342,7 @@ class MeshClient:
 			import zipfile
 			zf = zipfile.ZipFile( dest )
 
+			#todo: use temp files here
 			aoutfile = open(os.path.join("/tmp", "audio.wav"), 'wb')
 			aoutfile.write( zf.read("audio") )
 			aoutfile.flush()

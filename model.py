@@ -53,14 +53,18 @@ import _camera
 
 class Model:
 	def __init__( self, pca ):
-		#todo: this might all need to be relocated b/c of datastore
 		self.ca = pca
 		self.setConstants()
 
+		self.mediaTypes = {}
+		#todo: dictionary?
+		self.mediaTypes[0] = {"name":"photo", "type":self.TYPE_PHOTO}
+		self.mediaTypes[1] = {"name":"video", "type":self.TYPE_VIDEO}
+		self.mediaTypes[2] = {"name":"audio", "type":self.TYPE_AUDIO}
+
 		self.mediaHashs = {}
-		self.mediaHashs[self.TYPE_PHOTO] = []
-		self.mediaHashs[self.TYPE_VIDEO] = []
-		self.mediaHashs[self.TYPE_AUDIO] = []
+		for i in range(0, len(self.mediaTypes)):
+			self.mediaHashs[ self.mediaTypes[i]["type"] ] = []
 
 
 	def fillMediaHash( self, index ):
@@ -69,6 +73,7 @@ class Model:
 			print("fillMediaHash 2")
 			doc = parse( os.path.abspath(index) )
 
+			#todo: use an array/dictionary here
 			photos = doc.documentElement.getElementsByTagName('photo')
 			for each in photos:
 				self.loadMedia( each, self.mediaHashs[self.TYPE_PHOTO] )
@@ -81,6 +86,7 @@ class Model:
 			for each in audios:
 				self.loadMedia( each, self.mediaHashs[self.TYPE_AUDIO] )
 
+
 	def getByMd5( self, md5 ):
 		for mh in range (0, len(self.mediaHashs)):
 			for r in range (0, len(self.mediaHashs[mh])):
@@ -91,6 +97,7 @@ class Model:
 					return recd
 
 		return None
+
 
 	def loadMedia( self, el, hash ):
 		recd = Recorded( self.ca )
@@ -510,19 +517,19 @@ class Model:
 		thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
 		thumbMd5 = self.md5File( thumbFile )
 		recd.thumbMd5 = thumbMd5
-		t = os.open( thumbFile, os.O_R_DONLY )
-		tBytes = t.os.fstadt[7]
+		#t = os.open( thumbFile, os.O_RDONLY )
+		tBytes = os.stat(thumbFile)[7]
 		recd.thumbBytes = tBytes
-		t.close()
+		#t.close()
 
 		#load the mediafile
 		mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
 		mediaMd5 = self.md5File( mediaFile )
 		recd.mediaMd5 = mediaMd5
-		m = os.open( mediaFile, os.O_R_DONLY )
-		mBytes = m.os.fstadt[7]
+		#m = os.open( mediaFile, os.O_RDONLY )
+		mBytes = os.stat(mediaFile)[7]
 		recd.mediaBytes = mBytes
-		m.close()
+		#m.close()
 
 
 	def md5File( self, filepath ):

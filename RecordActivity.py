@@ -46,17 +46,14 @@ class RecordActivity(activity.Activity):
 
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
-		print("1 boot")
 		self.activityName = "Record"
 		self.set_title( self.activityName )
-		print("2 boot")
 
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
-		print("3 boot")
+
 
 	def _initme( self, userdata=None ):
-		print("4 boot")
 		self.instanceId = self._activity_id
 		self.ACTIVE = True
 
@@ -103,70 +100,52 @@ class RecordActivity(activity.Activity):
 		if self._shared_activity:
 			#have you joined or shared this activity yourself?
 			if self.get_shared():
-				print("in get_shared() 1")
 				self.startMesh()
-				print("in get_shared() 2")
 			else:
-				print("! in get_shared() 1")
-				# Wait until you're at the door of the party...
-				self.connect("joined", self.meshJoinedCb)
-				print("! in get_shared() 2")
+				self.connect("joined", self._meshJoinedCb)
 
-		print("leaving constructor")
 		self.m.selectLatestThumbs(self.m.TYPE_PHOTO)
 
-		print("100 boot")
 		return False
 
 
 	def read_file(self, file):
-		print("read file")
+		print("read file 1")
 		self.m.fillMediaHash(file)
-
+		print("read file 2")
 
 	def write_file(self, file):
 		print("write_file 1")
 		self.I_AM_SAVED = False
 		SAVING_AT_LEAST_ONE = False
 
-		#todo: just pass the file over to the method in m
 		f = open( file, "w" )
-
-		print("updateMediaIndex")
 		impl = getDOMImplementation()
 		album = impl.createDocument(None, "album", None)
 		root = album.documentElement
 
-		photoHash = self.m.mediaHashs[self.m.TYPE_PHOTO]
-		for i in range (0, len(photoHash)):
-			recd = photoHash[i]
+		for h in range(0, len (self.m.mediaHashs)):
+			hash = self.m.mediaHashs[h]
+			type = -1
+			for i in range (0, len(hash)):
+				recd = hash[i]
 
-			photo = album.createElement('photo')
-			root.appendChild(photo)
-			savingFile = self.saveMedia( photo, recd, self.m.TYPE_PHOTO )
-			if (savingFile):
-				SAVING_AT_LEAST_ONE = True
-				print("saving at least one photo!")
+				#todo: might beenfit from a function for this?
+				typeString = None
+				if (h == self.m.TYPE_PHOTO):
+					typeString = "photo"
+				elif (h == self.m.TYPE_VIDEO):
+					typeString = "video"
+				elif (h == self.m.TYPE_AUDIO):
+					typeString = "audio"
 
-		videoHash = self.m.mediaHashs[self.m.TYPE_VIDEO]
-		for i in range (0, len(videoHash)):
-			recd = videoHash[i]
-
-			video = album.createElement('video')
-			root.appendChild(video)
-			savingFile = self.saveMedia( video, recd, self.m.TYPE_VIDEO )
-			if (savingFile):
-				SAVING_AT_LEAST_ONE = True
-
-		audioHash = self.m.mediaHashs[self.m.TYPE_AUDIO]
-		for i in range (0, len(audioHash)):
-			recd = audioHash[i]
-
-			audio = album.createElement('audio')
-			root.appendChild(audio)
-			saving_file = self.saveMedia( audio, recd, self.m.TYPE_AUDIO )
-			if (saving_file):
-				SAVING_AT_LEAST_ONE = True
+				if (typeSting != None):
+					photo = album.createElement(typeString)
+					root.appendChild(photo)
+					savingFile = self.saveMedia( photo, recd, h )
+					if (savingFile):
+						SAVING_AT_LEAST_ONE = True
+						print("saving at least one media!")
 
 		album.writexml(f)
 		f.close()
@@ -290,7 +269,7 @@ class RecordActivity(activity.Activity):
 
 		print("saveMediaToDatastore 5")
 		recd.datastoreId = mediaObject.object_id
-		print("datastore.write...", recd.datastoreId)
+		print("saveMediaToDatastore 6", recd.datastoreId)
 
 		if (not self.I_AM_CLOSING):
 			recd.datastoreOb = mediaObject
@@ -333,24 +312,12 @@ class RecordActivity(activity.Activity):
 		recd.saved = True
 		allDone = True
 
-		#TODO: iterate through the mediaHashs
-		photoHash = self.m.mediaHashs[self.m.TYPE_PHOTO]
-		for i in range (0, len(photoHash)):
-			recd = photoHash[i]
-			if (not recd.saved):
-				allDone = False
-
-		videoHash = self.m.mediaHashs[self.m.TYPE_VIDEO]
-		for i in range (0, len(videoHash)):
-			recd = videoHash[i]
-			if (not recd.saved):
-				allDone = False
-
-		audioHash = self.m.mediaHashs[self.m.TYPE_AUDIO]
-		for i in range (0, len(audioHash)):
-			recd = audioHash[i]
-			if (not recd.saved):
-				allDone = False
+		for h in range (0, len(self.m.mediaHashs)):
+			mhash = self.m.mediaHashs[h]
+			for i in range (0, len(mhash)):
+				recd = mhash[i]
+				if (not recd.saved):
+					allDone = False
 
 		print("doPostMediaSave 2; allDone: ", allDone )
 
@@ -360,31 +327,23 @@ class RecordActivity(activity.Activity):
 		#todo: reset all the saved flags or just let them take care of themselves on the next save?
 		print("doPostMediaSave 3; allDone: ", self.I_AM_SAVED )
 		if (self.I_AM_SAVED and self.I_AM_CLOSING):
-			print("doPostMediaSave 1 -- pre destroy()")
+			print("doPostMediaSave 4 -- pre destroy()")
 			self.destroy()
-			print("doPostMediaSave 2 -- pre destroy()")
+			print("doPostMediaSave 5 -- pre destroy()")
 
 
 	def _sharedCb( self, activity ):
-		print("1 i am shared")
 		self.startMesh()
-		print("2 i am shared")
 
 
-	def meshJoinedCb( self, activity ):
-		print("1 i am joined")
+	def _meshJoinedCb( self, activity ):
 		self.startMesh()
-		print("2 i am joined")
 
 
 	def startMesh( self ):
-		print( "1 startMesh" );
 		self.httpServer = HttpServer(self)
-		print( "2 startMesh" );
 		self.meshClient = MeshClient(self)
-		print( "3 startMesh" );
 		self.meshXMLRPCServer = MeshXMLRPCServer(self)
-		print( "4 startMesh" );
 
 
 	def _activeCb( self, widget, pspec ):
@@ -444,6 +403,7 @@ class RecordActivity(activity.Activity):
 		#this calls write_file
 		activity.Activity.close( self )
 		print("close 3")
+
 
 	def destroy( self ):
 		print( "destroy and I_AM_CLOSING:", self.I_AM_CLOSING, "I_AM_SAVED:", self.I_AM_SAVED, "self._updating_jobject:", self._updating_jobject )

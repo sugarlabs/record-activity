@@ -43,7 +43,7 @@ class Glive:
 		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 1
 		self.PIPETYPE_X_VIDEO_DISPLAY = 2
 		self.PIPETYPE_AUDIO_RECORD = 3
-		self._PIPETYPE = self.PIPETYPE_SUGAR_JHBUILD
+		self._PIPETYPE = self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
 		self._LAST_PIPETYPE = self._PIPETYPE
 		self._NEXT_PIPETYPE = -1
 		#todo: create a dictionary here of what pipetypes have, e.g., "v4l2", "video", etc.
@@ -54,38 +54,49 @@ class Glive:
 		self.muxPipes = []
 		self._nextPipe()
 
+
 	def setPipeType( self, type ):
 		self._NEXT_PIPETYPE = type
+
 
 	def getPipeType( self ):
 		return self._PIPETYPE
 
+
 	def pipe(self):
 		return self.pipes[ len(self.pipes)-1 ]
+
 
 	def el(self, name):
 		n = str(len(self.pipes)-1)
 		return self.pipe().get_by_name(name+"_"+n)
 
+
 	def thumbPipe(self):
 		return self.thumbPipes[ len(self.thumbPipes)-1 ]
+
 
 	def thumbEl(self, name):
 		n = str(len(self.thumbPipes)-1)
 		return self.thumbPipe().get_by_name(name+"_"+n)
 
+
 	def muxPipe(self):
 		return self.muxPipes[ len(self.muxPipes)-1 ]
+
 
 	def muxEl(self, name):
 		n = str(len(self.muxPipes)-1)
 		return self.muxPipe().get_by_name(name+"_"+n)
 
+
 	def play(self):
 		self.pipe().set_state(gst.STATE_PLAYING)
 
+
 	def pause(self):
 		self.pipe().set_state(gst.STATE_PAUSED)
+
 
 	def stop(self):
 		self.pipe().set_state(gst.STATE_NULL)
@@ -94,6 +105,7 @@ class Glive:
 			self._PIPETYPE = self._NEXT_PIPETYPE
 		self._nextPipe()
 		self._NEXT_PIPETYPE = -1
+
 
 	def _nextPipe(self):
 		if ( len(self.pipes) > 0 ):
@@ -119,7 +131,7 @@ class Glive:
 		n = str(len(self.pipes))
 		v4l2 = False
 		if (self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_" +n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_"+n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
 			v4l2 = True
 
 			videoTee = pipeline.get_by_name('videoTee_'+n)
@@ -132,6 +144,7 @@ class Glive:
 			picFakesink.set_property("signal-handoffs", True)
 			self.picExposureOpen = False
 
+			movieQueue = pipeline.get_by_name("movieQueue_"+n)
 			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
 			movieFilepath = os.path.join(self.ca.tempPath, "output_"+n+".ogv" )
 			movieFilesink.set_property("location", movieFilepath )
