@@ -163,6 +163,7 @@ class RecordActivity(activity.Activity):
 
 		el.setAttribute("type", str(type))
 		if (type == self.m.TYPE_AUDIO):
+			#todo: this should get the file, not the pixbuf... saving to metadata too soon
 			pixbuf = recd.getAudioImagePixbuf( )
 			pixbufString = str( self._get_base64_pixbuf_data(pixbuf) )
 			el.setAttribute("audioImage", pixbufString )
@@ -199,6 +200,7 @@ class RecordActivity(activity.Activity):
 			if (recd.titleChange):
 				self.loadMediaFromDatastore( recd )
 				try:
+					#todo: solve 566 bugs... which keep this from working...
 					if (recd.datastoreOb.metadata['title'] != recd.title):
 						recd.datastoreOb.metadata['title'] = recd.title
 						datastore.write(recd.datastoreOb)
