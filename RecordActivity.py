@@ -124,28 +124,18 @@ class RecordActivity(activity.Activity):
 		album = impl.createDocument(None, "album", None)
 		root = album.documentElement
 
-		for h in range(0, len (self.m.mediaHashs)):
-			hash = self.m.mediaHashs[h]
-			type = -1
+		for type,value in self.m.mediaTypes.items():
+			typeName = value["name"]
+			hash = self.m.mediaHashs[typeName]
+
 			for i in range (0, len(hash)):
 				recd = hash[i]
-
-				#todo: might beenfit from a function for this?
-				typeString = None
-				if (h == self.m.TYPE_PHOTO):
-					typeString = "photo"
-				elif (h == self.m.TYPE_VIDEO):
-					typeString = "video"
-				elif (h == self.m.TYPE_AUDIO):
-					typeString = "audio"
-
-				if (typeSting != None):
-					photo = album.createElement(typeString)
-					root.appendChild(photo)
-					savingFile = self.saveMedia( photo, recd, h )
-					if (savingFile):
-						SAVING_AT_LEAST_ONE = True
-						print("saving at least one media!")
+				mediaEl = album.createElement(typeName)
+				root.appendChild(photo)
+				savingFile = self.saveMedia( mediaEl, recd, type )
+				if (savingFile):
+					SAVING_AT_LEAST_ONE = True
+					print("saving at least one media!")
 
 		album.writexml(f)
 		f.close()

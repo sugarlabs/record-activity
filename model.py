@@ -57,13 +57,15 @@ class Model:
 		self.setConstants()
 
 		self.mediaTypes = {}
-		self.mediaTypes[0] = {"name":"photo", "type":self.TYPE_PHOTO}
-		self.mediaTypes[1] = {"name":"video", "type":self.TYPE_VIDEO}
-		self.mediaTypes[2] = {"name":"audio", "type":self.TYPE_AUDIO}
+		self.mediaTypes[self.TYPE_PHOTO] = {"name":"photo"}
+		self.mediaTypes[self.TYPE_VIDEO] = {"name":"video"}
+		self.mediaTypes[self.TYPE_AUDIO] = {"name":"audio"}
 
 		self.mediaHashs = {}
-		for i in range(0, len(self.mediaTypes)):
-			self.mediaHashs[ self.mediaTypes[i]["type"] ] = []
+		#for i in range(0, len(self.mediaTypes)):
+		#for item in self.mediaTypes.keys():
+		for key,value in self.mediaTypes.items():
+			self.mediaHashs[ value["name"] ] = []
 
 
 	def fillMediaHash( self, index ):
@@ -144,6 +146,7 @@ class Model:
 			import base64
 			data = base64.b64decode( bt.nodeValue )
 			pbl.write(data)
+			pbl.close()
 			thumbImg = pbl.get_pixbuf()
 
 			thumbPath = os.path.join(self.ca.journalPath, "datastoreThumb.jpg")

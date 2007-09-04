@@ -130,7 +130,7 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 					#todo: again, rainbow...
 					zile = zipfile.ZipFile("/tmp/audio.zip", "w")
 					zile.write( "audio", recd.getMediaFilepath(False), zipfile.ZIP_STORED )
-					zile.write( "image", recd.getAudioImagePixbuf(), zipfile.ZIP_STORED )
+					zile.write( "image", recd.getAudioImageFilepath(), zipfile.ZIP_STORED )
 					zile.close()
 					path = "/tmp/audio.zip"
 				else:
