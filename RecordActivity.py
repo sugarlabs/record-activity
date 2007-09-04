@@ -126,12 +126,12 @@ class RecordActivity(activity.Activity):
 
 		for type,value in self.m.mediaTypes.items():
 			typeName = value["name"]
-			hash = self.m.mediaHashs[typeName]
+			hash = self.m.mediaHashs[type]
 
 			for i in range (0, len(hash)):
 				recd = hash[i]
-				mediaEl = album.createElement(typeName)
-				root.appendChild(photo)
+				mediaEl = album.createElement( typeName )
+				root.appendChild( mediaEl )
 				savingFile = self.saveMedia( mediaEl, recd, type )
 				if (savingFile):
 					SAVING_AT_LEAST_ONE = True
@@ -263,11 +263,15 @@ class RecordActivity(activity.Activity):
 
 		if (not self.I_AM_CLOSING):
 			recd.datastoreOb = mediaObject
+			print("saveMediaToDatastore 7")
 
 		if (not self.I_AM_CLOSING):
+			print("saveMediaToDatastore 8")
 			mediaObject.destroy()
 			del mediaObject
+			print("saveMediaToDatastore 9")
 
+		print("saveMediaToDatastore 10")
 		return True
 
 

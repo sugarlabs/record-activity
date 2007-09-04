@@ -65,7 +65,7 @@ class Model:
 		#for i in range(0, len(self.mediaTypes)):
 		#for item in self.mediaTypes.keys():
 		for key,value in self.mediaTypes.items():
-			self.mediaHashs[ value["name"] ] = []
+			self.mediaHashs[ key ] = []
 
 
 	def fillMediaHash( self, index ):
