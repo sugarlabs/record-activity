@@ -152,6 +152,12 @@ class RecordActivity(activity.Activity):
 		print("saveMedia 1")
 		needToDatastoreMedia = False
 
+		el.setAttribute("type", str(type))
+		if (type == self.m.TYPE_AUDIO):
+			pixbuf = recd.getAudioImagePixbuf( )
+			pixbufString = str( self._get_base64_pixbuf_data(pixbuf) )
+			el.setAttribute("audioImage", pixbufString )
+
 		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
 			pixbuf = recd.getThumbPixbuf( )
 			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
@@ -160,13 +166,6 @@ class RecordActivity(activity.Activity):
 		else:
 			recd.saved = False
 			needToDatastoreMedia = self.saveMediaToDatastore( recd )
-
-		el.setAttribute("type", str(type))
-		if (type == self.m.TYPE_AUDIO):
-			#todo: this should get the file, not the pixbuf... saving to metadata too soon
-			pixbuf = recd.getAudioImagePixbuf( )
-			pixbufString = str( self._get_base64_pixbuf_data(pixbuf) )
-			el.setAttribute("audioImage", pixbufString )
 
 		el.setAttribute("title", recd.title)
 		el.setAttribute("time", str(recd.time))

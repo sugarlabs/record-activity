@@ -56,7 +56,7 @@ class Recorded:
 		self.downloadedFromBuddy = False
 
 		#for flagging when you are being saved to the datastore for the first time...
-		#and just because you have an id, doesn't mean you're
+		#and just because you have an id, doesn't mean you're saved
 		self.saved = False
 
 
@@ -139,7 +139,7 @@ class Recorded:
 
 	def getAudioImagePixbuf( self ):
 		audioPixbuf = None
-		if (self.datastoreId == None):
+		if ( (self.datastoreId==None) and (not self.saved) ):
 			audioFilepath = self.getAudioImageFilepath()
 			if (audioFilepath != None):
 				audioPixbuf = gtk.gdk.pixbuf_new_from_file(audioFilepath)
