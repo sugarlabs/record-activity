@@ -132,6 +132,8 @@ class RecordActivity(activity.Activity):
 				recd = hash[i]
 				mediaEl = album.createElement( typeName )
 				root.appendChild( mediaEl )
+				recd.savedXml = False
+				recd.savedMedia = False
 				self.saveMedia( f, mediaEl, recd )
 
 
@@ -177,7 +179,7 @@ class RecordActivity(activity.Activity):
 		if (recd.datastoreId != None):
 			el.setAttribute("datastoreId", str(recd.datastoreId))
 
-		recd.saveXml = True
+		recd.savedXml = True
 		self.checkDestroy( el.ownerDocument, xmlFile )
 		print("2 saveXML" )
 
@@ -203,7 +205,7 @@ class RecordActivity(activity.Activity):
 				#reset for the next title change if not closing...
 				recd.titleChange = False
 				#save the title to the xml
-				recd.saveMedia = True
+				recd.savedMedia = True
 				self.saveXml( xmlFile, el, recd )
 
 			return
@@ -279,6 +281,11 @@ class RecordActivity(activity.Activity):
 		recd.thumbFilename = None
 
 		self.saveXml( xmlFile, el, recd )
+
+		if (self.I_AM_CLOSING):
+			mediaObject.destroy()
+			del mediaObject
+
 		recd.savedMedia = True
 		self.checkDestroy( el.ownerDocument, xmlFile )
 
@@ -364,12 +371,12 @@ class RecordActivity(activity.Activity):
 			mhash = self.m.mediaHashs[h]
 			for i in range (0, len(mhash)):
 				recd = mhash[i]
-				if ( (not recd.savedMedia) and (not recd.savedXml) ):
+				if ( (not recd.savedMedia) or (not recd.savedXml) ):
 					allDone = False
 
 		if (allDone):
-			album.writexml(f)
-			f.close()
+			album.writexml(xmlFile)
+			xmlFile.close()
 			self.I_AM_SAVED = True
 
 		#todo: reset all the saved flags or just let them take care of themselves on the next save?
