@@ -193,14 +193,16 @@ class RecordActivity(activity.Activity):
 			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 			#However, they might have changed the name of the file
 			if (recd.titleChange):
-				self.loadMediaFromDatastore( recd )
-				#todo: handle none mediaOb
-				if (recd.datastoreOb.metadata['title'] != recd.title):
-					recd.datastoreOb.metadata['title'] = recd.title
-					datastore.write(recd.datastoreOb)
-					if (self.I_AM_CLOSING):
-						recd.datastoreOb.destroy()
-						del recd.datastoreOb
+				#todo: fix!  this doesn't work as of 556...
+#				self.loadMediaFromDatastore( recd )
+#				#todo: handle none mediaOb
+#				if (recd.datastoreOb.metadata['title'] != recd.title):
+#					recd.datastoreOb.metadata['title'] = recd.title
+#					datastore.write(recd.datastoreOb)
+#					if (self.I_AM_CLOSING):
+#						recd.datastoreOb.destroy()
+#						del recd.datastoreOb
+				pass
 
 				#reset for the next title change if not closing...
 				recd.titleChange = False

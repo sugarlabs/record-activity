@@ -529,7 +529,7 @@ class Model:
 		if (os.path.exists(pathOb)):
 			i = i+1
 			newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
-			path = getUniqueFilepath( str(newPath), i )
+			path = self.getUniqueFilepath( str(newPath), i )
 		else:
 			return path
 
