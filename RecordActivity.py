@@ -178,7 +178,7 @@ class RecordActivity(activity.Activity):
 			el.setAttribute("datastoreId", str(recd.datastoreId))
 
 		recd.saveXml = True
-		self.checkDestroy( xmlFile )
+		self.checkDestroy( el.ownerDocument, xmlFile )
 		print("2 saveXML" )
 
 
@@ -277,11 +277,10 @@ class RecordActivity(activity.Activity):
 		recd.datastoreId = mediaObject.object_id
 		recd.mediaFilename = None
 		recd.thumbFilename = None
-		recd.savedMedia = True
 
 		self.saveXml( xmlFile, el, recd )
-
-		self.checkDestroy( xmlFile )
+		recd.savedMedia = True
+		self.checkDestroy( el.ownerDocument, xmlFile )
 
 
 	def _sharedCb( self, activity ):
@@ -357,7 +356,7 @@ class RecordActivity(activity.Activity):
 		print("close 3")
 
 
-	def checkDestroy( self, xmlFile ):
+	def checkDestroy( self, album, xmlFile ):
 		print("checkDestroy 0")
 		allDone = True
 
@@ -369,8 +368,9 @@ class RecordActivity(activity.Activity):
 					allDone = False
 
 		if (allDone):
+			album.writexml(f)
+			f.close()
 			self.I_AM_SAVED = True
-			#todo: serialize the XML here
 
 		#todo: reset all the saved flags or just let them take care of themselves on the next save?
 		print("checkDestroy 1; I_AM_SAVED: ", self.I_AM_SAVED )
