@@ -455,11 +455,12 @@ class Model:
 
 
 	def loadMediaFromDatastore( self, recd ):
-		#todo: make sure methods calling this handle None as a response
-
 		if (recd.datastoreId == None):
 			print("RecordActivity error -- request for recd from datastore with no datastoreId")
-			return None
+			return
+
+		if (recd.datastoreOb != None):
+			return
 
 		mediaObject = None
 		try:
@@ -467,7 +468,7 @@ class Model:
 		finally:
 			if (mediaObject == None):
 					print("RecordActivity error -- request for recd from datastore returning None")
-					return None
+					return
 
 		recd.datastoreOb = mediaObject
 

@@ -132,36 +132,31 @@ class RecordActivity(activity.Activity):
 				recd = hash[i]
 				mediaEl = album.createElement( typeName )
 				root.appendChild( mediaEl )
-				savingFile = self.saveMedia( mediaEl, recd, type )
-				if (savingFile):
-					SAVING_AT_LEAST_ONE = True
-					print("saving at least one media!")
+				self.saveMedia( f, mediaEl, recd )
 
-		album.writexml(f)
-		f.close()
 
-		#if (SAVING_AT_LEAST_ONE):
-		#	self.I_AM_SAVED = False
-		#else:
-		#	self.I_AM_SAVED = True
-		self.I_AM_SAVED = not SAVING_AT_LEAST_ONE
-		#todo: handle the off, off case that the callbacks beat us to this point
-		print( "write_file 2; I_AM_SAVED:", self.I_AM_SAVED )
 
-	def saveMedia( self, el, recd, type ):
+	def saveMedia( self, xmlFile, el, recd ):
 		print("saveMedia 1")
-		needToDatastoreMedia = False
 
-		el.setAttribute("type", str(type))
+		#presume we don't need to serialize...
+		needToDatastoreMedia = False
 
 		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
 			pixbuf = recd.getThumbPixbuf( )
 			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
 			el.setAttribute("buddyThumb", buddyThumb )
-			recd.saved = True
+			recd.savedMedia = True
+			self.saveXml( xmlFile, el, recd )
 		else:
-			recd.saved = False
-			needToDatastoreMedia = self.saveMediaToDatastore( recd )
+			recd.savedMedia = False
+			needToDatastoreMedia = self.saveMedia( recd )
+
+
+	def saveXml( self, xmlFile, el, recd ):
+		print( "1 saveXML" )
+
+		el.setAttribute("type", str(recd.type))
 
 		if (recd.type == self.m.TYPE_AUDIO):
 			aiPixbuf = recd.getAudioImagePixbuf( )
@@ -182,46 +177,42 @@ class RecordActivity(activity.Activity):
 		if (recd.datastoreId != None):
 			el.setAttribute("datastoreId", str(recd.datastoreId))
 
-		print("saveMedia 1; needToDatastoreMedia ", needToDatastoreMedia )
-		return needToDatastoreMedia
+		recd.saveXml = True
+		self.checkDestroy( xmlFile )
+		print("2 saveXML" )
 
 
-	def saveMediaToDatastore( self, recd ):
-		print("saveMediaToDatastore 1")
-		# note that we update the recds that go through here to how they would
+	def saveMedia( self, xmlFile, el, recd ):
+		print("saveMedia 1")
+		#note that we update the recds that go through here to how they would
 		#look on a fresh load from file since this won't just happen on close()
 
 		if (recd.datastoreId != None):
-			#okay, actually already saved here...
-			recd.saved = True
-
 			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 			#However, they might have changed the name of the file
 			if (recd.titleChange):
 				self.loadMediaFromDatastore( recd )
-				try:
-					#todo: solve 566 bugs... which keep this from working...
-					if (recd.datastoreOb.metadata['title'] != recd.title):
-						recd.datastoreOb.metadata['title'] = recd.title
-						datastore.write(recd.datastoreOb)
-						if (recd.datastoreOb != None):
-							recd.datastoreOb.destroy()
-							del recd.datastoreOb
-				finally:
-					if (recd.datastoreOb != None):
+				#todo: handle none mediaOb
+				if (recd.datastoreOb.metadata['title'] != recd.title):
+					recd.datastoreOb.metadata['title'] = recd.title
+					datastore.write(recd.datastoreOb)
+					if (self.I_AM_CLOSING):
 						recd.datastoreOb.destroy()
 						del recd.datastoreOb
 
 				#reset for the next title change if not closing...
 				recd.titleChange = False
+				#save the title to the xml
+				recd.saveMedia = True
+				self.saveXml( xmlFile, el, recd )
 
-			return False
+			return
 
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
 		#therefore this is only called when write_file is called by the activity superclass
-		print("saveMediaToDatastore 2")
+		print("saveMedia 2")
 		mediaObject = datastore.create()
-		print("saveMediaToDatastore 3")
+		print("saveMedia 3")
 		#todo: what other metadata to set?
 		mediaObject.metadata['title'] = recd.title
 		#jobject.metadata['keep'] = '0'
@@ -242,13 +233,11 @@ class RecordActivity(activity.Activity):
 		elif (recd.type == self.m.TYPE_AUDIO):
 			mediaObject.metadata['mime_type'] = 'audio/ogg'
 
-		#todo: make sure the file is available before you ever get to this point...
-		#todo: use recd.getMediaFilepath with option to not request mesh bits
-		mediaFile = recd.getMediaFilepath(False)#os.path.join(self.journalPath, recd.mediaFilename)
+		#todo: make sure the file is still available before you ever get to this point...
+		mediaFile = recd.getMediaFilepath(False)
 		mediaObject.file_path = mediaFile
 
-		print("saveMediaToDatastore 4")
-
+		print("saveMedia 4")
 #		dcbw:
 #		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
 #										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
@@ -257,25 +246,8 @@ class RecordActivity(activity.Activity):
 #		datastore.write(mediaObject, 	reply_handler=(lambda: self._mediaSaveCb(recd)),
 #										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
 
-		datastore.write(mediaObject)
-		self.doPostMediaSave( recd )
-
-		print("saveMediaToDatastore 5")
-		recd.datastoreId = mediaObject.object_id
-		print("saveMediaToDatastore 6", recd.datastoreId)
-
-		if (not self.I_AM_CLOSING):
-			recd.datastoreOb = mediaObject
-			print("saveMediaToDatastore 7")
-
-		if (not self.I_AM_CLOSING):
-			print("saveMediaToDatastore 8")
-			mediaObject.destroy()
-			del mediaObject
-			print("saveMediaToDatastore 9")
-
-		print("saveMediaToDatastore 10")
-		return True
+		datastore.write( mediaObject )
+		self.doPostMediaSave( xmlFile, el, recd, mediaObject )
 
 
 	def _get_base64_pixbuf_data(self, pixbuf):
@@ -299,34 +271,17 @@ class RecordActivity(activity.Activity):
 		self.doPostMediaSave( recd )
 
 
-	def doPostMediaSave( self, recd ):
+	def doPostMediaSave( self, xmlFile, el, recd, mediaObject ):
 		print("doPostMediaSave 1")
 
-		#clear these, they are not needed (but no real need to re-serialize now, if it happens, great, otherwise, nbd
+		recd.datastoreId = mediaObject.object_id
 		recd.mediaFilename = None
 		recd.thumbFilename = None
+		recd.savedMedia = True
 
-		recd.saved = True
-		allDone = True
+		self.saveXml( xmlFile, el, recd )
 
-		for h in range (0, len(self.m.mediaHashs)):
-			mhash = self.m.mediaHashs[h]
-			for i in range (0, len(mhash)):
-				recd = mhash[i]
-				if (not recd.saved):
-					allDone = False
-
-		print("doPostMediaSave 2; allDone: ", allDone )
-
-		if (allDone):
-			self.I_AM_SAVED = True
-
-		#todo: reset all the saved flags or just let them take care of themselves on the next save?
-		print("doPostMediaSave 3; allDone: ", self.I_AM_SAVED )
-		if (self.I_AM_SAVED and self.I_AM_CLOSING):
-			print("doPostMediaSave 4 -- pre destroy()")
-			self.destroy()
-			print("doPostMediaSave 5 -- pre destroy()")
+		self.checkDestroy( xmlFile )
 
 
 	def _sharedCb( self, activity ):
@@ -400,6 +355,29 @@ class RecordActivity(activity.Activity):
 		#this calls write_file
 		activity.Activity.close( self )
 		print("close 3")
+
+
+	def checkDestroy( self, xmlFile ):
+		print("checkDestroy 0")
+		allDone = True
+
+		for h in range (0, len(self.m.mediaHashs)):
+			mhash = self.m.mediaHashs[h]
+			for i in range (0, len(mhash)):
+				recd = mhash[i]
+				if ( (not recd.savedMedia) and (not recd.savedXml) ):
+					allDone = False
+
+		if (allDone):
+			self.I_AM_SAVED = True
+			#todo: serialize the XML here
+
+		#todo: reset all the saved flags or just let them take care of themselves on the next save?
+		print("checkDestroy 1; I_AM_SAVED: ", self.I_AM_SAVED )
+		if (self.I_AM_SAVED and self.I_AM_CLOSING):
+			print("checkDestroy 2 -- pre destroy()")
+			self.destroy()
+			print("checkDestroy 3 -- post destroy()")
 
 
 	def destroy( self ):

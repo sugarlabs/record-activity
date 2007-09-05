@@ -56,8 +56,9 @@ class Recorded:
 		self.downloadedFromBuddy = False
 
 		#for flagging when you are being saved to the datastore for the first time...
-		#and just because you have an id, doesn't mean you're saved
-		self.saved = False
+		#and just because you have a datastore id, doesn't mean you're saved
+		self.savedMedia = False
+		self.savedXml = False
 
 
 
