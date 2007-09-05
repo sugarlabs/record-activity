@@ -317,8 +317,8 @@ class MeshClient:
 			try:
 				#todo: destfile=fullpath filedescriptor=
 				getter.start( )
-			except IOError, e:
-				print( "yikes", e )
+			except:
+				print( "yikes")
 				#close fd here
 
 
