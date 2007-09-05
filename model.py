@@ -169,7 +169,7 @@ class Model:
 			audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
 			audioImg.save(audioImagePath, "jpeg", {"quality":"85"} )
 
-			recd.audioImageFilename = os.basename(audioImagePath)
+			recd.audioImageFilename = os.path.basename(audioImagePath)
 
 
 		if (addToHash):
