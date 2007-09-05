@@ -126,6 +126,7 @@ class Model:
 
 		recd.datastoreNode = el.getAttributeNode("datastoreId")
 		if (recd.datastoreNode != None):
+			print("loadMedia a")
 			recd.datastoreId = recd.datastoreNode.nodeValue
 			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
 			#todo: find better method here (e.g., datastore.exists(id))
@@ -141,6 +142,7 @@ class Model:
 
 		bt = el.getAttributeNode('buddyThumb')
 		if (not bt == None):
+			print("loadMedia b")
 			#todo: consolidate this code into a function...
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
@@ -153,10 +155,11 @@ class Model:
 			thumbPath = self.getUniqueFilepath( thumbPath, 0 )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 
-			recd.thumbFilename = os.basename(thumbPath)
+			recd.thumbFilename = os.path.basename(thumbPath)
 
 		ai = el.getAttributeNode('audioImage')
 		if (not ai == None):
+			print("loadMedia c")
 			#todo: consolidate this code into a function...
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
@@ -173,6 +176,7 @@ class Model:
 			recd.audioImageFilename = os.path.basename(audioImagePath)
 
 
+		print("addToHash:", addToHash )
 		if (addToHash):
 			hash.append( recd )
 
