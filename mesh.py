@@ -162,9 +162,8 @@ class MeshClient:
 		self.my_acty.connect('buddy-joined', self.buddyJoinedCb)
 		print("1.3")
 		self.my_acty.connect('buddy-left', self.buddyDepartedCb)
-		print("1.4")
+		print("1.4", len(self.my_acty.get_joined_buddies()) )
 
-		print("1.5", len(self.my_acty.get_joined_buddies()) )
 		#if you've just arrived at the playground, take a peruse around
 		for buddy in self.my_acty.get_joined_buddies():
 			print ("a", buddy.props.nick)
@@ -175,7 +174,7 @@ class MeshClient:
 #			else:
 #				print ("a2", self.bytes_to_string(buddy.props.key))
 
-		print("1.6")
+		print("1.5")
 
 
 	def buddyJoinedCb( self, activity, buddy ):
@@ -311,7 +310,7 @@ class MeshClient:
 			getter = network.GlibURLDownloader( uri )
 			getter.connect( "finished", self.mediaDownloadResultCb, recd )
 			getter.connect( "error", self.mediaDownloadErrorCb, recd )
-			getter.connect( "progress", self.mediaProgressCb, recd )
+			#getter.connect( "progress", self.mediaProgressCb, recd )
 
 			try:
 				#todo: destfile=fullpath filedescriptor=

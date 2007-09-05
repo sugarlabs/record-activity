@@ -167,6 +167,7 @@ class Model:
 
 			audioImagePath = os.path.join(self.ca.journalPath, "audioImage.jpg")
 			audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
+			#todo: use lossless since multiple savings?
 			audioImg.save(audioImagePath, "jpeg", {"quality":"85"} )
 
 			recd.audioImageFilename = os.path.basename(audioImagePath)

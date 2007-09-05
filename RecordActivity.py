@@ -119,7 +119,7 @@ class RecordActivity(activity.Activity):
 		self.I_AM_SAVED = False
 		SAVING_AT_LEAST_ONE = False
 
-		f = open( file, "w" )
+		xmlFile = open( file, "w" )
 		impl = getDOMImplementation()
 		album = impl.createDocument(None, "album", None)
 		root = album.documentElement
@@ -134,12 +134,12 @@ class RecordActivity(activity.Activity):
 				root.appendChild( mediaEl )
 				recd.savedXml = False
 				recd.savedMedia = False
-				self.saveMedia( f, mediaEl, recd )
+				self.save( xmlFile, mediaEl, recd )
 
 
 
-	def saveMedia( self, xmlFile, el, recd ):
-		print("saveMedia 1")
+	def save( self, xmlFile, el, recd ):
+		print("save 1")
 
 		#presume we don't need to serialize...
 		needToDatastoreMedia = False
@@ -152,7 +152,7 @@ class RecordActivity(activity.Activity):
 			self.saveXml( xmlFile, el, recd )
 		else:
 			recd.savedMedia = False
-			needToDatastoreMedia = self.saveMedia( recd )
+			needToDatastoreMedia = self.saveMedia( xmlFile, el, recd )
 
 
 	def saveXml( self, xmlFile, el, recd ):
