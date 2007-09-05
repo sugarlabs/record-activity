@@ -54,6 +54,8 @@ class MeshXMLRPCServer:
 		newRecd.hashKey = hashKey
 		newRecd.mediaMd5 = mediaMd5
 		newRecd.thumbMd5 = thumbMd5
+		newRecd.mediaBytes = mediaBytes
+		newRecd.thumbBytes = thumbBytes
 
 		colorStrokeHex = colorStroke
 		colorStroke = Color()
