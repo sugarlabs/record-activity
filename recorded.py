@@ -139,39 +139,16 @@ class Recorded:
 
 	def getAudioImagePixbuf( self ):
 		audioPixbuf = None
-		if ( (self.datastoreId==None) and (not self.saved) ):
-			audioFilepath = self.getAudioImageFilepath()
-			if (audioFilepath != None):
-				audioPixbuf = gtk.gdk.pixbuf_new_from_file(audioFilepath)
-		else:
-			if (self.datastoreOb == None):
-				self.ca.m.loadMediaFromDatastore( self )
-			if (self.datastoreOb == None):
-				print("RecordActivity error -- unable to get datastore object in getAudioImage")
-				return None
-
-			#todo: make a static function here:
-			pbl = gtk.gdk.PixbufLoader()
-			import base64
-			data = base64.b64decode(self.datastoreOb.metadata['audioImage'])
-			pbl.write(data)
-			pbl.close()
-			audioPixbuf = pbl.get_pixbuf()
+		audioFilepath = self.getAudioImageFilepath()
+		if (audioFilepath != None):
+			audioPixbuf = gtk.gdk.pixbuf_new_from_file(audioFilepath)
 
 		return audioPixbuf
 
 
 	def getAudioImageFilepath( self ):
-		if (self.datastoreId == None):
-			audioFilepath = os.path.join(self.ca.journalPath, self.audioImageFilename)
-			return os.path.abspath(audioFilepath)
-		else:
-			pixbuf = self.getAudioImagePixbuf()
-			if (pixbuf == None):
-				return None
-			audioImageFilepath = os.path.join(self.ca.journalPath, "audioImage.png")
-			pixbuf.save(audioImageFilepath, "png", {} )
-			return audioImageFilepath
+		audioFilepath = os.path.join(self.ca.journalPath, self.audioImageFilename)
+		return os.path.abspath(audioFilepath)
 
 
 	def getMediaFilepath( self, meshReq ):

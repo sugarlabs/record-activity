@@ -163,6 +163,11 @@ class RecordActivity(activity.Activity):
 			recd.saved = False
 			needToDatastoreMedia = self.saveMediaToDatastore( recd )
 
+		if (recd.type == self.m.TYPE_AUDIO):
+			aiPixbuf = recd.getAudioImagePixbuf( )
+			aiPixbufString = str( self._get_base64_pixbuf_data(aiPixbuf) )
+			el.setAttribute("audioImage", aiPixbufString)
+
 		el.setAttribute("title", recd.title)
 		el.setAttribute("time", str(recd.time))
 		el.setAttribute("photographer", recd.photographer)
@@ -225,11 +230,6 @@ class RecordActivity(activity.Activity):
 		pixbuf = recd.getThumbPixbuf()
 		thumbData = self._get_base64_pixbuf_data(pixbuf)
 		mediaObject.metadata['preview'] = thumbData
-
-		if (recd.type == self.m.TYPE_AUDIO):
-			aiPixbuf = recd.getAudioImagePixbuf( )
-			aiPixbufString = str( self._get_base64_pixbuf_data(aiPixbuf) )
-			mediaObject.metadata["audioImage"] = aiPixbufString
 
 		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
 		mediaObject.metadata['icon-color'] = colors

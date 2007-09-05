@@ -155,6 +155,22 @@ class Model:
 
 			recd.thumbFilename = os.basename(thumbPath)
 
+		ai = el.getAttributeNode('audioImage')
+		if (not ai == None):
+			#todo: consolidate this code into a function...
+			pbl = gtk.gdk.PixbufLoader()
+			import base64
+			data = base64.b64decode( ai.nodeValue )
+			pbl.write(data)
+			pbl.close()
+			audioImg = pbl.get_pixbuf()
+
+			audioImagePath = os.path.join(self.ca.journalPath, "audioImage.jpg")
+			audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
+			audioImg.save(audioImagePath, "jpeg", {"quality":"85"} )
+
+			recd.audioImageFilename = os.basename(audioImagePath)
+
 
 		if (addToHash):
 			hash.append( recd )
