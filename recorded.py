@@ -149,6 +149,8 @@ class Recorded:
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getAudioImage")
 				return None
+
+			#todo: make a static function here:
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
 			data = base64.b64decode(self.datastoreOb.metadata['audioImage'])

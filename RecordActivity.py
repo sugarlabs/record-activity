@@ -153,10 +153,6 @@ class RecordActivity(activity.Activity):
 		needToDatastoreMedia = False
 
 		el.setAttribute("type", str(type))
-		if (type == self.m.TYPE_AUDIO):
-			pixbuf = recd.getAudioImagePixbuf( )
-			pixbufString = str( self._get_base64_pixbuf_data(pixbuf) )
-			el.setAttribute("audioImage", pixbufString )
 
 		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
 			pixbuf = recd.getThumbPixbuf( )
@@ -230,9 +226,15 @@ class RecordActivity(activity.Activity):
 		thumbData = self._get_base64_pixbuf_data(pixbuf)
 		mediaObject.metadata['preview'] = thumbData
 
+		if (recd.type == self.m.TYPE_AUDIO):
+			aiPixbuf = recd.getAudioImagePixbuf( )
+			aiPixbufString = str( self._get_base64_pixbuf_data(aiPixbuf) )
+			mediaObject.metadata["audioImage"] = aiPixbufString
+
 		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
 		mediaObject.metadata['icon-color'] = colors
 
+		#todo: use dictionary here
 		if (recd.type == self.m.TYPE_PHOTO):
 			mediaObject.metadata['mime_type'] = 'image/jpeg'
 		elif (recd.type == self.m.TYPE_VIDEO):

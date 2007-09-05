@@ -153,6 +153,9 @@ class Model:
 			thumbPath = self.getUniqueFilepath( thumbPath, 0 )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 
+			recd.thumbFilename = os.basename(thumbPath)
+
+
 		if (addToHash):
 			hash.append( recd )
 
