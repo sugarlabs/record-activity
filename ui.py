@@ -620,6 +620,7 @@ class UI:
 
 		if (self.liveMode != True):
 			#todo: updating here?
+			self.ca.gplay.stop()
 			self.showLiveVideoTags()
 			self.liveMode = True
 			self.updateVideoComponents()
@@ -630,13 +631,10 @@ class UI:
 		if (self.liveMode):
 			return
 
-		self.showLiveVideoTags()
-
 		self.ca.gplay.stop()
+		self.showLiveVideoTags()
 		self.liveMode = True
 		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
-
-		#might need to hide video components here
 		self.updateVideoComponents()
 
 
@@ -667,6 +665,7 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			self.ca.gplay.stop()
 			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD )
 
 		self.doMouseListener( True )
@@ -989,7 +988,6 @@ class UI:
 
 
 	def showVideo( self, recd ):
-
 		#todo: this can be cleaned up for when playing subsequent videos
 		if (self.ca.glive.isXv()):
 			self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
