@@ -343,19 +343,24 @@ class MeshClient:
 
 		if (recd.type == self.ca.m.TYPE_AUDIO):
 			import zipfile
-			zf = zipfile.ZipFile( dest, "w" )
+			zf = zipfile.ZipFile( dest, "r" )
 
 			#todo: use temp files here
-			aoutfile = open(os.path.join("/tmp", "audio.wav"), 'wb')
+			audioPath = os.path.join("/tmp", "audio.wav")
+			aoutfile = open(audioPath, 'wb')
 			aoutfile.write( zf.read("audio") )
 			aoutfile.flush()
 			aoutfile.close()
+			recd.mediaFilename = audioPath
 
-			ioutfile = open(os.path.join("/tmp", "image.jpg"), 'wb')
+			imagePath = os.path.join("/tmp", "image.jpg")
+			ioutfile = open(imagePath, 'wb')
 			ioutfile.write( zf.read("image") )
 			ioutfile.flush()
 			ioutfile.close()
+			recd.audioImageFilename = imagePath
 
+			zf.close()
 
 		print( "downloaded media and here it is: " + str(dest) )
 		print( "and media filename is: " + recd.mediaFilename )

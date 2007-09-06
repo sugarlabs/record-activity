@@ -298,7 +298,9 @@ class Model:
 		thumbImg.write_to_png(thumbPath)
 
 		imagePath = os.path.join(self.ca.journalPath, "audioPicture.png")
+		print( "ip1", imagePath )
 		imagePath = self.getUniqueFilepath( imagePath, 0 )
+		print( "ip2", imagePath )
 		pixbuf.save( imagePath, "png", {} )
 		recd.audioImageFilename = imagePath
 
@@ -534,9 +536,9 @@ class Model:
 		if (os.path.exists(pathOb)):
 			i = i+1
 			newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
-			path = self.getUniqueFilepath( str(newPath), i )
+			pathOb = self.getUniqueFilepath( str(newPath), i )
 		else:
-			return path
+			return pathOb
 
 
 	def createNewRecordedMd5Sums( self, recd ):
