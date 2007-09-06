@@ -256,7 +256,8 @@ class MeshClient:
 		#todo: handle empty files here... or errors
 		print( "thumb says: ", tempfile, suggested_name )
 
-		dest = os.path.join( self.ca.temp, suggested_name )
+		dest = os.path.join( self.ca.tempPath, suggested_name )
+		dest = self.ca.m.getUniqueFilepath( dest, 0 )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 
@@ -335,8 +336,8 @@ class MeshClient:
 		#todo: on error, handle the following differently:
 
 		#can this temp file be the same as that temp file?
-		dest = os.path.join( self.ca.temp, suggested_name )
-		dest = self.ca.m.getUniqueFilepath( dest )
+		dest = os.path.join( self.ca.tempPath, suggested_name )
+		dest = self.ca.m.getUniqueFilepath( dest, 0 )
 		shutil.copyfile( tempfile, dest )
 		os.remove( tempfile )
 

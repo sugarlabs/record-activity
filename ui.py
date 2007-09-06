@@ -627,11 +627,12 @@ class UI:
 
 
 	def _playLiveButtonReleaseCb(self, widget, event):
+		self.ca.gplay.stop()
+
 		#if you are big on the screen, don't go changing anything, ok?
 		if (self.liveMode):
 			return
 
-		self.ca.gplay.stop()
 		self.showLiveVideoTags()
 		self.liveMode = True
 		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
