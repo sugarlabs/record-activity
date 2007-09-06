@@ -349,22 +349,23 @@ class MeshClient:
 			zf = zipfile.ZipFile( dest, "r" )
 
 			audioPath = os.path.join( self.ca.tempPath, "audio.wav")
-			audioPath = self.ca.getUniqueFilepath( audioPath, 0 )
+			audioPath = self.ca.m.getUniqueFilepath( audioPath, 0 )
 			aoutfile = open(audioPath, 'wb')
 			aoutfile.write( zf.read("audio") )
 			aoutfile.flush()
 			aoutfile.close()
-			recd.mediaFilename = audioPath
+			recd.mediaFilename = os.path.basename(audioPath)
 
 			imagePath = os.path.join( self.ca.tempPath, "image.jpg")
-			imagePath = self.ca.getUniqueFilepath( imagePath, 0 )
+			imagePath = self.ca.m.getUniqueFilepath( imagePath, 0 )
 			ioutfile = open(imagePath, 'wb')
 			ioutfile.write( zf.read("image") )
 			ioutfile.flush()
 			ioutfile.close()
-			recd.audioImageFilename = imagePath
+			recd.audioImageFilename = os.path.basename(imagePath)
 
 			zf.close()
+			os.remove( dest )
 
 		print( "downloaded media and here it is: " + str(dest) )
 		print( "and media filename is: " + recd.mediaFilename )
