@@ -130,9 +130,9 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 				if (recd.type == self.server.ca.m.TYPE_AUDIO):
 					import zipfile
 					#todo: again, rainbow...
-					zile = zipfile.ZipFile("/tmp/audio.zip", "w")
-					zile.write( "audio", recd.getMediaFilepath(False), zipfile.ZIP_STORED )
-					zile.write( "image", recd.getAudioImageFilepath(), zipfile.ZIP_STORED )
+					zile = zipfile.ZipFile("/tmp/audio.zip", "w", zipfile.ZIP_STORED)
+					zile.write( recd.getMediaFilepath(False), "audio" )
+					zile.write( recd.getAudioImageFilepath(), "image" )
 					zile.close()
 					path = "/tmp/audio.zip"
 				else:
@@ -343,7 +343,7 @@ class MeshClient:
 
 		if (recd.type == self.ca.m.TYPE_AUDIO):
 			import zipfile
-			zf = zipfile.ZipFile( dest )
+			zf = zipfile.ZipFile( dest, "w" )
 
 			#todo: use temp files here
 			aoutfile = open(os.path.join("/tmp", "audio.wav"), 'wb')
