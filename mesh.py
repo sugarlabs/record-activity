@@ -127,7 +127,7 @@ class HttpReqHandler(network.ChunkedGlibHTTPRequestHandler):
 			if (thumb):
 				path = recd.getThumbFilepath(False)
 			else:
-				if (recd.type == recd.server.ca.m.TYPE_AUDIO):
+				if (recd.type == self.server.ca.m.TYPE_AUDIO):
 					import zipfile
 					#todo: again, rainbow...
 					zile = zipfile.ZipFile("/tmp/audio.zip", "w")
@@ -308,7 +308,9 @@ class MeshClient:
 
 		print("photoTakingBuddy...", photoTakingBuddy)
 		if (photoTakingBuddy != None):
+
 			uri = "http://" + str(photoTakingBuddy.props.ip4_address) + ":" + str(self.ca.httpPort) + "/media?mediaMd5=" + str(recd.mediaMd5)
+			print( "uri", uri )
 			getter = network.GlibURLDownloader( uri )
 			getter.connect( "finished", self.mediaDownloadResultCb, recd )
 			getter.connect( "error", self.mediaDownloadErrorCb, recd )
@@ -318,7 +320,7 @@ class MeshClient:
 				#todo: destfile=fullpath filedescriptor=
 				getter.start( )
 			except:
-				print( "yikes")
+				print( "yikes" )
 				#close fd here
 
 
@@ -339,7 +341,7 @@ class MeshClient:
 		recd.mediaFilename = suggested_name
 		recd.downloadedFromBuddy = True
 
-		if (recd.type == self.ca.TYPE_AUDIO):
+		if (recd.type == self.ca.m.TYPE_AUDIO):
 			import zipfile
 			zf = zipfile.ZipFile( dest )
 
