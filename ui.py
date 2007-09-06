@@ -923,6 +923,8 @@ class UI:
 
 		self.liveMode = False
 
+		#returns the small file to start with, and gets updated when the fullscreen arrives on the mesh
+		#todo: gracefully replace the picture without restarting the audio
 		pixbuf = recd.getAudioImagePixbuf()
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.livePhotoCanvas.setImage( img )

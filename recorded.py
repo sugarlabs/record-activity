@@ -140,16 +140,23 @@ class Recorded:
 
 	def getAudioImagePixbuf( self ):
 		audioPixbuf = None
-		audioFilepath = self.getAudioImageFilepath()
-		if (audioFilepath != None):
-			audioPixbuf = gtk.gdk.pixbuf_new_from_file(audioFilepath)
+
+		if (self.audioImageFilename == None):
+			audioPixbuf = sef.getThumbPixbuf()
+		else:
+			audioFilepath = self.getAudioImageFilepath()
+			if (audioFilepath != None):
+				audioPixbuf = gtk.gdk.pixbuf_new_from_file(audioFilepath)
 
 		return audioPixbuf
 
 
 	def getAudioImageFilepath( self ):
-		audioFilepath = os.path.join(self.ca.journalPath, self.audioImageFilename)
-		return os.path.abspath(audioFilepath)
+		if (self.audioImageFilename != None):
+			audioFilepath = os.path.join(self.ca.journalPath, self.audioImageFilename)
+			return os.path.abspath(audioFilepath)
+		else:
+			return self.getThumbFilepath()
 
 
 	def getMediaFilepath( self, meshReq ):
