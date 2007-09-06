@@ -157,7 +157,7 @@ class RecordActivity(activity.Activity):
 			self.saveXml( xmlFile, el, recd )
 		else:
 			recd.savedMedia = False
-			needToDatastoreMedia = self.saveMedia( xmlFile, el, recd )
+			self.saveMedia( xmlFile, el, recd )
 
 
 	def saveXml( self, xmlFile, el, recd ):
@@ -195,68 +195,79 @@ class RecordActivity(activity.Activity):
 		#look on a fresh load from file since this won't just happen on close()
 
 		if (recd.datastoreId != None):
+			print("name change 1")
 			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 			#However, they might have changed the name of the file
 			if (recd.titleChange):
-				#todo: fix!  this doesn't work as of 556...
-				self.loadMediaFromDatastore( recd )
-				#todo: handle none mediaOb
+				print("name change 2")
+				self.m.loadMediaFromDatastore( recd )
 				if (recd.datastoreOb.metadata['title'] != recd.title):
+					print("name change 3")
+
 					recd.datastoreOb.metadata['title'] = recd.title
 					datastore.write(recd.datastoreOb)
-					if (self.I_AM_CLOSING):
-						recd.datastoreOb.destroy()
-						del recd.datastoreOb
-				pass
+
+					print("name change 4")
+
+					#todo: move this code to the final closeout?
+					#if (self.I_AM_CLOSING):
+					#	recd.datastoreOb.destroy()
+					#	del recd.datastoreOb
+
 
 				#reset for the next title change if not closing...
 				recd.titleChange = False
 				#save the title to the xml
 				recd.savedMedia = True
+
+				print("name change 5")
+				self.saveXml( xmlFile, el, recd )
+				print("name change 6")
+			else:
+				recd.savedMedia = True
 				self.saveXml( xmlFile, el, recd )
 
-			return
+		else:
+			#this will remove the media from being accessed on the local disk since it puts it away into cold storage
+			#therefore this is only called when write_file is called by the activity superclass
+			print("saveMedia 2")
+			mediaObject = datastore.create()
+			print("saveMedia 3")
+			#todo: what other metadata to set?
+			mediaObject.metadata['title'] = recd.title
+			#jobject.metadata['keep'] = '0'
+			#jobject.metadata['buddies'] = ''
 
-		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
-		#therefore this is only called when write_file is called by the activity superclass
-		print("saveMedia 2")
-		mediaObject = datastore.create()
-		print("saveMedia 3")
-		#todo: what other metadata to set?
-		mediaObject.metadata['title'] = recd.title
-		#jobject.metadata['keep'] = '0'
-		#jobject.metadata['buddies'] = ''
+			pixbuf = recd.getThumbPixbuf()
+			thumbData = self._get_base64_pixbuf_data(pixbuf)
+			mediaObject.metadata['preview'] = thumbData
 
-		pixbuf = recd.getThumbPixbuf()
-		thumbData = self._get_base64_pixbuf_data(pixbuf)
-		mediaObject.metadata['preview'] = thumbData
+			colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
+			mediaObject.metadata['icon-color'] = colors
 
-		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
-		mediaObject.metadata['icon-color'] = colors
+			#todo: use dictionary here
+			if (recd.type == self.m.TYPE_PHOTO):
+				mediaObject.metadata['mime_type'] = 'image/jpeg'
+			elif (recd.type == self.m.TYPE_VIDEO):
+				mediaObject.metadata['mime_type'] = 'video/ogg'
+			elif (recd.type == self.m.TYPE_AUDIO):
+				mediaObject.metadata['mime_type'] = 'audio/ogg'
 
-		#todo: use dictionary here
-		if (recd.type == self.m.TYPE_PHOTO):
-			mediaObject.metadata['mime_type'] = 'image/jpeg'
-		elif (recd.type == self.m.TYPE_VIDEO):
-			mediaObject.metadata['mime_type'] = 'video/ogg'
-		elif (recd.type == self.m.TYPE_AUDIO):
-			mediaObject.metadata['mime_type'] = 'audio/ogg'
+			#todo: make sure the file is still available before you ever get to this point...
+			mediaFile = recd.getMediaFilepath(False)
+			mediaObject.file_path = mediaFile
 
-		#todo: make sure the file is still available before you ever get to this point...
-		mediaFile = recd.getMediaFilepath(False)
-		mediaObject.file_path = mediaFile
+			print("saveMedia 4")
+	#		dcbw:
+	#		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
+	#										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
 
-		print("saveMedia 4")
-#		dcbw:
-#		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
-#										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
+	#		jedierikb:
+	#		datastore.write(mediaObject, 	reply_handler=(lambda: self._mediaSaveCb(recd)),
+	#										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
 
-#		jedierikb:
-#		datastore.write(mediaObject, 	reply_handler=(lambda: self._mediaSaveCb(recd)),
-#										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
-
-		datastore.write( mediaObject )
-		self.doPostMediaSave( xmlFile, el, recd, mediaObject )
+			datastore.write( mediaObject )
+			self.doPostMediaSave( xmlFile, el, recd, mediaObject )
 
 
 	def _get_base64_pixbuf_data(self, pixbuf):
