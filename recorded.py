@@ -142,7 +142,7 @@ class Recorded:
 		audioPixbuf = None
 
 		if (self.audioImageFilename == None):
-			audioPixbuf = sef.getThumbPixbuf()
+			audioPixbuf = self.getThumbPixbuf()
 		else:
 			audioFilepath = self.getAudioImageFilepath()
 			if (audioFilepath != None):
