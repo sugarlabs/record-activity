@@ -256,7 +256,7 @@ class MeshClient:
 		#todo: handle empty files here... or errors
 		print( "thumb says: ", tempfile, suggested_name )
 
-		dest = os.path.join( self.ca.journalPath, suggested_name )
+		dest = os.path.join( self.ca.temp, suggested_name )
 		shutil.copyfile(tempfile, dest)
 		os.remove(tempfile)
 
@@ -328,13 +328,15 @@ class MeshClient:
 		f.get_bytes()
 		print( "bytes: ", bytes, " of", recd.mediaBytes )
 
+
 	def mediaDownloadResultCb(self, getter, tempfile, suggested_name, recd):
 		print ( "mediaDownloadResultCb...", tempfile, suggested_name )
 
 		#todo: on error, handle the following differently:
 
 		#can this temp file be the same as that temp file?
-		dest = os.path.join( self.ca.journalPath, suggested_name )
+		dest = os.path.join( self.ca.temp, suggested_name )
+		dest = self.ca.m.getUniqueFilepath( dest )
 		shutil.copyfile( tempfile, dest )
 		os.remove( tempfile )
 
@@ -345,15 +347,16 @@ class MeshClient:
 			import zipfile
 			zf = zipfile.ZipFile( dest, "r" )
 
-			#todo: use temp files here
-			audioPath = os.path.join("/tmp", "audio.wav")
+			audioPath = os.path.join( self.ca.tempPath, "audio.wav")
+			audioPath = self.ca.getUniqueFilepath( audioPath, 0 )
 			aoutfile = open(audioPath, 'wb')
 			aoutfile.write( zf.read("audio") )
 			aoutfile.flush()
 			aoutfile.close()
 			recd.mediaFilename = audioPath
 
-			imagePath = os.path.join("/tmp", "image.jpg")
+			imagePath = os.path.join( self.ca.tempPath, "image.jpg")
+			imagePath = self.ca.getUniqueFilepath( imagePath, 0 )
 			ioutfile = open(imagePath, 'wb')
 			ioutfile.write( zf.read("image") )
 			ioutfile.flush()

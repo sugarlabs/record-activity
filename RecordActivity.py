@@ -63,12 +63,12 @@ class RecordActivity(activity.Activity):
 		self.nickName = profile.get_nick_name()
 		self.basePath = activity.get_bundle_path()
 		self.gfxPath = os.path.join(self.basePath, "gfx")
-		self.topJournalPath = os.path.join(os.path.expanduser("~"), "Journal", self.activityName)
-		if (not os.path.exists(self.topJournalPath)):
-			os.makedirs(self.topJournalPath)
-		self.journalPath = os.path.join(self.topJournalPath, self.instanceId)
-		if (not os.path.exists(self.journalPath)):
-			os.makedirs(self.journalPath)
+#		self.topJournalPath = os.path.join(os.path.expanduser("~"), "Journal", self.activityName)
+#		if (not os.path.exists(self.topJournalPath)):
+#			os.makedirs(self.topJournalPath)
+#		self.journalPath = os.path.join(self.topJournalPath, self.instanceId)
+#		if (not os.path.exists(self.journalPath)):
+#			os.makedirs(self.journalPath)
 		self.recreateTemp()
 
 		#whoami?
@@ -354,7 +354,7 @@ class RecordActivity(activity.Activity):
 
 
 	def recreateTemp( self ):
-		self.tempPath = os.path.join(self.topJournalPath, "temp")
+		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
 		if (os.path.exists(self.tempPath)):
 			shutil.rmtree( self.tempPath )
 		os.makedirs(self.tempPath)
@@ -414,11 +414,9 @@ class RecordActivity(activity.Activity):
 		if self.I_AM_SAVED:
 			print("total Destruction 1")
 
-			#todo: why recreate temp and destroy journalpath?
-			#todo: clean up / throw away any video you might be recording when you quit the activity
 			self.recreateTemp()
-			if (os.path.exists(self.journalPath)):
-				shutil.rmtree( self.journalPath )
+			#if (os.path.exists(self.journalPath)):
+			#	shutil.rmtree( self.journalPath )
 
 			print("total Destruction 2")
 			activity.Activity.destroy( self )

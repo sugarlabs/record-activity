@@ -151,7 +151,7 @@ class Model:
 			pbl.close()
 			thumbImg = pbl.get_pixbuf()
 
-			thumbPath = os.path.join(self.ca.journalPath, "datastoreThumb.jpg")
+			thumbPath = os.path.join(self.ca.tempPath, "datastoreThumb.jpg")
 			thumbPath = self.getUniqueFilepath( thumbPath, 0 )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 
@@ -168,10 +168,9 @@ class Model:
 			pbl.close()
 			audioImg = pbl.get_pixbuf()
 
-			audioImagePath = os.path.join(self.ca.journalPath, "audioImage.jpg")
+			audioImagePath = os.path.join(self.ca.tempPath, "audioImage.png")
 			audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
-			#todo: use lossless since multiple savings?
-			audioImg.save(audioImagePath, "jpeg", {"quality":"85"} )
+			audioImg.save(audioImagePath, "png", {} )
 
 			recd.audioImageFilename = os.path.basename(audioImagePath)
 
@@ -272,9 +271,6 @@ class Model:
 				self.stopRecordingAudio()
 
 
-
-
-
 	def stopRecordingAudio( self ):
 		self.setUpdating( True )
 		self.ca.glive.stopRecordingAudio( )
@@ -289,25 +285,16 @@ class Model:
 		self.ca.ui.hidePlayWindows()
 
 		recd = self.createNewRecorded( self.TYPE_AUDIO )
+		os.rename( tempPath, os.path.join(self.ca.tempPath,recd.mediaFilename))
 
-		oggPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
-
-		#todo: need to save the fullpixbuf to the xml only for display (for now, thumbnail)
-		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
+		thumbPath = os.path.join(self.ca.tempPath, recd.thumbFilename)
 		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
-
-		print( "ok...")
 		thumbImg.write_to_png(thumbPath)
 
-		imagePath = os.path.join(self.ca.journalPath, "audioPicture.png")
-		print( "ip1", imagePath )
+		imagePath = os.path.join(self.ca.tempPath, "audioPicture.png")
 		imagePath = self.getUniqueFilepath( imagePath, 0 )
-		print( "ip2", imagePath )
 		pixbuf.save( imagePath, "png", {} )
 		recd.audioImageFilename = imagePath
-
-		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
-		shutil.move(tempPath, oggPath)
 
 		#at this point, we have both audio and thumb sapath, so we can save the recd
 		self.createNewRecordedMd5Sums( recd )
@@ -361,20 +348,12 @@ class Model:
 
 	def saveVideo( self, pixbuf, tempPath ):
 		recd = self.createNewRecorded( self.TYPE_VIDEO )
+		os.rename( tempPath, os.path.join(self.ca.tempPath,recd.mediaFilename))
 
-		oggPath = os.path.join(self.ca.journalPath, recd.mediaFilename)
-		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
-
-		#todo: dynamic creation of this ratio
-		thumbImg = self.generateThumbnail(pixbuf, float(.66875) )
+		thumbPath = os.path.join(self.ca.tempPath, recd.thumbFilename)
+		thumbImg = self.generateThumbnail(pixbuf, float(.66875) ) #todo: dynamic creation of this ratio
 		thumbImg.write_to_png(thumbPath)
-		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
-		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
-		#todo: unneccassary to move to oggpath? or temp should *be* oggpath
-		shutil.move(tempPath, oggPath)
-
-		#at this point, we have both video and thumb path, so we can save the recd
 		self.createNewRecordedMd5Sums( recd )
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
@@ -383,7 +362,6 @@ class Model:
 
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
-
 
 
 	def meshShareRecd( self, recd ):
@@ -420,10 +398,10 @@ class Model:
 	def savePhoto( self, pixbuf ):
 		recd = self.createNewRecorded( self.TYPE_PHOTO )
 
-		imgpath = os.path.join(self.ca.journalPath, recd.mediaFilename)
+		imgpath = os.path.join(self.ca.tempPath, recd.mediaFilename)
 		pixbuf.save( imgpath, "jpeg" )
 
-		thumbpath = os.path.join(self.ca.journalPath, recd.thumbFilename)
+		thumbpath = os.path.join(self.ca.tempPath, recd.thumbFilename)
 		#todo: generate this dynamically
 		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 		thumbImg.write_to_png(thumbpath)
@@ -494,7 +472,8 @@ class Model:
 		self.setUpdating( False )
 		print( "2 adding recd... ", self.mediaHashs[recd.type] )
 
-	#assign a better name here (name_0.jpg)
+
+
 	def createNewRecorded( self, type ):
 		recd = Recorded( self.ca )
 		recd.hashKey = self.ca.hashedKey
@@ -517,6 +496,8 @@ class Model:
 		if (type == self.TYPE_AUDIO):
 			mediaFilename = mediaFilename + ".ogg"
 			titleStarter = "Audio"
+
+		#todo: use temp?!
 		mediaFilename = self.getUniqueFilepath( mediaFilename, 0 )
 		recd.mediaFilename = mediaFilename
 
@@ -538,29 +519,25 @@ class Model:
 		if (os.path.exists(pathOb)):
 			i = i+1
 			newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
-			path = self.getUniqueFilepath( str(newPath), i )
+			return self.getUniqueFilepath( str(newPath), i )
 		else:
 			return path
 
 
 	def createNewRecordedMd5Sums( self, recd ):
 		#load the thumbfile
-		thumbFile = os.path.join(self.ca.journalPath, recd.thumbFilename)
+		thumbFile = os.path.join(self.ca.tempPath, recd.thumbFilename)
 		thumbMd5 = self.md5File( thumbFile )
 		recd.thumbMd5 = thumbMd5
-		#t = os.open( thumbFile, os.O_RDONLY )
 		tBytes = os.stat(thumbFile)[7]
 		recd.thumbBytes = tBytes
-		#t.close()
 
 		#load the mediafile
-		mediaFile = os.path.join(self.ca.journalPath, recd.mediaFilename)
+		mediaFile = os.path.join(self.ca.tempPath, recd.mediaFilename)
 		mediaMd5 = self.md5File( mediaFile )
 		recd.mediaMd5 = mediaMd5
-		#m = os.open( mediaFile, os.O_RDONLY )
 		mBytes = os.stat(mediaFile)[7]
 		recd.mediaBytes = mBytes
-		#m.close()
 
 
 	def md5File( self, filepath ):
@@ -570,7 +547,6 @@ class Model:
 		digest = md.hexdigest()
 		hash = util.printable_hash(digest)
 		return hash
-
 
 
 	#outdated?

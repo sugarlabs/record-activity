@@ -291,7 +291,6 @@ class Glive:
 
 		n = str(len(self.thumbPipes))
 		f = str(len(self.pipes)-2)
-		#todo: use the sessionid as part of the filename to diffentiate if multiple camera activities are going on
 		oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogv" )
 
 		#todo: test ~~> need to check *exists* and the filesize here to prevent stalling... & maybe earlier?
@@ -335,7 +334,6 @@ class Glive:
 			n = str(len(self.muxPipes))
 			f = str(len(self.pipes)-2)
 			oggFilepath = os.path.join(self.ca.tempPath, "output_"+f+".ogv")
-			print( n, f, oggFilepath )
 			if (self.audio):
 				if ( len(self.muxPipes) > 0 ):
 					self.muxPipe().get_bus().disable_sync_message_emission()
