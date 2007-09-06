@@ -114,6 +114,7 @@ class RecordActivity(activity.Activity):
 		self.m.fillMediaHash(file)
 		print("read file 2")
 
+
 	def write_file(self, file):
 		print("write_file 1")
 		self.I_AM_SAVED = False
@@ -123,6 +124,8 @@ class RecordActivity(activity.Activity):
 		impl = getDOMImplementation()
 		album = impl.createDocument(None, "album", None)
 		root = album.documentElement
+
+		atLeastOne = False
 
 		for type,value in self.m.mediaTypes.items():
 			typeName = value["name"]
@@ -134,9 +137,11 @@ class RecordActivity(activity.Activity):
 				root.appendChild( mediaEl )
 				recd.savedXml = False
 				recd.savedMedia = False
+				atLeastOne = True
 				self.saveIt( xmlFile, mediaEl, recd )
 
-
+		if (not atLeastOne):
+			self.checkDestroy( album, xmlFile )
 
 	def saveIt( self, xmlFile, el, recd ):
 		print("save 1")
