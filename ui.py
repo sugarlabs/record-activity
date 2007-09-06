@@ -553,7 +553,7 @@ class UI:
 		self.nameTextfield.set_text("Live Video")
 		self.nameTextfield.set_sensitive( False )
 		self.photographerNameLabel.set_label( str(self.ca.nickName) )
-		self.dateDateLabel.set_label( "Today" )
+		self.dateDateLabel.set_label("Today")
 
 		#todo: figure this out without the ui collapsing around it
 		self.namePanel.hide()
@@ -561,7 +561,6 @@ class UI:
 		self.datePanel.hide()
 		self.tagsPanel.hide()
 		self.tagsBuffer.set_text("")
-
 
 		self.livePhotoCanvas.setImage( None )
 		self.resetWidgetFadeTimer()
@@ -957,8 +956,7 @@ class UI:
 				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
 			elif (recd.type == self.ca.m.TYPE_AUDIO):
 				self.livePhotoCanvas.setImage( None )
-				self.ca.gplay.stop()
-				self.restartLiveAudio()
+				self.startLiveAudio()
 
 			self.liveMode = True
 			self.updateVideoComponents()
@@ -966,7 +964,10 @@ class UI:
 			self.showLiveVideoTags()
 
 
-	def restartLiveAudio( self ):
+	def startLiveAudio( self ):
+		#todo: finesse the stopping of the play pipes
+		self.ca.gplay.stop()
+
 		#todo: updating
 		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		self.liveVideoWindow.set_glive(self.ca.glive)

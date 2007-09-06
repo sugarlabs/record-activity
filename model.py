@@ -294,7 +294,7 @@ class Model:
 		imagePath = os.path.join(self.ca.tempPath, "audioPicture.png")
 		imagePath = self.getUniqueFilepath( imagePath, 0 )
 		pixbuf.save( imagePath, "png", {} )
-		recd.audioImageFilename = imagePath
+		recd.audioImageFilename = os.path.basename(imagePath)
 
 		#at this point, we have both audio and thumb sapath, so we can save the recd
 		self.createNewRecordedMd5Sums( recd )
@@ -497,13 +497,14 @@ class Model:
 			mediaFilename = mediaFilename + ".ogg"
 			titleStarter = "Audio"
 
-		#todo: use temp?!
-		mediaFilename = self.getUniqueFilepath( mediaFilename, 0 )
-		recd.mediaFilename = mediaFilename
+		mediaFilepath = os.path.join( self.ca.tempPath, mediaFilename )
+		mediaFilepath = self.getUniqueFilepath( mediaFilepath, 0 )
+		recd.mediaFilename = os.path.basename( mediaFilepath )
 
 		thumbFilename = mediaThumbFilename + "_thumb.jpg"
-		thumbFilename = self.getUniqueFilepath( thumbFilename, 0 )
-		recd.thumbFilename = thumbFilename
+		thumbFilepath = os.path.join( self.ca.tempPath, thumbFilename )
+		thumbFilepath = self.getUniqueFilepath( thumbFilepath, 0 )
+		recd.thumbFilename = os.path.basename( thumbFilepath )
 
 		recd.photographer = self.ca.nickName
 		recd.title = titleStarter + " by " + str(recd.photographer)
