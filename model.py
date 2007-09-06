@@ -295,6 +295,8 @@ class Model:
 		#todo: need to save the fullpixbuf to the xml only for display (for now, thumbnail)
 		thumbPath = os.path.join(self.ca.journalPath, recd.thumbFilename)
 		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
+
+		print( "ok...")
 		thumbImg.write_to_png(thumbPath)
 
 		imagePath = os.path.join(self.ca.journalPath, "audioPicture.png")
@@ -536,9 +538,9 @@ class Model:
 		if (os.path.exists(pathOb)):
 			i = i+1
 			newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
-			pathOb = self.getUniqueFilepath( str(newPath), i )
+			path = self.getUniqueFilepath( str(newPath), i )
 		else:
-			return pathOb
+			return path
 
 
 	def createNewRecordedMd5Sums( self, recd ):
