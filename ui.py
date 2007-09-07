@@ -18,6 +18,8 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
+#todo: (12:52:51 PM) dcbw: jedierikb: we just need to make sure to turn off double buffering and turn on app paintable on the fixed
+
 import gtk
 from gtk import gdk
 from gtk import keysyms
@@ -114,7 +116,6 @@ class UI:
 		toolbox.add_toolbar( ('Record'), self.modeToolbar )
 		toolbox.show()
 
-		print("ok")
 		self.mainFix = gtk.Fixed()
 		self.ca.set_canvas( self.mainFix )
 
@@ -177,41 +178,6 @@ class UI:
 		self.backgdCanvas = BackgroundCanvas(self)
 		self.backgdCanvas.set_size_request(self.vw, self.vh)
 		backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
-
-
-		##
-		##
-		#the video scrubber
-#		self.videoScrubBox = gtk.HBox()
-#		self.videoScrubPanel.add( self.videoScrubBox )
-
-#		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-#		self.pause_image.show()
-#		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
-#		self.play_image.show()
-
-#		self.playPauseButton = gtk.ToolButton()
-#		self.playPauseButton.set_icon_widget(self.play_image)
-#		self.playPauseButton.set_property('can-default', True)
-#		self.playPauseButton.show()
-#		self.playPauseButton.connect('clicked', self._playPauseButtonCb)
-
-#		self.videoScrubBox.pack_start(self.playPauseButton, expand=False)
-
-#		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
-#		self.hscale = gtk.HScale(self.adjustment)
-#		self.hscale.set_draw_value(False)
-#		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
-#		self.hscale.connect('button-press-event', self._scrubberPressCb)
-#		self.hscale.connect('button-release-event', self._scrubberReleaseCb)
-
-#		self.scale_item = gtk.ToolItem()
-#		self.scale_item.set_expand(True)
-#		self.scale_item.add(self.hscale)
-#		self.videoScrubBox.pack_start(self.scale_item, expand=True)
-#		##
-#		##
-
 
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
@@ -287,8 +253,6 @@ class UI:
 		self.hideAudioWindows()
 
 		#only show the floating windows once everything is exposed and has a layout position
-		#todo: need to listen to size-request signal on the widget that i overlay with a connect_after
-		#todo: rename exposeId
 		self.SIZE_ALLOCATE_ID = self.backgdCanvas.connect_after("size-allocate", self._sizeAllocateCb)
 		self.ca.show_all()
 
@@ -310,12 +274,13 @@ class UI:
 
 	def addToWindowStack( self, win, w, h, parent ):
 		self.windowStack.append( win )
-		win.resize( w, h )
-		win.set_transient_for( parent )
-		win.set_type_hint( gtk.gdk.WINDOW_TYPE_HINT_DIALOG )
-		win.set_decorated( False )
-		win.set_focus_on_map( False )
-		win.set_property("accept-focus", False)
+		win.set_size_request( w, h )
+		self.mainFix.put( win, 0, 0 )
+		#win.set_transient_for( parent )
+		#win.set_type_hint( gtk.gdk.WINDOW_TYPE_HINT_DIALOG )
+		#win.set_decorated( False )
+		#win.set_focus_on_map( False )
+		#win.set_property("accept-focus", False)
 
 
 	def resetWidgetFadeTimer( self ):
@@ -751,16 +716,17 @@ class UI:
 
 
 	def smartResize( self, win, w, h ):
-		winSize = win.get_size()
+		winSize = win.get_size_request()
 		if ( (winSize[0] != w) or (winSize[1] != h) ):
-			win.resize( w, h )
+			win.set_size_request( w, h )
 
 
 	def smartMove( self, win, x, y ):
-		winLoc = win.get_position()
-		if ( (winLoc[0] != x) or (winLoc[1] != y) ):
-			win.move( x, y )
-
+		for i in range( 0, len(self.mainFix.get_children()) ):
+			child = self.mainFix.get_children()[i]
+			if (child == win):
+				if (self.mainFix.child_get_property(child, "x") != x or self.mainFix.child_get_property(child, "y") != y):
+					self.mainFix.move( child, x, y )
 
 	def setMaxLocDim( self, win ):
 		#win.hide()
@@ -1122,9 +1088,9 @@ class BackgroundCanvas(P5):
 		self.ui.modWaitSvg.render_cairo( ctx )
 
 
-class PhotoCanvasWindow(gtk.Window):
+class PhotoCanvasWindow(gtk.EventBox):
 	def __init__(self, ui):
-		gtk.Window.__init__(self)
+		gtk.EventBox.__init__(self)
 		self.ui = ui
 		self.photoCanvas = None
 
@@ -1192,9 +1158,9 @@ class PhotoCanvas(P5):
 		self.scalingImageCb = 0
 
 
-class PipWindow(gtk.Window):
+class PipWindow(gtk.EventBox):
 	def __init__(self, ui):
-		gtk.Window.__init__(self)
+		gtk.EventBox.__init__(self)
 		self.ui = ui
 		self.pipCanvas = PipCanvas(self.ui)
 		self.add( self.pipCanvas )
@@ -1209,9 +1175,9 @@ class PipCanvas(P5):
 		self.background( ctx, self.ui.colorWhite, w, h )
 
 
-class MaxWindow(gtk.Window):
+class MaxWindow(gtk.EventBox):
 	def __init__(self, ui):
-		gtk.Window.__init__(self)
+		gtk.EventBox.__init__(self)
 		self.ui = ui
 		self.maxButton = MaxButton(self.ui)
 		self.add( self.maxButton )
@@ -1534,9 +1500,9 @@ class ThumbnailButton(gtk.Button):
 
 
 
-class RecordWindow(gtk.Window):
+class RecordWindow(gtk.EventBox):
 	def __init__(self,ui):
-		gtk.Window.__init__(self)
+		gtk.EventBox.__init__(self)
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
@@ -1545,9 +1511,7 @@ class RecordWindow(gtk.Window):
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		#todo: this is insensitive until we're all set up
 		#self.shutterButton.set_sensitive(False)
-		shutterBox = gtk.EventBox()
-		shutterBox.add( self.shutterButton )
-		self.add( shutterBox )
+		self.add( self.shutterButton )
 
 
 class ModeToolbar(gtk.Toolbar):

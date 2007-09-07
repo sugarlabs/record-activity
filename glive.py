@@ -430,9 +430,9 @@ class Glive:
 		return self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
 
 
-class LiveVideoWindow(gtk.Window):
+class LiveVideoWindow(gtk.DrawingArea):
 	def __init__(self):
-		gtk.Window.__init__(self)
+		gtk.DrawingArea.__init__(self)
 
 		self.imagesink = None
 		self.glive = None

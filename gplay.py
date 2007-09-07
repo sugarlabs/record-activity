@@ -115,9 +115,9 @@ class Gplay:
 		return self.playing
 
 
-class PlayVideoWindow(gtk.Window):
+class PlayVideoWindow(gtk.DrawingArea):
 	def __init__(self):
-		gtk.Window.__init__(self)
+		gtk.DrawingArea.__init__(self)
 
 		self.imagesink = None
 		self.glive = None
