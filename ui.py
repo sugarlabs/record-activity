@@ -661,11 +661,7 @@ class UI:
 
 
 	def moveWinOffscreen( self, win ):
-		#we move offscreen to resize or else we get flashes on screen, and setting hide() doesn't allow resize & moves
-		offW = (gtk.gdk.screen_width() + 100)
-		offH = (gtk.gdk.screen_height() + 100)
-		self.smartMove(win, offW, offH)
-
+		mainFix.remove( win )
 
 	def setImgLocDim( self, win ):
 		#this is *very* annoying... this call makes the video not show up at launch
