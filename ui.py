@@ -112,12 +112,15 @@ class UI:
 		self.modeToolbar = ModeToolbar(self.ca)
 		#todo: internationalize this
 		toolbox.add_toolbar( ('Record'), self.modeToolbar )
-		#sToolbar = SearchToolbar(self.ca)
-		#toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
 
+		print("ok")
+		self.mainFix = gtk.Fixed()
+		self.ca.set_canvas( self.mainFix )
+
 		self.mainBox = gtk.VBox()
-		self.ca.set_canvas(self.mainBox)
+		self.mainFix.put(self.mainBox, 0, 0)
+		self.mainBox.set_size_request( gtk.gdk.screen_width(), gtk.gdk.screen_height()-(75) )
 
 		topBox = gtk.HBox()
 		self.mainBox.pack_start(topBox, expand=True)
@@ -1584,9 +1587,3 @@ class ModeToolbar(gtk.Toolbar):
 
 	def modeAudioCb(self, button):
 		self.ca.m.doAudioMode()
-
-
-class SearchToolbar(gtk.Toolbar):
-	def __init__(self, pc):
-		gtk.Toolbar.__init__(self)
-		self.ca = pc
