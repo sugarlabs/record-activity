@@ -216,6 +216,7 @@ class Glive:
 		self.stop()
 		self.record = False
 		self.audio = False
+		#todo: walter noted bug of the audioPixbuf being None here
 		self.ca.m.saveAudio(audioFile, self.audioPixbuf)
 
 

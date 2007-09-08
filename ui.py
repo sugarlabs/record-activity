@@ -448,6 +448,8 @@ class UI:
 		return False
 
 
+#todo: lock the buttons when we are saving audio...
+
 	def doClipboardCopyStart( self, recd ):
 		imgPath_s = recd.getMediaFilepath(False)
 		if (imgPath_s == None):
@@ -457,7 +459,7 @@ class UI:
 		#todo: truly unique filenames for temp... #and check they're not taken..
 		tempImgPath = os.path.join("tmp", recd.mediaFilename)
 		tempImgPath = os.path.abspath(tempImgPath)
-		print( imgPath_s, " -- ", tempImgPath )
+		print( "LOOK FOR JPE HERE--->" + imgPath_s, " -- ", tempImgPath )
 		shutil.copyfile( imgPath_s, tempImgPath )
 		return tempImgPath
 
@@ -661,7 +663,12 @@ class UI:
 
 
 	def moveWinOffscreen( self, win ):
-		mainFix.remove( win )
+		for i in range( 0, len(self.mainFix.get_children()) ):
+			child = self.mainFix.get_children()[i]
+			if (child == win):
+				self.mainFix.remove(child)
+				return
+
 
 	def setImgLocDim( self, win ):
 		#this is *very* annoying... this call makes the video not show up at launch

@@ -350,7 +350,7 @@ class RecordActivity(activity.Activity):
 		print("restart pipes")
 		if (not self.m.UPDATING):
 			self.ui.updateModeChange( )
-			self.doMouseListener( True )
+			self.ui.doMouseListener( True )
 
 
 	def recreateTemp( self ):
