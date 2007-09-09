@@ -271,7 +271,6 @@ class UI:
 		self.showLiveVideoTags()
 
 
-
 	def addToWindowStack( self, win, w, h, parent ):
 		self.windowStack.append( win )
 		win.set_size_request( w, h )
