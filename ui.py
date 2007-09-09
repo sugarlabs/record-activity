@@ -269,11 +269,13 @@ class UI:
 		self.resetWidgetFadeTimer()
 
 		self.showLiveVideoTags()
+		print("ok")
 
 
 	def addToWindowStack( self, win, w, h, parent ):
 		self.windowStack.append( win )
 		win.set_size_request( w, h )
+		print( win )
 		self.mainFix.put( win, 0, 0 )
 		#win.set_transient_for( parent )
 		#win.set_type_hint( gtk.gdk.WINDOW_TYPE_HINT_DIALOG )

@@ -43,7 +43,7 @@ class Glive:
 		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 1
 		self.PIPETYPE_X_VIDEO_DISPLAY = 2
 		self.PIPETYPE_AUDIO_RECORD = 3
-		self._PIPETYPE = self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
+		self._PIPETYPE = self.PIPETYPE_SUGAR_JHBUILD
 		self._LAST_PIPETYPE = self._PIPETYPE
 		self._NEXT_PIPETYPE = -1
 		#todo: create a dictionary here of what pipetypes have, e.g., "v4l2", "video", etc.
@@ -423,9 +423,9 @@ class Glive:
 		return self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
 
 
-class LiveVideoWindow(gtk.Window):
+class LiveVideoWindow(gtk.DrawingArea):
 	def __init__(self):
-		gtk.Window.__init__(self)
+		gtk.DrawingArea.__init__(self)
 
 		self.imagesink = None
 		self.glive = None
