@@ -43,7 +43,7 @@ class Glive:
 		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 1
 		self.PIPETYPE_X_VIDEO_DISPLAY = 2
 		self.PIPETYPE_AUDIO_RECORD = 3
-		self._PIPETYPE = self.PIPETYPE_SUGAR_JHBUILD
+		self._PIPETYPE = self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
 		self._LAST_PIPETYPE = self._PIPETYPE
 		self._NEXT_PIPETYPE = -1
 		#todo: create a dictionary here of what pipetypes have, e.g., "v4l2", "video", etc.
@@ -216,13 +216,11 @@ class Glive:
 		self.stop()
 		self.record = False
 		self.audio = False
-		#todo: walter noted bug of the audioPixbuf being None here
-		self.ca.m.saveAudio(audioFile, self.audioPixbuf)
+		if (self.audioPixbuf != None):
+			self.ca.m.saveAudio(audioFile, self.audioPixbuf)
 
 
 	def takePhoto(self):
-		self.takePhotoBufferBuffer = 0
-
 		if not(self.picExposureOpen):
 			self.picExposureOpen = True
 			self.el("videoTee").link(self.el("picQueue"))
@@ -231,21 +229,15 @@ class Glive:
 	def copyPic(self, fsink, buffer, pad, user_data=None):
 		if (self.picExposureOpen):
 
-			self.takePhotoBufferBuffer = self.takePhotoBufferBuffer + 1
-			takePhotoBuffered = 0
-			if (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-				takePhotoBuffered = 10
+			self.picExposureOpen = False
+			pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
+			pic.write( buffer )
+			pic.close()
+			pixBuf = pic.get_pixbuf()
+			del pic
 
-			if (self.takePhotoBufferBuffer >= takePhotoBuffered):
-				self.picExposureOpen = False
-				pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
-				pic.write( buffer )
-				pic.close()
-				pixBuf = pic.get_pixbuf()
-				del pic
-
-				self.el("videoTee").unlink(self.el("picQueue"))
-				gobject.idle_add(self.savePhoto, pixBuf)
+			self.el("videoTee").unlink(self.el("picQueue"))
+			self.savePhoto( pixBuf )
 
 
 	def savePhoto(self, pixbuf):
@@ -431,9 +423,9 @@ class Glive:
 		return self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
 
 
-class LiveVideoWindow(gtk.DrawingArea):
+class LiveVideoWindow(gtk.Window):
 	def __init__(self):
-		gtk.DrawingArea.__init__(self)
+		gtk.Window.__init__(self)
 
 		self.imagesink = None
 		self.glive = None

@@ -127,21 +127,32 @@ class RecordActivity(activity.Activity):
 
 		atLeastOne = False
 
+		#flag everything for saving...
 		for type,value in self.m.mediaTypes.items():
 			typeName = value["name"]
 			hash = self.m.mediaHashs[type]
-
 			for i in range (0, len(hash)):
 				recd = hash[i]
-				mediaEl = album.createElement( typeName )
-				root.appendChild( mediaEl )
 				recd.savedXml = False
 				recd.savedMedia = False
 				atLeastOne = True
-				self.saveIt( xmlFile, mediaEl, recd )
 
+		#and if there is anything to save, save it
+		if (atLeastOne):
+			for type,value in self.m.mediaTypes.items():
+				typeName = value["name"]
+				hash = self.m.mediaHashs[type]
+
+				for i in range (0, len(hash)):
+					recd = hash[i]
+					mediaEl = album.createElement( typeName )
+					root.appendChild( mediaEl )
+					self.saveIt( xmlFile, mediaEl, recd )
+
+		#otherwise, clear it out
 		if (not atLeastOne):
 			self.checkDestroy( album, xmlFile )
+
 
 	def saveIt( self, xmlFile, el, recd ):
 		print("save 1")
@@ -413,11 +424,7 @@ class RecordActivity(activity.Activity):
 
 		if self.I_AM_SAVED:
 			print("total Destruction 1")
-
 			self.recreateTemp()
-			#if (os.path.exists(self.journalPath)):
-			#	shutil.rmtree( self.journalPath )
-
 			print("total Destruction 2")
 			activity.Activity.destroy( self )
 			print("total Destruction 3")

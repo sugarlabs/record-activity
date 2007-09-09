@@ -183,8 +183,8 @@ class Model:
 	def selectLatestThumbs( self, type ):
 		p_mx = len(self.mediaHashs[type])
 		p_mn = max(p_mx-self.ca.ui.numThumbs, 0)
-		#gobject.idle_add(self.setupThumbs, type, p_mn, p_mx)
-		self.setupThumbs( type, p_mn, p_mx )
+		gobject.idle_add(self.setupThumbs, type, p_mn, p_mx)
+		#self.setupThumbs( type, p_mn, p_mx )
 
 
 	def isVideoMode( self ):
@@ -303,6 +303,20 @@ class Model:
 		audioHash.append( recd )
 		self.thumbAdded( self.TYPE_AUDIO )
 
+		#SJ KLEIN AUDIO SAVE TO DISK BEGIN
+#		audioPath = os.path.join(os.path.expanduser("~"), "Journal", "Audio")
+#		if (not os.path.exists(audioPath)):
+#			os.makedirs(audioPath)
+
+#		whoWhen = self.ca.nickName + "_" + str(strftime( "%a_%b_%d__%I:%M:%S_%p", time.localtime(recd.time) ))
+#		audioFilepath = os.path.join( audioPath, whoWhen + ".wav" )
+#		audioFilepath = self.getUniqueFilepath(audioFilepath, 0)
+#		shutil.copy( os.path.join(self.ca.tempPath,recd.mediaFilename), audioFilepath )
+#		audioImageFilepath = os.path.join( audioPath, whoWhen + ".png" )
+#		audioImageFilepath = self.getUniqueFilepath(audioImageFilepath, 0)
+#		shutil.copy( imagePath, audioImageFilepath )
+		#SJ KLEIN AUDIO SAVE TO DISK END
+
 		self.doPostSaveVideo()
 
 		self.meshShareRecd( recd )
@@ -396,9 +410,11 @@ class Model:
 
 
 	def savePhoto( self, pixbuf ):
+		print( "0 savePhoto", pixbuf.get_height() )
 		recd = self.createNewRecorded( self.TYPE_PHOTO )
 
 		imgpath = os.path.join(self.ca.tempPath, recd.mediaFilename)
+		print( "1 savePhoto", imgpath )
 		pixbuf.save( imgpath, "jpeg" )
 
 		thumbpath = os.path.join(self.ca.tempPath, recd.thumbFilename)
@@ -410,8 +426,11 @@ class Model:
 		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
 		#now that we've saved both the image and its pixbuf, we get their md5s
+		print( "2 savePhoto", imgpath )
 		self.createNewRecordedMd5Sums( recd )
+		print( "3 savePhoto", imgpath )
 		self.addRecd( recd )
+		print( "4 savePhoto", imgpath )
 
 		self.meshShareRecd( recd )
 
@@ -466,11 +485,15 @@ class Model:
 		#todo: sort on time-taken, not on their arrival time over the mesh (?)
 		self.mediaHashs[recd.type].append( recd )
 
+		print( "2 adding recd... ", recd.type, recd )
+
 		#updateUi
+		#todo: gobject idle?
 		self.thumbAdded( recd.type )
 
+		print( "3 adding recd... ", recd.type, recd )
 		self.setUpdating( False )
-		print( "2 adding recd... ", self.mediaHashs[recd.type] )
+		print( "4 adding recd... ", self.mediaHashs[recd.type] )
 
 
 
@@ -494,7 +517,7 @@ class Model:
 			mediaFilename = mediaFilename + ".ogv"
 			titleStarter = "Video"
 		if (type == self.TYPE_AUDIO):
-			mediaFilename = mediaFilename + ".ogg"
+			mediaFilename = mediaFilename + ".wav"
 			titleStarter = "Audio"
 
 		mediaFilepath = os.path.join( self.ca.tempPath, mediaFilename )
@@ -522,7 +545,7 @@ class Model:
 			newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
 			return self.getUniqueFilepath( str(newPath), i )
 		else:
-			return path
+			return os.path.abspath( path )
 
 
 	def createNewRecordedMd5Sums( self, recd ):
@@ -591,7 +614,8 @@ class Model:
 	def thumbAdded( self, type ):
 		mx = len(self.mediaHashs[type])
 		mn = max(mx-self.ca.ui.numThumbs, 0)
-		self.setupThumbs(type, mn, mx)
+		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback
+		gobject.idle_add(self.setupThumbs, type, mn, mx )
 
 
 	def doVideoMode( self ):

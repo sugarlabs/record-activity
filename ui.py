@@ -456,9 +456,9 @@ class UI:
 			return None
 
 		#todo: truly unique filenames for temp... #and check they're not taken..
-		tempImgPath = os.path.join("tmp", recd.mediaFilename)
-		tempImgPath = os.path.abspath(tempImgPath)
-		print( "LOOK FOR JPE HERE--->" + imgPath_s, " -- ", tempImgPath )
+		tempImgPath = os.path.join( self.ca.tempPath, recd.mediaFilename)
+		tempImgPath = self.ca.m.getUniqueFilepath(tempImgPath,0)
+		print( imgPath_s, " -- ", tempImgPath )
 		shutil.copyfile( imgPath_s, tempImgPath )
 		return tempImgPath
 
@@ -1369,7 +1369,7 @@ class ThumbnailButton(gtk.Button):
 			elif ( self.tc.recd.type == self.ui.ca.m.TYPE_VIDEO ):
 				targets = [('video/ogg', 0, 0)]
 			elif ( self.tc.recd.type == self.ui.ca.m.TYPE_AUDIO ):
-				targets = [('audio/ogg', 0, 0)]
+				targets = [('audio/wav', 0, 0)]
 
 			if ( len(targets) > 0 ):
 				self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
@@ -1423,7 +1423,7 @@ class ThumbnailButton(gtk.Button):
 	def _dragDataGetCb(self, widget, drag_context, selection_data, info, timestamp):
 		if (	(selection_data.target == 'image/jpeg') or
 				(selection_data.target == 'video/ogg' ) or
-				(selection_data.target == 'audio/ogg')	):
+				(selection_data.target == 'audio/wav')	):
 			self.tempImgPath = self.ui.doClipboardCopyStart( self.tc.recd )
 			self.ui.doClipboardCopyCopy( self.tempImgPath, selection_data )
 

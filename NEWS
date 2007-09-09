@@ -1,3 +1,11 @@
+24
+* fix for saving audio files' image counterparts (prevents blank screen and spinning cursor) (jedierikb)
+* correctly handle bug in notify::active callbacks, and opened #2026 (jedierikb)
+* disable the disappearing record buttons until more work can be done on them (jedierikb)
+* correct mime and filetypes for audio recordings (addresses #2909) (jedierikb)
+* fix for hitherto unknown bug regarding multiple saves to the datastore (jedierikb)
+* new icon (simon@schampijer.de)
+
 23
 * journal integration (closes #1758) (jedierikb):
 ** media saved to the the journal
