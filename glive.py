@@ -39,11 +39,13 @@ class Glive:
 		self.ca = pca
 		self.pipes = []
 
+		self.playing = False
+
 		self.PIPETYPE_SUGAR_JHBUILD = 0
 		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 1
 		self.PIPETYPE_X_VIDEO_DISPLAY = 2
 		self.PIPETYPE_AUDIO_RECORD = 3
-		self._PIPETYPE = self.PIPETYPE_SUGAR_JHBUILD
+		self._PIPETYPE = self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
 		self._LAST_PIPETYPE = self._PIPETYPE
 		self._NEXT_PIPETYPE = -1
 		#todo: create a dictionary here of what pipetypes have, e.g., "v4l2", "video", etc.
@@ -92,19 +94,27 @@ class Glive:
 
 	def play(self):
 		self.pipe().set_state(gst.STATE_PLAYING)
+		self.playing = True
 
 
 	def pause(self):
 		self.pipe().set_state(gst.STATE_PAUSED)
+		self.playing = False
 
 
 	def stop(self):
 		self.pipe().set_state(gst.STATE_NULL)
+		self.playing = False
+
 		self._LAST_PIPETYPE = self._PIPETYPE
 		if (self._NEXT_PIPETYPE != -1):
 			self._PIPETYPE = self._NEXT_PIPETYPE
 		self._nextPipe()
 		self._NEXT_PIPETYPE = -1
+
+
+	def is_playing(self):
+		return self.playing
 
 
 	def _nextPipe(self):

@@ -492,9 +492,6 @@ class Model:
 		self.thumbAdded( recd.type )
 
 		print( "3 adding recd... ", recd.type, recd )
-		self.setUpdating( False )
-		print( "4 adding recd... ", self.mediaHashs[recd.type] )
-
 
 
 	def createNewRecorded( self, type ):

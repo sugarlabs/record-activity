@@ -117,11 +117,13 @@ class UI:
 		toolbox.show()
 
 		self.mainFix = gtk.Fixed()
-		self.ca.set_canvas( self.mainFix )
+		self.mainFix.unset_flags(gtk.DOUBLE_BUFFERED)
+		self.mainFix.set_flags(gtk.APP_PAINTABLE)
+		self.ca.set_canvas(self.mainFix)
 
 		self.mainBox = gtk.VBox()
 		self.mainFix.put(self.mainBox, 0, 0)
-		self.mainBox.set_size_request( gtk.gdk.screen_width(), gtk.gdk.screen_height()-(75) )
+		self.mainBox.set_size_request( gtk.gdk.screen_width(), gtk.gdk.screen_height()-(0) ) #todo
 
 		topBox = gtk.HBox()
 		self.mainBox.pack_start(topBox, expand=True)
@@ -308,27 +310,29 @@ class UI:
 
 
 	def showWidgets( self ):
-		self.updateVideoComponents()
+		pass
+		#self.updateVideoComponents()
 
 
 	def hideWidgets( self ):
-		self.moveWinOffscreen( self.recordWindow )
-		self.moveWinOffscreen( self.maxWindow )
-		self.moveWinOffscreen( self.pipBgdWindow )
-		self.moveWinOffscreen( self.pipBgdWindow2 )
-		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			if (not self.liveMode):
-				self.moveWinOffscreen( self.liveVideoWindow )
-			else:
-				self.moveWinOffscreen( self.livePhotoWindow )
-		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			if (not self.liveMode):
-				self.moveWinOffscreen( self.playLiveWindow )
-		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			if (not self.liveMode):
-				self.moveWinOffscreen( self.liveVideoWindow )
-			else:
-				self.moveWinOffscreen( self.livePhotoWindow )
+		pass
+#		self.moveWinOffscreen( self.recordWindow )
+#		self.moveWinOffscreen( self.maxWindow )
+#		self.moveWinOffscreen( self.pipBgdWindow )
+#		self.moveWinOffscreen( self.pipBgdWindow2 )
+#		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+#			if (not self.liveMode):
+#				self.moveWinOffscreen( self.liveVideoWindow )
+#			else:
+#				self.moveWinOffscreen( self.livePhotoWindow )
+#		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+#			if (not self.liveMode):
+#				self.moveWinOffscreen( self.playLiveWindow )
+#		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+#			if (not self.liveMode):
+#				self.moveWinOffscreen( self.liveVideoWindow )
+#			else:
+#				self.moveWinOffscreen( self.livePhotoWindow )
 
 
 	def _mouseMightaMovedCb( self ):
@@ -493,7 +497,6 @@ class UI:
 
 			self.liveMode = False
 			self.updateVideoComponents()
-
 			self.showRecdMeta(recd)
 
 
@@ -703,7 +706,7 @@ class UI:
 			win.set_size_request( w, h )
 
 	def smartMove( self, win, x, y ):
-		y = y-75
+		y = y-0 #todo
 
 		there = False
 		for i in range( 0, len(self.mainFix.get_children()) ):
@@ -770,11 +773,19 @@ class UI:
 
 	def updateVideoComponents( self ):
 		#todo: no need for pipBgdWindow2
+		#todo: one method to remove everything
 
-		#todo: move everything offscreen better
+		livePlay = self.ca.glive.is_playing()
+		self.ca.glive.stop()
+		playPlay = self.ca.gplay.is_playing()
+		self.ca.gplay.stop()
+
+		#remove everything
 		self.hideLiveWindows( )
 		self.hidePlayWindows( )
 		self.hideAudioWindows( )
+		self.mainFix.show_all()
+		print("hidden")
 
 		pos = []
 		#then re-add in the correct order to the right sizes
@@ -807,9 +818,7 @@ class UI:
 				pos.append({"position":"pip", "window":self.pipBgdWindow} )
 				pos.append({"position":"pgd", "window":self.liveVidwoWindow} )
 
-
-		print( str(len(pos)) + "," + str(len(self.windowStack)) )
-
+		print("pre-add")
 		for i in range (0, len(self.windowStack)):
 			for j in range (0, len(pos)):
 				if (self.windowStack[i] == pos[j]["window"]):
@@ -818,11 +827,54 @@ class UI:
 					elif (pos[j]["position"] == "max"):
 						self.setMaxLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "pip"):
-						self.setPipLocDim( pos[j]["window"])
+						self.setPipLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "pgd"):
-						self.setPipBgdLocDim( pos[j]["window"])
+						self.setPipBgdLocDim( pos[j]["window"] )
+
+		#todo: add callbacks here to sync the video once the windows are up again
+		print("post-showAll")
+		if (livePlay):
+			self.map2 = False
+			self.all2 = False
+			#only show the floating windows once everything is exposed and has a layout position
+			self.SIZE_ALLOCATE_ID2 = self.liveVideoWindow.connect_after("size-allocate", self._sizeAllocateCb2)
+			self.MAP_ID2 = self.liveVideoWindow.connect_after("map-event", self._mapEventCb2)
+			#for i in range (0, len(self.windowStack)):
+			#	self.windowStack[i].show_all()
+
+		#if (playPlay):
+		#	self.ca.gplay.play()
+		print("post replay")
 
 		self.mainFix.show_all()
+
+
+		print("post-add")
+
+	def _sizeAllocateCb2( self, widget, event ):
+		print("sa 0")
+		self.liveVideoWindow.disconnect(self.SIZE_ALLOCATE_ID2)
+		self.all2 = True
+		print("sa 1")
+		self.okok()
+		print("sa 2")
+
+
+	def _mapEventCb2( self, widget, event ):
+		print("me 0")
+		self.liveVideoWindow.disconnect(self.MAP_ID2)
+		self.map2 = True
+		print("me 1")
+		self.okok()
+		print("me 2")
+
+
+	def okok( self ):
+		print("okok 1")
+		if (self.all2 and self.map2):
+			print("okok 2")
+			#self.ca.glive.play()
+			print("okok 3")
 
 
 	def updateThumbs( self, addToTrayArray, left, start, right ):
@@ -1123,7 +1175,9 @@ class PhotoCanvas(P5):
 #			self.drawImg = None
 		self.drawImg = None
 
-		self.queue_draw()
+		print("pre q")
+		#self.queue_draw()
+		print("post q")
 
 
 	def resizeImage(self, w, h):
