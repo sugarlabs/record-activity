@@ -104,7 +104,7 @@ class UI:
 
 		#prep for when to show
 		self.allocated = False
-		self.mapped = False
+		self.mapped = True
 
 		self.shownRecd = None
 
@@ -256,9 +256,9 @@ class UI:
 		self.SIZE_ALLOCATE_ID = self.backgdCanvas.connect_after("size-allocate", self._sizeAllocateCb)
 		self.ca.show_all()
 
-		self.mapId = self.liveVideoWindow.connect("map-event", self.mapEvent)
-		for i in range (0, len(self.windowStack)):
-			self.windowStack[i].show_all()
+		#self.MAP_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
+		#for i in range (0, len(self.windowStack)):
+		#	self.windowStack[i].show_all()
 
 
 		#listen for ctrl+c & game key buttons
@@ -269,13 +269,12 @@ class UI:
 		self.resetWidgetFadeTimer()
 
 		self.showLiveVideoTags()
-		print("ok")
+
 
 
 	def addToWindowStack( self, win, w, h, parent ):
 		self.windowStack.append( win )
 		win.set_size_request( w, h )
-		print( win )
 		self.mainFix.put( win, 0, 0 )
 		#win.set_transient_for( parent )
 		#win.set_type_hint( gtk.gdk.WINDOW_TYPE_HINT_DIALOG )
@@ -460,7 +459,6 @@ class UI:
 		#todo: truly unique filenames for temp... #and check they're not taken..
 		tempImgPath = os.path.join( self.ca.tempPath, recd.mediaFilename)
 		tempImgPath = self.ca.m.getUniqueFilepath(tempImgPath,0)
-		print( imgPath_s, " -- ", tempImgPath )
 		shutil.copyfile( imgPath_s, tempImgPath )
 		return tempImgPath
 
@@ -672,13 +670,6 @@ class UI:
 
 
 	def setImgLocDim( self, win ):
-		#this is *very* annoying... this call makes the video not show up at launch
-		#win.hide_all()
-
-		#win.hide()
-
-		#self.moveWinOffscreen( win )
-
 		if (self.fullScreen):
 			self.smartResize( win, gtk.gdk.screen_width(), gtk.gdk.screen_height() )
 			self.smartMove( win, 0, 0 )
@@ -687,15 +678,8 @@ class UI:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			self.smartMove( win, vPos[0], vPos[1] )
 
-		#win.show_all()
-
 
 	def setPipLocDim( self, win ):
-		#this order of operations prevents video flicker
-		#win.hide()
-
-		#self.moveWinOffscreen( win )
-
 		self.smartResize( win, self.pipw, self.piph )
 
 		if (self.fullScreen):
@@ -704,19 +688,13 @@ class UI:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			self.smartMove( win, vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
 
-		#win.show_all()
-
 
 	def setPipBgdLocDim( self, win ):
-		#win.hide()
-
 		if (self.fullScreen):
 			self.smartMove( win, self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder))
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			self.smartMove( win, vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder) )
-
-		#win.show_all()
 
 
 	def smartResize( self, win, w, h ):
@@ -724,24 +702,27 @@ class UI:
 		if ( (winSize[0] != w) or (winSize[1] != h) ):
 			win.set_size_request( w, h )
 
-
 	def smartMove( self, win, x, y ):
+		y = y-75
+
+		there = False
 		for i in range( 0, len(self.mainFix.get_children()) ):
 			child = self.mainFix.get_children()[i]
 			if (child == win):
+				there = True
 				if (self.mainFix.child_get_property(child, "x") != x or self.mainFix.child_get_property(child, "y") != y):
 					self.mainFix.move( child, x, y )
 
-	def setMaxLocDim( self, win ):
-		#win.hide()
+		if (not there):
+			self.mainFix.put( win, x, y )
 
+
+	def setMaxLocDim( self, win ):
 		if (self.fullScreen):
 			self.smartMove( win, gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			self.smartMove( win, (vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset)
-
-		#win.show_all()
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
@@ -771,14 +752,16 @@ class UI:
 			self.ca.glive.play()
 
 
-	def mapEvent( self, widget, event ):
+	def _mapEventCb( self, widget, event ):
+		print("map")
 		#when your parent window is ready, turn on the feed of live video
-		self.liveVideoWindow.disconnect(self.mapId)
+		self.liveVideoWindow.disconnect(self.MAP_ID)
 		self.mapped = True
 		self.checkReadyToSetup()
 
 
 	def _sizeAllocateCb( self, widget, event ):
+		print("alloc")
 		#initial setup of the panels
 		self.backgdCanvas.disconnect(self.SIZE_ALLOCATE_ID)
 		self.allocated = True
@@ -786,69 +769,64 @@ class UI:
 
 
 	def updateVideoComponents( self ):
+		#todo: no need for pipBgdWindow2
 
-		#todo: working with dcbw on solution for this one... avoiding video flicker when switching modes, #3046
-#		for i in range (0, len(self.windowStack)):
-#			self.windowStack[i].hide()
+		#todo: move everything offscreen better
+		self.hideLiveWindows( )
+		self.hidePlayWindows( )
+		self.hideAudioWindows( )
 
-
-		#todo: only one max window needed, really, as is only one pipBgdWindow
+		pos = []
+		#then re-add in the correct order to the right sizes
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (self.liveMode):
-				self.moveWinOffscreen( self.pipBgdWindow )
-				self.moveWinOffscreen( self.livePhotoWindow )
-
-				self.setImgLocDim( self.liveVideoWindow )
-				self.setMaxLocDim( self.maxWindow )
-				self.setPipBgdLocDim( self.recordWindow )
+				pos.append({"position":"img", "window":self.liveVideoWindow})
+				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"pgd", "window":self.recordWindow} )
 			else:
-				self.moveWinOffscreen( self.recordWindow )
-
-				self.setImgLocDim( self.livePhotoWindow )
-				self.setPipBgdLocDim( self.pipBgdWindow )
-				self.setPipLocDim( self.liveVideoWindow )
-				self.setMaxLocDim( self.maxWindow )
+				pos.append({"position":"img", "window":self.livePhotoWindow} )
+				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
+				pos.append({"position":"pip", "window":self.liveVideoWindow} )
+				pos.append({"position":"max", "window":self.maxWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			if (self.liveMode):
-				self.moveWinOffscreen( self.playOggWindow )
-				self.moveWinOffscreen( self.pipBgdWindow2 )
-
-				self.setImgLocDim( self.playLiveWindow )
-				self.setMaxLocDim( self.maxWindow )
-				self.setPipBgdLocDim( self.recordWindow )
+				pos.append({"position":"img", "window":self.playLiveWindow} )
+				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"pgd", "window":self.recordWindow} )
 			else:
-				self.moveWinOffscreen( self.recordWindow )
-
-				self.setImgLocDim( self.playOggWindow )
-				self.setMaxLocDim( self.maxWindow )
-				self.setPipBgdLocDim( self.pipBgdWindow2 )
-				self.setPipLocDim( self.playLiveWindow )
+				pos.append({"position":"img", "window":self.playOggWindow} )
+				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
+				pos.append({"position":"pip", "window":self.playLiveWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (self.liveMode):
-				self.moveWinOffscreen( self.livePhotoWindow )
-				self.moveWinOffscreen( self.pipBgdWindow )
-
-				self.setImgLocDim( self.liveVideoWindow )
-				self.setPipBgdLocDim( self.recordWindow )
+				pos.append({"position":"img", "window":self.liveVideoWindow} )
+				pos.append({"position":"pgd", "window":self.recordWindow} )
 			else:
-				self.moveWinOffscreen( self.recordWindow )
-
-				self.setImgLocDim( self.livePhotoWindow )
-				self.setPipBgdLocDim( self.pipBgdWindow )
-				self.setPipLocDim( self.liveVideoWindow )
-
-#		for i in range (0, len(self.windowStack)):
-#			self.windowStack[i].realize()
-#			if (i == 0):
-#				self.windowStack[i].set_transient_for( self.ca )
-#			else:
-#				self.windowStack[i].set_transient_for( self.windowStack[i-1])
-#			self.windowStack[i].raise_()
-#			self.windowStack[i].show_all()
+				pos.append({"position":"img", "window":self.livePhotoWindow} )
+				pos.append({"position":"pip", "window":self.pipBgdWindow} )
+				pos.append({"position":"pgd", "window":self.liveVidwoWindow} )
 
 
-	#todo: cache buttons which we can reuse
+		print( str(len(pos)) + "," + str(len(self.windowStack)) )
+
+		for i in range (0, len(self.windowStack)):
+			for j in range (0, len(pos)):
+				if (self.windowStack[i] == pos[j]["window"]):
+					if (pos[j]["position"] == "img"):
+						self.setImgLocDim( pos[j]["window"] )
+					elif (pos[j]["position"] == "max"):
+						self.setMaxLocDim( pos[j]["window"] )
+					elif (pos[j]["position"] == "pip"):
+						self.setPipLocDim( pos[j]["window"])
+					elif (pos[j]["position"] == "pgd"):
+						self.setPipBgdLocDim( pos[j]["window"])
+
+		self.mainFix.show_all()
+
+
 	def updateThumbs( self, addToTrayArray, left, start, right ):
+		#todo: cache buttons which we can reuse
 		for i in range (0, len(self.thumbButts)):
 			self.thumbButts[i].clear()
 
