@@ -296,7 +296,7 @@ class UI:
 		self.SIZE_ALLOCATE_ID = self.backgdCanvas.connect_after("size-allocate", self._sizeAllocateCb)
 		self.ca.show_all()
 
-		self.mapId = self.liveVideoWindow.connect("map-event", self.mapEvent)
+		self.MAP_EVENT_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].show_all()
 
@@ -346,29 +346,21 @@ class UI:
 					gobject.source_remove( self.HIDE_WIDGET_TIMEOUT_ID )
 
 
-	def showWidgets( self ):
-		self.updateVideoComponents()
-
-
 	def hideWidgets( self ):
-		pass
-#		self.moveWinOffscreen( self.recordWindow )
-#		self.moveWinOffscreen( self.maxWindow )
-#		self.moveWinOffscreen( self.pipBgdWindow )
-#		self.moveWinOffscreen( self.pipBgdWindow2 )
-#		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-#			if (not self.liveMode):
-#				self.moveWinOffscreen( self.liveVideoWindow )
-#			else:
-#				self.moveWinOffscreen( self.livePhotoWindow )
-#		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-#			if (not self.liveMode):
-#				self.moveWinOffscreen( self.playLiveWindow )
-#		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-#			if (not self.liveMode):
-#				self.moveWinOffscreen( self.liveVideoWindow )
-#			else:
-#				self.moveWinOffscreen( self.livePhotoWindow )
+		self.moveWinOffscreen( self.recordWindow )
+		self.moveWinOffscreen( self.maxWindow )
+		self.moveWinOffscreen( self.pipBgdWindow )
+		self.moveWinOffscreen( self.pipBgdWindow2 )
+		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			if (not self.liveMode):
+				self.moveWinOffscreen( self.liveVideoWindow )
+		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+			if (not self.liveMode):
+				self.moveWinOffscreen( self.playLiveWindow )
+		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			if (not self.liveMode):
+				self.moveWinOffscreen( self.liveVideoWindow )
+		self.LAST_MODE = -1
 
 
 	def _mouseMightaMovedCb( self ):
@@ -803,9 +795,9 @@ class UI:
 			self.ca.glive.play()
 
 
-	def mapEvent( self, widget, event ):
+	def _mapEventCb( self, widget, event ):
 		#when your parent window is ready, turn on the feed of live video
-		self.liveVideoWindow.disconnect(self.mapId)
+		self.liveVideoWindow.disconnect(self.MAP_EVENT_ID)
 		self.mapped = True
 		self.checkReadyToSetup()
 
@@ -868,18 +860,7 @@ class UI:
 		self.hidePlayWindows()
 		self.hideAudioWindows()
 
-		#now move those pieces where they need to be...
-		for i in range (0, len(self.windowStack)):
-			for j in range (0, len(pos)):
-				if (self.windowStack[i] == pos[j]["window"]):
-					if (pos[j]["position"] == "img"):
-						self.setImgLocDim( pos[j]["window"] )
-					elif (pos[j]["position"] == "max"):
-						self.setMaxLocDim( pos[j]["window"] )
-					elif (pos[j]["position"] == "pip"):
-						self.setPipLocDim( pos[j]["window"] )
-					elif (pos[j]["position"] == "pgd"):
-						self.setPipBgdLocDim( pos[j]["window"] )
+		self.updatePos( pos )
 
 		#show everything
 		if (self.HIDE_ON_UPDATE):
@@ -893,8 +874,51 @@ class UI:
 		self.HIDE_ON_UPDATE = True
 
 
-	#todo: cache buttons which we can reuse
+	def showWidgets( self ):
+		pos = []
+		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			if (not self.liveMode):
+				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
+				pos.append({"position":"pip", "window":self.liveVideoWindow} )
+				pos.append({"position":"max", "window":self.maxWindow} )
+			else:
+				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"pgd", "window":self.recordWindow} )
+		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+			if (not self.liveMode):
+				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
+				pos.append({"position":"pip", "window":self.playLiveWindow} )
+			else:
+				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"pgd", "window":self.recordWindow} )
+		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			if (not self.liveMode):
+				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
+				pos.append({"position":"pip", "window":self.liveVideoWindow} )
+			else:
+				pos.append({"position":"pgd", "window":self.recordWindow} )
+
+		self.updatePos( pos )
+
+
+	def updatePos( self, pos ):
+		#now move those pieces where they need to be...
+		for i in range (0, len(self.windowStack)):
+			for j in range (0, len(pos)):
+				if (self.windowStack[i] == pos[j]["window"]):
+					if (pos[j]["position"] == "img"):
+						self.setImgLocDim( pos[j]["window"] )
+					elif (pos[j]["position"] == "max"):
+						self.setMaxLocDim( pos[j]["window"] )
+					elif (pos[j]["position"] == "pip"):
+						self.setPipLocDim( pos[j]["window"] )
+					elif (pos[j]["position"] == "pgd"):
+						self.setPipBgdLocDim( pos[j]["window"] )
+
+
 	def updateThumbs( self, addToTrayArray, left, start, right ):
+		#todo: cache buttons which we can reuse
 		for i in range (0, len(self.thumbButts)):
 			self.thumbButts[i].clear()
 
