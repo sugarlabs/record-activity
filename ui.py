@@ -78,6 +78,7 @@ class UI:
 		self.LAST_MODE = -1
 		self.LAST_FULLSCREEN = False
 		self.LAST_LIVE = True
+		self.HIDE_ON_UPDATE = True
 
 		#thumb dimensions:
 		self.thumbTrayHt = 150
@@ -641,7 +642,7 @@ class UI:
 
 		self.showLiveVideoTags()
 		self.liveMode = True
-		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
+		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, False )
 		self.updateVideoComponents()
 
 
@@ -654,44 +655,41 @@ class UI:
 
 
 	def updateModeChange(self):
-		#todo: move the video offscreen when switching modes until the video comes on and is playng
-		#todo: return from this if we're already in this mode?
-
 		#this is called when a menubar button is clicked
 		self.liveMode = True
 		self.fullScreen = False
 
-		self.hideLiveWindows()
-		self.hidePlayWindows()
-		self.hideAudioWindows()
-
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
+			self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, True )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
+			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, True )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			self.ca.gplay.stop()
-			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD )
+			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD, True )
 
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
+		self.LAST_MODE = -1 #force an update
 		self.updateVideoComponents()
 		self.resetWidgetFadeTimer()
 
 
-	def startLiveVideo(self, window, pipetype):
+	def startLiveVideo(self, window, pipetype, force):
 		#We need to know which window and which pipe here
 
 		#if returning from another activity, active won't be false and needs to be to get started
-		if (self.ca.glive.getPipeType() == pipetype and self.ca.glive.window == window and self.ca.ACTIVE):
+		if (self.ca.glive.getPipeType() == pipetype
+			and self.ca.glive.window == window
+			and self.ca.ACTIVE
+			and not force):
 			return
 
 		self.ca.glive.setPipeType( pipetype )
 		window.set_glive(self.ca.glive)
 		self.ca.glive.stop()
 		self.ca.glive.play()
+		print("force reset video")
 
 
 	def doFullscreen( self ):
@@ -708,13 +706,13 @@ class UI:
 
 	def setImgLocDim( self, win ):
 		imgDim = self.getImgDim( self.fullScreen )
-		self.smartResize( win, imgDim[0], imgDim[1] )
+		r = self.smartResize( win, imgDim[0], imgDim[1] )
+
 		if (self.fullScreen):
 			self.smartMove( win, 0, 0 )
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			self.smartMove( win, vPos[0], vPos[1] )
-
+			m = self.smartMove( win, vPos[0], vPos[1] )
 
 	def getImgDim( self, full ):
 		if (full):
@@ -753,18 +751,15 @@ class UI:
 		winSize = win.get_size()
 		if ( (winSize[0] != w) or (winSize[1] != h) ):
 			win.resize( w, h )
+			return True
+		else:
+			return False
 
 
 	def smartMove( self, win, x, y ):
 		winLoc = win.get_position()
 		if ( (winLoc[0] != x) or (winLoc[1] != y) ):
 			win.move( x, y )
-
-
-	def willWinDimEqual( self, win, position, full ):
-		dim = win.get_size()
-		posDim = self.getDim( position, full )
-		if (	(dim[0] != posDim[0])	or	(dim[1] != posDim[1])	):
 			return True
 		else:
 			return False
@@ -860,9 +855,10 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 
-		#hide everything
-		for i in range (0, len(self.windowStack)):
-			self.windowStack[i].hide_all()
+		if (self.HIDE_ON_UPDATE):
+			#hide everything
+			for i in range (0, len(self.windowStack)):
+				self.windowStack[i].hide_all()
 
 		#todo: only move away the windows *not* moved in the call below:
 		self.hideLiveWindows()
@@ -883,13 +879,15 @@ class UI:
 						self.setPipBgdLocDim( pos[j]["window"] )
 
 		#show everything
-		for i in range (0, len(self.windowStack)):
-			self.windowStack[i].show_all()
+		if (self.HIDE_ON_UPDATE):
+			for i in range (0, len(self.windowStack)):
+				self.windowStack[i].show_all()
 
 		print("all reset!")
 		self.LAST_MODE = self.ca.m.MODE
 		self.LAST_FULLSCREEN = self.fullScreen
 		self.LAST_LIVE = self.liveMode
+		self.HIDE_ON_UPDATE = True
 
 
 	#todo: cache buttons which we can reuse
@@ -971,7 +969,7 @@ class UI:
 				self.livePhotoCanvas.setImage( None )
 			elif (recd.type == self.ca.m.TYPE_VIDEO):
 				self.ca.gplay.stop()
-				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD )
+				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, False )
 			elif (recd.type == self.ca.m.TYPE_AUDIO):
 				self.livePhotoCanvas.setImage( None )
 				self.startLiveAudio()

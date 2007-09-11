@@ -125,9 +125,11 @@ class PlayVideoWindow(gtk.Window):
 		self.unset_flags(gtk.DOUBLE_BUFFERED)
 		self.set_flags(gtk.APP_PAINTABLE)
 
+
 	def set_gplay(self, pgplay):
 		self.gplay = pgplay
 		self.gplay.window = self
+
 
 	def set_sink(self, sink):
 		if (self.imagesink != None):

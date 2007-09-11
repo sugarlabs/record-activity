@@ -392,6 +392,8 @@ class Model:
 	def doPostSaveVideo( self ):
 		#resume live video from the camera (if the activity is active)
 		if (self.ca.ACTIVE):
+			self.ca.ui.LAST_MODE = -1
+			self.ca.ui.HIDE_ON_UPDATE = False
 			self.ca.ui.updateVideoComponents()
 			self.ca.glive.play()
 
@@ -433,7 +435,6 @@ class Model:
 		print( "4 savePhoto", imgpath )
 
 		self.meshShareRecd( recd )
-
 
 
 	def removeMediaFromDatastore( self, recd ):
