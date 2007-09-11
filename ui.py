@@ -311,7 +311,6 @@ class UI:
 		self.showLiveVideoTags()
 
 
-
 	def addToWindowStack( self, win, w, h, parent ):
 		self.windowStack.append( win )
 		win.resize( w, h )
@@ -380,11 +379,19 @@ class UI:
 
 		if (self.hideWidgetsTimer > 2000):
 			if (not self.hiddenWidgets):
-				self.hideWidgets()
-				self.hiddenWidgets = True
+				if (self.mouseInWidget()):
+					self.hideWidgetsTimer = 0
+				else:
+					self.hideWidgets()
+					self.hiddenWidgets = True
 
 		self.mx = x
 		self.my = y
+		return True
+
+
+	def mouseInWidget( self ):
+		#todo:
 		return True
 
 
