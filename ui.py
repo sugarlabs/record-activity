@@ -75,6 +75,10 @@ class UI:
 		self.fullScreen = False
 		self.liveMode = True
 
+		self.LAST_MODE = -1
+		self.LAST_FULLSCREEN = False
+		self.LAST_LIVE = True
+
 		#thumb dimensions:
 		self.thumbTrayHt = 150
 		self.tw = 107
@@ -104,7 +108,7 @@ class UI:
 
 		#prep for when to show
 		self.allocated = False
-		self.mapped = True
+		self.mapped = False
 
 		self.shownRecd = None
 
@@ -114,16 +118,12 @@ class UI:
 		self.modeToolbar = ModeToolbar(self.ca)
 		#todo: internationalize this
 		toolbox.add_toolbar( ('Record'), self.modeToolbar )
+		#sToolbar = SearchToolbar(self.ca)
+		#toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
 
-		self.mainFix = gtk.Fixed()
-		self.mainFix.unset_flags(gtk.DOUBLE_BUFFERED)
-		self.mainFix.set_flags(gtk.APP_PAINTABLE)
-		self.ca.set_canvas(self.mainFix)
-
 		self.mainBox = gtk.VBox()
-		self.mainFix.put(self.mainBox, 0, 0)
-		self.mainBox.set_size_request( gtk.gdk.screen_width(), gtk.gdk.screen_height()-(0) ) #todo
+		self.ca.set_canvas(self.mainBox)
 
 		topBox = gtk.HBox()
 		self.mainBox.pack_start(topBox, expand=True)
@@ -181,6 +181,41 @@ class UI:
 		self.backgdCanvas.set_size_request(self.vw, self.vh)
 		backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
 
+
+		##
+		##
+		#the video scrubber
+#		self.videoScrubBox = gtk.HBox()
+#		self.videoScrubPanel.add( self.videoScrubBox )
+
+#		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
+#		self.pause_image.show()
+#		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
+#		self.play_image.show()
+
+#		self.playPauseButton = gtk.ToolButton()
+#		self.playPauseButton.set_icon_widget(self.play_image)
+#		self.playPauseButton.set_property('can-default', True)
+#		self.playPauseButton.show()
+#		self.playPauseButton.connect('clicked', self._playPauseButtonCb)
+
+#		self.videoScrubBox.pack_start(self.playPauseButton, expand=False)
+
+#		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
+#		self.hscale = gtk.HScale(self.adjustment)
+#		self.hscale.set_draw_value(False)
+#		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+#		self.hscale.connect('button-press-event', self._scrubberPressCb)
+#		self.hscale.connect('button-release-event', self._scrubberReleaseCb)
+
+#		self.scale_item = gtk.ToolItem()
+#		self.scale_item.set_expand(True)
+#		self.scale_item.add(self.hscale)
+#		self.videoScrubBox.pack_start(self.scale_item, expand=True)
+#		##
+#		##
+
+
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
 		thumbnailsEventBox.set_size_request( -1, self.thumbTrayHt )
@@ -220,7 +255,7 @@ class UI:
 		self.livePhotoCanvas = PhotoCanvas(self)
 		self.livePhotoWindow.setPhotoCanvas(self.livePhotoCanvas)
 
-		#border behind 
+		#border behind
 		self.pipBgdWindow = PipWindow(self)
 		self.addToWindowStack( self.pipBgdWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
 
@@ -255,12 +290,14 @@ class UI:
 		self.hideAudioWindows()
 
 		#only show the floating windows once everything is exposed and has a layout position
+		#todo: need to listen to size-request signal on the widget that i overlay with a connect_after
+		#todo: rename exposeId
 		self.SIZE_ALLOCATE_ID = self.backgdCanvas.connect_after("size-allocate", self._sizeAllocateCb)
 		self.ca.show_all()
 
-		#self.MAP_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
-		#for i in range (0, len(self.windowStack)):
-		#	self.windowStack[i].show_all()
+		self.mapId = self.liveVideoWindow.connect("map-event", self.mapEvent)
+		for i in range (0, len(self.windowStack)):
+			self.windowStack[i].show_all()
 
 
 		#listen for ctrl+c & game key buttons
@@ -276,13 +313,12 @@ class UI:
 
 	def addToWindowStack( self, win, w, h, parent ):
 		self.windowStack.append( win )
-		win.set_size_request( w, h )
-		self.mainFix.put( win, 0, 0 )
-		#win.set_transient_for( parent )
-		#win.set_type_hint( gtk.gdk.WINDOW_TYPE_HINT_DIALOG )
-		#win.set_decorated( False )
-		#win.set_focus_on_map( False )
-		#win.set_property("accept-focus", False)
+		win.resize( w, h )
+		win.set_transient_for( parent )
+		win.set_type_hint( gtk.gdk.WINDOW_TYPE_HINT_DIALOG )
+		win.set_decorated( False )
+		win.set_focus_on_map( False )
+		win.set_property("accept-focus", False)
 
 
 	def resetWidgetFadeTimer( self ):
@@ -310,8 +346,7 @@ class UI:
 
 
 	def showWidgets( self ):
-		pass
-		#self.updateVideoComponents()
+		self.updateVideoComponents()
 
 
 	def hideWidgets( self ):
@@ -452,17 +487,15 @@ class UI:
 		return False
 
 
-#todo: lock the buttons when we are saving audio...
-
 	def doClipboardCopyStart( self, recd ):
 		imgPath_s = recd.getMediaFilepath(False)
 		if (imgPath_s == None):
 			#todo: make sure this is handled correctly
 			return None
 
-		#todo: truly unique filenames for temp... #and check they're not taken..
 		tempImgPath = os.path.join( self.ca.tempPath, recd.mediaFilename)
 		tempImgPath = self.ca.m.getUniqueFilepath(tempImgPath,0)
+		print( imgPath_s, " -- ", tempImgPath )
 		shutil.copyfile( imgPath_s, tempImgPath )
 		return tempImgPath
 
@@ -497,6 +530,7 @@ class UI:
 
 			self.liveMode = False
 			self.updateVideoComponents()
+
 			self.showRecdMeta(recd)
 
 
@@ -646,6 +680,7 @@ class UI:
 		self.updateVideoComponents()
 		self.resetWidgetFadeTimer()
 
+
 	def startLiveVideo(self, window, pipetype):
 		#We need to know which window and which pipe here
 
@@ -665,21 +700,27 @@ class UI:
 
 
 	def moveWinOffscreen( self, win ):
-		for i in range( 0, len(self.mainFix.get_children()) ):
-			child = self.mainFix.get_children()[i]
-			if (child == win):
-				self.mainFix.remove(child)
-				return
+		#we move offscreen to resize or else we get flashes on screen, and setting hide() doesn't allow resize & moves
+		offW = (gtk.gdk.screen_width() + 100)
+		offH = (gtk.gdk.screen_height() + 100)
+		self.smartMove(win, offW, offH)
 
 
 	def setImgLocDim( self, win ):
+		imgDim = self.getImgDim( self.fullScreen )
+		self.smartResize( win, imgDim[0], imgDim[1] )
 		if (self.fullScreen):
-			self.smartResize( win, gtk.gdk.screen_width(), gtk.gdk.screen_height() )
 			self.smartMove( win, 0, 0 )
 		else:
-			self.smartResize( win, self.vw, self.vh )
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			self.smartMove( win, vPos[0], vPos[1] )
+
+
+	def getImgDim( self, full ):
+		if (full):
+			return [gtk.gdk.screen_width(), gtk.gdk.screen_height()]
+		else:
+			return [self.vw, self.vh]
 
 
 	def setPipLocDim( self, win ):
@@ -700,32 +741,44 @@ class UI:
 			self.smartMove( win, vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder) )
 
 
-	def smartResize( self, win, w, h ):
-		winSize = win.get_size_request()
-		if ( (winSize[0] != w) or (winSize[1] != h) ):
-			win.set_size_request( w, h )
-
-	def smartMove( self, win, x, y ):
-		y = y-0 #todo
-
-		there = False
-		for i in range( 0, len(self.mainFix.get_children()) ):
-			child = self.mainFix.get_children()[i]
-			if (child == win):
-				there = True
-				if (self.mainFix.child_get_property(child, "x") != x or self.mainFix.child_get_property(child, "y") != y):
-					self.mainFix.move( child, x, y )
-
-		if (not there):
-			self.mainFix.put( win, x, y )
-
-
 	def setMaxLocDim( self, win ):
 		if (self.fullScreen):
 			self.smartMove( win, gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
 			self.smartMove( win, (vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset)
+
+
+	def smartResize( self, win, w, h ):
+		winSize = win.get_size()
+		if ( (winSize[0] != w) or (winSize[1] != h) ):
+			win.resize( w, h )
+
+
+	def smartMove( self, win, x, y ):
+		winLoc = win.get_position()
+		if ( (winLoc[0] != x) or (winLoc[1] != y) ):
+			win.move( x, y )
+
+
+	def willWinDimEqual( self, win, position, full ):
+		dim = win.get_size()
+		posDim = self.getDim( position, full )
+		if (	(dim[0] != posDim[0])	or	(dim[1] != posDim[1])	):
+			return True
+		else:
+			return False
+
+
+	def getDim( self, pos, full ):
+		if (pos == "pip"):
+			return [self.pipw, self.piph]
+		elif(pos == "pgd"):
+			return [self.pipBorderW, self.pipBorderH]
+		elif(pos == "max"):
+			return [self.maxw, self.maxh]
+		elif(pos == "img"):
+			return self.getImgDim( full )
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
@@ -755,16 +808,14 @@ class UI:
 			self.ca.glive.play()
 
 
-	def _mapEventCb( self, widget, event ):
-		print("map")
+	def mapEvent( self, widget, event ):
 		#when your parent window is ready, turn on the feed of live video
-		self.liveVideoWindow.disconnect(self.MAP_ID)
+		self.liveVideoWindow.disconnect(self.mapId)
 		self.mapped = True
 		self.checkReadyToSetup()
 
 
 	def _sizeAllocateCb( self, widget, event ):
-		print("alloc")
 		#initial setup of the panels
 		self.backgdCanvas.disconnect(self.SIZE_ALLOCATE_ID)
 		self.allocated = True
@@ -772,23 +823,14 @@ class UI:
 
 
 	def updateVideoComponents( self ):
-		#todo: no need for pipBgdWindow2
-		#todo: one method to remove everything
 
-		livePlay = self.ca.glive.is_playing()
-		self.ca.glive.stop()
-		playPlay = self.ca.gplay.is_playing()
-		self.ca.gplay.stop()
-
-		#remove everything
-		self.hideLiveWindows( )
-		self.hidePlayWindows( )
-		self.hideAudioWindows( )
-		self.mainFix.show_all()
-		print("hidden")
+		if (	(self.LAST_MODE == self.ca.m.MODE)
+				and (self.LAST_FULLSCREEN == self.fullScreen)
+				and (self.LAST_LIVE == self.liveMode)):
+			print("same, same")
+			return
 
 		pos = []
-		#then re-add in the correct order to the right sizes
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (self.liveMode):
 				pos.append({"position":"img", "window":self.liveVideoWindow})
@@ -815,10 +857,19 @@ class UI:
 				pos.append({"position":"pgd", "window":self.recordWindow} )
 			else:
 				pos.append({"position":"img", "window":self.livePhotoWindow} )
-				pos.append({"position":"pip", "window":self.pipBgdWindow} )
-				pos.append({"position":"pgd", "window":self.liveVidwoWindow} )
+				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
+				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 
-		print("pre-add")
+		#hide everything
+		for i in range (0, len(self.windowStack)):
+			self.windowStack[i].hide_all()
+
+		#todo: only move away the windows *not* moved in the call below:
+		self.hideLiveWindows()
+		self.hidePlayWindows()
+		self.hideAudioWindows()
+
+		#now move those pieces where they need to be...
 		for i in range (0, len(self.windowStack)):
 			for j in range (0, len(pos)):
 				if (self.windowStack[i] == pos[j]["window"]):
@@ -831,54 +882,18 @@ class UI:
 					elif (pos[j]["position"] == "pgd"):
 						self.setPipBgdLocDim( pos[j]["window"] )
 
-		#todo: add callbacks here to sync the video once the windows are up again
-		print("post-showAll")
-		if (livePlay):
-			self.map2 = False
-			self.all2 = False
-			#only show the floating windows once everything is exposed and has a layout position
-			self.SIZE_ALLOCATE_ID2 = self.liveVideoWindow.connect_after("size-allocate", self._sizeAllocateCb2)
-			self.MAP_ID2 = self.liveVideoWindow.connect_after("map-event", self._mapEventCb2)
-			#for i in range (0, len(self.windowStack)):
-			#	self.windowStack[i].show_all()
+		#show everything
+		for i in range (0, len(self.windowStack)):
+			self.windowStack[i].show_all()
 
-		#if (playPlay):
-		#	self.ca.gplay.play()
-		print("post replay")
-
-		self.mainFix.show_all()
+		print("all reset!")
+		self.LAST_MODE = self.ca.m.MODE
+		self.LAST_FULLSCREEN = self.fullScreen
+		self.LAST_LIVE = self.liveMode
 
 
-		print("post-add")
-
-	def _sizeAllocateCb2( self, widget, event ):
-		print("sa 0")
-		self.liveVideoWindow.disconnect(self.SIZE_ALLOCATE_ID2)
-		self.all2 = True
-		print("sa 1")
-		self.okok()
-		print("sa 2")
-
-
-	def _mapEventCb2( self, widget, event ):
-		print("me 0")
-		self.liveVideoWindow.disconnect(self.MAP_ID2)
-		self.map2 = True
-		print("me 1")
-		self.okok()
-		print("me 2")
-
-
-	def okok( self ):
-		print("okok 1")
-		if (self.all2 and self.map2):
-			print("okok 2")
-			#self.ca.glive.play()
-			print("okok 3")
-
-
+	#todo: cache buttons which we can reuse
 	def updateThumbs( self, addToTrayArray, left, start, right ):
-		#todo: cache buttons which we can reuse
 		for i in range (0, len(self.thumbButts)):
 			self.thumbButts[i].clear()
 
@@ -1122,9 +1137,9 @@ class BackgroundCanvas(P5):
 		self.ui.modWaitSvg.render_cairo( ctx )
 
 
-class PhotoCanvasWindow(gtk.EventBox):
+class PhotoCanvasWindow(gtk.Window):
 	def __init__(self, ui):
-		gtk.EventBox.__init__(self)
+		gtk.Window.__init__(self)
 		self.ui = ui
 		self.photoCanvas = None
 
@@ -1175,9 +1190,7 @@ class PhotoCanvas(P5):
 #			self.drawImg = None
 		self.drawImg = None
 
-		print("pre q")
-		#self.queue_draw()
-		print("post q")
+		self.queue_draw()
 
 
 	def resizeImage(self, w, h):
@@ -1194,9 +1207,9 @@ class PhotoCanvas(P5):
 		self.scalingImageCb = 0
 
 
-class PipWindow(gtk.EventBox):
+class PipWindow(gtk.Window):
 	def __init__(self, ui):
-		gtk.EventBox.__init__(self)
+		gtk.Window.__init__(self)
 		self.ui = ui
 		self.pipCanvas = PipCanvas(self.ui)
 		self.add( self.pipCanvas )
@@ -1211,9 +1224,9 @@ class PipCanvas(P5):
 		self.background( ctx, self.ui.colorWhite, w, h )
 
 
-class MaxWindow(gtk.EventBox):
+class MaxWindow(gtk.Window):
 	def __init__(self, ui):
-		gtk.EventBox.__init__(self)
+		gtk.Window.__init__(self)
 		self.ui = ui
 		self.maxButton = MaxButton(self.ui)
 		self.add( self.maxButton )
@@ -1536,9 +1549,9 @@ class ThumbnailButton(gtk.Button):
 
 
 
-class RecordWindow(gtk.EventBox):
+class RecordWindow(gtk.Window):
 	def __init__(self,ui):
-		gtk.EventBox.__init__(self)
+		gtk.Window.__init__(self)
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
@@ -1547,7 +1560,9 @@ class RecordWindow(gtk.EventBox):
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		#todo: this is insensitive until we're all set up
 		#self.shutterButton.set_sensitive(False)
-		self.add( self.shutterButton )
+		shutterBox = gtk.EventBox()
+		shutterBox.add( self.shutterButton )
+		self.add( shutterBox )
 
 
 class ModeToolbar(gtk.Toolbar):
@@ -1587,3 +1602,9 @@ class ModeToolbar(gtk.Toolbar):
 
 	def modeAudioCb(self, button):
 		self.ca.m.doAudioMode()
+
+
+class SearchToolbar(gtk.Toolbar):
+	def __init__(self, pc):
+		gtk.Toolbar.__init__(self)
+		self.ca = pc
