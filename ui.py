@@ -825,6 +825,9 @@ class UI:
 			print("same, same")
 			return
 
+		#only show the clock if we're in video mode and have some compression to do
+		self.backgdCanvas.queue_draw()
+
 		pos = []
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (self.liveMode):
@@ -1130,9 +1133,13 @@ class BackgroundCanvas(P5):
 		P5.__init__(self)
 		self.ui = ui
 
+
 	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorWhite, w, h )
-		self.ui.modWaitSvg.render_cairo( ctx )
+		if (self.ui.ca.m.MODE == self.ui.ca.m.MODE_VIDEO):
+			self.background( ctx, self.ui.colorWhite, w, h )
+			self.ui.modWaitSvg.render_cairo( ctx )
+		else:
+			self.background( ctx, self.ui.colorBg, w, h )
 
 
 class PhotoCanvasWindow(gtk.Window):
