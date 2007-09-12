@@ -104,6 +104,8 @@ class UI:
 		self.vw = int(self.vh/.75)
 
 		letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
+		self.letterBoxVW = (letterBoxW/2)-(self.inset*2)
+		self.letterBoxVH = int(self.letterBoxVW*.75)
 
 		#number of thumbs
 		self.numThumbs = 7
@@ -132,33 +134,35 @@ class UI:
 		leftFill.set_size_request( letterBoxW, -1 )
 		topBox.pack_start( leftFill, expand=True )
 
-		backgdCanvasBox = gtk.VBox()
-		backgdCanvasBox.set_size_request(self.vw, -1)
-		topBox.pack_start( backgdCanvasBox, expand=False )
+		self.centerBox = gtk.EventBox()
+		topBox.pack_start( self.centerBox, expand=False )
 
+		#into the center box we put this guy...
+		self.backgdCanvasBox = gtk.VBox()
+		self.backgdCanvasBox.set_size_request(self.vw, -1)
 		self.backgdCanvas = BackgroundCanvas(self)
 		self.backgdCanvas.set_size_request(self.vw, self.vh)
-		backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
+		self.backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
+		self.centerBox.add(self.backgdCanvasBox)
 
-		#insert entry fields on left
-		infoBox = gtk.VBox(spacing=self.inset)
-		infoBox.set_border_width(self.inset)
-		#topBox.pack_start(infoBox, expand=True)
+		#or this guy...
+		self.infoBox = gtk.VBox(spacing=self.inset)
+		self.infoBox.set_border_width(self.inset)
 
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( letterBoxW, -1 )
 		topBox.pack_start( rightFill, expand=True )
 
 		rightFillTop = gtk.HBox()
-		#rightFillTop.set_size_request( -1, -1 )
 		rightFill.pack_start( rightFillTop, expand=True )
 		self.infoButton = gtk.Button("i")
+		self.infoButton.connect("clicked", self._infoButtonClickedCb)
 		self.infoButton.set_size_request( letterBoxW, letterBoxW )
 		rightFill.pack_start( self.infoButton, expand=False )
 		self.infoButton.hide_all()
 
 		self.namePanel = gtk.VBox(spacing=self.inset)
-		infoBox.pack_start(self.namePanel, expand=False)
+		self.infoBox.pack_start(self.namePanel, expand=False)
 		nameLabel = gtk.Label("Title:")
 		self.namePanel.pack_start( nameLabel, expand=False )
 		nameLabel.set_alignment(0, .5)
@@ -168,7 +172,7 @@ class UI:
 		self.namePanel.pack_start(self.nameTextfield)
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
-		infoBox.pack_start(self.photographerPanel, expand=False)
+		self.infoBox.pack_start(self.photographerPanel, expand=False)
 		photographerLabel = gtk.Label("Recorder:")
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
@@ -177,7 +181,7 @@ class UI:
 		self.photographerPanel.pack_start(self.photographerNameLabel)
 
 		self.datePanel = gtk.HBox(spacing=self.inset)
-		infoBox.pack_start(self.datePanel, expand=False)
+		self.infoBox.pack_start(self.datePanel, expand=False)
 		dateLabel = gtk.Label("Date:")
 		self.datePanel.pack_start(dateLabel, expand=False)
 		self.dateDateLabel = gtk.Label("")
@@ -193,7 +197,7 @@ class UI:
 		self.tagsField = gtk.TextView( self.tagsBuffer )
 		self.tagsPanel.pack_start( self.tagsField, expand=True )
 
-		infoBox.pack_start(self.tagsPanel, expand=True)
+		self.infoBox.pack_start(self.tagsPanel, expand=True)
 
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
@@ -203,7 +207,7 @@ class UI:
 		self.mainBox.pack_end(thumbnailsEventBox, expand=False)
 
 		self.leftThumbButton = gtk.Button()
-		self.leftThumbButton.connect( "clicked", self._leftThumbButton )
+		self.leftThumbButton.connect( "clicked", self._leftThumbButtonCb )
 		self.setupThumbButton( self.leftThumbButton, "left-thumb-sensitive" )
 		leftThumbEventBox = gtk.EventBox()
 		leftThumbEventBox.set_border_width(self.inset)
@@ -216,7 +220,7 @@ class UI:
 			thumbnailsBox.pack_start( thumbButt, expand=True )
 			self.thumbButts.append( thumbButt )
 		self.rightThumbButton = gtk.Button()
-		self.rightThumbButton.connect( "clicked", self._rightThumbButton )
+		self.rightThumbButton.connect( "clicked", self._rightThumbButtonCb )
 		self.setupThumbButton( self.rightThumbButton, "right-thumb-sensitive" )
 		rightThumbEventBox = gtk.EventBox()
 		rightThumbEventBox.set_border_width(self.inset)
@@ -954,12 +958,24 @@ class UI:
 		self.rightThumbMove = right
 
 
-	def _leftThumbButton( self, args ):
+	def _leftThumbButtonCb( self, args ):
 		self.ca.m.setupThumbs( self.ca.m.MODE, self.leftThumbMove, self.leftThumbMove+self.numThumbs )
 
 
-	def _rightThumbButton( self, args ):
+	def _rightThumbButtonCb( self, args ):
 		self.ca.m.setupThumbs( self.ca.m.MODE, self.rightThumbMove, self.rightThumbMove+self.numThumbs )
+
+
+	def _infoButtonClickedCb( self, args ):
+		if (self.RECD_INFO_ON):
+			self.centerBox.remove( self.backgdCanvasBox )
+			self.centerBox.add( self.infoBox )
+		else:
+			self.centerBox.remove( self.infoBox )
+			self.centerBox.add( self.backgdCanvasBox )
+		self.RECD_INFO_ON = not self.RECD_INFO_ON
+
+		self.updateVideoComponents()
 
 
 	def showThumbSelection( self, recd ):
@@ -1324,7 +1340,7 @@ class ThumbnailCanvas(gtk.VBox):
 
 		self.delButt = ThumbnailDeleteButton(self, self.ui)
 		self.delButt.set_size_request( -1, 20 )
-		self.pack_start(self.delButt, expand=False)
+		#self.pack_start(self.delButt, expand=False)
 
 		self.show_all()
 
