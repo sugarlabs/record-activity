@@ -90,8 +90,8 @@ class UI:
 		self.pipw = 160
 		self.piph = 120
 		self.pipBorder = 4
-		self.pipBorderW = self.pipw + (self.pipBorder*2)
-		self.pipBorderH = self.piph + (self.pipBorder*2)
+		self.pgdw = self.pipw + (self.pipBorder*2)
+		self.pgdh = self.piph + (self.pipBorder*2)
 		#maximize size:
 		self.maxw = 49
 		self.maxh = 49
@@ -258,7 +258,7 @@ class UI:
 
 		#border behind
 		self.pipBgdWindow = PipWindow(self)
-		self.addToWindowStack( self.pipBgdWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+		self.addToWindowStack( self.pipBgdWindow, self.pgdw, self.pgdh, self.windowStack[len(self.windowStack)-1] )
 
 		self.liveVideoWindow = LiveVideoWindow()
 		self.addToWindowStack( self.liveVideoWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
@@ -273,7 +273,7 @@ class UI:
 
 		#border behind
 		self.pipBgdWindow2 = PipWindow(self)
-		self.addToWindowStack( self.pipBgdWindow2, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+		self.addToWindowStack( self.pipBgdWindow2, self.pgdw, self.pgdh, self.windowStack[len(self.windowStack)-1] )
 
 		self.playLiveWindow = LiveVideoWindow()
 		self.addToWindowStack( self.playLiveWindow, self.pipw, self.piph, self.windowStack[len(self.windowStack)-1] )
@@ -281,7 +281,7 @@ class UI:
 		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
 
 		self.recordWindow = RecordWindow(self)
-		self.addToWindowStack( self.recordWindow, self.pipBorderW, self.pipBorderH, self.windowStack[len(self.windowStack)-1] )
+		self.addToWindowStack( self.recordWindow, self.pgdw, self.pgdh, self.windowStack[len(self.windowStack)-1] )
 
 		self.maxWindow = MaxWindow(self )
 		self.addToWindowStack( self.maxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
@@ -379,7 +379,8 @@ class UI:
 
 		if (self.hideWidgetsTimer > 2000):
 			if (not self.hiddenWidgets):
-				if (self.mouseInWidget()):
+				if (self.mouseInWidget(x,y)):
+					print("inda widget")
 					self.hideWidgetsTimer = 0
 				else:
 					self.hideWidgets()
@@ -390,10 +391,17 @@ class UI:
 		return True
 
 
-	def mouseInWidget( self ):
-		if (self.fullScreen):
-			maxPos = ;
-			
+	def mouseInWidget( self, mx, my ):
+		#todo: audio does not have fullscreen
+		maxLoc = self.getMaxLoc(self.fullScreen)
+		if (	(mx > maxLoc[0]) and (my > maxLoc[1])	):
+			if (	(mx < maxLoc[0]+self.maxw) and (my <maxLoc[1]+self.maxh)	):
+				return True
+
+		pgdLoc = self.getPgdLoc(self.fullScreen)
+		if (	(mx > pgdLoc[0]) and (my > pgdLoc[1])	):
+			if (	(mx < pgdLoc[0]+self.pgdw) and (my < pgdLoc[1]+self.pgdh)	):
+				return True
 
 
 	def _nameTextfieldEditedCb(self, widget):
@@ -732,19 +740,29 @@ class UI:
 
 
 	def setPipBgdLocDim( self, win ):
-		if (self.fullScreen):
-			self.smartMove( win, self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder))
+		pgdLoc = self.getPgdLoc( self.fullScreen )
+		self.smartMove( win, pgdLoc[0], pgdLoc[1] )
+
+
+	def getPgdLoc( self, full ):
+		if (full):
+			return [self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder)]
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			self.smartMove( win, vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder) )
+			return [vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder)]
 
 
 	def setMaxLocDim( self, win ):
-		if (self.fullScreen):
-			self.smartMove( win, gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset )
+		maxLoc = self.getMaxLoc( self.fullScreen )
+		self.smartMove( win, maxLoc[0], maxLoc[1] )
+
+
+	def getMaxLoc( self, full ):
+		if (full):
+			return [gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset]
 		else:
 			vPos = self.backgdCanvas.translate_coordinates( self.ca, 0, 0 )
-			self.smartMove( win, (vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset)
+			return [(vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset]
 
 
 	def smartResize( self, win, w, h ):
@@ -769,11 +787,22 @@ class UI:
 		if (pos == "pip"):
 			return [self.pipw, self.piph]
 		elif(pos == "pgd"):
-			return [self.pipBorderW, self.pipBorderH]
+			return [self.pgdw, self.pgdh]
 		elif(pos == "max"):
 			return [self.maxw, self.maxh]
 		elif(pos == "img"):
 			return self.getImgDim( full )
+
+
+	def getLoc( self, pos, full ):
+		if (pos == "pip"):
+			return self.getPipLoc( full )
+		elif(pos == "pgd"):
+			return self.getPgdLoc( full )
+		elif(pos == "max"):
+			return self.getMaxLoc( full )
+		elif(pos == "img"):
+			return self.getImgLoc( full )
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
