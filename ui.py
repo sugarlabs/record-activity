@@ -391,8 +391,9 @@ class UI:
 
 
 	def mouseInWidget( self ):
-		#todo:
-		return True
+		if (self.fullScreen):
+			maxPos = ;
+			
 
 
 	def _nameTextfieldEditedCb(self, widget):

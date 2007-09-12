@@ -1,3 +1,8 @@
+25
+* fix for narrowly possible gtk bug when taking pictures (closes #3342)
+* fix for xv "glitches" when moving and resizing gtk.Windows (closes #3046)
+* enable the disappearing record buttons which don't disappear if your moused over them (jedierikb)
+
 24
 * fix for saving audio files' image counterparts (prevents blank screen and spinning cursor) (jedierikb)
 * correctly handle bug in notify::active callbacks, and opened #2026 (jedierikb)
