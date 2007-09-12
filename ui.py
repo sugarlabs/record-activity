@@ -380,7 +380,6 @@ class UI:
 		if (self.hideWidgetsTimer > 2000):
 			if (not self.hiddenWidgets):
 				if (self.mouseInWidget(x,y)):
-					print("inda widget")
 					self.hideWidgetsTimer = 0
 				else:
 					self.hideWidgets()
