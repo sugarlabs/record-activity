@@ -375,9 +375,9 @@ class UI:
 		#todo: audio does not have fullscreen
 		if (self.inWidget( mx, my, self.getLoc("max", self.fullScreen), self.getDim("max"))):
 			return True
-		elif (self.inWidget( mx, my, self.getLoc("pgd", self.fullScreen), self.getDim("pgd"))):
+		if (self.inWidget( mx, my, self.getLoc("pgd", self.fullScreen), self.getDim("pgd"))):
 			return True
-		elif (self.inWidget( mx, my, self.getLoc("eye", self.fullScreen), self.getDim("eye"))):
+		if (self.inWidget( mx, my, self.getLoc("eye", self.fullScreen), self.getDim("eye"))):
 			return True
 
 		return False
@@ -723,11 +723,16 @@ class UI:
 	def setPipLocDim( self, win ):
 		self.smartResize( win, self.pipw, self.piph )
 
-		if (self.fullScreen):
-			self.smartMove( win, self.inset, gtk.gdk.screen_height()-(self.inset+self.piph))
+		loc = self.getPipLoc( self.fullScreen )
+		self.smartMove( win, loc[0], loc[1] )
+
+
+	def getPipLoc( self, full ):
+		if (full):
+			return [self.inset+self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder)]
 		else:
 			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-			self.smartMove( win, vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.piph) )
+			return [vPos[0]+self.inset+self.pipBorder, (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder)]
 
 
 	def setPipBgdLocDim( self, win ):
@@ -737,10 +742,10 @@ class UI:
 
 	def getPgdLoc( self, full ):
 		if (full):
-			return [self.inset-self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder)]
+			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.pgdh)]
 		else:
 			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-			return [vPos[0]+(self.inset-self.pipBorder), (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder)]
+			return [vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.pgdh)]
 
 
 	def setMaxLocDim( self, win ):
