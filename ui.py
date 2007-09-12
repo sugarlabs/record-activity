@@ -18,8 +18,6 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-#todo: (12:52:51 PM) dcbw: jedierikb: we just need to make sure to turn off double buffering and turn on app paintable on the fixed
-
 import gtk
 from gtk import gdk
 from gtk import keysyms
@@ -79,6 +77,7 @@ class UI:
 		self.LAST_FULLSCREEN = False
 		self.LAST_LIVE = True
 		self.HIDE_ON_UPDATE = True
+		self.RECD_INFO_ON = False
 
 		#thumb dimensions:
 		self.thumbTrayHt = 150
@@ -104,6 +103,8 @@ class UI:
 		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+75+45+5)
 		self.vw = int(self.vh/.75)
 
+		letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
+
 		#number of thumbs
 		self.numThumbs = 7
 
@@ -119,8 +120,6 @@ class UI:
 		self.modeToolbar = ModeToolbar(self.ca)
 		#todo: internationalize this
 		toolbox.add_toolbar( ('Record'), self.modeToolbar )
-		#sToolbar = SearchToolbar(self.ca)
-		#toolbox.add_toolbar( ('Search'), sToolbar)
 		toolbox.show()
 
 		self.mainBox = gtk.VBox()
@@ -129,14 +128,36 @@ class UI:
 		topBox = gtk.HBox()
 		self.mainBox.pack_start(topBox, expand=True)
 
+		leftFill = gtk.VBox()
+		leftFill.set_size_request( letterBoxW, -1 )
+		topBox.pack_start( leftFill, expand=True )
+
+		backgdCanvasBox = gtk.VBox()
+		backgdCanvasBox.set_size_request(self.vw, -1)
+		topBox.pack_start( backgdCanvasBox, expand=False )
+
+		self.backgdCanvas = BackgroundCanvas(self)
+		self.backgdCanvas.set_size_request(self.vw, self.vh)
+		backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
+
 		#insert entry fields on left
 		infoBox = gtk.VBox(spacing=self.inset)
 		infoBox.set_border_width(self.inset)
-		topBox.pack_start(infoBox, expand=True)
+		#topBox.pack_start(infoBox, expand=True)
+
+		rightFill = gtk.VBox()
+		rightFill.set_size_request( letterBoxW, -1 )
+		topBox.pack_start( rightFill, expand=True )
+
+		rightFillTop = gtk.HBox()
+		#rightFillTop.set_size_request( -1, -1 )
+		rightFill.pack_start( rightFillTop, expand=True )
+		infoButton = gtk.Button("i")
+		infoButton.set_size_request( letterBoxW, letterBoxW )
+		rightFill.pack_start( infoButton, expand=False )
 
 		self.namePanel = gtk.VBox(spacing=self.inset)
 		infoBox.pack_start(self.namePanel, expand=False)
-		#todo: internationalize this...
 		nameLabel = gtk.Label("Title:")
 		self.namePanel.pack_start( nameLabel, expand=False )
 		nameLabel.set_alignment(0, .5)
@@ -171,51 +192,7 @@ class UI:
 		self.tagsField = gtk.TextView( self.tagsBuffer )
 		self.tagsPanel.pack_start( self.tagsField, expand=True )
 
-		infoBox.pack_start( self.tagsPanel, expand=True)
-
-
-		backgdCanvasBox = gtk.VBox()
-		backgdCanvasBox.set_size_request(self.vw, -1)
-		topBox.pack_start( backgdCanvasBox, expand=False )
-
-		self.backgdCanvas = BackgroundCanvas(self)
-		self.backgdCanvas.set_size_request(self.vw, self.vh)
-		backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
-
-
-		##
-		##
-		#the video scrubber
-#		self.videoScrubBox = gtk.HBox()
-#		self.videoScrubPanel.add( self.videoScrubBox )
-
-#		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-#		self.pause_image.show()
-#		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
-#		self.play_image.show()
-
-#		self.playPauseButton = gtk.ToolButton()
-#		self.playPauseButton.set_icon_widget(self.play_image)
-#		self.playPauseButton.set_property('can-default', True)
-#		self.playPauseButton.show()
-#		self.playPauseButton.connect('clicked', self._playPauseButtonCb)
-
-#		self.videoScrubBox.pack_start(self.playPauseButton, expand=False)
-
-#		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
-#		self.hscale = gtk.HScale(self.adjustment)
-#		self.hscale.set_draw_value(False)
-#		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
-#		self.hscale.connect('button-press-event', self._scrubberPressCb)
-#		self.hscale.connect('button-release-event', self._scrubberReleaseCb)
-
-#		self.scale_item = gtk.ToolItem()
-#		self.scale_item.set_expand(True)
-#		self.scale_item.add(self.hscale)
-#		self.videoScrubBox.pack_start(self.scale_item, expand=True)
-#		##
-#		##
-
+		infoBox.pack_start(self.tagsPanel, expand=True)
 
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
@@ -291,15 +268,12 @@ class UI:
 		self.hideAudioWindows()
 
 		#only show the floating windows once everything is exposed and has a layout position
-		#todo: need to listen to size-request signal on the widget that i overlay with a connect_after
-		#todo: rename exposeId
 		self.SIZE_ALLOCATE_ID = self.backgdCanvas.connect_after("size-allocate", self._sizeAllocateCb)
 		self.ca.show_all()
 
-		self.MAP_EVENT_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
+		self.MAP_EVENT_ID = self.liveVideoWindow.connect_after("map-event", self._mapEventCb)
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].show_all()
-
 
 		#listen for ctrl+c & game key buttons
 		self.ca.connect('key-press-event', self._keyPressEventCb)
