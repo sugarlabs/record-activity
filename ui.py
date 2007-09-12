@@ -1269,7 +1269,6 @@ class PhotoCanvas(P5):
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorBg, w, h )
 
-
 		if (self.img != None):
 
 			if (w == self.img.get_width()):
@@ -1338,6 +1337,7 @@ class MaxWindow(gtk.Window):
 		self.ui = ui
 		self.maxButton = MaxButton(self.ui)
 		self.add( self.maxButton )
+
 
 class MaxButton(P5Button):
 	def __init__(self, ui):
@@ -1658,7 +1658,7 @@ class ThumbnailButton(gtk.Button):
 
 
 class RecordWindow(gtk.Window):
-	def __init__(self,ui):
+	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
 
@@ -1669,6 +1669,9 @@ class RecordWindow(gtk.Window):
 		#todo: this is insensitive until we're all set up
 		#self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
+		shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		self.shutterButton.set_border_width( self.ui.pipBorder )
+
 		shutterBox.add( self.shutterButton )
 		self.add( shutterBox )
 
