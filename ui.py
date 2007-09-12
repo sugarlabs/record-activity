@@ -152,9 +152,10 @@ class UI:
 		rightFillTop = gtk.HBox()
 		#rightFillTop.set_size_request( -1, -1 )
 		rightFill.pack_start( rightFillTop, expand=True )
-		infoButton = gtk.Button("i")
-		infoButton.set_size_request( letterBoxW, letterBoxW )
-		rightFill.pack_start( infoButton, expand=False )
+		self.infoButton = gtk.Button("i")
+		self.infoButton.set_size_request( letterBoxW, letterBoxW )
+		rightFill.pack_start( self.infoButton, expand=False )
+		self.infoButton.hide_all()
 
 		self.namePanel = gtk.VBox(spacing=self.inset)
 		infoBox.pack_start(self.namePanel, expand=False)
@@ -271,7 +272,7 @@ class UI:
 		self.SIZE_ALLOCATE_ID = self.backgdCanvas.connect_after("size-allocate", self._sizeAllocateCb)
 		self.ca.show_all()
 
-		self.MAP_EVENT_ID = self.liveVideoWindow.connect_after("map-event", self._mapEventCb)
+		self.MAP_EVENT_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].show_all()
 
@@ -310,7 +311,6 @@ class UI:
 
 
 	def doMouseListener( self, listen ):
-
 		if (listen):
 			self.resetWidgetFadeTimer()
 		else:
@@ -552,6 +552,7 @@ class UI:
 
 		self.livePhotoCanvas.setImage( None )
 		self.resetWidgetFadeTimer()
+		self.infoButton.hide_all()
 
 
 	def updateButtonSensitivities( self ):
@@ -827,6 +828,9 @@ class UI:
 			print("same, same")
 			return
 
+		#something's changing so start counting anew
+		self.resetWidgetFadeTimer()
+
 		#only show the clock if we're in video mode and have some compression to do
 		self.backgdCanvas.queue_draw()
 
@@ -967,6 +971,7 @@ class UI:
 		elif (recd.type == self.ca.m.TYPE_AUDIO):
 			self.showAudio( recd )
 
+		self.infoButton.show_all()
 		self.resetWidgetFadeTimer()
 
 
