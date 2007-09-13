@@ -264,7 +264,7 @@ class Model:
 				self.startRecordingVideo()
 			else:
 				#post-processing begins now, so queue up this gfx
-				self.centerBox.add( self.back .)
+				self.ca.ui.showPostProcessGfx(True)
 				self.stopRecordingVideo()
 		elif (self.MODE == self.MODE_AUDIO):
 			if (not self.RECORDING):
@@ -392,6 +392,8 @@ class Model:
 
 
 	def doPostSaveVideo( self ):
+		self.ca.ui.showPostProcessGfx(False)
+
 		#resume live video from the camera (if the activity is active)
 		if (self.ca.ACTIVE):
 			self.ca.ui.LAST_MODE = -1
