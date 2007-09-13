@@ -266,7 +266,8 @@ class UI:
 		self.playOggWindow = PlayVideoWindow()
 		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 		self.playOggWindow.set_gplay(self.ca.gplay)
-		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
+		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
+		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback2)
 
 		#border behind
 		self.pipBgdWindow2 = PipWindow(self)
@@ -403,10 +404,19 @@ class UI:
 
 
 	def _mediaClickedForPlayback(self, widget, event):
+		self.mediaClicked()
+
+
+	def _mediaClickedForPlayback2(self, widget, event):
+		self.mediaClicked()
+
+
+	def mediaClicked( self ):
 		print("clicked")
 		if (not self.liveMode):
 			if (self.shownRecd != None):
-				self.showThumbSelection( self.shownRecd )
+				if (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
+					self.showThumbSelection( self.shownRecd )
 
 
 	def inWidget( self, mx, my, loc, dim ):
