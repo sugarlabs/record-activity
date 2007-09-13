@@ -339,6 +339,7 @@ class UI:
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
+		self.moveWinOffscreen( self.infWindow )
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (not self.liveMode):
 				self.moveWinOffscreen( self.liveVideoWindow )
@@ -572,7 +573,6 @@ class UI:
 
 		self.livePhotoCanvas.setImage( None )
 		self.resetWidgetFadeTimer()
-		self.infoEventBox.hide_all()
 
 
 	def updateButtonSensitivities( self ):
@@ -607,6 +607,7 @@ class UI:
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
+		self.moveWinOffscreen( self.infWindow )
 
 
 	def hidePlayWindows( self ):
@@ -615,14 +616,14 @@ class UI:
 		self.moveWinOffscreen( self.playLiveWindow )
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
-
+		self.moveWinOffscreen( self.infWindow )
 
 	def hideAudioWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
-
+		self.moveWinOffscreen( self.infWindow )
 
 	def _liveButtonReleaseCb(self, widget, event):
 		self.livePhotoCanvas.setImage( None )
@@ -995,26 +996,26 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			if (not self.liveMode):
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (not self.liveMode):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 			else:
 				pos.append({"position":"eye", "window":self.recordWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
 
 		self.updatePos( pos )
 
@@ -1092,7 +1093,6 @@ class UI:
 		elif (recd.type == self.ca.m.TYPE_AUDIO):
 			self.showAudio( recd )
 
-		self.infoEventBox.show_all()
 		self.resetWidgetFadeTimer()
 
 
@@ -1474,7 +1474,7 @@ class InfButton(P5Button):
 		self._butts.append( butt )
 
 	def draw(self, ctx, w, h):
-		if (self.ui.RECD_INFO_ON):
+		if (not self.ui.RECD_INFO_ON):
 			self.ui.infoOnSvg.render_cairo( ctx )
 		else:
 			self.ui.infoOffSvg.render_cairo( ctx )
