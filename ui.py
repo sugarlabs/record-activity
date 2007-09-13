@@ -103,7 +103,6 @@ class UI:
 		#(03:23:16 PM) tomeu: jedierikb: you create the toolbar, you can ask him it's height after it has been allocated
 		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+75+45+5)
 		self.vw = int(self.vh/.75)
-		print( self.vw, self.vh )
 
 		letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
 		self.letterBoxVW = (self.vw/2)-(self.inset*2)
@@ -145,7 +144,6 @@ class UI:
 		self.backgdCanvas = BackgroundCanvas(self)
 		self.backgdCanvas.set_size_request(self.vw, self.vh)
 		self.backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
-		self.centerBox.add(self.backgdCanvasBox)
 
 		#or this guy...
 		self.infoBox = gtk.EventBox()
@@ -248,6 +246,7 @@ class UI:
 		self.addToWindowStack( self.livePhotoWindow, self.vw, self.vh, self.ca )
 		self.livePhotoCanvas = PhotoCanvas(self)
 		self.livePhotoWindow.setPhotoCanvas(self.livePhotoCanvas)
+		self.livePhotoWindow.connect("button_release_event", self._mediaClickedForPlayback)
 
 		#border behind
 		self.pipBgdWindow = PipWindow(self)
@@ -263,6 +262,7 @@ class UI:
 		self.playOggWindow = PlayVideoWindow()
 		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 		self.playOggWindow.set_gplay(self.ca.gplay)
+		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
 
 		#border behind
 		self.pipBgdWindow2 = PipWindow(self)
@@ -396,6 +396,13 @@ class UI:
 			return True
 
 		return False
+
+
+	def _mediaClickedForPlayback(self, widget, event):
+		print("clicked")
+		if (not self.liveMode):
+			if (self.shownRecd != None):
+				self.showThumbSelection( self.shownRecd )
 
 
 	def inWidget( self, mx, my, loc, dim ):
@@ -1331,6 +1338,9 @@ class BackgroundCanvas(P5):
 		self.ui = ui
 
 	def draw(self, ctx, w, h):
+		#todo: set to default bg color
+		#self.background( ctx, self.ui.colorRed, w, h )
+		ctx.translate( (w/2)-(h/2), 0 )
 		self.ui.modWaitSvg.render_cairo( ctx )
 
 
