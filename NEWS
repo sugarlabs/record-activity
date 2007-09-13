@@ -1,3 +1,6 @@
+26
+* ui (jedierikb)
+
 25
 * fix for narrowly possible gtk bug when taking pictures (closes #3342)
 * fix for xv "glitches" when moving and resizing gtk.Windows (closes #3046)
