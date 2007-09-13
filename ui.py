@@ -1363,8 +1363,7 @@ class BackgroundCanvas(P5):
 		self.ui = ui
 
 	def draw(self, ctx, w, h):
-		#todo: set to default bg color
-		#self.background( ctx, self.ui.colorRed, w, h )
+		self.background( ctx, self.ui.colorBg, w, h )
 		ctx.translate( (w/2)-(h/2), 0 )
 		self.ui.modWaitSvg.render_cairo( ctx )
 

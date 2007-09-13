@@ -46,7 +46,7 @@ class Color:
 
 
 	def init_gdk(self, col):
-		self.init_rgba( col._r, col._g, col._b, 255 )
+		self.init_hex( col.get_html() )
 
 
 	def init_hex(self, hex):
