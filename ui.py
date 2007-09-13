@@ -137,6 +137,11 @@ class UI:
 
 		self.centerBox = gtk.EventBox()
 		topBox.pack_start( self.centerBox, expand=False )
+		#filled with this guy for sizings..
+		centerSizer = gtk.VBox()
+		centerSizer.set_size_request(self.vw, -1)
+		self.centerBox.pack_start(centerSizer)
+		self.centerBox.pack_start(centerSizer)
 
 		#into the center box we can put this guy...
 		self.backgdCanvasBox = gtk.VBox()
@@ -911,6 +916,10 @@ class UI:
 	def _sizeAllocateCb( self, widget, event ):
 		#initial setup of the panels
 		self.centerBox.disconnect(self.SIZE_ALLOCATE_ID)
+		centerKid = self.centerBox.get_child()
+		if (centerKid != None):
+			self.centerBox.remove( centerKid )
+
 		self.allocated = True
 		self.checkReadyToSetup( )
 
