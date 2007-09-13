@@ -188,9 +188,16 @@ class UI:
 		photographerLabel = gtk.Label("Recorder:")
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
+		photoNamePanel = gtk.HBox(spacing=self.inset)
+		self.photographerPanel.pack_start(photoNamePanel)
+
+		self.photoXoPanel = xoPanel(self)
+		photoNamePanel.pack_start( self.photoXoPanel, expand=False )
+		self.photoXoPanel.set_size_request( 40, 40 )
+
 		self.photographerNameLabel = gtk.Label("")
 		self.photographerNameLabel.set_alignment(0, .5)
-		self.photographerPanel.pack_start(self.photographerNameLabel)
+		photoNamePanel.pack_start(self.photographerNameLabel)
 
 		self.datePanel = gtk.HBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.datePanel, expand=False)
@@ -267,7 +274,7 @@ class UI:
 		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
 		self.playOggWindow.set_gplay(self.ca.gplay)
 		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback2)
+		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
 
 		#border behind
 		self.pipBgdWindow2 = PipWindow(self)
@@ -404,15 +411,6 @@ class UI:
 
 
 	def _mediaClickedForPlayback(self, widget, event):
-		self.mediaClicked()
-
-
-	def _mediaClickedForPlayback2(self, widget, event):
-		self.mediaClicked()
-
-
-	def mediaClicked( self ):
-		print("clicked")
 		if (not self.liveMode):
 			if (self.shownRecd != None):
 				if (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
@@ -1134,6 +1132,7 @@ class UI:
 		elif (recd.type == self.ca.m.TYPE_AUDIO):
 			self.showAudio( recd )
 
+		self.photoXoPanel.updateXoColors()
 		self.resetWidgetFadeTimer()
 
 
@@ -1308,6 +1307,10 @@ class UI:
 		self.infoOffSvg = self.loadSvg(infoOffSvgData, None, None )
 		infoOffSvgFile.close()
 
+		xoGuySvgFile = open(os.path.join(self.ca.gfxPath, 'xo-guy.svg'), 'r')
+		self.xoGuySvgData = xoGuySvgFile.read()
+		infoOffSvgFile.close()
+
 
 	def loadColors( self ):
 		profileColor = profile.get_color()
@@ -1444,6 +1447,44 @@ class PipCanvas(P5):
 		self.background( ctx, self.ui.colorWhite, w, h )
 
 
+class xoPanel(P5):
+	def __init__(self, ui):
+		P5.__init__(self)
+		self.ui = ui
+
+		self.xoGuy = None
+		self.lastStroke = None
+		self.lastFill = None
+
+
+	def updateXoColors( self ):
+		if ((self.lastStroke == self.ui.shownRecd.colorStroke.hex) and (self.lastFill == self.ui.shownRecd.colorFill.hex)):
+			return
+
+		lastStroke = self.ui.shownRecd.colorStroke.hex
+		lastFill = self.ui.shownRecd.colorFill.hex
+
+		if (self.ui.shownRecd != None):
+			self.xoGuy = self.ui.loadSvg(self.ui.xoGuySvgData, self.ui.shownRecd.colorStroke.hex, self.ui.shownRecd.colorFill.hex)
+		else:
+			self.xoGuy = None
+
+		self.queue_draw()
+
+
+	def draw(self, ctx, w, h):
+		#todo: 2x buffer
+
+		#todo: bgd for the info panel..
+		self.background( ctx, self.ui.colorWhite, w, h )
+
+		if (self.xoGuy != None):
+			#todo: scale mr xo
+			ctx.scale( .5, .5 )
+			self.xoGuy.render_cairo( ctx )
+			print("see me?")
+
+
 class MaxWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
@@ -1473,11 +1514,13 @@ class MaxButton(P5Button):
 		butt.setActionCommand( self.maxS )
 		self._butts.append( butt )
 
+
 	def draw(self, ctx, w, h):
 		if (self.ui.fullScreen):
 			self.ui.maxEnlargeSvg.render_cairo( ctx )
 		else:
 			self.ui.maxReduceSvg.render_cairo( ctx )
+
 
 	def fireButton(self, actionCommand):
 		if (actionCommand == self.maxS):
