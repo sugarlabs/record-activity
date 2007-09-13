@@ -140,8 +140,7 @@ class UI:
 		#filled with this guy for sizings..
 		centerSizer = gtk.VBox()
 		centerSizer.set_size_request(self.vw, -1)
-		self.centerBox.pack_start(centerSizer)
-		self.centerBox.pack_start(centerSizer)
+		self.centerBox.add(centerSizer)
 
 		#into the center box we can put this guy...
 		self.backgdCanvasBox = gtk.VBox()
@@ -737,8 +736,7 @@ class UI:
 		if (self.fullScreen):
 			self.smartMove( win, 0, 0 )
 		else:
-			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-			m = self.smartMove( win, vPos[0], vPos[1] )
+			m = self.smartMove( win, self.centerBoxPos[0], self.centerBoxPos[1] )
 
 
 	def getImgDim( self, full ):
@@ -759,8 +757,7 @@ class UI:
 		if (full):
 			return [self.inset+self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder)]
 		else:
-			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-			return [vPos[0]+self.inset+self.pipBorder, (vPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder)]
+			return [self.centerBoxPos[0]+self.inset+self.pipBorder, (self.centerBoxPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder)]
 
 
 	def setPipBgdLocDim( self, win ):
@@ -772,8 +769,7 @@ class UI:
 		if (full):
 			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.pgdh)]
 		else:
-			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-			return [vPos[0]+self.inset, (vPos[1]+self.vh)-(self.inset+self.pgdh)]
+			return [self.centerBoxPos[0]+self.inset, (self.centerBoxPos[1]+self.vh)-(self.inset+self.pgdh)]
 
 
 	def setMaxLocDim( self, win ):
@@ -785,8 +781,7 @@ class UI:
 		if (full):
 			return [gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset]
 		else:
-			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-			return [(vPos[0]+self.vw)-(self.inset+self.maxw), vPos[1]+self.inset]
+			return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.maxw), self.centerBoxPos[1]+self.inset]
 
 
 	def setEyeLocDim( self, win ):
@@ -799,13 +794,11 @@ class UI:
 		if (full):
 			return [x, gtk.gdk.screen_height()-(self.inset+self.pgdh)]
 		else:
-			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-			return [x, (vPos[1]+self.vh)-(self.inset+self.pgdh)]
+			return [x, (self.centerBoxPos[1]+self.vh)-(self.inset+self.pgdh)]
 
 
 	def getInfLoc( self ):
-		vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-		return [(vPos[0]+self.vw)-(self.inset+self.letterBoxVW), vPos[1]+self.inset]
+		return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.letterBoxVW), self.centerBoxPos[1]+self.inset]
 
 
 	def setInfLocDim( self, win ):
@@ -818,8 +811,7 @@ class UI:
 		if (full):
 			return [(gtk.gdk.screen_width() + 100), (gtk.gdk.screen_height() + 100)]
 		else:
-			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-			return [(vPos[0]+self.vw)-(self.inset+self.maxw), (vPos[1]+self.vh)-(self.maxh+self.inset)]
+			return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.maxw), (self.centerBoxPos[1]+self.vh)-(self.maxh+self.inset)]
 
 
 	def setInbLocDim( self, win ):
@@ -916,6 +908,8 @@ class UI:
 	def _sizeAllocateCb( self, widget, event ):
 		#initial setup of the panels
 		self.centerBox.disconnect(self.SIZE_ALLOCATE_ID)
+		self.centerBoxPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
+
 		centerKid = self.centerBox.get_child()
 		if (centerKid != None):
 			self.centerBox.remove( centerKid )
