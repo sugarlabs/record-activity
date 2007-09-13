@@ -25,6 +25,7 @@ class Color:
 	def __init__(self):
 		pass
 
+
 	def init_rgba(self, r, g, b, a):
 		self._ro = r
 		self._go = g
@@ -43,14 +44,21 @@ class Color:
 		self.hex = self.rgb_to_hex( rgb_tup )
 		self.gColor = gtk.gdk.color_parse( self.hex )
 
+
+	def init_gdk(self, col):
+		self.init_rgba( col._r, col._g, col._b, 255 )
+
+
 	def init_hex(self, hex):
 		cTup = self.hex_to_rgb( hex )
 		self.init_rgba( cTup[0], cTup[1], cTup[2], 255 )
+
 
 	def rgb_to_hex(self, rgb_tuple):
 		hexcolor = '#%02x%02x%02x' % rgb_tuple
 		# that's it! '%02x' means zero-padded, 2-digit hex values
 		return hexcolor
+
 
 	def hex_to_rgb(self, h):
 		c = eval('0x' + h[1:])

@@ -1330,17 +1330,18 @@ class UI:
 		self.colorWhite.init_rgba( 255, 255, 255, 255 )
 		self.colorTray = Color()
 		self.colorTray.init_rgba(  77, 77, 79, 255 )
-		self.colorBg = Color()
-		#todo: get this from the os
-		self.colorBg.init_rgba( 226, 226, 226, 255 )
-		self.colorHilite = Color()
-		self.colorHilite.init_hex( "#808384" )
 		self.colorRed = Color()
 		self.colorRed.init_rgba( 255, 0, 0, 255)
 		self.colorGreen = Color()
 		self.colorGreen.init_rgba( 0, 255, 0, 255)
 		self.colorBlue = Color()
 		self.colorBlue.init_rgba( 0, 0, 255, 255)
+
+		import sugar.graphics.style
+		self.colorBg = Color()
+		self.colorBg.init_gdk( sugar.graphics.style.COLOR_PANEL_GREY )
+		self.colorHilite = Color()
+		self.colorHilite.init_gdk( sugar.graphics.style.COLOR_BUTTON_GREY ) #"#808384" )
 
 
 	def loadSvg( self, data, stroke, fill ):
