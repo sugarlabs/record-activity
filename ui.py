@@ -287,7 +287,7 @@ class UI:
 		self.hideAudioWindows()
 
 		#only show the floating windows once everything is exposed and has a layout position
-		self.SIZE_ALLOCATE_ID = self.backgdCanvas.connect_after("size-allocate", self._sizeAllocateCb)
+		self.SIZE_ALLOCATE_ID = self.centerBox.connect_after("size-allocate", self._sizeAllocateCb)
 		self.ca.show_all()
 
 		self.MAP_EVENT_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
@@ -903,13 +903,12 @@ class UI:
 
 	def _sizeAllocateCb( self, widget, event ):
 		#initial setup of the panels
-		self.backgdCanvas.disconnect(self.SIZE_ALLOCATE_ID)
+		self.centerBox.disconnect(self.SIZE_ALLOCATE_ID)
 		self.allocated = True
 		self.checkReadyToSetup( )
 
 
 	def updateVideoComponents( self ):
-
 		if (	(self.LAST_MODE == self.ca.m.MODE)
 				and (self.LAST_FULLSCREEN == self.fullScreen)
 				and (self.LAST_LIVE == self.liveMode)
@@ -919,10 +918,6 @@ class UI:
 
 		#something's changing so start counting anew
 		self.resetWidgetFadeTimer()
-
-		#only show the clock if we're in video mode and have some compression to do
-		if (not self.RECD_INFO_ON):
-			self.backgdCanvas.queue_draw()
 
 		pos = []
 		if (self.RECD_INFO_ON):
@@ -1096,6 +1091,18 @@ class UI:
 			self.centerBox.show_all()
 
 		self.updateVideoComponents()
+
+
+	def showPostProcessGfx( self, show ):
+		centerKid = self.centerBox.get_child()
+		if (centerKid != None):
+			self.centerBox.remove( centerKid )
+
+		if (show):
+			self.centerBox.add( self.backgdCanvasBox )
+			self.centerBox.show_all()
+		else:
+			self.centerBox.hide_all()
 
 
 	def showThumbSelection( self, recd ):
@@ -1325,11 +1332,7 @@ class BackgroundCanvas(P5):
 
 
 	def draw(self, ctx, w, h):
-		if (self.ui.ca.m.MODE == self.ui.ca.m.MODE_VIDEO):
-			self.background( ctx, self.ui.colorWhite, w, h )
-			self.ui.modWaitSvg.render_cairo( ctx )
-		else:
-			self.background( ctx, self.ui.colorBg, w, h )
+		self.ui.modWaitSvg.render_cairo( ctx )
 
 
 class PhotoCanvasWindow(gtk.Window):
@@ -1337,6 +1340,7 @@ class PhotoCanvasWindow(gtk.Window):
 		gtk.Window.__init__(self)
 		self.ui = ui
 		self.photoCanvas = None
+
 
 	def setPhotoCanvas( self, photoCanvas ):
 		self.photoCanvas = photoCanvas

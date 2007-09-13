@@ -324,6 +324,7 @@ class Glive:
 		gobject.idle_add( thumbline.set_state, gst.STATE_PLAYING )
 
 
+
 	def copyThumbPic(self, fsink, buffer, pad, user_data=None):
 		if (self.thumbExposureOpen):
 			self.thumbExposureOpen = False

@@ -263,6 +263,8 @@ class Model:
 			if (not self.RECORDING):
 				self.startRecordingVideo()
 			else:
+				#post-processing begins now, so queue up this gfx
+				self.centerBox.add( self.back .)
 				self.stopRecordingVideo()
 		elif (self.MODE == self.MODE_AUDIO):
 			if (not self.RECORDING):
