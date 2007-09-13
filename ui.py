@@ -151,7 +151,7 @@ class UI:
 
 		#or this guy...
 		self.infoBox = gtk.EventBox()
-		self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorGreen.gColor )
+		self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorHilite.gColor )
 		iinfoBox = gtk.VBox(spacing=self.inset)
 		self.infoBox.add( iinfoBox )
 		iinfoBox.set_size_request(self.vw, -1)
@@ -1327,6 +1327,8 @@ class UI:
 		self.colorBg = Color()
 		#todo: get this from the os
 		self.colorBg.init_rgba( 226, 226, 226, 255 )
+		self.colorHilite = Color()
+		self.colorHilite.init_hex( "#808384" )
 		self.colorRed = Color()
 		self.colorRed.init_rgba( 255, 0, 0, 255)
 		self.colorGreen = Color()
@@ -1475,8 +1477,7 @@ class xoPanel(P5):
 	def draw(self, ctx, w, h):
 		#todo: 2x buffer
 
-		#todo: bgd for the info panel..
-		self.background( ctx, self.ui.colorWhite, w, h )
+		self.background( ctx, self.ui.colorHilite, w, h )
 
 		if (self.xoGuy != None):
 			#todo: scale mr xo
@@ -1556,11 +1557,15 @@ class InfButton(P5Button):
 		butt.setActionCommand( self.infS )
 		self._butts.append( butt )
 
+
 	def draw(self, ctx, w, h):
-		if (not self.ui.RECD_INFO_ON):
-			self.ui.infoOnSvg.render_cairo( ctx )
-		else:
-			self.ui.infoOffSvg.render_cairo( ctx )
+		self.ui.infoOnSvg.render_cairo( ctx )
+
+#		if (not self.ui.RECD_INFO_ON):
+#			self.ui.infoOnSvg.render_cairo( ctx )
+#		else:
+#			self.ui.infoOffSvg.render_cairo( ctx )
+
 
 	def fireButton(self, actionCommand):
 		if (actionCommand == self.infS):
