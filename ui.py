@@ -105,8 +105,9 @@ class UI:
 		self.vw = int(self.vh/.75)
 
 		letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
-		self.letterBoxVW = (letterBoxW/2)-(self.inset*2)
+		self.letterBoxVW = (self.vw/2)-(self.inset*2)
 		self.letterBoxVH = int(self.letterBoxVW*.75)
+		print( self.letterBoxVW, self.letterBoxVH )
 
 		#number of thumbs
 		self.numThumbs = 7
@@ -163,8 +164,17 @@ class UI:
 		rightFill.pack_start( self.infoButton, expand=False )
 		self.infoButton.hide_all()
 
+		#info box innards:
+		self.infoBoxTop = gtk.HBox()
+		self.infoBox.pack_start( self.infoBoxTop, expand=False )
+		self.infoBoxTopLeft = gtk.VBox(spacing=self.inset)
+		self.infoBoxTop.pack_start( self.infoBoxTopLeft )
+		self.infoBoxTopRight = gtk.VBox()
+		self.infoBoxTopRight.set_size_request(self.letterBoxVW, self.letterBoxVH)
+		self.infoBoxTop.pack_start( self.infoBoxTopRight )
+
 		self.namePanel = gtk.VBox(spacing=self.inset)
-		self.infoBox.pack_start(self.namePanel, expand=False)
+		self.infoBoxTopLeft.pack_start(self.namePanel, expand=False)
 		nameLabel = gtk.Label("Title:")
 		self.namePanel.pack_start( nameLabel, expand=False )
 		nameLabel.set_alignment(0, .5)
@@ -174,7 +184,7 @@ class UI:
 		self.namePanel.pack_start(self.nameTextfield)
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
-		self.infoBox.pack_start(self.photographerPanel, expand=False)
+		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
 		photographerLabel = gtk.Label("Recorder:")
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
@@ -183,7 +193,7 @@ class UI:
 		self.photographerPanel.pack_start(self.photographerNameLabel)
 
 		self.datePanel = gtk.HBox(spacing=self.inset)
-		self.infoBox.pack_start(self.datePanel, expand=False)
+		self.infoBoxTopLeft.pack_start(self.datePanel, expand=False)
 		dateLabel = gtk.Label("Date:")
 		self.datePanel.pack_start(dateLabel, expand=False)
 		self.dateDateLabel = gtk.Label("")
@@ -194,12 +204,13 @@ class UI:
 		tagsLabel = gtk.Label("Tags:")
 		tagsLabel.set_alignment(0, .5)
 		self.tagsPanel.pack_start(tagsLabel, expand=False)
-
 		self.tagsBuffer = gtk.TextBuffer()
 		self.tagsField = gtk.TextView( self.tagsBuffer )
 		self.tagsPanel.pack_start( self.tagsField, expand=True )
-
 		self.infoBox.pack_start(self.tagsPanel, expand=True)
+
+		self.infoBotBox = gtk.HBox()
+		self.infoBox.pack_start(self.infoBotBox, expand=True)
 
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
@@ -775,6 +786,17 @@ class UI:
 			return [x, (vPos[1]+self.vh)-(self.inset+self.pgdh)]
 
 
+	def getInfLoc( self ):
+		vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
+		return [(vPos[0]+self.vw)-(self.inset+self.letterBoxVW), vPos[1]+self.inset]
+
+
+	def setInfLocDim( self, win ):
+		self.smartResize( win, self.letterBoxVW, self.letterBoxVH )
+		loc = self.getInfLoc()
+		self.smartMove( win, loc[0], loc[1] )
+
+
 	def smartResize( self, win, w, h ):
 		winSize = win.get_size()
 		if ( (winSize[0] != w) or (winSize[1] != h) ):
@@ -804,6 +826,8 @@ class UI:
 			return self.getImgDim( full )
 		elif(pos == "eye"):
 			return [self.pgdw, self.pgdh]
+		elif(pos == "inf"):
+			return [self.letterBoxVW, self.letterBoxVH]
 
 
 	def getLoc( self, pos, full ):
@@ -817,6 +841,8 @@ class UI:
 			return self.getImgLoc( full )
 		elif(pos == "eye"):
 			return self.getEyeLoc( full )
+		elif(pos == "inf"):
+			return self.getInfLoc( full )
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
@@ -881,12 +907,15 @@ class UI:
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
+				pos.append({"position":"inf", "window":self.livePhotoWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
+				pos.append({"position":"inf", "window":self.playOggWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
+				pos.append({"position":"inf", "window":self.livePhotoWindow} )
 		else:
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				if (self.liveMode):
@@ -985,6 +1014,8 @@ class UI:
 						self.setPipBgdLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "eye"):
 						self.setEyeLocDim( pos[j]["window"] )
+					elif (pos[j]["position"] == "inf"):
+						self.setInfLocDim( pos[j]["window"] )
 
 
 	def updateThumbs( self, addToTrayArray, left, start, right ):
@@ -1195,7 +1226,7 @@ class UI:
 		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
 		maxReduceSvgFile.close()
 
-		shutterImgFile = os.path.join(self.ca.gfxPath, 'shutter_button.png')
+		shutterImgFile = os.path.join(self.ca.gfxPath, 'device-cam.png')
 		shutterImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterImgFile)
 		self.shutterImg = gtk.Image()
 		self.shutterImg.set_from_pixbuf( shutterImgPixbuf )
