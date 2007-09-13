@@ -158,19 +158,14 @@ class UI:
 
 		rightFillTop = gtk.HBox()
 		rightFill.pack_start( rightFillTop, expand=True )
-		self.infoButton = gtk.Button("i")
-		self.infoButton.connect("clicked", self._infoButtonClickedCb)
-		self.infoButton.set_size_request( letterBoxW, letterBoxW )
-		rightFill.pack_start( self.infoButton, expand=False )
-		self.infoButton.hide_all()
 
 		#info box innards:
 		self.infoBoxTop = gtk.HBox()
-		self.infoBox.pack_start( self.infoBoxTop, expand=False )
+		self.infoBox.pack_start( self.infoBoxTop, expand=True )
 		self.infoBoxTopLeft = gtk.VBox(spacing=self.inset)
 		self.infoBoxTop.pack_start( self.infoBoxTopLeft )
 		self.infoBoxTopRight = gtk.VBox()
-		self.infoBoxTopRight.set_size_request(self.letterBoxVW, self.letterBoxVH)
+		self.infoBoxTopRight.set_size_request(self.letterBoxVW, -1)
 		self.infoBoxTop.pack_start( self.infoBoxTopRight )
 
 		self.namePanel = gtk.VBox(spacing=self.inset)
@@ -207,10 +202,11 @@ class UI:
 		self.tagsBuffer = gtk.TextBuffer()
 		self.tagsField = gtk.TextView( self.tagsBuffer )
 		self.tagsPanel.pack_start( self.tagsField, expand=True )
-		self.infoBox.pack_start(self.tagsPanel, expand=True)
+		self.infoBoxTopLeft.pack_start(self.tagsPanel, expand=True)
 
-		self.infoBotBox = gtk.HBox()
-		self.infoBox.pack_start(self.infoBotBox, expand=True)
+		infoBotBox = gtk.HBox()
+		infoBotBox.set_size_request( -1, self.pgdh+self.inset )
+		self.infoBox.pack_start(infoBotBox, expand=False)
 
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
@@ -240,7 +236,6 @@ class UI:
 		rightThumbEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
 		rightThumbEventBox.add( self.rightThumbButton )
 		thumbnailsBox.pack_start( rightThumbEventBox, expand=False )
-
 
 		#image windows
 		self.windowStack = []
@@ -278,8 +273,11 @@ class UI:
 		self.recordWindow = RecordWindow(self)
 		self.addToWindowStack( self.recordWindow, self.pgdw, self.pgdh, self.windowStack[len(self.windowStack)-1] )
 
-		self.maxWindow = MaxWindow(self )
+		self.maxWindow = MaxWindow(self)
 		self.addToWindowStack( self.maxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
+
+		self.infWindow = InfWindow(self)
+		self.addToWindowStack( self.infWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.hideLiveWindows()
 		self.hidePlayWindows()
@@ -574,7 +572,7 @@ class UI:
 
 		self.livePhotoCanvas.setImage( None )
 		self.resetWidgetFadeTimer()
-		self.infoButton.hide_all()
+		self.infoEventBox.hide_all()
 
 
 	def updateButtonSensitivities( self ):
@@ -643,7 +641,6 @@ class UI:
 		self.ca.gplay.stop()
 
 		self.RECD_INFO_ON = False
-
 		#if you are big on the screen, don't go changing anything, ok?
 		if (self.liveMode):
 			return
@@ -680,6 +677,7 @@ class UI:
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
 		self.LAST_MODE = -1 #force an update
+		self.recordWindow.updateGfx()
 		self.updateVideoComponents()
 		self.resetWidgetFadeTimer()
 
@@ -797,6 +795,19 @@ class UI:
 		self.smartMove( win, loc[0], loc[1] )
 
 
+	def getInbLoc( self, full ):
+		if (full):
+			return [(gtk.gdk.screen_width() + 100), (gtk.gdk.screen_height() + 100)]
+		else:
+			vPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
+			return [(vPos[0]+self.vw)-(self.inset+self.maxw), (vPos[1]+self.vh)-(self.maxh+self.inset)]
+
+
+	def setInbLocDim( self, win ):
+		loc = self.getInbLoc(self.fullScreen)
+		self.smartMove( win, loc[0], loc[1] )
+
+
 	def smartResize( self, win, w, h ):
 		winSize = win.get_size()
 		if ( (winSize[0] != w) or (winSize[1] != h) ):
@@ -908,14 +919,17 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inf", "window":self.livePhotoWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
 				pos.append({"position":"inf", "window":self.playOggWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inf", "window":self.livePhotoWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 		else:
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				if (self.liveMode):
@@ -927,6 +941,7 @@ class UI:
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
+					pos.append({"position":"inb", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 				if (self.liveMode):
 					pos.append({"position":"img", "window":self.playLiveWindow} )
@@ -937,6 +952,7 @@ class UI:
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 					pos.append({"position":"pip", "window":self.playLiveWindow} )
+					pos.append({"position":"inb", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				if (self.liveMode):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
@@ -945,6 +961,7 @@ class UI:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
+					pos.append({"position":"inb", "window":self.infWindow} )
 
 		if (self.HIDE_ON_UPDATE):
 			#hide everything
@@ -981,6 +998,7 @@ class UI:
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			if (not self.liveMode):
 				pos.append({"position":"max", "window":self.maxWindow} )
@@ -989,12 +1007,14 @@ class UI:
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (not self.liveMode):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 			else:
 				pos.append({"position":"eye", "window":self.recordWindow} )
+				pos.append({"position":"inb", "window":self.infWindow} )
 
 		self.updatePos( pos )
 
@@ -1016,7 +1036,8 @@ class UI:
 						self.setEyeLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "inf"):
 						self.setInfLocDim( pos[j]["window"] )
-
+					elif (pos[j]["position"] == "inb"):
+						self.setInbLocDim( pos[j]["window"])
 
 	def updateThumbs( self, addToTrayArray, left, start, right ):
 		#todo: cache buttons which we can reuse
@@ -1049,7 +1070,7 @@ class UI:
 		self.ca.m.setupThumbs( self.ca.m.MODE, self.rightThumbMove, self.rightThumbMove+self.numThumbs )
 
 
-	def _infoButtonClickedCb( self, args ):
+	def infoButtonClicked( self ):
 		if (self.RECD_INFO_ON):
 			self.centerBox.remove( self.infoBox )
 			self.centerBox.add( self.backgdCanvasBox )
@@ -1071,7 +1092,7 @@ class UI:
 		elif (recd.type == self.ca.m.TYPE_AUDIO):
 			self.showAudio( recd )
 
-		self.infoButton.show_all()
+		self.infoEventBox.show_all()
 		self.resetWidgetFadeTimer()
 
 
@@ -1226,10 +1247,25 @@ class UI:
 		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
 		maxReduceSvgFile.close()
 
-		shutterImgFile = os.path.join(self.ca.gfxPath, 'device-cam.png')
-		shutterImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterImgFile)
-		self.shutterImg = gtk.Image()
-		self.shutterImg.set_from_pixbuf( shutterImgPixbuf )
+		shutterCamImgFile = os.path.join(self.ca.gfxPath, 'device-cam.png')
+		shutterCamImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterCamImgFile)
+		self.shutterCamImg = gtk.Image()
+		self.shutterCamImg.set_from_pixbuf( shutterCamImgPixbuf )
+
+		shutterMicImgFile = os.path.join(self.ca.gfxPath, 'device-mic.png')
+		shutterMicImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterMicImgFile)
+		self.shutterMicImg = gtk.Image()
+		self.shutterMicImg.set_from_pixbuf( shutterMicImgPixbuf )
+
+		infoOnSvgFile = open(os.path.join(self.ca.gfxPath, 'info-on.svg'), 'r')
+		infoOnSvgData = infoOnSvgFile.read()
+		self.infoOnSvg = self.loadSvg(infoOnSvgData, None, None )
+		infoOnSvgFile.close()
+
+		infoOffSvgFile = open(os.path.join(self.ca.gfxPath, 'info-off.svg'), 'r')
+		infoOffSvgData = infoOffSvgFile.read()
+		self.infoOffSvg = self.loadSvg(infoOffSvgData, None, None )
+		infoOffSvgFile.close()
 
 
 	def loadColors( self ):
@@ -1245,7 +1281,8 @@ class UI:
 		self.colorTray = Color()
 		self.colorTray.init_rgba(  77, 77, 79, 255 )
 		self.colorBg = Color()
-		self.colorBg.init_rgba( 198, 199, 201, 255 )
+		#todo: get this from the os
+		self.colorBg.init_rgba( 226, 226, 226, 255 )
 		self.colorRed = Color()
 		self.colorRed.init_rgba( 255, 0, 0, 255)
 		self.colorGreen = Color()
@@ -1405,6 +1442,46 @@ class MaxButton(P5Button):
 	def fireButton(self, actionCommand):
 		if (actionCommand == self.maxS):
 			self.ui.doFullscreen()
+
+
+class InfWindow(gtk.Window):
+	def __init__(self, ui):
+		gtk.Window.__init__(self)
+		self.ui = ui
+		self.infButton = InfButton(self.ui)
+		self.add( self.infButton )
+
+
+class InfButton(P5Button):
+	def __init__(self, ui):
+		P5Button.__init__(self)
+		self.ui = ui
+		xs = []
+		ys = []
+		xs.append(0)
+		ys.append(0)
+		xs.append(self.ui.maxw)
+		ys.append(0)
+		xs.append(self.ui.maxw)
+		ys.append(self.ui.maxh)
+		xs.append(0)
+		ys.append(self.ui.maxh)
+		poly = Polygon( xs, ys )
+		butt = Button( poly, 0, 0)
+		butt.addActionListener( self )
+		self.infS = "inf"
+		butt.setActionCommand( self.infS )
+		self._butts.append( butt )
+
+	def draw(self, ctx, w, h):
+		if (self.ui.RECD_INFO_ON):
+			self.ui.infoOnSvg.render_cairo( ctx )
+		else:
+			self.ui.infoOffSvg.render_cairo( ctx )
+
+	def fireButton(self, actionCommand):
+		if (actionCommand == self.infS):
+			self.ui.infoButtonClicked()
 
 
 #todo: rename, and handle clear events to clear away and remove all listeners
@@ -1699,8 +1776,7 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
-		#todo: make a method to change between eyes and lips and state
-		self.shutterButton.set_image( self.ui.shutterImg )
+		self.shutterButton.set_image( self.ui.shutterCamImg )
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		#todo: this is insensitive until we're all set up
 		#self.shutterButton.set_sensitive(False)
@@ -1710,6 +1786,14 @@ class RecordWindow(gtk.Window):
 
 		shutterBox.add( self.shutterButton )
 		self.add( shutterBox )
+
+	def updateGfx( self ):
+		if (self.ui.ca.m.MODE == self.ui.ca.m.MODE_AUDIO):
+			if (self.shutterButton.get_image() != self.ui.shutterMicImg):
+				self.shutterButton.set_image( self.ui.shutterMicImg )
+		else:
+			if (self.shutterButton.get_image() != self.ui.shutterCamImg):
+				self.shutterButton.set_image( self.ui.shutterCamImg )
 
 
 class ModeToolbar(gtk.Toolbar):
