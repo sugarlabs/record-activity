@@ -103,11 +103,11 @@ class UI:
 		#(03:23:16 PM) tomeu: jedierikb: you create the toolbar, you can ask him it's height after it has been allocated
 		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+75+45+5)
 		self.vw = int(self.vh/.75)
+		print( self.vw, self.vh )
 
 		letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
 		self.letterBoxVW = (self.vw/2)-(self.inset*2)
 		self.letterBoxVH = int(self.letterBoxVW*.75)
-		print( self.letterBoxVW, self.letterBoxVH )
 
 		#number of thumbs
 		self.numThumbs = 7
@@ -1329,7 +1329,6 @@ class BackgroundCanvas(P5):
 	def __init__(self, ui):
 		P5.__init__(self)
 		self.ui = ui
-
 
 	def draw(self, ctx, w, h):
 		self.ui.modWaitSvg.render_cairo( ctx )
