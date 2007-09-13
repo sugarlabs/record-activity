@@ -397,15 +397,21 @@ class UI:
 
 
 	def mouseInWidget( self, mx, my ):
-		#todo: audio does not have fullscreen
-		if (self.inWidget( mx, my, self.getLoc("max", self.fullScreen), self.getDim("max"))):
-			return True
-		if (self.inWidget( mx, my, self.getLoc("pgd", self.fullScreen), self.getDim("pgd"))):
-			return True
-		if (self.inWidget( mx, my, self.getLoc("eye", self.fullScreen), self.getDim("eye"))):
-			return True
-		if (self.inWidget( mx, my, self.getLoc("inb", self.fullScreen), self.getDim("inb"))):
-			return True
+
+		if (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
+			if (self.inWidget( mx, my, self.getLoc("max", self.fullScreen), self.getDim("max"))):
+				return True
+
+		if (not self.liveMode):
+			if (self.inWidget( mx, my, self.getLoc("pgd", self.fullScreen), self.getDim("pgd"))):
+				return True
+
+			if (self.inWidget( mx, my, self.getLoc("inb", self.fullScreen), self.getDim("inb"))):
+				return True
+
+		if (self.liveMode):
+			if (self.inWidget( mx, my, self.getLoc("eye", self.fullScreen), self.getDim("eye"))):
+				return True
 
 		return False
 
