@@ -139,7 +139,7 @@ class UI:
 		self.centerBox = gtk.EventBox()
 		topBox.pack_start( self.centerBox, expand=False )
 
-		#into the center box we put this guy...
+		#into the center box we can put this guy...
 		self.backgdCanvasBox = gtk.VBox()
 		self.backgdCanvasBox.set_size_request(self.vw, -1)
 		self.backgdCanvas = BackgroundCanvas(self)
@@ -148,9 +148,12 @@ class UI:
 		self.centerBox.add(self.backgdCanvasBox)
 
 		#or this guy...
-		self.infoBox = gtk.VBox(spacing=self.inset)
-		self.infoBox.set_size_request(self.vw, -1)
-		self.infoBox.set_border_width(self.inset)
+		self.infoBox = gtk.EventBox()
+		self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorGreen.gColor )
+		iinfoBox = gtk.VBox(spacing=self.inset)
+		self.infoBox.add( iinfoBox )
+		iinfoBox.set_size_request(self.vw, -1)
+		iinfoBox.set_border_width(self.inset)
 
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( letterBoxW, -1 )
@@ -161,7 +164,7 @@ class UI:
 
 		#info box innards:
 		self.infoBoxTop = gtk.HBox()
-		self.infoBox.pack_start( self.infoBoxTop, expand=True )
+		iinfoBox.pack_start( self.infoBoxTop, expand=True )
 		self.infoBoxTopLeft = gtk.VBox(spacing=self.inset)
 		self.infoBoxTop.pack_start( self.infoBoxTopLeft )
 		self.infoBoxTopRight = gtk.VBox()
@@ -206,7 +209,7 @@ class UI:
 
 		infoBotBox = gtk.HBox()
 		infoBotBox.set_size_request( -1, self.pgdh+self.inset )
-		self.infoBox.pack_start(infoBotBox, expand=False)
+		iinfoBox.pack_start(infoBotBox, expand=False)
 
 		thumbnailsEventBox = gtk.EventBox()
 		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
@@ -389,8 +392,11 @@ class UI:
 			return True
 		if (self.inWidget( mx, my, self.getLoc("eye", self.fullScreen), self.getDim("eye"))):
 			return True
+		if (self.inWidget( mx, my, self.getLoc("inb", self.fullScreen), self.getDim("inb"))):
+			return True
 
 		return False
+
 
 	def inWidget( self, mx, my, loc, dim ):
 		if (	(mx > loc[0]) and (my > loc[1])	):
@@ -840,6 +846,8 @@ class UI:
 			return [self.pgdw, self.pgdh]
 		elif(pos == "inf"):
 			return [self.letterBoxVW, self.letterBoxVH]
+		elif(pos == "inb"):
+			return [self.maxw, self.maxh]
 
 
 	def getLoc( self, pos, full ):
@@ -855,6 +863,8 @@ class UI:
 			return self.getEyeLoc( full )
 		elif(pos == "inf"):
 			return self.getInfLoc( full )
+		elif(pos == "inb"):
+			return self.getInbLoc( full )
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
@@ -1072,15 +1082,19 @@ class UI:
 
 
 	def infoButtonClicked( self ):
-		if (self.RECD_INFO_ON):
-			self.centerBox.remove( self.infoBox )
-			self.centerBox.add( self.backgdCanvasBox )
-		else:
-			self.centerBox.remove( self.backgdCanvasBox )
-			self.centerBox.add( self.infoBox )
-
-		self.centerBox.show_all()
 		self.RECD_INFO_ON = not self.RECD_INFO_ON
+
+		centerKid = self.centerBox.get_child()
+		if (centerKid != None):
+			self.centerBox.remove( centerKid )
+
+		if (not self.RECD_INFO_ON):
+			self.centerBox.hide_all()
+			#self.centerBox.add( self.backgdCanvasBox )
+		else:
+			self.centerBox.add( self.infoBox )
+			self.centerBox.show_all()
+
 		self.updateVideoComponents()
 
 
