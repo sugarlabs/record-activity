@@ -294,9 +294,13 @@ class UI:
 		self.infWindow = InfWindow(self)
 		self.addToWindowStack( self.infWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
+		self.delWindow = DelWindow(self)
+		self.addToWindowStack( self.delWindow, 200, 50, self.windowStack[len(self.windowStack)-1] )
+
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 		self.hideAudioWindows()
+		self.hideDeleteWindow()
 
 		#only show the floating windows once everything is exposed and has a layout position
 		self.SIZE_ALLOCATE_ID = self.centerBox.connect_after("size-allocate", self._sizeAllocateCb)
@@ -324,6 +328,20 @@ class UI:
 		win.set_decorated( False )
 		win.set_focus_on_map( False )
 		win.set_property("accept-focus", False)
+
+
+	def showDeleteWindow( self, button ):
+		deletePos = button.translate_coordinates( self.ca, 0, 0 )
+		self.smartMove( self.delWindow, deletePos[0], deletePos[1] -self.delWindow.get_size()[1] )
+
+
+	def hideDeleteWindow( self ):
+		x, y = self.ca.get_pointer()
+		self.moveWinOffscreen( self.delWindow )
+
+
+	def _deleteClickCb( self ):
+		print("delete me!")
 
 
 	def resetWidgetFadeTimer( self ):
@@ -434,62 +452,6 @@ class UI:
 			if (self.nameTextfield.get_text() != self.shownRecd.title):
 				self.shownRecd.setTitle( self.nameTextfield.get_text() )
 
-
-	def _playPauseButtonCb(self, widget):
-		if (self.ca.gplay.is_playing()):
-			self.ca.gplay.pause()
-		else:
-			self.ca.gplay.play()
-
-		self.updatePlayPauseButton()
-
-
-	def updatePlayPauseButton(self):
-		if (self.ca.gplay.is_playing()):
-			self.playPauseButton.set_icon_widget(self.play_image)
-		else:
-			self.playPauseButton.set_icon_widget(self.pause_image)
-
-
-	def _scrubberPressCb(self, widget, event):
-		self.toolbar.button.set_sensitive(False)
-		self.was_playing = self.player.is_playing()
-		if self.was_playing:
-			self.player.pause()
-
-		# don't timeout-update position during seek
-		if self.update_id != -1:
-			gobject.source_remove(self.update_id)
-			self.update_id = -1
-		# make sure we get changed notifies
-			if self.changed_id == -1:
-				self.changed_id = self.toolbar.hscale.connect('value-changed', self.scale_value_changed_cb)
-
-
-	def _scrubberReleaseCb(self, scale):
-		#todo: where are these values from?
-		real = long(scale.get_value() * self.p_duration / 100) # in ns
-		self.ca.gplay.seek( real )
-		# allow for a preroll
-		self.ca.gplay.get_state(timeout=50 * gst.MSECOND) # 50 ms
-
-
-	def scale_button_release_cb(self, widget, event):
-		# see seek.cstop_seek
-		widget.disconnect(self.changed_id)
-		self.changed_id = -1
-
-		self.toolbar.button.set_sensitive(True)
-		if self.seek_timeout_id != -1:
-			gobject.source_remove(self.seek_timeout_id)
-			self.seek_timeout_id = -1
-		else:
-			if self.was_playing:
-				self.player.play()
-			if self.update_id != -1:
-				self.error('Had a previous update timeout id')
-			else:
-				self.update_id = gobject.timeout_add(self.UPDATE_INTERVAL, self.update_scale_cb)
 
 
 	def _keyPressEventCb( self, widget, event):
@@ -1534,6 +1496,24 @@ class MaxButton(P5Button):
 			self.ui.doFullscreen()
 
 
+class DelWindow(gtk.Window):
+	def __init__(self, ui):
+		gtk.Window.__init__(self)
+		self.ui = ui
+		eventBox = gtk.EventBox()
+		self.add(eventBox)
+		butt = gtk.Button("Delete")
+		butt.modify_bg( gtk.STATE_NORMAL, self.ui.colorBlack.gColor )
+		eventBox.add(butt)
+		eventBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorBlack.gColor )
+		butt.connect("clicked", self.ui._deleteClickCb )
+		self.connect("leave_notify_event", self._leaveEventCb)
+
+
+	def _leaveEventCb( self, widget, event ):
+		self.ui.hideDeleteWindow()
+
+
 class InfWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
@@ -1715,9 +1695,26 @@ class ThumbnailButton(gtk.Button):
 
 		self.exposeConnection = self.connect("expose_event", self._exposeEventCb)
 		self.clickConnection = self.connect("clicked", self._buttonClickCb)
+		self.enterEventConnection = self.connect("enter_notify_event", self._enterEventCb)
+		self.leaveEventConnection = self.connect("leave_notify_event", self._leaveEventCb)
 		self.dragBeginConnection = None
 		self.dragDataGetConnection = None
 		self.dragEndConnection = None
+		self.DELETE_TIMEOUT = None
+
+
+	def _enterEventCb( self, widget, event):
+		self.DELETE_TIMEOUT = gobject.timeout_add( 1000, self._deleteTimeout )
+
+
+	def _leaveEventCb( self, widget, event ):
+		gobject.source_remove( self.DELETE_TIMEOUT )
+		self.DELETE_TIMEOUT = None
+		self.ui.hideDeleteWindow()
+
+
+	def _deleteTimeout( self ):
+		self.ui.showDeleteWindow( self )
 
 
 	def setDraggable( self ):
@@ -1863,7 +1860,6 @@ class ThumbnailButton(gtk.Button):
 			ctx.set_source_rgb( col._r, col._g, col._b )
 
 
-
 class RecordWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
@@ -1928,8 +1924,3 @@ class ModeToolbar(gtk.Toolbar):
 	def modeAudioCb(self, button):
 		self.ca.m.doAudioMode()
 
-
-class SearchToolbar(gtk.Toolbar):
-	def __init__(self, pc):
-		gtk.Toolbar.__init__(self)
-		self.ca = pc
