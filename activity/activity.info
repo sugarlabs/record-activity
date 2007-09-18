@@ -3,5 +3,5 @@ name = Record
 service_name = org.laptop.RecordActivity
 class = RecordActivity.RecordActivity
 icon = activity-record
-activity_version = 26
+activity_version = 27
 show_launcher = yes
