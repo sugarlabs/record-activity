@@ -331,16 +331,18 @@ class UI:
 
 
 	def showDeleteWindow( self, button ):
+		self.deletableRecd = button.
 		deletePos = button.translate_coordinates( self.ca, 0, 0 )
 		self.smartMove( self.delWindow, deletePos[0], deletePos[1] -self.delWindow.get_size()[1] )
 
 
 	def hideDeleteWindow( self ):
 		x, y = self.ca.get_pointer()
-		self.moveWinOffscreen( self.delWindow )
+		if (not self.inWidget( x, y, self.delWindow.get_position(), self.getDim("del"))):
+			self.moveWinOffscreen( self.delWindow )
 
 
-	def _deleteClickCb( self ):
+	def _deleteClickCb( self, args ):
 		print("delete me!")
 
 
@@ -451,7 +453,6 @@ class UI:
 		if (self.shownRecd != None):
 			if (self.nameTextfield.get_text() != self.shownRecd.title):
 				self.shownRecd.setTitle( self.nameTextfield.get_text() )
-
 
 
 	def _keyPressEventCb( self, widget, event):
@@ -611,12 +612,14 @@ class UI:
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.infWindow )
 
+
 	def hideAudioWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.infWindow )
+
 
 	def _liveButtonReleaseCb(self, widget, event):
 		self.livePhotoCanvas.setImage( None )
@@ -828,6 +831,8 @@ class UI:
 			return [self.letterBoxVW, self.letterBoxVH]
 		elif(pos == "inb"):
 			return [self.maxw, self.maxh]
+		elif(pos == "del"):
+			return [200, 50]
 
 
 	def getLoc( self, pos, full ):
@@ -845,6 +850,8 @@ class UI:
 			return self.getInfLoc( full )
 		elif(pos == "inb"):
 			return self.getInbLoc( full )
+		elif(pos == "del"):
+			self.delWindow.get_position()
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
