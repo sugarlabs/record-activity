@@ -103,7 +103,6 @@ class UI:
 		#(03:23:16 PM) tomeu: jedierikb: you create the toolbar, you can ask him it's height after it has been allocated
 		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+75+45+5)
 		self.vw = int(self.vh/.75)
-
 		letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
 		self.letterBoxVW = (self.vw/2)-(self.inset*2)
 		self.letterBoxVH = int(self.letterBoxVW*.75)
@@ -114,8 +113,9 @@ class UI:
 		#prep for when to show
 		self.allocated = False
 		self.mapped = False
-
 		self.shownRecd = None
+		self.deletableRecd = None
+		self.deletableButt = None
 
 		#this includes the default sharing tab
 		toolbox = activity.ActivityToolbox(self.ca)
@@ -330,20 +330,30 @@ class UI:
 		win.set_property("accept-focus", False)
 
 
-	def showDeleteWindow( self, button ):
-		self.deletableRecd = button.
+	def showDeleteWindow( self, button, recd ):
+		self.deletableRecd = recd
+		self.deletableButt = button
 		deletePos = button.translate_coordinates( self.ca, 0, 0 )
-		self.smartMove( self.delWindow, deletePos[0], deletePos[1] -self.delWindow.get_size()[1] )
+		self.smartMove( self.delWindow, deletePos[0], (deletePos[1]-self.delWindow.get_size()[1])+1 )
 
 
 	def hideDeleteWindow( self ):
 		x, y = self.ca.get_pointer()
-		if (not self.inWidget( x, y, self.delWindow.get_position(), self.getDim("del"))):
+		w, h = self.getDim("del")
+		delDim = [w, h+10]
+		if (not self.inWidget( x, y, self.delWindow.get_position(), delDim)):
 			self.moveWinOffscreen( self.delWindow )
+			if (self.deletableButt != None):
+				self.deletableButt.recdThumbRenderImg = None
+				self.deletableButt.queue_draw()
 
 
 	def _deleteClickCb( self, args ):
 		print("delete me!")
+		self.moveWinOffscreen( self.delWindow )
+		if (self.deletableRecd != None):
+			self.deleteThumbSelection( self.deletableRecd )
+			self.deletableRecd = None
 
 
 	def resetWidgetFadeTimer( self ):
@@ -1241,10 +1251,10 @@ class UI:
 		self.thumbVideoSvg = self.loadSvg(self.thumbVideoSvgData, self.colorStroke.hex, self.colorFill.hex)
 		thumbVideoSvgFile.close()
 
-		closeSvgFile = open(os.path.join(self.ca.gfxPath, 'thumb_close.svg'), 'r')
-		closeSvgData = closeSvgFile.read()
-		self.closeSvg = self.loadSvg(closeSvgData, self.colorStroke.hex, self.colorFill.hex)
-		closeSvgFile.close()
+#		closeSvgFile = open(os.path.join(self.ca.gfxPath, 'thumb_close.svg'), 'r')
+#		closeSvgData = closeSvgFile.read()
+#		self.closeSvg = self.loadSvg(closeSvgData, self.colorStroke.hex, self.colorFill.hex)
+#		closeSvgFile.close()
 
 		modWaitSvgFile = open(os.path.join(self.ca.gfxPath, 'wait.svg'), 'r')
 		modWaitSvgData = modWaitSvgFile.read()
@@ -1580,8 +1590,8 @@ class ThumbnailCanvas(gtk.VBox):
 		self.butt = ThumbnailButton(self, self.ui)
 		self.pack_start(self.butt, expand=True)
 
-		self.delButt = ThumbnailDeleteButton(self, self.ui)
-		self.delButt.set_size_request( -1, 20 )
+		#self.delButt = ThumbnailDeleteButton(self, self.ui)
+		#self.delButt.set_size_request( -1, 20 )
 		#self.pack_start(self.delButt, expand=False)
 
 		self.show_all()
@@ -1590,7 +1600,7 @@ class ThumbnailCanvas(gtk.VBox):
 	def set_sensitive(self, sen):
 		#todo: change colors here to gray'd out, and don't change if already in that mode
 		self.butt.set_sensitive( sen )
-		self.delButt.set_sensitive( sen )
+		#self.delButt.set_sensitive( sen )
 
 
 	def clear(self):
@@ -1599,8 +1609,8 @@ class ThumbnailCanvas(gtk.VBox):
 		self.thumbCanvas = None
 		self.butt.clear()
 		self.butt.queue_draw()
-		self.delButt.clear()
-		self.delButt.queue_draw()
+		#self.delButt.clear()
+		#self.delButt.queue_draw()
 
 
 	def setButton(self, recd):
@@ -1611,7 +1621,7 @@ class ThumbnailCanvas(gtk.VBox):
 		self.loadThumb()
 		self.butt.setDraggable()
 		self.butt.queue_draw()
-		self.delButt.queue_draw()
+		#self.delButt.queue_draw()
 
 
 	def loadThumb(self):
@@ -1625,70 +1635,74 @@ class ThumbnailCanvas(gtk.VBox):
 		self.thumbCanvas = _camera.cairo_surface_from_gdk_pixbuf( self.thumbPixbuf )
 
 
-class ThumbnailDeleteButton(gtk.Button):
-	def __init__(self, ptc, ui):
-		gtk.Button.__init__(self)
-		self.tc = ptc
-		self.ui = ui
-		self.recd = None
-		self.recdThumbRenderImg = None
-		self.recdThumbInsensitiveImg = None
+#class ThumbnailDeleteButton(gtk.Button):
+#	def __init__(self, ptc, ui):
+#		gtk.Button.__init__(self)
+#		self.tc = ptc
+#		self.ui = ui
+#		self.recd = None
+#		self.recdThumbRenderImg = None
+#		self.recdThumbInsensitiveImg = None
 
-		self.exposeConnection = self.connect("expose_event", self.expose)
-		self.clickConnection = self.connect("clicked", self.buttonClickCb)
-
-	def clear( self ):
-		self.recdThumbRenderImg == None
-		self.recdThumbInsensitiveImg = None
-
-	def buttonClickCb(self, args ):
-		if (self.tc.recd == None):
-			return
-		if (not self.props.sensitive):
-			return
-
-		self.ui.deleteThumbSelection( self.tc.recd )
-
-	def expose(self, widget, event):
-		ctx = widget.window.cairo_create()
-		self.draw( ctx, self.allocation.width, self.allocation.height )
-		return True
-
-	def draw(self, ctx, w, h):
-		ctx.translate( self.allocation.x, self.allocation.y )
-		self.background( ctx, self.ui.colorTray, w, h )
-		if (self.tc.recd == None):
-			return
-
-		if (self.recdThumbRenderImg == None):
-			self.recdThumbRenderImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-			rtCtx = cairo.Context(self.recdThumbRenderImg)
-			self.background(rtCtx, self.ui.colorTray, w, h)
-
-			#todo: dynamic query of the delete button size
-			rtCtx.translate( w/2-25/2, 0 )
-			self.ui.closeSvg.render_cairo(rtCtx)
+#		self.exposeConnection = self.connect("expose_event", self.expose)
+#		self.clickConnection = self.connect("clicked", self.buttonClickCb)
 
 
-		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
-		ctx.paint()
+#	def clear( self ):
+#		self.recdThumbRenderImg == None
+#		self.recdThumbInsensitiveImg = None
 
-	def background(self, ctx, col, w, h):
-		self.setColor( ctx, col )
 
-		ctx.line_to(0, 0)
-		ctx.line_to(w, 0)
-		ctx.line_to(w, h)
-		ctx.line_to(0, h)
-		ctx.close_path()
+#	def buttonClickCb(self, args ):
+#		if (self.tc.recd == None):
+#			return
+#		if (not self.props.sensitive):
+#			return
 
-		ctx.fill()
+#		self.ui.deleteThumbSelection( self.tc.recd )
 
-	def setColor( self, ctx, col ):
-		if (not col._opaque):
-			ctx.set_source_rgba( col._r, col._g, col._b, col._a )
-		else:
-			ctx.set_source_rgb( col._r, col._g, col._b )
+
+#	def expose(self, widget, event):
+#		ctx = widget.window.cairo_create()
+#		self.draw( ctx, self.allocation.width, self.allocation.height )
+#		return True
+
+
+#	def draw(self, ctx, w, h):
+#		ctx.translate( self.allocation.x, self.allocation.y )
+#		self.background( ctx, self.ui.colorTray, w, h )
+#		if (self.tc.recd == None):
+#			return
+
+#		if (self.recdThumbRenderImg == None):
+#			self.recdThumbRenderImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+#			rtCtx = cairo.Context(self.recdThumbRenderImg)
+#			self.background(rtCtx, self.ui.colorTray, w, h)
+
+#			rtCtx.translate( w/2-25/2, 0 )
+#			self.ui.closeSvg.render_cairo(rtCtx)
+
+#		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
+#		ctx.paint()
+
+
+#	def background(self, ctx, col, w, h):
+#		self.setColor( ctx, col )
+
+#		ctx.line_to(0, 0)
+#		ctx.line_to(w, 0)
+#		ctx.line_to(w, h)
+#		ctx.line_to(0, h)
+#		ctx.close_path()
+
+#		ctx.fill()
+
+
+#	def setColor( self, ctx, col ):
+#		if (not col._opaque):
+#			ctx.set_source_rgba( col._r, col._g, col._b, col._a )
+#		else:
+#			ctx.set_source_rgb( col._r, col._g, col._b )
 
 
 class ThumbnailButton(gtk.Button):
@@ -1708,20 +1722,31 @@ class ThumbnailButton(gtk.Button):
 		self.dragDataGetConnection = None
 		self.dragEndConnection = None
 		self.DELETE_TIMEOUT = None
+		self.inHere = False
 
 
 	def _enterEventCb( self, widget, event):
+		self.inHere = True
+		if (self.tc.recd == None):
+			return
+
+		self.recdThumbRenderImg = None
+		self.queue_draw()
 		self.DELETE_TIMEOUT = gobject.timeout_add( 1000, self._deleteTimeout )
 
 
 	def _leaveEventCb( self, widget, event ):
-		gobject.source_remove( self.DELETE_TIMEOUT )
-		self.DELETE_TIMEOUT = None
+		self.inHere = False
+
+		if (self.DELETE_TIMEOUT != None):
+			gobject.source_remove( self.DELETE_TIMEOUT )
+			self.DELETE_TIMEOUT = None
+
 		self.ui.hideDeleteWindow()
 
 
 	def _deleteTimeout( self ):
-		self.ui.showDeleteWindow( self )
+		self.ui.showDeleteWindow( self, self.tc.recd )
 
 
 	def setDraggable( self ):
@@ -1796,7 +1821,8 @@ class ThumbnailButton(gtk.Button):
 
 	def draw(self, ctx, w, h):
 		ctx.translate( self.allocation.x, self.allocation.y )
-		self.background( ctx, self.ui.colorTray, w, h )
+		clr = self.ui.colorTray
+		self.background( ctx, clr, w, h )
 
 		if (self.tc.recd == None):
 			return
@@ -1806,7 +1832,10 @@ class ThumbnailButton(gtk.Button):
 		if (self.recdThumbRenderImg == None):
 			self.recdThumbRenderImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
 			rtCtx = cairo.Context(self.recdThumbRenderImg)
-			self.background(rtCtx, self.ui.colorTray, w, h)
+			clr = self.ui.colorTray
+			if (self.inHere):
+				clr = self.ui.colorBlack
+			self.background(rtCtx, clr, w, h)
 
 			xSvg = (w-self.ui.thumbSvgW)/2
 			ySvg = (h-self.ui.thumbSvgH)/2
@@ -1849,6 +1878,7 @@ class ThumbnailButton(gtk.Button):
 		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
 		ctx.paint()
 
+
 	def background(self, ctx, col, w, h):
 		self.setColor( ctx, col )
 
@@ -1859,6 +1889,7 @@ class ThumbnailButton(gtk.Button):
 		ctx.close_path()
 
 		ctx.fill()
+
 
 	def setColor( self, ctx, col ):
 		if (not col._opaque):
