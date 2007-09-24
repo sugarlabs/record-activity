@@ -225,7 +225,14 @@ class UI:
 		thumbnailsEventBox.set_size_request( -1, self.thumbTrayHt )
 		thumbnailsBox = gtk.HBox( )
 		thumbnailsEventBox.add( thumbnailsBox )
-		self.mainBox.pack_end(thumbnailsEventBox, expand=False)
+
+		#		self.mainBox.pack_end(thumbnailsEventBox, expand=False)
+
+		#todo: all new tray!
+		from sugar.graphics.tray import HTray
+		self.thumbTray = HTray()
+		self.thumbTray.set_size_request( -1, self.thumbTrayHt )
+		self.mainBox.pack_end( self.thumbTray, expand=False )
 
 		self.leftThumbButton = gtk.Button()
 		self.leftThumbButton.connect( "clicked", self._leftThumbButtonCb )
@@ -316,7 +323,6 @@ class UI:
 		self.HIDE_WIDGET_TIMEOUT_ID = 0
 		self.hiddenWidgets = False
 		self.resetWidgetFadeTimer()
-
 		self.showLiveVideoTags()
 
 
@@ -331,6 +337,7 @@ class UI:
 
 
 	def showDeleteWindow( self, button, recd ):
+		#todo: remove these three methods & replace with gtk.tray
 		self.deletableRecd = recd
 		self.deletableButt = button
 		deletePos = button.translate_coordinates( self.ca, 0, 0 )
@@ -349,7 +356,6 @@ class UI:
 
 
 	def _deleteClickCb( self, args ):
-		print("delete me!")
 		self.moveWinOffscreen( self.delWindow )
 		if (self.deletableRecd != None):
 			self.deleteThumbSelection( self.deletableRecd )
