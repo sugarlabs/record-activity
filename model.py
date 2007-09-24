@@ -394,11 +394,13 @@ class Model:
 	def doPostSaveVideo( self ):
 		self.ca.ui.showPostProcessGfx(False)
 
+		#prep the ui for your return
+		self.ca.ui.LAST_MODE = -1
+		self.ca.ui.HIDE_ON_UPDATE = False
+		self.ca.ui.updateVideoComponents()
+
 		#resume live video from the camera (if the activity is active)
 		if (self.ca.ACTIVE):
-			self.ca.ui.LAST_MODE = -1
-			self.ca.ui.HIDE_ON_UPDATE = False
-			self.ca.ui.updateVideoComponents()
 			self.ca.glive.play()
 
 		self.setRecording( False )
@@ -485,18 +487,12 @@ class Model:
 
 
 	def addRecd( self, recd ):
-		print( "1 adding recd... ", recd.type, recd )
-
 		#todo: sort on time-taken, not on their arrival time over the mesh (?)
 		self.mediaHashs[recd.type].append( recd )
-
-		print( "2 adding recd... ", recd.type, recd )
 
 		#updateUi
 		#todo: gobject idle?
 		self.thumbAdded( recd.type )
-
-		print( "3 adding recd... ", recd.type, recd )
 
 
 	def createNewRecorded( self, type ):
@@ -575,9 +571,9 @@ class Model:
 		return hash
 
 
-	#outdated?
 	def generateThumbnail( self, pixbuf, scale ):
-#		#need to generate thumbnail version here
+		#outdated?
+		#need to generate thumbnail version here
 		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.tw, self.ca.ui.th)
 		tctx = cairo.Context(thumbImg)
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
@@ -612,8 +608,8 @@ class Model:
 		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
 
 
-	#todo: if you are not at the end of the list, do we want to force you to the end?
 	def thumbAdded( self, type ):
+		#todo: if you are not at the end of the list, do we want to force you to the end?
 		mx = len(self.mediaHashs[type])
 		mn = max(mx-self.ca.ui.numThumbs, 0)
 		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback
