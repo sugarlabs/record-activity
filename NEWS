@@ -1,3 +1,6 @@
+28
+* when finished post-processing video, and not the active activity, setup the ui correctly so that video pipelines can return their display (closes #2894)
+
 27
 * delete (jedierikb)
 
