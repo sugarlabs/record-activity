@@ -56,9 +56,8 @@ from p5_button import Polygon
 from p5_button import Button
 from glive import LiveVideoWindow
 from gplay import PlayVideoWindow
-
-#for debug testing
 from recorded import Recorded
+from button import RecdButton
 
 import _camera
 
@@ -226,35 +225,10 @@ class UI:
 		thumbnailsBox = gtk.HBox( )
 		thumbnailsEventBox.add( thumbnailsBox )
 
-		#		self.mainBox.pack_end(thumbnailsEventBox, expand=False)
-
-		#todo: all new tray!
 		from sugar.graphics.tray import HTray
 		self.thumbTray = HTray()
 		self.thumbTray.set_size_request( -1, self.thumbTrayHt )
 		self.mainBox.pack_end( self.thumbTray, expand=False )
-
-		self.leftThumbButton = gtk.Button()
-		self.leftThumbButton.connect( "clicked", self._leftThumbButtonCb )
-		self.setupThumbButton( self.leftThumbButton, "left-thumb-sensitive" )
-		leftThumbEventBox = gtk.EventBox()
-		leftThumbEventBox.set_border_width(self.inset)
-		leftThumbEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
-		leftThumbEventBox.add( self.leftThumbButton )
-		thumbnailsBox.pack_start( leftThumbEventBox, expand=False )
-		self.thumbButts = []
-		for i in range (0, self.numThumbs):
-			thumbButt = ThumbnailCanvas(self)
-			thumbnailsBox.pack_start( thumbButt, expand=True )
-			self.thumbButts.append( thumbButt )
-		self.rightThumbButton = gtk.Button()
-		self.rightThumbButton.connect( "clicked", self._rightThumbButtonCb )
-		self.setupThumbButton( self.rightThumbButton, "right-thumb-sensitive" )
-		rightThumbEventBox = gtk.EventBox()
-		rightThumbEventBox.set_border_width(self.inset)
-		rightThumbEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
-		rightThumbEventBox.add( self.rightThumbButton )
-		thumbnailsBox.pack_start( rightThumbEventBox, expand=False )
 
 		#image windows
 		self.windowStack = []
@@ -301,13 +275,9 @@ class UI:
 		self.infWindow = InfWindow(self)
 		self.addToWindowStack( self.infWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
-		self.delWindow = DelWindow(self)
-		self.addToWindowStack( self.delWindow, 200, 50, self.windowStack[len(self.windowStack)-1] )
-
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 		self.hideAudioWindows()
-		self.hideDeleteWindow()
 
 		#only show the floating windows once everything is exposed and has a layout position
 		self.SIZE_ALLOCATE_ID = self.centerBox.connect_after("size-allocate", self._sizeAllocateCb)
@@ -334,32 +304,6 @@ class UI:
 		win.set_decorated( False )
 		win.set_focus_on_map( False )
 		win.set_property("accept-focus", False)
-
-
-	def showDeleteWindow( self, button, recd ):
-		#todo: remove these three methods & replace with gtk.tray
-		self.deletableRecd = recd
-		self.deletableButt = button
-		deletePos = button.translate_coordinates( self.ca, 0, 0 )
-		self.smartMove( self.delWindow, deletePos[0], (deletePos[1]-self.delWindow.get_size()[1])+1 )
-
-
-	def hideDeleteWindow( self ):
-		x, y = self.ca.get_pointer()
-		w, h = self.getDim("del")
-		delDim = [w, h+10]
-		if (not self.inWidget( x, y, self.delWindow.get_position(), delDim)):
-			self.moveWinOffscreen( self.delWindow )
-			if (self.deletableButt != None):
-				self.deletableButt.recdThumbRenderImg = None
-				self.deletableButt.queue_draw()
-
-
-	def _deleteClickCb( self, args ):
-		self.moveWinOffscreen( self.delWindow )
-		if (self.deletableRecd != None):
-			self.deleteThumbSelection( self.deletableRecd )
-			self.deletableRecd = None
 
 
 	def resetWidgetFadeTimer( self ):
@@ -433,7 +377,6 @@ class UI:
 
 
 	def mouseInWidget( self, mx, my ):
-
 		if (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
 			if (self.inWidget( mx, my, self.getLoc("max", self.fullScreen), self.getDim("max"))):
 				return True
@@ -597,8 +540,6 @@ class UI:
 		self.modeToolbar.vidButt.set_sensitive( switchStuff )
 		self.modeToolbar.audButt.set_sensitive( switchStuff )
 
-		for i in range (0, len(self.thumbButts)):
-			self.thumbButts[i].set_sensitive( switchStuff )
 
 		if (self.ca.m.UPDATING):
 			self.ca.ui.setWaitCursor()
@@ -1054,35 +995,28 @@ class UI:
 					elif (pos[j]["position"] == "inb"):
 						self.setInbLocDim( pos[j]["window"])
 
-	def updateThumbs( self, addToTrayArray, left, start, right ):
-		#todo: cache buttons which we can reuse
-		for i in range (0, len(self.thumbButts)):
-			self.thumbButts[i].clear()
 
-		for i in range (0, len(addToTrayArray)):
-			self.thumbButts[i].setButton(addToTrayArray[i])
-
-		if (left == -1):
-			self.leftThumbButton.set_sensitive(False)
-		else:
-			self.leftThumbButton.set_sensitive(True)
-
-		if (right == -1):
-			self.rightThumbButton.set_sensitive(False)
-		else:
-			self.rightThumbButton.set_sensitive(True)
-
-		self.startThumb = start
-		self.leftThumbMove = left
-		self.rightThumbMove = right
+	def removeThumbs( self ):
+		pass
 
 
-	def _leftThumbButtonCb( self, args ):
-		self.ca.m.setupThumbs( self.ca.m.MODE, self.leftThumbMove, self.leftThumbMove+self.numThumbs )
+	def removeThumb( self, recd ):
+		kids = self.thumbTray.get_children()
+		for i in range (0, len(kids)):
+			if (kids[i].recd == recd):
+				self.thumbTray.remove_item(kids[i])
+				#todo: remove listeners...
 
 
-	def _rightThumbButtonCb( self, args ):
-		self.ca.m.setupThumbs( self.ca.m.MODE, self.rightThumbMove, self.rightThumbMove+self.numThumbs )
+	def addThumb( self, recd ):
+		butt = RecdButton( self, recd )
+		butt.connect("clicked", self._thumbClicked, recd )
+		self.thumbTray.add_item( butt, 0 )
+		butt.show()
+
+
+	def _thumbClicked( self, button, recd ):
+		self.showThumbSelection( recd )
 
 
 	def infoButtonClicked( self ):
@@ -1150,7 +1084,8 @@ class UI:
 
 
 	def deleteThumbSelection( self, recd ):
-		self.ca.m.deleteRecorded( recd, self.startThumb )
+		self.ca.m.deleteRecorded( recd )
+		self.removeThumb( recd )
 		self.removeIfSelectedRecorded( recd )
 
 
@@ -1519,24 +1454,6 @@ class MaxButton(P5Button):
 			self.ui.doFullscreen()
 
 
-class DelWindow(gtk.Window):
-	def __init__(self, ui):
-		gtk.Window.__init__(self)
-		self.ui = ui
-		eventBox = gtk.EventBox()
-		self.add(eventBox)
-		butt = gtk.Button("Delete")
-		butt.modify_bg( gtk.STATE_NORMAL, self.ui.colorBlack.gColor )
-		eventBox.add(butt)
-		eventBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorBlack.gColor )
-		butt.connect("clicked", self.ui._deleteClickCb )
-		self.connect("leave_notify_event", self._leaveEventCb)
-
-
-	def _leaveEventCb( self, widget, event ):
-		self.ui.hideDeleteWindow()
-
-
 class InfWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
@@ -1579,329 +1496,6 @@ class InfButton(P5Button):
 	def fireButton(self, actionCommand):
 		if (actionCommand == self.infS):
 			self.ui.infoButtonClicked()
-
-
-#todo: rename, and handle clear events to clear away and remove all listeners
-class ThumbnailCanvas(gtk.VBox):
-	def __init__(self, pui):
-		gtk.VBox.__init__(self)
-		self.ui = pui
-
-		self.recd = None
-		self.butt = None
-		self.delButt = None
-		self.thumbPixbuf = None
-		self.thumbCanvas = None
-
-		self.butt = ThumbnailButton(self, self.ui)
-		self.pack_start(self.butt, expand=True)
-
-		#self.delButt = ThumbnailDeleteButton(self, self.ui)
-		#self.delButt.set_size_request( -1, 20 )
-		#self.pack_start(self.delButt, expand=False)
-
-		self.show_all()
-
-
-	def set_sensitive(self, sen):
-		#todo: change colors here to gray'd out, and don't change if already in that mode
-		self.butt.set_sensitive( sen )
-		#self.delButt.set_sensitive( sen )
-
-
-	def clear(self):
-		self.recd = None
-		self.thumbPixbuf = None
-		self.thumbCanvas = None
-		self.butt.clear()
-		self.butt.queue_draw()
-		#self.delButt.clear()
-		#self.delButt.queue_draw()
-
-
-	def setButton(self, recd):
-		self.recd = recd
-		if (self.recd == None):
-			return
-
-		self.loadThumb()
-		self.butt.setDraggable()
-		self.butt.queue_draw()
-		#self.delButt.queue_draw()
-
-
-	def loadThumb(self):
-		#todo: either thumbs are going into the main datastore object or they are dynamic.  ask dcbw for advice.
-		if (self.recd == None):
-			#todo: alert error here?
-			return
-
-		self.thumbPixbuf = self.recd.getThumbPixbuf( )
-		#todo: handle None
-		self.thumbCanvas = _camera.cairo_surface_from_gdk_pixbuf( self.thumbPixbuf )
-
-
-#class ThumbnailDeleteButton(gtk.Button):
-#	def __init__(self, ptc, ui):
-#		gtk.Button.__init__(self)
-#		self.tc = ptc
-#		self.ui = ui
-#		self.recd = None
-#		self.recdThumbRenderImg = None
-#		self.recdThumbInsensitiveImg = None
-
-#		self.exposeConnection = self.connect("expose_event", self.expose)
-#		self.clickConnection = self.connect("clicked", self.buttonClickCb)
-
-
-#	def clear( self ):
-#		self.recdThumbRenderImg == None
-#		self.recdThumbInsensitiveImg = None
-
-
-#	def buttonClickCb(self, args ):
-#		if (self.tc.recd == None):
-#			return
-#		if (not self.props.sensitive):
-#			return
-
-#		self.ui.deleteThumbSelection( self.tc.recd )
-
-
-#	def expose(self, widget, event):
-#		ctx = widget.window.cairo_create()
-#		self.draw( ctx, self.allocation.width, self.allocation.height )
-#		return True
-
-
-#	def draw(self, ctx, w, h):
-#		ctx.translate( self.allocation.x, self.allocation.y )
-#		self.background( ctx, self.ui.colorTray, w, h )
-#		if (self.tc.recd == None):
-#			return
-
-#		if (self.recdThumbRenderImg == None):
-#			self.recdThumbRenderImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-#			rtCtx = cairo.Context(self.recdThumbRenderImg)
-#			self.background(rtCtx, self.ui.colorTray, w, h)
-
-#			rtCtx.translate( w/2-25/2, 0 )
-#			self.ui.closeSvg.render_cairo(rtCtx)
-
-#		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
-#		ctx.paint()
-
-
-#	def background(self, ctx, col, w, h):
-#		self.setColor( ctx, col )
-
-#		ctx.line_to(0, 0)
-#		ctx.line_to(w, 0)
-#		ctx.line_to(w, h)
-#		ctx.line_to(0, h)
-#		ctx.close_path()
-
-#		ctx.fill()
-
-
-#	def setColor( self, ctx, col ):
-#		if (not col._opaque):
-#			ctx.set_source_rgba( col._r, col._g, col._b, col._a )
-#		else:
-#			ctx.set_source_rgb( col._r, col._g, col._b )
-
-
-class ThumbnailButton(gtk.Button):
-	def __init__(self, ptc, ui):
-		gtk.Button.__init__(self)
-		self.tc = ptc
-		self.ui = ui
-		self.recd = None
-		self.recdThumbRenderImg = None
-		self.recdThumbInsensitiveImg = None
-
-		self.exposeConnection = self.connect("expose_event", self._exposeEventCb)
-		self.clickConnection = self.connect("clicked", self._buttonClickCb)
-		self.enterEventConnection = self.connect("enter_notify_event", self._enterEventCb)
-		self.leaveEventConnection = self.connect("leave_notify_event", self._leaveEventCb)
-		self.dragBeginConnection = None
-		self.dragDataGetConnection = None
-		self.dragEndConnection = None
-		self.DELETE_TIMEOUT = None
-		self.inHere = False
-
-
-	def _enterEventCb( self, widget, event):
-		self.inHere = True
-		if (self.tc.recd == None):
-			return
-
-		self.recdThumbRenderImg = None
-		self.queue_draw()
-		self.DELETE_TIMEOUT = gobject.timeout_add( 1000, self._deleteTimeout )
-
-
-	def _leaveEventCb( self, widget, event ):
-		self.inHere = False
-
-		if (self.DELETE_TIMEOUT != None):
-			gobject.source_remove( self.DELETE_TIMEOUT )
-			self.DELETE_TIMEOUT = None
-
-		self.ui.hideDeleteWindow()
-
-
-	def _deleteTimeout( self ):
-		self.ui.showDeleteWindow( self, self.tc.recd )
-
-
-	def setDraggable( self ):
-		#todo: update when the media has been downloaded
-
-		if ( self.tc.recd.isClipboardCopyable() ):
-			targets =[]
-			#todo: make an array for all the mimes we support for these calls
-			if ( self.tc.recd.type == self.ui.ca.m.TYPE_PHOTO ):
-				targets = [('image/jpeg', 0, 0)]
-			elif ( self.tc.recd.type == self.ui.ca.m.TYPE_VIDEO ):
-				targets = [('video/ogg', 0, 0)]
-			elif ( self.tc.recd.type == self.ui.ca.m.TYPE_AUDIO ):
-				targets = [('audio/wav', 0, 0)]
-
-			if ( len(targets) > 0 ):
-				self.drag_source_set( gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_COPY)
-				self.dragBeginConnection = self.connect("drag_begin", self._dragBeginCb)
-				self.dragDataGetConnection = self.connect("drag_data_get", self._dragDataGetCb)
-				self.dragEndConnection = self.connect("drag_end", self._dragEndCb)
-
-
-	def clear( self ):
-		#todo: no dragging if insensitive either, why not?
-		self.drag_source_unset()
-		self.recdThumbRenderImg = None
-		self.recdThumbInsensitiveImg = None
-
-		#todo: remove the tempImagePath file..
-		self.tempImgPath = None
-
-		#disconnect the dragConnections
-		if (self.dragBeginConnection != None):
-			if (self.dragBeginConnection != 0):
-				self.disconnect(self.dragBeginConnection)
-				self.disconnect(self.dragDataGetConnection)
-				self.disconnect(self.dragEndConnection)
-				self.dragBeginConnection = None
-				self.dragDataGetConnection = None
-				self.dragEndConnection = None
-
-
-	def _buttonClickCb(self, args ):
-		if (self.tc.recd == None):
-			return
-		if (not self.props.sensitive):
-			return
-		self.ui.showThumbSelection( self.tc.recd )
-
-
-	def _exposeEventCb(self, widget, event):
-		ctx = widget.window.cairo_create()
-		self.draw( ctx, self.allocation.width, self.allocation.height )
-		return True
-
-
-	def _dragEndCb(self, widget, dragCtxt):
-		self.ui.doClipboardCopyFinish( self.tempImgPath )
-
-
-	def _dragBeginCb(self, widget, dragCtxt ):
-		self.drag_source_set_icon_pixbuf( self.tc.thumbPixbuf )
-
-
-	def _dragDataGetCb(self, widget, drag_context, selection_data, info, timestamp):
-		if (	(selection_data.target == 'image/jpeg') or
-				(selection_data.target == 'video/ogg' ) or
-				(selection_data.target == 'audio/wav')	):
-			self.tempImgPath = self.ui.doClipboardCopyStart( self.tc.recd )
-			self.ui.doClipboardCopyCopy( self.tempImgPath, selection_data )
-
-
-	def draw(self, ctx, w, h):
-		ctx.translate( self.allocation.x, self.allocation.y )
-		clr = self.ui.colorTray
-		self.background( ctx, clr, w, h )
-
-		if (self.tc.recd == None):
-			return
-		if (self.tc.thumbCanvas == None):
-			return
-
-		if (self.recdThumbRenderImg == None):
-			self.recdThumbRenderImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-			rtCtx = cairo.Context(self.recdThumbRenderImg)
-			clr = self.ui.colorTray
-			if (self.inHere):
-				clr = self.ui.colorBlack
-			self.background(rtCtx, clr, w, h)
-
-			xSvg = (w-self.ui.thumbSvgW)/2
-			ySvg = (h-self.ui.thumbSvgH)/2
-			rtCtx.translate( xSvg, ySvg )
-
-			if (self.tc.recd.type == self.ui.ca.m.TYPE_PHOTO):
-				if (self.tc.recd.buddy):
-					thumbPhotoSvg = self.ui.loadSvg(self.ui.thumbPhotoSvgData, self.tc.recd.colorStroke.hex, self.tc.recd.colorFill.hex)
-					thumbPhotoSvg.render_cairo(rtCtx)
-				else:
-					self.ui.thumbPhotoSvg.render_cairo(rtCtx)
-
-				rtCtx.translate( 8, 8 )
-				rtCtx.set_source_surface(self.tc.thumbCanvas, 0, 0)
-				rtCtx.paint()
-
-			elif (self.tc.recd.type == self.ui.ca.m.TYPE_VIDEO):
-				if (self.tc.recd.buddy):
-					thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.tc.recd.colorStroke.hex, self.tc.recd.colorFill.hex)
-					thumbVideoSvg.render_cairo(rtCtx)
-				else:
-					self.ui.thumbVideoSvg.render_cairo(rtCtx)
-
-				rtCtx.translate( 8, 22 )
-				rtCtx.set_source_surface(self.tc.thumbCanvas, 0, 0)
-				rtCtx.paint()
-
-
-			elif (self.tc.recd.type == self.ui.ca.m.TYPE_AUDIO):
-				if (self.tc.recd.buddy):
-					thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.tc.recd.colorStroke.hex, self.tc.recd.colorFill.hex)
-					thumbVideoSvg.render_cairo(rtCtx)
-				else:
-					self.ui.thumbVideoSvg.render_cairo(rtCtx)
-
-				rtCtx.translate( 8, 22 )
-				rtCtx.set_source_surface(self.tc.thumbCanvas, 0, 0)
-				rtCtx.paint()
-
-		ctx.set_source_surface(self.recdThumbRenderImg, 0, 0)
-		ctx.paint()
-
-
-	def background(self, ctx, col, w, h):
-		self.setColor( ctx, col )
-
-		ctx.line_to(0, 0)
-		ctx.line_to(w, 0)
-		ctx.line_to(w, h)
-		ctx.line_to(0, h)
-		ctx.close_path()
-
-		ctx.fill()
-
-
-	def setColor( self, ctx, col ):
-		if (not col._opaque):
-			ctx.set_source_rgba( col._r, col._g, col._b, col._a )
-		else:
-			ctx.set_source_rgb( col._r, col._g, col._b )
 
 
 class RecordWindow(gtk.Window):
@@ -1962,8 +1556,10 @@ class ModeToolbar(gtk.Toolbar):
 	def modeVideoCb(self, button):
 		self.ca.m.doVideoMode()
 
+
 	def modePhotoCb(self, button):
 		self.ca.m.doPhotoMode()
+
 
 	def modeAudioCb(self, button):
 		self.ca.m.doAudioMode()

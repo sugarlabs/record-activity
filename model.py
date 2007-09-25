@@ -200,41 +200,10 @@ class Model:
 			return
 
 		self.setUpdating( True )
-
 		hash = self.mediaHashs[type]
+		if (len(hash) > 0):
+			self.ca.ui.addThumb( hash[len(hash)-1] )
 
-		#don't load more than you possibly need by accident
-		if (mx>mn+self.ca.ui.numThumbs):
-			mx = mn+self.ca.ui.numThumbs
-		mx = min( mx, len(hash) )
-
-		if (mn<0):
-			mn = 0
-
-		if (mx == mn):
-			mn = mx-self.ca.ui.numThumbs
-
-		if (mn<0):
-			mn = 0
-
-		#
-		#	UI
-		#
-		#at which # do the left and right buttons begin?
-		left = -1
-		rigt = -1
-		if (mn>0):
-			left = max(0, mn-self.ca.ui.numThumbs)
-		rigt = mx
-		if (mx>=len(hash)):
-			rigt = -1
-
-		#get these from the hash to send over
-		addToTray = []
-		for i in range (mn, mx):
-			addToTray.append( hash[i] )
-
-		self.ca.ui.updateThumbs( addToTray, left, mn, rigt  )
 		self.setUpdating( False )
 
 
@@ -584,8 +553,7 @@ class Model:
 		return thumbImg
 
 
-
-	def deleteRecorded( self, recd, mn ):
+	def deleteRecorded( self, recd ):
 		#remove files from the filesystem if not on the datastore
 		if (recd.datastoreId == None):
 			mediaFile = recd.getMediaFilepath( False )
@@ -605,13 +573,14 @@ class Model:
 		hash.remove( recd )
 
 		#update your own ui
-		self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
+		#self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
 
 
 	def thumbAdded( self, type ):
 		#todo: if you are not at the end of the list, do we want to force you to the end?
 		mx = len(self.mediaHashs[type])
 		mn = max(mx-self.ca.ui.numThumbs, 0)
+
 		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback
 		gobject.idle_add(self.setupThumbs, type, mn, mx )
 
