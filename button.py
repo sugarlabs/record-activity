@@ -21,11 +21,50 @@ class RecdButton(TrayButton, gobject.GObject):
 
 
 	def getImg( self ):
-		pb = self.ui.thumbVideoSvg.get_pixbuf()
 		img = gtk.Image()
-		img.set_from_pixbuf( pb )
-		img.show()
+		ipb = self.recd.getThumbPixbuf()
+		if (self.recd.type == self.ui.ca.m.TYPE_PHOTO):
+			if (self.tc.recd.buddy):
+				thumbPhotoSvg = self.ui.loadSvg(self.ui.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+				pb = thumbPhotoSvg.get_pixbuf()
+				img.set_from_pixbuf( pb )
+				img.show()
+				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
+			else:
+				pb = self.ui.thumbPhotoSvg.get_pixbuf()
+				img.set_from_pixbuf( pb )
+				img.show()
+				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
+
+		if (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
+			if (self.tc.recd.buddy):
+				thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+				pb = thumbVideoSvg.get_pixbuf()
+				img.set_from_pixbuf( pb )
+				img.show()
+				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
+			else:
+				pb = self.ui.thumbVideoSvg.get_pixbuf()
+				img.set_from_pixbuf( pb )
+				img.show()
+				ipb.composite(pb, 8, 22, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
+
+		if (self.recd.type == self.ui.ca.m.TYPE_AUDIO):
+			if (self.tc.recd.buddy):
+				thumbAudioSvg = self.ui.loadSvg(self.ui.thumbAudioSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+				pb = thumbAudioSvg.get_pixbuf()
+				img.set_from_pixbuf( pb )
+				img.show()
+				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
+			else:
+				pb = self.ui.thumbAudioSvg.get_pixbuf()
+				img.set_from_pixbuf( pb )
+				img.show()
+				ipb.composite(pb, 8, 22, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
+
+		img.set_from_pixbuf(pb)
 		return img
+
 
 
 	def setup_rollover_options( self, info ):

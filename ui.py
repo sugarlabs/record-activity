@@ -1011,7 +1011,7 @@ class UI:
 	def addThumb( self, recd ):
 		butt = RecdButton( self, recd )
 		butt.connect("clicked", self._thumbClicked, recd )
-		self.thumbTray.add_item( butt, 0 )
+		self.thumbTray.add_item( butt, len(self.thumbTray.get_children())-1 )
 		butt.show()
 
 

@@ -572,9 +572,6 @@ class Model:
 		index = hash.index(recd)
 		hash.remove( recd )
 
-		#update your own ui
-		#self.setupThumbs(recd.type, mn, mn+self.ca.ui.numThumbs)
-
 
 	def thumbAdded( self, type ):
 		#todo: if you are not at the end of the list, do we want to force you to the end?
