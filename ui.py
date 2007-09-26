@@ -106,9 +106,6 @@ class UI:
 		self.letterBoxVW = (self.vw/2)-(self.inset*2)
 		self.letterBoxVH = int(self.letterBoxVW*.75)
 
-		#number of thumbs
-		self.numThumbs = 7
-
 		#prep for when to show
 		self.allocated = False
 		self.mapped = False
@@ -229,6 +226,7 @@ class UI:
 		self.thumbTray = HTray()
 		self.thumbTray.set_size_request( -1, self.thumbTrayHt )
 		self.mainBox.pack_end( self.thumbTray, expand=False )
+		self.thumbTray.show()
 
 		#image windows
 		self.windowStack = []
@@ -1011,7 +1009,7 @@ class UI:
 	def addThumb( self, recd ):
 		butt = RecdButton( self, recd )
 		butt.connect("clicked", self._thumbClicked, recd )
-		self.thumbTray.add_item( butt, len(self.thumbTray.get_children())-1 )
+		self.thumbTray.add_item( butt, len(self.thumbTray.get_children()) )
 		butt.show()
 
 

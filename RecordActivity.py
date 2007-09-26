@@ -63,12 +63,6 @@ class RecordActivity(activity.Activity):
 		self.nickName = profile.get_nick_name()
 		self.basePath = activity.get_bundle_path()
 		self.gfxPath = os.path.join(self.basePath, "gfx")
-#		self.topJournalPath = os.path.join(os.path.expanduser("~"), "Journal", self.activityName)
-#		if (not os.path.exists(self.topJournalPath)):
-#			os.makedirs(self.topJournalPath)
-#		self.journalPath = os.path.join(self.topJournalPath, self.instanceId)
-#		if (not os.path.exists(self.journalPath)):
-#			os.makedirs(self.journalPath)
 		self.recreateTemp()
 
 		#whoami?
@@ -77,8 +71,6 @@ class RecordActivity(activity.Activity):
 		self.hashedKey = util.printable_hash(keyHash)
 
 		#todo: replace this code to avoid conflicts between multiple instances (tubes?)
-		#xmlRpcPort = 8888
-		#httpPort = 8889
 		h = hash(self.instanceId)
 		self.xmlRpcPort = 1024 + (h%32255) * 2
 		self.httpPort = self.xmlRpcPort + 1
