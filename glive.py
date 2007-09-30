@@ -156,7 +156,7 @@ class Glive:
 
 			movieQueue = pipeline.get_by_name("movieQueue_"+n)
 			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
-			movieFilepath = os.path.join(self.ca.tempPath, "output.ogv" )
+			movieFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
 			movieFilesink.set_property("location", movieFilepath )
 
 			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
@@ -294,7 +294,7 @@ class Glive:
 
 		n = str(len(self.thumbPipes))
 		f = str(len(self.pipes)-2)
-		oggFilepath = os.path.join(self.ca.tempPath, "output.ogv" )
+		oggFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
 
 		#todo: test ~~> need to check *exists* and the filesize here to prevent stalling... & maybe earlier?
 		if (not os.path.exists(oggFilepath)):
@@ -337,7 +337,7 @@ class Glive:
 
 			n = str(len(self.muxPipes))
 			f = str(len(self.pipes)-2)
-			oggFilepath = os.path.join(self.ca.tempPath, "output.ogv")
+			oggFilepath = os.path.join(self.ca.tempPath, "output.ogg") #ogv
 			if (self.audio):
 				if ( len(self.muxPipes) > 0 ):
 					self.muxPipe().get_bus().disable_sync_message_emission()
@@ -346,7 +346,7 @@ class Glive:
 
 				#todo: write to rainbow tmp
 				wavFilepath = os.path.join(self.ca.tempPath, "output.wav")
-				muxFilepath = os.path.join(self.ca.tempPath, "mux.ogv")
+				muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg") #ogv
 				#todo: ensure that decoding is required
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
 				muxBus = muxline.get_bus()
@@ -407,8 +407,8 @@ class Glive:
 			f = str(len(self.pipes)-2)
 
 			wavFilepath = os.path.join(self.ca.tempPath, "output.wav")
-			oggFilepath = os.path.join(self.ca.tempPath, "output.ogv")
-			muxFilepath = os.path.join(self.ca.tempPath, "mux.ogv")
+			oggFilepath = os.path.join(self.ca.tempPath, "output.ogg") #ogv
+			muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg") #ogv
 			os.remove( wavFilepath )
 			os.remove( oggFilepath )
 			self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath))

@@ -481,7 +481,7 @@ class Model:
 			mediaFilename = mediaFilename + ".jpg"
 			titleStarter = "Photo"
 		if (type == self.TYPE_VIDEO):
-			mediaFilename = mediaFilename + ".ogv"
+			mediaFilename = mediaFilename + ".ogg" #ogv
 			titleStarter = "Video"
 		if (type == self.TYPE_AUDIO):
 			mediaFilename = mediaFilename + ".wav"

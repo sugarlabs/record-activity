@@ -68,7 +68,6 @@ class RecdButton(TrayButton, gobject.GObject):
 		return img
 
 
-
 	def setup_rollover_options( self, info ):
 		palette = Palette(info)
 		self.set_palette(palette)
