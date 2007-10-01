@@ -18,6 +18,8 @@ class RecdButton(TrayButton, gobject.GObject):
 		self.set_icon_widget( img )
 
 		self.setup_rollover_options( recd.title )
+		#todo: add drag and drop
+		#todo: add copy to clipboard
 
 
 	def getImg( self ):
