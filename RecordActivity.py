@@ -49,6 +49,9 @@ class RecordActivity(activity.Activity):
 		self.activityName = "Record"
 		self.set_title( self.activityName )
 
+		self.connect( "shared", self._sharedCb )
+		self.connect( "notify::active", self._activeCb )
+
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
 
@@ -82,10 +85,6 @@ class RecordActivity(activity.Activity):
 		self.gplay = Gplay( self )
 		self.m = Model( self )
 		self.ui = UI( self )
-
-		#listen for meshins
-		self.connect( "shared", self._sharedCb )
-		self.connect( "notify::active", self._activeCb )
 
 		#share, share alike
 		#if the prsc knows about an act with my id on the network...
