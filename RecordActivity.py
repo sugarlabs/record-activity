@@ -63,11 +63,11 @@ class RecordActivity(activity.Activity):
 
 		self.set_title( self.activityName )
 
+		#flags for controlling the writing to the datastore
 		self.I_AM_CLOSING = False
 		self.I_AM_SAVED = False
 
-		self.instanceId = self._activity_id
-		self.nickName = profile.get_nick_name()
+		#paths
 		self.basePath = activity.get_bundle_path()
 		self.gfxPath = os.path.join(self.basePath, "gfx")
 		self.recreateTemp()
@@ -76,22 +76,24 @@ class RecordActivity(activity.Activity):
 		key = profile.get_pubkey()
 		keyHash = util._sha_data(key)
 		self.hashedKey = util.printable_hash(keyHash)
+		self.instanceId = self._activity_id
+		self.nickName = profile.get_nick_name()
 
-		#todo: replace this code to avoid conflicts between multiple instances (tubes?)
+		#todo: also tubes
 		h = hash(self.instanceId)
 		self.xmlRpcPort = 1024 + (h%32255) * 2
 		self.httpPort = self.xmlRpcPort + 1
-
 		self.httpServer = None
 		self.meshClient = None
 		self.meshXMLRPCServer = None
+
+		#the main classes
 		self.glive = Glive( self )
 		self.gplay = Gplay( self )
 		self.m = Model( self )
 		self.ui = UI( self )
 
-		#share, share alike
-		#if the prsc knows about an act with my id on the network...
+		#CSCL
 		if self._shared_activity:
 			#have you joined or shared this activity yourself?
 			if self.get_shared():
@@ -99,6 +101,7 @@ class RecordActivity(activity.Activity):
 			else:
 				self.connect("joined", self._meshJoinedCb)
 
+		#initialize the app with the thumbs todo: do this by selecting the Photo tab?
 		self.m.selectLatestThumbs(self.m.TYPE_PHOTO)
 
 		return False
