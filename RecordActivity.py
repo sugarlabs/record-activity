@@ -38,6 +38,8 @@ from mesh import HttpServer
 from glive import Glive
 from gplay import Gplay
 
+from gettext import gettext as _
+
 import xml.dom.minidom
 from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
@@ -46,23 +48,25 @@ class RecordActivity(activity.Activity):
 
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
-		self.activityName = "Record"
-		self.set_title( self.activityName )
-
+		#handle the initial notify::active callback differently
+		self.JUST_LAUNCHED = True
+		#connect these right away
 		self.connect( "shared", self._sharedCb )
 		self.connect( "notify::active", self._activeCb )
-
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
 
 
 	def _initme( self, userdata=None ):
-		self.instanceId = self._activity_id
-		self.ACTIVE = True
+		#todo: load all other strings here
+		self.activityName = _('Record')
+
+		self.set_title( self.activityName )
 
 		self.I_AM_CLOSING = False
 		self.I_AM_SAVED = False
 
+		self.instanceId = self._activity_id
 		self.nickName = profile.get_nick_name()
 		self.basePath = activity.get_bundle_path()
 		self.gfxPath = os.path.join(self.basePath, "gfx")
@@ -101,13 +105,10 @@ class RecordActivity(activity.Activity):
 
 
 	def read_file(self, file):
-		print("read file 1")
 		self.m.fillMediaHash(file)
-		print("read file 2")
 
 
 	def write_file(self, file):
-		print("write_file 1")
 		self.I_AM_SAVED = False
 		SAVING_AT_LEAST_ONE = False
 
@@ -146,8 +147,6 @@ class RecordActivity(activity.Activity):
 
 
 	def saveIt( self, xmlFile, el, recd ):
-		print("save 1")
-
 		#presume we don't need to serialize...
 		needToDatastoreMedia = False
 
@@ -163,8 +162,6 @@ class RecordActivity(activity.Activity):
 
 
 	def saveXml( self, xmlFile, el, recd ):
-		print( "1 saveXML" )
-
 		el.setAttribute("type", str(recd.type))
 
 		if (recd.type == self.m.TYPE_AUDIO):
@@ -188,43 +185,28 @@ class RecordActivity(activity.Activity):
 
 		recd.savedXml = True
 		self.checkDestroy( el.ownerDocument, xmlFile )
-		print("2 saveXML" )
 
 
 	def saveMedia( self, xmlFile, el, recd ):
-		print("saveMedia 1")
 		#note that we update the recds that go through here to how they would
 		#look on a fresh load from file since this won't just happen on close()
 
 		if (recd.datastoreId != None):
-			print("name change 1")
 			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 			#However, they might have changed the name of the file
 			if (recd.titleChange):
-				print("name change 2")
 				self.m.loadMediaFromDatastore( recd )
 				if (recd.datastoreOb.metadata['title'] != recd.title):
-					print("name change 3")
 
 					recd.datastoreOb.metadata['title'] = recd.title
 					datastore.write(recd.datastoreOb)
-
-					print("name change 4")
-
-					#todo: move this code to the final closeout?
-					#if (self.I_AM_CLOSING):
-					#	recd.datastoreOb.destroy()
-					#	del recd.datastoreOb
-
 
 				#reset for the next title change if not closing...
 				recd.titleChange = False
 				#save the title to the xml
 				recd.savedMedia = True
 
-				print("name change 5")
 				self.saveXml( xmlFile, el, recd )
-				print("name change 6")
 			else:
 				recd.savedMedia = True
 				self.saveXml( xmlFile, el, recd )
@@ -232,9 +214,7 @@ class RecordActivity(activity.Activity):
 		else:
 			#this will remove the media from being accessed on the local disk since it puts it away into cold storage
 			#therefore this is only called when write_file is called by the activity superclass
-			print("saveMedia 2")
 			mediaObject = datastore.create()
-			print("saveMedia 3")
 			#todo: what other metadata to set?
 			mediaObject.metadata['title'] = recd.title
 			#jobject.metadata['keep'] = '0'
@@ -259,15 +239,6 @@ class RecordActivity(activity.Activity):
 			mediaFile = recd.getMediaFilepath(False)
 			mediaObject.file_path = mediaFile
 
-			print("saveMedia 4")
-	#		dcbw:
-	#		datastore.write(mediaObject, 	reply_handler=lambda *args: self._mediaSaveCb(recd, *args),
-	#										error_handler=lambda *args: self._mediaSaveErrorCb(recd, *args) );
-
-	#		jedierikb:
-	#		datastore.write(mediaObject, 	reply_handler=(lambda: self._mediaSaveCb(recd)),
-	#										error_handler=(lambda: self._mediaSaveErrorCb(recd))	);
-
 			datastore.write( mediaObject )
 			self.doPostMediaSave( xmlFile, el, recd, mediaObject )
 
@@ -275,7 +246,6 @@ class RecordActivity(activity.Activity):
 	def _get_base64_pixbuf_data(self, pixbuf):
 		data = [""]
 		pixbuf.save_to_callback(self._save_data_to_buffer_cb, "png", {}, data)
-
 		import base64
 		return base64.b64encode(str(data[0]))
 
@@ -294,8 +264,6 @@ class RecordActivity(activity.Activity):
 
 
 	def doPostMediaSave( self, xmlFile, el, recd, mediaObject ):
-		print("doPostMediaSave 1")
-
 		recd.datastoreId = mediaObject.object_id
 		recd.mediaFilename = None
 		recd.thumbFilename = None
@@ -325,19 +293,17 @@ class RecordActivity(activity.Activity):
 
 
 	def _activeCb( self, widget, pspec ):
-		print("active?", self.props.active, self.ACTIVE )
-		if (not self.props.active and self.ACTIVE):
-			self.stopPipes()
-		elif (self.props.active and not self.ACTIVE):
-			self.restartPipes()
-			print("should restart pipes")
+		if (self.JUST_LAUNCHED):
+			self.JUST_LAUNCHED = False
+			return
 
-		self.ACTIVE = self.props.active
+		if (not self.props.active):
+			self.stopPipes()
+		elif (self.props.active):
+			self.restartPipes()
 
 
 	def stopPipes(self):
-		#todo: also make sure not to put the video back on display when done.
-		print("stop pipes")
 		self.gplay.stop()
 		self.ui.doMouseListener( False )
 
@@ -349,7 +315,6 @@ class RecordActivity(activity.Activity):
 
 
 	def restartPipes(self):
-		print("restart pipes")
 		if (not self.m.UPDATING):
 			self.ui.updateModeChange( )
 			self.ui.doMouseListener( True )
@@ -363,7 +328,6 @@ class RecordActivity(activity.Activity):
 
 
 	def close( self ):
-		print("close 1")
 		self.I_AM_CLOSING = True
 		#quicker we look like we're gone, the better
 		self.hide()
@@ -377,14 +341,11 @@ class RecordActivity(activity.Activity):
 		self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
 		self.glive.stop( )
 
-		print("close 2")
 		#this calls write_file
 		activity.Activity.close( self )
-		print("close 3")
 
 
 	def checkDestroy( self, album, xmlFile ):
-		print("checkDestroy 0")
 		allDone = True
 
 		for h in range (0, len(self.m.mediaHashs)):
@@ -400,22 +361,14 @@ class RecordActivity(activity.Activity):
 			self.I_AM_SAVED = True
 
 		#todo: reset all the saved flags or just let them take care of themselves on the next save?
-		print("checkDestroy 1; I_AM_SAVED: ", self.I_AM_SAVED )
 		if (self.I_AM_SAVED and self.I_AM_CLOSING):
-			print("checkDestroy 2 -- pre destroy()")
 			self.destroy()
-			print("checkDestroy 3 -- post destroy()")
 
 
 	def destroy( self ):
-		print( "destroy and I_AM_CLOSING:", self.I_AM_CLOSING, "I_AM_SAVED:", self.I_AM_SAVED, "self._updating_jobject:", self._updating_jobject )
-
 		if self.I_AM_CLOSING:
 			self.hide()
 
 		if self.I_AM_SAVED:
-			print("total Destruction 1")
 			self.recreateTemp()
-			print("total Destruction 2")
 			activity.Activity.destroy( self )
-			print("total Destruction 3")
