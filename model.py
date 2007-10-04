@@ -57,21 +57,17 @@ class Model:
 		self.setConstants()
 
 		self.mediaTypes = {}
-		self.mediaTypes[self.TYPE_PHOTO] = {"name":"photo"}
-		self.mediaTypes[self.TYPE_VIDEO] = {"name":"video"}
-		self.mediaTypes[self.TYPE_AUDIO] = {"name":"audio"}
+		self.mediaTypes[self.TYPE_PHOTO] = {"name":"photo", "mime":"image/jpeg", "ext":"jpg"}
+		self.mediaTypes[self.TYPE_VIDEO] = {"name":"video", "mime":"video/ogg", "ext":"ogg"}
+		self.mediaTypes[self.TYPE_AUDIO] = {"name":"audio", "mime":"audio/wav", "ext":"wav"}
 
 		self.mediaHashs = {}
-		#for i in range(0, len(self.mediaTypes)):
-		#for item in self.mediaTypes.keys():
 		for key,value in self.mediaTypes.items():
 			self.mediaHashs[ key ] = []
 
 
 	def fillMediaHash( self, index ):
-		print("fillMediaHash 1")
 		if (os.path.exists(index)):
-			print("fillMediaHash 2")
 			doc = parse( os.path.abspath(index) )
 
 			#todo: use an array/dictionary here

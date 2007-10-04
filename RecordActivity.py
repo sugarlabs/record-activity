@@ -245,12 +245,14 @@ class RecordActivity(activity.Activity):
 			mediaObject.metadata['icon-color'] = colors
 
 			#todo: use dictionary here
-			if (recd.type == self.m.TYPE_PHOTO):
-				mediaObject.metadata['mime_type'] = 'image/jpeg'
-			elif (recd.type == self.m.TYPE_VIDEO):
-				mediaObject.metadata['mime_type'] = 'video/ogg'
-			elif (recd.type == self.m.TYPE_AUDIO):
-				mediaObject.metadata['mime_type'] = 'audio/wav'
+			for h in range (0, len(self.m.mediaTypes)):
+				mtype = self.m.mediaTypes[h]
+				if (recd.type == self.m.TYPE_PHOTO):
+					mediaObject.metadata['mime_type'] = 'image/jpeg'
+				elif (recd.type == self.m.TYPE_VIDEO):
+					mediaObject.metadata['mime_type'] = 'video/ogg'
+				elif (recd.type == self.m.TYPE_AUDIO):
+					mediaObject.metadata['mime_type'] = 'audio/wav'
 
 			#todo: make sure the file is still available before you ever get to this point...
 			mediaFile = recd.getMediaFilepath(False)
