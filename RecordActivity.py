@@ -59,7 +59,10 @@ class RecordActivity(activity.Activity):
 
 	def _initme( self, userdata=None ):
 		#todo: all other international strings here
-		self.activityName = _('Record')
+		self.istrActivityName = _('Record')
+		self.istrPhoto = _('Photo')
+		self.istrVideo = _('Video')
+		self.istrAudio = _('Audio')
 		self.recdTitle = "title"
 		self.recdTime = "time"
 		self.recdPhotographer = "photographer"
@@ -80,7 +83,7 @@ class RecordActivity(activity.Activity):
 		self.keyMime = "mime"
 		self.keyExt = "ext"
 
-		self.set_title( self.activityName )
+		self.set_title( self.istrActivityName )
 
 		#flags for controlling the writing to the datastore
 		self.I_AM_CLOSING = False

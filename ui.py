@@ -115,13 +115,14 @@ class UI:
 
 		#this includes the default sharing tab
 		toolbox = activity.ActivityToolbox(self.ca)
+		toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
 		self.ca.set_toolbox(toolbox)
 		self.photoToolbar = PhotoToolbar(self.ca)
-		toolbox.add_toolbar( ('Photo'), self.photoToolbar )
+		toolbox.add_toolbar( self.ca.istrPhoto, self.photoToolbar )
 		self.videoToolbar = VideoToolbar(self.ca)
-		toolbox.add_toolbar( ('Video'), self.videoToolbar )
+		toolbox.add_toolbar( self.ca.istrVideo, self.videoToolbar )
 		self.audioToolbar = AudioToolbar(self.ca)
-		toolbox.add_toolbar( ('Audio'), self.audioToolbar )
+		toolbox.add_toolbar( self.ca.istrAudio, self.audioToolbar )
 		toolbox.show()
 		self.tbars = {self.ca.m.MODE_PHOTO:self.photoToolbar,self.ca.m.MODE_VIDEO:self.videoToolbar,self.ca.m.MODE_AUDIO:self.audioToolbar}
 		toolbox.set_current_toolbar(self.tbars[self.ca.m.MODE])
@@ -297,6 +298,16 @@ class UI:
 		self.hiddenWidgets = False
 		self.resetWidgetFadeTimer()
 		self.showLiveVideoTags()
+
+
+	def _toolbarChangeCb( self, args ):
+		print("clicked a new toolbar!")
+#	def modeVideoCb(self, button):
+#		self.ca.m.doVideoMode()
+#	def modePhotoCb(self, button):
+#		self.ca.m.doPhotoMode()
+#	def modeAudioCb(self, button):
+#		self.ca.m.doAudioMode()
 
 
 	def addToWindowStack( self, win, w, h, parent ):
@@ -1527,43 +1538,19 @@ class RecordWindow(gtk.Window):
 				self.shutterButton.set_image( self.ui.shutterCamImg )
 
 
-class ModeToolbar(gtk.Toolbar):
+class PhotoToolbar(gtk.Toolbar):
 	def __init__(self, pc):
 		gtk.Toolbar.__init__(self)
 		self.ca = pc
 
-		self.picButt = RadioToolButton( "menubar_photo" )
-		self.picButt.set_tooltip("Photo")
-		self.picButt.props.sensitive = True
-		self.picButt.connect('clicked', self.modePhotoCb)
-		self.insert(self.picButt, -1)
-		self.picButt.show()
 
-		self.vidButt = RadioToolButton( "menubar_video" )
-		self.vidButt.set_group( self.picButt )
-		self.vidButt.set_tooltip("Video")
-		self.vidButt.props.sensitive = True
-		self.vidButt.connect('clicked', self.modeVideoCb)
-		self.insert(self.vidButt, -1)
-		self.vidButt.show()
-
-		self.audButt = RadioToolButton( "menubar_video" )
-		self.audButt.set_group( self.picButt )
-		self.audButt.set_tooltip("Audio")
-		self.audButt.props.sensitive = True
-		self.audButt.connect('clicked', self.modeAudioCb)
-		self.insert(self.audButt, -1)
-		self.audButt.show()
+class VideoToolbar(gtk.Toolbar):
+	def __init__(self, pc):
+		gtk.Toolbar.__init__(self)
+		self.ca = pc
 
 
-	def modeVideoCb(self, button):
-		self.ca.m.doVideoMode()
-
-
-	def modePhotoCb(self, button):
-		self.ca.m.doPhotoMode()
-
-
-	def modeAudioCb(self, button):
-		self.ca.m.doAudioMode()
-
+class AudioToolbar(gtk.Toolbar):
+	def __init__(self, pc):
+		gtk.Toolbar.__init__(self)
+		self.ca = pc
