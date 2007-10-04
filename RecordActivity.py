@@ -219,7 +219,6 @@ class RecordActivity(activity.Activity):
 			if (recd.titleChange):
 				self.m.loadMediaFromDatastore( recd )
 				if (recd.datastoreOb.metadata['title'] != recd.title):
-
 					recd.datastoreOb.metadata['title'] = recd.title
 					datastore.write(recd.datastoreOb)
 
