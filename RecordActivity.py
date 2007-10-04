@@ -58,8 +58,22 @@ class RecordActivity(activity.Activity):
 
 
 	def _initme( self, userdata=None ):
-		#todo: load all other strings here
+		#todo: all other international strings here
 		self.activityName = _('Record')
+		self.recdTitle = "title"
+		self.recdTime = "time"
+		self.recdPhotographer = "photographer"
+		self.recdColorStroke = "colorStroke"
+		self.recdColorFill = "colorFill"
+		self.recdHashKey = "hashKey"
+		self.recdBuddy = "buddy"
+		self.recdMediaMd5 = "mediaMd5"
+		self.recdThumbMd5 = "thumbMd5"
+		self.recdMediaBytes = "mediaBytes"
+		self.recdThumbBytes = "thumbBytes"
+		self.recdDatastoreId = "datastoreId"
+		self.recdAudioImage = "audioImage"
+		self.recdAlbum = "album"
 
 		self.set_title( self.activityName )
 
@@ -117,7 +131,7 @@ class RecordActivity(activity.Activity):
 
 		xmlFile = open( file, "w" )
 		impl = getDOMImplementation()
-		album = impl.createDocument(None, "album", None)
+		album = impl.createDocument(None, self.recdAlbum, None)
 		root = album.documentElement
 
 		atLeastOne = False
@@ -170,21 +184,21 @@ class RecordActivity(activity.Activity):
 		if (recd.type == self.m.TYPE_AUDIO):
 			aiPixbuf = recd.getAudioImagePixbuf( )
 			aiPixbufString = str( self._get_base64_pixbuf_data(aiPixbuf) )
-			el.setAttribute("audioImage", aiPixbufString)
+			el.setAttribute(self.recdAudioImage, aiPixbufString)
 
-		el.setAttribute("title", recd.title)
-		el.setAttribute("time", str(recd.time))
-		el.setAttribute("photographer", recd.photographer)
-		el.setAttribute("colorStroke", str(recd.colorStroke.hex) )
-		el.setAttribute("colorFill", str(recd.colorFill.hex) )
-		el.setAttribute("hashKey", str(recd.hashKey))
-		el.setAttribute("buddy", str(recd.buddy))
-		el.setAttribute("mediaMd5", str(recd.mediaMd5))
-		el.setAttribute("thumbMd5", str(recd.thumbMd5))
-		el.setAttribute("mediaBytes", str(recd.mediaBytes))
-		el.setAttribute("thumbBytes", str(recd.thumbBytes))
+		el.setAttribute(self.recdTitle, recd.title)
+		el.setAttribute(self.recdTime, str(recd.time))
+		el.setAttribute(self.recdPhotographer, recd.photographer)
+		el.setAttribute(self.recdColorStroke, str(recd.colorStroke.hex) )
+		el.setAttribute(self.recdColorFill, str(recd.colorFill.hex) )
+		el.setAttribute(self.recdHashKey, str(recd.hashKey))
+		el.setAttribute(self.recdBuddy, str(recd.buddy))
+		el.setAttribute(self.recdMediaMd5, str(recd.mediaMd5))
+		el.setAttribute(self.recdThumbMd5, str(recd.thumbMd5))
+		el.setAttribute(self.recdMediaBytes, str(recd.mediaBytes))
+		el.setAttribute(self.recdThumbBytes, str(recd.thumbBytes))
 		if (recd.datastoreId != None):
-			el.setAttribute("datastoreId", str(recd.datastoreId))
+			el.setAttribute(self.recdDatastoreId, str(recd.datastoreId))
 
 		recd.savedXml = True
 		self.checkDestroy( el.ownerDocument, xmlFile )
@@ -236,7 +250,7 @@ class RecordActivity(activity.Activity):
 			elif (recd.type == self.m.TYPE_VIDEO):
 				mediaObject.metadata['mime_type'] = 'video/ogg'
 			elif (recd.type == self.m.TYPE_AUDIO):
-				mediaObject.metadata['mime_type'] = 'audio/ogg'
+				mediaObject.metadata['mime_type'] = 'audio/wav'
 
 			#todo: make sure the file is still available before you ever get to this point...
 			mediaFile = recd.getMediaFilepath(False)
@@ -324,6 +338,7 @@ class RecordActivity(activity.Activity):
 
 
 	def recreateTemp( self ):
+		#todo: rainbow
 		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
 		if (os.path.exists(self.tempPath)):
 			shutil.rmtree( self.tempPath )
