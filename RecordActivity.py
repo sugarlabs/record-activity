@@ -74,6 +74,11 @@ class RecordActivity(activity.Activity):
 		self.recdDatastoreId = "datastoreId"
 		self.recdAudioImage = "audioImage"
 		self.recdAlbum = "album"
+		self.recdType = "type"
+		self.recdBuddyThumb = "buddyThumb"
+		self.keyName = "name"
+		self.keyMime = "mime"
+		self.keyExt = "ext"
 
 		self.set_title( self.activityName )
 
@@ -115,8 +120,8 @@ class RecordActivity(activity.Activity):
 			else:
 				self.connect("joined", self._meshJoinedCb)
 
-		#initialize the app with the thumbs todo: do this by selecting the Photo tab?
-		self.m.selectLatestThumbs(self.m.TYPE_PHOTO)
+		#initialize the app with the default thumbs
+		self.setupThumbs( self.m.MODE )
 
 		return False
 
@@ -138,7 +143,7 @@ class RecordActivity(activity.Activity):
 
 		#flag everything for saving...
 		for type,value in self.m.mediaTypes.items():
-			typeName = value["name"]
+			typeName = value[self.keyName]
 			hash = self.m.mediaHashs[type]
 			for i in range (0, len(hash)):
 				recd = hash[i]
@@ -149,7 +154,7 @@ class RecordActivity(activity.Activity):
 		#and if there is anything to save, save it
 		if (atLeastOne):
 			for type,value in self.m.mediaTypes.items():
-				typeName = value["name"]
+				typeName = value[self.keyName]
 				hash = self.m.mediaHashs[type]
 
 				for i in range (0, len(hash)):
@@ -170,7 +175,7 @@ class RecordActivity(activity.Activity):
 		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
 			pixbuf = recd.getThumbPixbuf( )
 			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
-			el.setAttribute("buddyThumb", buddyThumb )
+			el.setAttribute(self.recdBuddyThumb, buddyThumb )
 			recd.savedMedia = True
 			self.saveXml( xmlFile, el, recd )
 		else:
@@ -179,7 +184,7 @@ class RecordActivity(activity.Activity):
 
 
 	def saveXml( self, xmlFile, el, recd ):
-		el.setAttribute("type", str(recd.type))
+		el.setAttribute(self.recdType, str(recd.type))
 
 		if (recd.type == self.m.TYPE_AUDIO):
 			aiPixbuf = recd.getAudioImagePixbuf( )
@@ -244,15 +249,9 @@ class RecordActivity(activity.Activity):
 			colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
 			mediaObject.metadata['icon-color'] = colors
 
-			#todo: use dictionary here
-			for h in range (0, len(self.m.mediaTypes)):
-				mtype = self.m.mediaTypes[h]
-				if (recd.type == self.m.TYPE_PHOTO):
-					mediaObject.metadata['mime_type'] = 'image/jpeg'
-				elif (recd.type == self.m.TYPE_VIDEO):
-					mediaObject.metadata['mime_type'] = 'video/ogg'
-				elif (recd.type == self.m.TYPE_AUDIO):
-					mediaObject.metadata['mime_type'] = 'audio/wav'
+			mtype = self.m.mediaTypes[recd.type]
+			mmime = mtype[self.ca.typeMime]
+			mediaObject.metadata['mime_type'] = mmime
 
 			#todo: make sure the file is still available before you ever get to this point...
 			mediaFile = recd.getMediaFilepath(False)

@@ -57,9 +57,9 @@ class Model:
 		self.setConstants()
 
 		self.mediaTypes = {}
-		self.mediaTypes[self.TYPE_PHOTO] = {"name":"photo", "mime":"image/jpeg", "ext":"jpg"}
-		self.mediaTypes[self.TYPE_VIDEO] = {"name":"video", "mime":"video/ogg", "ext":"ogg"}
-		self.mediaTypes[self.TYPE_AUDIO] = {"name":"audio", "mime":"audio/wav", "ext":"wav"}
+		self.mediaTypes[self.TYPE_PHOTO] = {self.ca.keyName:"photo", self.ca.keyMime:"image/jpeg", self.ca.keyExt:"jpg"}
+		self.mediaTypes[self.TYPE_VIDEO] = {self.ca.keyName:"video", self.ca.keyMime:"video/ogg", self.ca.keyExt:"ogg"}
+		self.mediaTypes[self.TYPE_AUDIO] = {self.ca.keyName:"audio", self.ca.keyMime:"audio/wav", self.ca.keyExt:"wav"}
 
 		self.mediaHashs = {}
 		for key,value in self.mediaTypes.items():
@@ -70,18 +70,10 @@ class Model:
 		if (os.path.exists(index)):
 			doc = parse( os.path.abspath(index) )
 
-			#todo: use an array/dictionary here
-			photos = doc.documentElement.getElementsByTagName('photo')
-			for each in photos:
-				self.loadMedia( each, self.mediaHashs[self.TYPE_PHOTO] )
-
-			videos = doc.documentElement.getElementsByTagName('video')
-			for each in videos:
-				self.loadMedia( each, self.mediaHashs[self.TYPE_VIDEO] )
-
-			audios = doc.documentElement.getElementsByTagName('audio')
-			for each in audios:
-				self.loadMedia( each, self.mediaHashs[self.TYPE_AUDIO] )
+		for key,value in self.mediaTypes.items():
+			recdEl = doc.documentElement.getElementsByTagName(value[self.ca.keyName])
+			for each in recdEl:
+				self.loadMedia( each, self.mediaHashs[key] )
 
 
 	def getByMd5( self, md5 ):
@@ -100,35 +92,33 @@ class Model:
 		recd = Recorded( self.ca )
 		addToHash = True
 
-		recd.type = int(el.getAttribute('type'))
-		recd.title = el.getAttribute('title')
-		recd.time = int(el.getAttribute('time'))
-		recd.photographer = el.getAttribute('photographer')
-		colorStrokeHex = el.getAttribute('colorStroke')
+		recd.type = int(el.getAttribute(self.ca.recdType))
+		recd.title = el.getAttribute(self.ca.recdTitle)
+		recd.time = int(el.getAttribute(self.ca.recdTime))
+		recd.photographer = el.getAttribute(self.ca.recdPhotographer)
+		colorStrokeHex = el.getAttribute(self.ca.recdColorStroke)
 		colorStroke = Color()
 		colorStroke.init_hex( colorStrokeHex )
 		recd.colorStroke = colorStroke
-		colorFillHex = el.getAttribute('colorFill')
+		colorFillHex = el.getAttribute(self.ca.recdColorFill)
 		colorFill = Color()
 		colorFill.init_hex( colorFillHex )
 		recd.colorFill = colorFill
 
-		recd.buddy = (el.getAttribute('buddy') == "True")
-		recd.hashKey = el.getAttribute('hashKey')
-		recd.mediaMd5 = el.getAttribute('mediaMd5')
-		recd.thumbMd5 = el.getAttribute('thumbMd5')
-		recd.mediaBytes = int( el.getAttribute('mediaBytes') )
-		recd.thumbBytes = int( el.getAttribute('thumbBytes') )
+		recd.buddy = (el.getAttribute(self.ca.recdBuddy) == "True")
+		recd.hashKey = el.getAttribute(self.ca.recdHashKey)
+		recd.mediaMd5 = el.getAttribute(self.ca.recdMediaMd5)
+		recd.thumbMd5 = el.getAttribute(self.ca.recdThumbMd5)
+		recd.mediaBytes = int( el.getAttribute(self.ca.recdMediaBytes) )
+		recd.thumbBytes = int( el.getAttribute(self.ca.recdThumbBytes) )
 
-		recd.datastoreNode = el.getAttributeNode("datastoreId")
+		recd.datastoreNode = el.getAttributeNode(self.ca.recdDatastoreId)
 		if (recd.datastoreNode != None):
-			print("loadMedia a")
 			recd.datastoreId = recd.datastoreNode.nodeValue
 			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
 			#todo: find better method here (e.g., datastore.exists(id))
 			self.loadMediaFromDatastore( recd )
 			if (recd.datastoreOb == None):
-				print("~~> recd.datastoreId", recd.datastoreId )
 				addToHash = False
 			else:
 				#name might have been changed in the journal, so reflect that here
@@ -136,9 +126,8 @@ class Model:
 			recd.datastoreOb == None
 
 
-		bt = el.getAttributeNode('buddyThumb')
+		bt = el.getAttributeNode(self.ca.recdBuddyThumb)
 		if (not bt == None):
-			print("loadMedia b")
 			#todo: consolidate this code into a function...
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
@@ -153,9 +142,8 @@ class Model:
 
 			recd.thumbFilename = os.path.basename(thumbPath)
 
-		ai = el.getAttributeNode('audioImage')
+		ai = el.getAttributeNode(self.ca.recdAudioImage)
 		if (not ai == None):
-			print("loadMedia c")
 			#todo: consolidate this code into a function...
 			pbl = gtk.gdk.PixbufLoader()
 			import base64
@@ -170,17 +158,8 @@ class Model:
 
 			recd.audioImageFilename = os.path.basename(audioImagePath)
 
-
-		print("addToHash:", addToHash )
 		if (addToHash):
 			hash.append( recd )
-
-
-	def selectLatestThumbs( self, type ):
-		p_mx = len(self.mediaHashs[type])
-		p_mn = max(p_mx-self.ca.ui.numThumbs, 0)
-		gobject.idle_add(self.setupThumbs, type, p_mn, p_mx)
-		#self.setupThumbs( type, p_mn, p_mx )
 
 
 	def isVideoMode( self ):
@@ -191,7 +170,7 @@ class Model:
 		return self.MODE == self.MODE_PHOTO
 
 
-	def setupThumbs( self, type, mn, mx ):
+	def setupThumbs( self, type ):
 		if (not type == self.MODE):
 			return
 
@@ -570,12 +549,9 @@ class Model:
 
 
 	def thumbAdded( self, type ):
-		#todo: if you are not at the end of the list, do we want to force you to the end?
-		mx = len(self.mediaHashs[type])
-		mn = max(mx-self.ca.ui.numThumbs, 0)
-
 		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback
-		gobject.idle_add(self.setupThumbs, type, mn, mx )
+		#this happens b/c this might get called from a gstreamer callback
+		gobject.idle_add(self.setupThumbs, type)
 
 
 	def doVideoMode( self ):
@@ -583,10 +559,9 @@ class Model:
 			return
 
 		self.setUpdating(True)
-		#assign your new mode
 		self.MODE = self.MODE_VIDEO
-		self.selectLatestThumbs(self.TYPE_VIDEO)
-
+		gobject.idle_add( self.setupThumbs, self.MODE )
+		#todo: move these into the setupThumbs call for the idle call
 		self.ca.ui.updateModeChange()
 		self.setUpdating(False)
 
@@ -596,10 +571,8 @@ class Model:
 			return
 
 		self.setUpdating(True)
-		#assign your new mode
 		self.MODE = self.MODE_PHOTO
-		self.selectLatestThumbs(self.TYPE_PHOTO)
-
+		gobject.idle_add( self.setupThumbs, self.MODE )
 		self.ca.ui.updateModeChange()
 		self.setUpdating(False)
 
@@ -610,8 +583,7 @@ class Model:
 
 		self.setUpdating(True)
 		self.MODE = self.MODE_AUDIO
-		self.selectLatestThumbs(self.TYPE_AUDIO)
-
+		gobject.idle_add( self.setupThumbs, self.MODE )
 		self.ca.ui.updateModeChange()
 		self.setUpdating(False)
 

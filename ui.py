@@ -116,10 +116,15 @@ class UI:
 		#this includes the default sharing tab
 		toolbox = activity.ActivityToolbox(self.ca)
 		self.ca.set_toolbox(toolbox)
-		self.modeToolbar = ModeToolbar(self.ca)
-		#todo: internationalize this
-		toolbox.add_toolbar( ('Record'), self.modeToolbar )
+		self.photoToolbar = PhotoToolbar(self.ca)
+		toolbox.add_toolbar( ('Photo'), self.photoToolbar )
+		self.videoToolbar = VideoToolbar(self.ca)
+		toolbox.add_toolbar( ('Video'), self.videoToolbar )
+		self.audioToolbar = AudioToolbar(self.ca)
+		toolbox.add_toolbar( ('Audio'), self.audioToolbar )
 		toolbox.show()
+		self.tbars = {self.ca.m.MODE_PHOTO:self.photoToolbar,self.ca.m.MODE_VIDEO:self.videoToolbar,self.ca.m.MODE_AUDIO:self.audioToolbar}
+		toolbox.set_current_toolbar(self.tbars[self.ca.m.MODE])
 
 		self.mainBox = gtk.VBox()
 		self.ca.set_canvas(self.mainBox)
