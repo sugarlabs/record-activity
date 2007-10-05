@@ -63,6 +63,11 @@ class RecordActivity(activity.Activity):
 		self.istrPhoto = _('Photo')
 		self.istrVideo = _('Video')
 		self.istrAudio = _('Audio')
+		self.istrClickToShoot = _('Click to Shoot')
+		self.istrTitle = _('Title')
+		self.istrRecorder = _('Recorder')
+		self.istrDate = _('Date')
+		self.istrTags = _('Tags')
 		self.recdTitle = "title"
 		self.recdTime = "time"
 		self.recdPhotographer = "photographer"
@@ -89,17 +94,17 @@ class RecordActivity(activity.Activity):
 		self.I_AM_CLOSING = False
 		self.I_AM_SAVED = False
 
-		#paths
-		self.basePath = activity.get_bundle_path()
-		self.gfxPath = os.path.join(self.basePath, "gfx")
-		self.recreateTemp()
-
 		#whoami?
 		key = profile.get_pubkey()
 		keyHash = util._sha_data(key)
 		self.hashedKey = util.printable_hash(keyHash)
 		self.instanceId = self._activity_id
 		self.nickName = profile.get_nick_name()
+
+		#paths
+		self.basePath = activity.get_bundle_path()
+		self.gfxPath = os.path.join(self.basePath, "gfx")
+		self.recreateTemp()
 
 		#todo: also tubes
 		h = hash(self.instanceId)
@@ -124,7 +129,7 @@ class RecordActivity(activity.Activity):
 				self.connect("joined", self._meshJoinedCb)
 
 		#initialize the app with the default thumbs
-		self.setupThumbs( self.m.MODE )
+		self.m.setupThumbs( self.m.MODE )
 
 		return False
 

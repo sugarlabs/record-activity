@@ -59,7 +59,7 @@ class Model:
 		self.mediaTypes = {}
 		self.mediaTypes[self.TYPE_PHOTO] = {self.ca.keyName:"photo", self.ca.keyMime:"image/jpeg", self.ca.keyExt:"jpg"}
 		self.mediaTypes[self.TYPE_VIDEO] = {self.ca.keyName:"video", self.ca.keyMime:"video/ogg", self.ca.keyExt:"ogg"}
-		self.mediaTypes[self.TYPE_AUDIO] = {self.ca.keyName:"audio", self.ca.keyMime:"audio/wav", self.ca.keyExt:"wav"}
+		self.mediaTypes[self.TYPE_AUDIO] = {self.ca.keyName:"audio", self.ca.keyMime:"audio/x-wav", self.ca.keyExt:"wav"}
 
 		self.mediaHashs = {}
 		for key,value in self.mediaTypes.items():
