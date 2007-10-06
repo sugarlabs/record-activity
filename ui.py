@@ -277,7 +277,9 @@ class UI:
 		self.addToWindowStack( self.infWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.recWindow = gtk.Window()
-		self.addToWindowStack( self.recWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
+		self.recWindowLabel = gtk.Label(self.ca.istrClickToShoot)
+		self.recWindow.add(self.recWindowLabel)
+		self.addToWindowStack( self.recWindow, 1, 1, self.windowStack[len(self.windowStack)-1] )
 
 		self.hideLiveWindows()
 		self.hidePlayWindows()
@@ -362,7 +364,7 @@ class UI:
 
 	def _mouseMightaMovedCb( self ):
 		x, y = self.ca.get_pointer()
-		self.recWindow.move( x, y )
+		self.updateRecWindow( x, y )
 
 		if (x != self.mx or y != self.my):
 			self.hideWidgetsTimer = 0
@@ -391,16 +393,26 @@ class UI:
 		return True
 
 
+	def updateRecWindow( self, mx, my ):
+		if (not self.liveMode):
+			self.moveWinOffscreen( self.recWindow )
+		else:
+			if (self.inWidget( mx, my, self.getLoc("img", self.fullScreen), self.getDim("img", self.fullScreen))):
+				self.recWindow.move( mx, my )
+			else:
+				self.moveWinOffscreen( self.recWindow )
+
+
 	def mouseInWidget( self, mx, my ):
 		if (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
-			if (self.inWidget( mx, my, self.getLoc("max", self.fullScreen), self.getDim("max"))):
+			if (self.inWidget( mx, my, self.getLoc("max", self.fullScreen), self.getDim("max", self.fullScreen))):
 				return True
 
 		if (not self.liveMode):
-			if (self.inWidget( mx, my, self.getLoc("pgd", self.fullScreen), self.getDim("pgd"))):
+			if (self.inWidget( mx, my, self.getLoc("pgd", self.fullScreen), self.getDim("pgd", self.fullScreen))):
 				return True
 
-			if (self.inWidget( mx, my, self.getLoc("inb", self.fullScreen), self.getDim("inb"))):
+			if (self.inWidget( mx, my, self.getLoc("inb", self.fullScreen), self.getDim("inb", self.fullScreen))):
 				return True
 
 		return False
@@ -672,12 +684,9 @@ class UI:
 
 	def setImgLocDim( self, win ):
 		imgDim = self.getImgDim( self.fullScreen )
-		r = self.smartResize( win, imgDim[0], imgDim[1] )
-
-		if (self.fullScreen):
-			self.smartMove( win, 0, 0 )
-		else:
-			m = self.smartMove( win, self.centerBoxPos[0], self.centerBoxPos[1] )
+		self.smartResize( win, imgDim[0], imgDim[1] )
+		imgLoc = self.getImgLoc( self.fullScreen )
+		self.smartMove( win, imgLoc[0], imgLoc[1] )
 
 
 	def getImgDim( self, full ):
@@ -685,6 +694,13 @@ class UI:
 			return [gtk.gdk.screen_width(), gtk.gdk.screen_height()]
 		else:
 			return [self.vw, self.vh]
+
+
+	def getImgLoc( self, full ):
+		if (full):
+			return[0, 0]
+		else:
+			return[self.centerBoxPos[0], self.centerBoxPos[1]]
 
 
 	def setPipLocDim( self, win ):
@@ -778,7 +794,7 @@ class UI:
 			return False
 
 
-	def getDim( self, pos ):
+	def getDim( self, pos, full ):
 		if (pos == "pip"):
 			return [self.pipw, self.piph]
 		elif(pos == "pgd"):
