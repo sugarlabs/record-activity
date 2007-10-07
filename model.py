@@ -341,10 +341,11 @@ class Model:
 		#prep the ui for your return
 		self.ca.ui.LAST_MODE = -1
 		self.ca.ui.HIDE_ON_UPDATE = False
+		print("p1")
 		self.ca.ui.updateVideoComponents()
 
 		#resume live video from the camera (if the activity is active)
-		if (self.ca.ACTIVE):
+		if (self.ca.props.active):
 			self.ca.glive.play()
 
 		self.setRecording( False )

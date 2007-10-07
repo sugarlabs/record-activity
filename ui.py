@@ -80,6 +80,7 @@ class UI:
 		#init
 		self.mapped = False
 		self.centered = False
+		self.setup = False
 
 		#thumb dimensions:
 		self.thumbTrayHt = 150
@@ -271,7 +272,8 @@ class UI:
 
 
 	def setUp( self ):
-		if (self.mapped and self.centered):
+		if (self.mapped and self.centered and not self.setup):
+			self.setup = True
 
 			#set correct window sizes
 			self.setUpWindowsSizes()
@@ -285,6 +287,7 @@ class UI:
 			self.showLiveVideoTags()
 
 			self.recordWindow.shutterButton.set_sensitive(True)
+			print("p2")
 			self.updateVideoComponents()
 			self.ca.glive.play()
 
@@ -356,6 +359,7 @@ class UI:
 		self.pipBgdWindow.resize( pgdDim[0], pgdDim[1] )
 		self.liveVideoWindow.resize( imgDim[0], imgDim[1] )
 		self.playOggWindow.resize( imgDim[0], imgDim[1] )
+		self.playLiveWindow.resize( imgDim[0], imgDim[1] )
 		self.pipBgdWindow2.resize( pgdDim[0], pgdDim[1] )
 		pipDim = self.getPipDim(False)
 		self.playLiveWindow.resize( pipDim[0], pipDim[1] )
@@ -370,13 +374,18 @@ class UI:
 
 
 	def _toolbarChangeCb( self, tbox, num ):
+		print("toolbar change 1!")
 		num = num - 1 #offset the default activity tab
-		if (num == self.ca.m.MODE_PHOTO):
+		if (num == self.ca.m.MODE_PHOTO) and (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
+			print("do Photo!")
 			self.ca.m.doPhotoMode()
-		elif(num == self.ca.m.MODE_VIDEO):
+		elif(num == self.ca.m.MODE_VIDEO) and (self.ca.m.MODE != self.ca.m.MODE_VIDEO):
+			print("do Video!")
 			self.ca.m.doVideoMode()
-		elif(num == self.ca.m.MODE_AUDIO):
+		elif(num == self.ca.m.MODE_AUDIO) and (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
+			print("do Audio!")
 			self.ca.m.doAudioMode()
+		print("toolbar change 2!")
 
 
 	def addToWindowStack( self, win, parent ):
@@ -412,12 +421,12 @@ class UI:
 
 
 	def hideWidgets( self ):
-		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
 		self.moveWinOffscreen( self.infWindow )
-		self.moveWinOffscreen( self.progressWindow)
+		#self.moveWinOffscreen( self.progressWindow)
+		#self.moveWinOffscreen( self.recordWindow )
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (not self.liveMode):
 				self.moveWinOffscreen( self.liveVideoWindow )
@@ -569,6 +578,7 @@ class UI:
 			self.livePhotoCanvas.setImage( img )
 
 			self.liveMode = False
+			print("p3")
 			self.updateVideoComponents()
 
 			self.showRecdMeta(recd)
@@ -623,12 +633,12 @@ class UI:
 
 		if (self.ca.m.RECORDING):
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
-			self.leftFillBox.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
-			self.rightFillBox.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+			#self.leftFillBox.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+			#self.rightFillBox.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
 		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
-			self.leftFillBox.modify_bg( gtk.STATE_NORMAL, None )
-			self.rightFillBox.modify_bg( gtk.STATE_NORMAL, None )
+			#self.leftFillBox.modify_bg( gtk.STATE_NORMAL, None )
+			#self.rightFillBox.modify_bg( gtk.STATE_NORMAL, None )
 
 
 	def hideLiveWindows( self ):
@@ -670,6 +680,7 @@ class UI:
 			self.ca.gplay.stop()
 			self.showLiveVideoTags()
 			self.liveMode = True
+			print("p4")
 			self.updateVideoComponents()
 
 
@@ -684,6 +695,7 @@ class UI:
 		self.showLiveVideoTags()
 		self.liveMode = True
 		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, False )
+		print("p5")
 		self.updateVideoComponents()
 
 
@@ -707,10 +719,13 @@ class UI:
 		self.recTime = self.recTime + 500.0
 		if (self.recTime >= 10000.0 ):
 			self.progressWindow.updateProgress( 1.0 )
+			if (self.ca.m.RECORDING):
+				self.shutterClickCb( None )
+
+			return False
 		else:
 			self.progressWindow.updateProgress( self.recTime/10000.0 )
-
-		return True
+			return True
 
 
 	def updateModeChange(self):
@@ -732,6 +747,7 @@ class UI:
 		self.showLiveVideoTags()
 		self.LAST_MODE = -1 #force an update
 		self.recordWindow.updateGfx()
+		print("p6")
 		self.updateVideoComponents()
 		self.resetWidgetFadeTimer()
 
@@ -755,6 +771,7 @@ class UI:
 
 	def doFullscreen( self ):
 		self.fullScreen = not self.fullScreen
+		print("p7")
 		self.updateVideoComponents()
 
 
@@ -767,6 +784,7 @@ class UI:
 
 	def setImgLocDim( self, win ):
 		imgDim = self.getImgDim( self.fullScreen )
+		print("imgDim", imgDim )
 		self.smartResize( win, imgDim[0], imgDim[1] )
 		imgLoc = self.getImgLoc( self.fullScreen )
 		self.smartMove( win, imgLoc[0], imgLoc[1] )
@@ -923,7 +941,7 @@ class UI:
 
 
 	def getInfDim( self, full ):
-		return [self.letterBoxVW, self.letterBoxVH]
+		return [self.maxw, self.maxh]
 
 
 	def getInbDim( self, full ):
@@ -979,11 +997,14 @@ class UI:
 
 
 	def updateVideoComponents( self ):
+		print("uvc 1")
 		if (	(self.LAST_MODE == self.ca.m.MODE)
 				and (self.LAST_FULLSCREEN == self.fullScreen)
 				and (self.LAST_LIVE == self.liveMode)
 				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)):
 			return
+		print("uvc 2")
+
 
 		#something's changing so start counting anew
 		self.resetWidgetFadeTimer()
@@ -1102,6 +1123,9 @@ class UI:
 		for i in range (0, len(self.windowStack)):
 			for j in range (0, len(pos)):
 				if (self.windowStack[i] == pos[j]["window"]):
+					if (pos[j]["window"] == self.playLiveWindow):
+						print("WTF?", pos[j]["position"])
+
 					if (pos[j]["position"] == "img"):
 						self.setImgLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "max"):
@@ -1157,6 +1181,7 @@ class UI:
 			self.centerBox.add( self.infoBox )
 			self.centerBox.show_all()
 
+		print("p8")
 		self.updateVideoComponents()
 
 
@@ -1197,6 +1222,7 @@ class UI:
 		self.livePhotoCanvas.setImage( img )
 		self.shownRecd = recd
 
+		print("p9")
 		self.updateVideoComponents()
 
 		mediaFilepath = recd.getMediaFilepath( True )
@@ -1228,6 +1254,7 @@ class UI:
 				self.startLiveAudio()
 
 			self.liveMode = True
+			print("p10")
 			self.updateVideoComponents()
 
 			self.showLiveVideoTags()
@@ -1246,6 +1273,7 @@ class UI:
 
 		self.showLiveVideoTags()
 		self.liveMode = True
+		print("p11")
 		self.updateVideoComponents()
 
 
@@ -1265,6 +1293,7 @@ class UI:
 			self.ca.glive.play()
 
 		self.liveMode = False
+		print("p12")
 		self.updateVideoComponents()
 
 		#todo: yank from the datastore here, yo
@@ -1663,6 +1692,7 @@ class ProgressWindow(gtk.Window):
 
 
 	def updateProgress( self, amt ):
+		#todo: set sentences here too with updates
 		self.progBar.set_fraction( amt )
 		print( amt )
 
