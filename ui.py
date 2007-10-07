@@ -98,6 +98,9 @@ class UI:
 		self.maxh = 49
 		#component spacing
 		self.inset = 10
+		#height of the record button, progress bar, etc.
+		self.controlBarHt = 50
+		self.recordButtWd = 75
 
 		#prep for when to show
 		self.shownRecd = None
@@ -122,7 +125,7 @@ class UI:
 
 	def _toolboxSizeAllocateCb( self, widget, event ):
 		toolboxHt = self.toolbox.size_request()[1]
-		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+toolboxHt)
+		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+toolboxHt+self.controlBarHt)
 		self.vw = int(self.vh/.75)
 		self.letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
 		self.letterBoxVW = (self.vw/2)-(self.inset*2)
@@ -343,15 +346,21 @@ class UI:
 
 
 	def setUpWindowsSizes( self ):
-		self.livePhotoWindow.resize( self.vw, self.vh )
-		self.pipBgdWindow.resize( self.pgdw, self.pgdh )
-		self.liveVideoWindow.resize( self.vw, self.vh )
-		self.playOggWindow.resize( self.vw, self.vh )
-		self.pipBgdWindow2.resize( self.pgdw, self.pgdh )
-		self.playLiveWindow.resize( self.pipw, self.piph )
-		self.recordWindow.resize( self.pgdw, self.pgdh )
-		self.maxWindow.resize( self.maxw, self.maxh )
-		self.infWindow.resize( self.maxw, self.maxh )
+		imgDim = self.getImgDim( False )
+		self.livePhotoWindow.resize( imgDim[0], imgDim[1] )
+		pgdDim = self.getPgdDim( False )
+		self.pipBgdWindow.resize( pgdDim[0], pgdDim[1] )
+		self.liveVideoWindow.resize( imgDim[0], imgDim[1] )
+		self.playOggWindow.resize( imgDim[0], imgDim[1] )
+		self.pipBgdWindow2.resize( pgdDim[0], pgdDim[1] )
+		pipDim = self.getPipDim(False)
+		self.playLiveWindow.resize( pipDim[0], pipDim[1] )
+		eyeDim = self.getEyeDim(False)
+		self.recordWindow.resize( eyeDim[0], eyeDim[1] )
+		maxDim = self.getMaxDim( False )
+		self.maxWindow.resize( maxDim[0], maxDim[1] )
+		infDim = self.getInfDim( False )
+		self.infWindow.resize( infDim[0], infDim[1] )
 
 
 	def _toolbarChangeCb( self, tbox, num ):
@@ -719,8 +728,8 @@ class UI:
 
 	def moveWinOffscreen( self, win ):
 		#we move offscreen to resize or else we get flashes on screen, and setting hide() doesn't allow resize & moves
-		offW = (gtk.gdk.screen_width() + 1000)
-		offH = (gtk.gdk.screen_height() + 1000)
+		offW = (gtk.gdk.screen_width() + 100)
+		offH = (gtk.gdk.screen_height() + 100)
 		self.smartMove(win, offW, offH)
 
 
@@ -789,11 +798,14 @@ class UI:
 
 
 	def getEyeLoc( self, full ):
-		x = (gtk.gdk.screen_width()/2) - (self.pipw/2)
-		if (full):
-			return [x, gtk.gdk.screen_height()-(self.inset+self.pgdh)]
+		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			x = (gtk.gdk.screen_width()/2) - (self.recordButtWd/2)
+			if (full):
+				return [x, gtk.gdk.screen_height()-(self.inset+self.pgdh)]
+			else:
+				return [x, self.centerBoxPos[1]+self.vh]
 		else:
-			return [x, (self.centerBoxPos[1]+self.vh)-(self.inset+self.pgdh)]
+			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 
 
 	def getInfLoc( self ):
@@ -866,7 +878,7 @@ class UI:
 
 
 	def getEyeDim( self, full ):
-		return [self.pgdw, self.pgdh]
+		return [self.recordButtWd, self.controlBarHt]
 
 
 	def getInfDim( self, full ):
@@ -1559,12 +1571,12 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
-		self.shutterButton.set_image( self.ui.shutterCamImg )
+		#self.shutterButton.set_image( self.ui.shutterCamImg )
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		#todo: this is insensitive until we're all set up
 		#self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
-		shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		#shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		self.shutterButton.set_border_width( self.ui.pipBorder )
 
 		shutterBox.add( self.shutterButton )
