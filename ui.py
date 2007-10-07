@@ -152,11 +152,15 @@ class UI:
 
 		#or this guy...
 		self.infoBox = gtk.EventBox()
-		self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorHilite.gColor )
+		#self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorHilite.gColor ) #todo: segfault
 		iinfoBox = gtk.VBox(spacing=self.inset)
 		self.infoBox.add( iinfoBox )
 		iinfoBox.set_size_request(self.vw, -1)
 		iinfoBox.set_border_width(self.inset)
+
+
+		if True:
+			return
 
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( self.letterBoxW, -1 )
@@ -222,7 +226,8 @@ class UI:
 		iinfoBox.pack_start(infoBotBox, expand=False)
 
 		thumbnailsEventBox = gtk.EventBox()
-		thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
+		#segFault?!!
+		#thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
 		thumbnailsEventBox.set_size_request( -1, self.thumbTrayHt )
 		thumbnailsBox = gtk.HBox( )
 		thumbnailsEventBox.add( thumbnailsBox )
