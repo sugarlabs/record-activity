@@ -128,9 +128,6 @@ class RecordActivity(activity.Activity):
 			else:
 				self.connect("joined", self._meshJoinedCb)
 
-		#initialize the app with the default thumbs
-		self.m.setupThumbs( self.m.MODE )
-
 		return False
 
 

@@ -45,9 +45,7 @@ import gst.interfaces
 from sugar import profile
 from sugar import util
 
-#to get the toolbox
 from sugar.activity import activity
-from sugar.graphics.radiotoolbutton import RadioToolButton
 
 from color import Color
 from p5 import P5
@@ -96,37 +94,38 @@ class UI:
 		self.maxh = 49
 		#component spacing
 		self.inset = 10
-		#video size:
-		#todo: dynamically set this...
-		#(03:19:45 PM) eben: jedierikb: bar itself is 75px, tabs take an additional 45px (including gray spacer)
-		#(03:23:16 PM) tomeu: jedierikb: you create the toolbar, you can ask him it's height after it has been allocated
-		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+75+45+5)
-		self.vw = int(self.vh/.75)
-		letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
-		self.letterBoxVW = (self.vw/2)-(self.inset*2)
-		self.letterBoxVH = int(self.letterBoxVW*.75)
 
 		#prep for when to show
-		self.allocated = False
-		self.mapped = False
 		self.shownRecd = None
-		self.deletableRecd = None
-		self.deletableButt = None
 
 		#this includes the default sharing tab
-		toolbox = activity.ActivityToolbox(self.ca)
-		self.ca.set_toolbox(toolbox)
+		self.toolbox = activity.ActivityToolbox(self.ca)
+		self.ca.set_toolbox(self.toolbox)
 		self.photoToolbar = PhotoToolbar(self.ca)
-		toolbox.add_toolbar( self.ca.istrPhoto, self.photoToolbar )
+		self.toolbox.add_toolbar( self.ca.istrPhoto, self.photoToolbar )
 		self.videoToolbar = VideoToolbar(self.ca)
-		toolbox.add_toolbar( self.ca.istrVideo, self.videoToolbar )
+		self.toolbox.add_toolbar( self.ca.istrVideo, self.videoToolbar )
 		self.audioToolbar = AudioToolbar(self.ca)
-		toolbox.add_toolbar( self.ca.istrAudio, self.audioToolbar )
-		toolbox.show()
+		self.toolbox.add_toolbar( self.ca.istrAudio, self.audioToolbar )
 		self.tbars = {self.ca.m.MODE_PHOTO:self.photoToolbar,self.ca.m.MODE_VIDEO:self.videoToolbar,self.ca.m.MODE_AUDIO:self.audioToolbar}
-		toolbox.set_current_toolbar(self.ca.m.MODE)
-		toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
+		self.toolbox.set_current_toolbar(self.ca.m.MODE+1)
+		self.toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
+		self.TOOLBOX_SIZE_ALLOCATE_ID = self.toolbox.connect_after("size-allocate", self._toolboxSizeAllocateCb)
+		self.toolbox.show()
 
+
+	def _toolboxSizeAllocateCb( self, widget, event ):
+		toolboxHt = self.toolbox.get_size_request()[0]
+		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+toolboxHt)
+		self.vw = int(self.vh/.75)
+		self.letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
+		self.letterBoxVW = (self.vw/2)-(self.inset*2)
+		self.letterBoxVH = int(self.letterBoxVW*.75)
+		#now that we know how big the toolbox is, we can layout more
+		self.layout()
+
+
+	def layout( self ):
 		self.mainBox = gtk.VBox()
 		self.ca.set_canvas(self.mainBox)
 
@@ -134,7 +133,7 @@ class UI:
 		self.mainBox.pack_start(topBox, expand=True)
 
 		leftFill = gtk.VBox()
-		leftFill.set_size_request( letterBoxW, -1 )
+		leftFill.set_size_request( self.letterBoxW, -1 )
 		topBox.pack_start( leftFill, expand=True )
 
 		self.centerBox = gtk.EventBox()
@@ -160,7 +159,7 @@ class UI:
 		iinfoBox.set_border_width(self.inset)
 
 		rightFill = gtk.VBox()
-		rightFill.set_size_request( letterBoxW, -1 )
+		rightFill.set_size_request( self.letterBoxW, -1 )
 		topBox.pack_start( rightFill, expand=True )
 
 		rightFillTop = gtk.HBox()
@@ -270,24 +269,31 @@ class UI:
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
 
+		self.recordWindow = RecordWindow(self)
+		self.addToWindowStack( self.recordWindow, self.pgdw, self.pgdh, self.windowStack[len(self.windowStack)-1] )
+
 		self.maxWindow = MaxWindow(self)
 		self.addToWindowStack( self.maxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
 		self.infWindow = InfWindow(self)
 		self.addToWindowStack( self.infWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
 
-		self.recWindow = gtk.Window()
-		self.recWindowLabel = gtk.Label(self.ca.istrClickToShoot)
-		self.recWindow.add(self.recWindowLabel)
-		self.addToWindowStack( self.recWindow, 1, 1, self.windowStack[len(self.windowStack)-1] )
-
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 		self.hideAudioWindows()
 
-		#only show the floating windows once everything is exposed and has a layout position
-		self.SIZE_ALLOCATE_ID = self.centerBox.connect_after("size-allocate", self._sizeAllocateCb)
+		self.CENTER_SIZE_ALLOCATE_ID = self.centerBox.connect_after("size-allocate", self._centerSizeAllocateCb)
 		self.ca.show_all()
+
+
+	def _centerSizeAllocateCb( self, widget, event ):
+		#initial setup of the panels
+		self.centerBox.disconnect(self.CENTER_SIZE_ALLOCATE_ID)
+		self.centerBoxPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
+
+		centerKid = self.centerBox.get_child()
+		if (centerKid != None):
+			self.centerBox.remove( centerKid )
 
 		self.MAP_EVENT_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
 		for i in range (0, len(self.windowStack)):
@@ -300,6 +306,14 @@ class UI:
 		self.hiddenWidgets = False
 		self.resetWidgetFadeTimer()
 		self.showLiveVideoTags()
+
+		self.recordWindow.shutterButton.set_sensitive(True)
+		self.updateVideoComponents()
+		self.ca.glive.play()
+
+		#initialize the app with the default thumbs
+		self.ca.m.setupThumbs( self.ca.m.MODE )
+
 
 
 	def _toolbarChangeCb( self, tbox, num ):
@@ -346,6 +360,7 @@ class UI:
 
 
 	def hideWidgets( self ):
+		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
@@ -393,16 +408,6 @@ class UI:
 		return True
 
 
-	def updateRecWindow( self, mx, my ):
-		if (not self.liveMode):
-			self.moveWinOffscreen( self.recWindow )
-		else:
-			if (self.inWidget( mx, my, self.getLoc("img", self.fullScreen), self.getDim("img", self.fullScreen))):
-				self.recWindow.move( mx, my )
-			else:
-				self.moveWinOffscreen( self.recWindow )
-
-
 	def mouseInWidget( self, mx, my ):
 		if (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
 			if (self.inWidget( mx, my, self.getLoc("max", self.fullScreen), self.getDim("max", self.fullScreen))):
@@ -413,6 +418,10 @@ class UI:
 				return True
 
 			if (self.inWidget( mx, my, self.getLoc("inb", self.fullScreen), self.getDim("inb", self.fullScreen))):
+				return True
+
+		if (self.liveMode):
+			if (self.inWidget( mx, my, self.getLoc("eye", self.fullScreen), self.getDim("eye", self.fullScreen))):
 				return True
 
 		return False
@@ -516,29 +525,19 @@ class UI:
 	def getPhotoPixbuf( self, recd ):
 		pixbuf = None
 		imgPath = recd.getMediaFilepath( True )
-		print( "getting photoPixbuf: ", imgPath )
 		if (not imgPath == None):
 			if ( os.path.isfile(imgPath) ):
 				pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
 
 		if (pixbuf == None):
 			#maybe it is not downloaded from the mesh yet...
-			print("showing thumb from pixbuf 1")
 			pixbuf = recd.getThumbPixbuf()
-			print("showing thumb from pixbuf 2")
 
 		return pixbuf
 
 
 	def showLiveVideoTags( self ):
 		self.shownRecd = None
-
-		#todo: if this is too long, then live video gets pushed off screen (and ends up at 0x0??!)
-		#make this uneditable here
-		self.nameTextfield.set_text("Live Video")
-		self.nameTextfield.set_sensitive( False )
-		self.photographerNameLabel.set_label( str(self.ca.nickName) )
-		self.dateDateLabel.set_label("Today")
 
 		#todo: figure this out without the ui collapsing around it
 		self.namePanel.hide()
@@ -554,6 +553,8 @@ class UI:
 	def updateButtonSensitivities( self ):
 
 		#todo: make the gtk.entry uneditable
+		#todo: change this button which is now in a window
+		self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING )
 
 		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
 
@@ -568,6 +569,10 @@ class UI:
 		else:
 			self.ca.ui.setDefaultCursor( )
 
+		if (self.ca.m.RECORDING):
+			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+		else:
+			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
 
 	def hideLiveWindows( self ):
@@ -575,6 +580,7 @@ class UI:
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.maxWindow )
+		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.infWindow )
 
 
@@ -583,25 +589,24 @@ class UI:
 		self.moveWinOffscreen( self.pipBgdWindow2 )
 		self.moveWinOffscreen( self.playLiveWindow )
 		self.moveWinOffscreen( self.maxWindow )
+		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.infWindow )
 
 
 	def hideAudioWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
 		self.moveWinOffscreen( self.liveVideoWindow )
+		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.infWindow )
 
 
 	def _liveButtonReleaseCb(self, widget, event):
-		if (self.liveMode):
-			self.ca.m.doShutter()
+		self.livePhotoCanvas.setImage( None )
 
-		else:
-			#these two used to be above this call todo: why?
-			self.livePhotoCanvas.setImage( None )
-			self.RECD_INFO_ON = False
+		self.RECD_INFO_ON = False
 
+		if (self.liveMode != True):
 			#todo: updating here?
 			self.ca.gplay.stop()
 			self.showLiveVideoTags()
@@ -649,6 +654,7 @@ class UI:
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
 		self.LAST_MODE = -1 #force an update
+		self.recordWindow.updateGfx()
 		self.updateVideoComponents()
 		self.resetWidgetFadeTimer()
 
@@ -796,19 +802,25 @@ class UI:
 
 	def getDim( self, pos, full ):
 		if (pos == "pip"):
-			return [self.pipw, self.piph]
+			#return [self.pipw, self.piph]
+			return self.getPipDim()
 		elif(pos == "pgd"):
-			return [self.pgdw, self.pgdh]
+			#return [self.pgdw, self.pgdh]
+			return self.getPgdDim()
 		elif(pos == "max"):
-			return [self.maxw, self.maxh]
+			#return [self.maxw, self.maxh]
+			return self.getMaxDim()
 		elif(pos == "img"):
 			return self.getImgDim( full )
+		elif(pos == "eye"):
+			#return [self.pgdw, self.pgdh]
+			return self.getEyeDim( full )
 		elif(pos == "inf"):
-			return [self.letterBoxVW, self.letterBoxVH]
+			#return [self.letterBoxVW, self.letterBoxVH]
+			return self.getInfDim( full )
 		elif(pos == "inb"):
-			return [self.maxw, self.maxh]
-		elif(pos == "del"):
-			return [200, 50]
+			#return [self.maxw, self.maxh]
+			return self.getInbDim( full )
 
 
 	def getLoc( self, pos, full ):
@@ -820,12 +832,12 @@ class UI:
 			return self.getMaxLoc( full )
 		elif(pos == "img"):
 			return self.getImgLoc( full )
+		elif(pos == "eye"):
+			return self.getEyeLoc( full )
 		elif(pos == "inf"):
 			return self.getInfLoc( full )
 		elif(pos == "inb"):
 			return self.getInbLoc( full )
-		elif(pos == "del"):
-			self.delWindow.get_position()
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
@@ -844,10 +856,9 @@ class UI:
 		thumbButton.set_size_request(80, -1)
 
 
-	def checkReadyToSetup(self):
-		if (self.allocated and self.mapped):
-			self.updateVideoComponents()
-			self.ca.glive.play()
+	def shutterClickCb( self, arg ):
+		#todo: play a click here
+		self.ca.m.doShutter()
 
 
 	def _mapEventCb( self, widget, event ):
@@ -855,19 +866,6 @@ class UI:
 		self.liveVideoWindow.disconnect(self.MAP_EVENT_ID)
 		self.mapped = True
 		self.checkReadyToSetup()
-
-
-	def _sizeAllocateCb( self, widget, event ):
-		#initial setup of the panels
-		self.centerBox.disconnect(self.SIZE_ALLOCATE_ID)
-		self.centerBoxPos = self.centerBox.translate_coordinates( self.ca, 0, 0 )
-
-		centerKid = self.centerBox.get_child()
-		if (centerKid != None):
-			self.centerBox.remove( centerKid )
-
-		self.allocated = True
-		self.checkReadyToSetup( )
 
 
 	def updateVideoComponents( self ):
@@ -902,6 +900,7 @@ class UI:
 				if (self.liveMode):
 					pos.append({"position":"img", "window":self.liveVideoWindow})
 					pos.append({"position":"max", "window":self.maxWindow} )
+					pos.append({"position":"eye", "window":self.recordWindow} )
 				else:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
@@ -912,6 +911,7 @@ class UI:
 				if (self.liveMode):
 					pos.append({"position":"img", "window":self.playLiveWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
+					pos.append({"position":"eye", "window":self.recordWindow} )
 				else:
 					pos.append({"position":"img", "window":self.playOggWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
@@ -921,6 +921,7 @@ class UI:
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				if (self.liveMode):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
+					pos.append({"position":"eye", "window":self.recordWindow} )
 				else:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
@@ -961,6 +962,7 @@ class UI:
 				pos.append({"position":"inb", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"eye", "window":self.recordWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			if (not self.liveMode):
 				pos.append({"position":"max", "window":self.maxWindow} )
@@ -969,13 +971,14 @@ class UI:
 				pos.append({"position":"inb", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"eye", "window":self.recordWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (not self.liveMode):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inb", "window":self.infWindow} )
 			else:
-				pass
+				pos.append({"position":"eye", "window":self.recordWindow} )
 
 		self.updatePos( pos )
 
@@ -993,6 +996,8 @@ class UI:
 						self.setPipLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "pgd"):
 						self.setPipBgdLocDim( pos[j]["window"] )
+					elif (pos[j]["position"] == "eye"):
+						self.setEyeLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "inf"):
 						self.setInfLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "inb"):
@@ -1499,6 +1504,32 @@ class InfButton(P5Button):
 	def fireButton(self, actionCommand):
 		if (actionCommand == self.infS):
 			self.ui.infoButtonClicked()
+
+
+class RecordWindow(gtk.Window):
+	def __init__(self, ui):
+		gtk.Window.__init__(self)
+		self.ui = ui
+
+		self.shutterButton = gtk.Button()
+		self.shutterButton.set_image( self.ui.shutterCamImg )
+		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
+		#todo: this is insensitive until we're all set up
+		#self.shutterButton.set_sensitive(False)
+		shutterBox = gtk.EventBox()
+		shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		self.shutterButton.set_border_width( self.ui.pipBorder )
+
+		shutterBox.add( self.shutterButton )
+		self.add( shutterBox )
+
+	def updateGfx( self ):
+		if (self.ui.ca.m.MODE == self.ui.ca.m.MODE_AUDIO):
+			if (self.shutterButton.get_image() != self.ui.shutterMicImg):
+				self.shutterButton.set_image( self.ui.shutterMicImg )
+		else:
+			if (self.shutterButton.get_image() != self.ui.shutterCamImg):
+				self.shutterButton.set_image( self.ui.shutterCamImg )
 
 
 class PhotoToolbar(gtk.Toolbar):
