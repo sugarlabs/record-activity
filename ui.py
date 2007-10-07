@@ -145,6 +145,8 @@ class UI:
 
 		leftFill = gtk.VBox()
 		leftFill.set_size_request( self.letterBoxW, -1 )
+		self.leftFillBox = gtk.EventBox()
+		leftFill.add( self.leftFillBox )
 		topBox.pack_start( leftFill, expand=True )
 
 		self.centerBox = gtk.EventBox()
@@ -171,10 +173,9 @@ class UI:
 
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( self.letterBoxW, -1 )
+		self.rightFillBox = gtk.EventBox()
+		rightFill.add( self.rightFillBox )
 		topBox.pack_start( rightFill, expand=True )
-
-		rightFillTop = gtk.HBox()
-		rightFill.pack_start( rightFillTop, expand=True )
 
 		#info box innards:
 		self.infoBoxTop = gtk.HBox()
@@ -331,6 +332,9 @@ class UI:
 		self.recordWindow = RecordWindow(self)
 		self.addToWindowStack( self.recordWindow, self.windowStack[len(self.windowStack)-1] )
 
+		self.progressWindow = ProgressWindow(self)
+		self.addToWindowStack( self.progressWindow, self.windowStack[len(self.windowStack)-1] )
+
 		self.maxWindow = MaxWindow(self)
 		self.addToWindowStack( self.maxWindow, self.windowStack[len(self.windowStack)-1] )
 
@@ -361,6 +365,8 @@ class UI:
 		self.maxWindow.resize( maxDim[0], maxDim[1] )
 		infDim = self.getInfDim( False )
 		self.infWindow.resize( infDim[0], infDim[1] )
+		prgDim = self.getPrgDim( False )
+		self.progressWindow.resize( prgDim[0], prgDim[1] )
 
 
 	def _toolbarChangeCb( self, tbox, num ):
@@ -411,6 +417,7 @@ class UI:
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
 		self.moveWinOffscreen( self.infWindow )
+		self.moveWinOffscreen( self.progressWindow)
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (not self.liveMode):
 				self.moveWinOffscreen( self.liveVideoWindow )
@@ -616,8 +623,12 @@ class UI:
 
 		if (self.ca.m.RECORDING):
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+			self.leftFillBox.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+			self.rightFillBox.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
 		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
+			self.leftFillBox.modify_bg( gtk.STATE_NORMAL, None )
+			self.rightFillBox.modify_bg( gtk.STATE_NORMAL, None )
 
 
 	def hideLiveWindows( self ):
@@ -627,6 +638,7 @@ class UI:
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.infWindow )
+		self.moveWinOffscreen( self.progressWindow )
 
 
 	def hidePlayWindows( self ):
@@ -636,6 +648,7 @@ class UI:
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.infWindow )
+		self.moveWinOffscreen( self.progressWindow )
 
 
 	def hideAudioWindows( self ):
@@ -644,6 +657,7 @@ class UI:
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.infWindow )
+		self.moveWinOffscreen( self.progressWindow )
 
 
 	def _liveButtonReleaseCb(self, widget, event):
@@ -675,10 +689,28 @@ class UI:
 
 	def recordVideo( self ):
 		self.ca.glive.startRecordingVideo( )
+		self.beginRecordingTimer( )
 
 
 	def recordAudio( self ):
 		self.ca.glive.startRecordingAudio( )
+		self.beginRecordingTimer( )
+
+
+	def beginRecordingTimer( self ):
+		self.recTime = 0.0
+		gobject.timeout_add( 500, self.updateRecordingTimer )
+
+
+	def updateRecordingTimer( self ):
+		#todo: use real time
+		self.recTime = self.recTime + 500.0
+		if (self.recTime >= 10000.0 ):
+			self.progressWindow.updateProgress( 1.0 )
+		else:
+			self.progressWindow.updateProgress( self.recTime/10000.0 )
+
+		return True
 
 
 	def updateModeChange(self):
@@ -738,6 +770,13 @@ class UI:
 		self.smartResize( win, imgDim[0], imgDim[1] )
 		imgLoc = self.getImgLoc( self.fullScreen )
 		self.smartMove( win, imgLoc[0], imgLoc[1] )
+
+
+	def setPrgLocDim( self, win ):
+		prgDim = self.getPrgDim( self.fullScreen )
+		self.smartResize( win, prgDim[0], prgDim[1] )
+		prgLoc = self.getPrgLoc( self.fullScreen )
+		self.smartMove( win, prgLoc[0], prgLoc[1] )
 
 
 	def getImgDim( self, full ):
@@ -863,6 +902,8 @@ class UI:
 			return self.getInfDim( full )
 		elif(pos == "inb"):
 			return self.getInbDim( full )
+		elif(pos == "pgd"):
+			return self.getPgdDim( full )
 
 
 	def getMaxDim( self, full ):
@@ -889,6 +930,14 @@ class UI:
 		return [self.maxw, self.maxh]
 
 
+	def getPrgDim( self, full ):
+		return [self.vw-self.recordButtWd, self.controlBarHt]
+
+
+	def getPrgLoc( self, full ):
+		return [self.centerBoxPos[0]+self.recordButtWd, self.centerBoxPos[1]+self.vh]
+
+
 	def getLoc( self, pos, full ):
 		if (pos == "pip"):
 			return self.getPipLoc( full )
@@ -904,6 +953,8 @@ class UI:
 			return self.getInfLoc( full )
 		elif(pos == "inb"):
 			return self.getInbLoc( full )
+		elif(pos == "prg"):
+			return self.getPrgLoc( full )
 
 
 	def setupThumbButton( self, thumbButton, iconStringSensitive ):
@@ -971,6 +1022,7 @@ class UI:
 					pos.append({"position":"img", "window":self.playLiveWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
+					pos.append({"position":"prg", "window":self.progressWindow} )
 				else:
 					pos.append({"position":"img", "window":self.playOggWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
@@ -981,6 +1033,7 @@ class UI:
 				if (self.liveMode):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
+					pos.append({"position":"prg", "window":self.progressWindow} )
 				else:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
@@ -1031,6 +1084,7 @@ class UI:
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
+				pos.append({"position":"prg", "window":self.progressWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			if (not self.liveMode):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
@@ -1038,6 +1092,7 @@ class UI:
 				pos.append({"position":"inb", "window":self.infWindow} )
 			else:
 				pos.append({"position":"eye", "window":self.recordWindow} )
+				pos.append({"position":"prg", "window":self.progressWindow} )
 
 		self.updatePos( pos )
 
@@ -1061,6 +1116,8 @@ class UI:
 						self.setInfLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "inb"):
 						self.setInbLocDim( pos[j]["window"])
+					elif (pos[j]["position"] == "prg"):
+						self.setPrgLocDim( pos[j]["window"])
 
 
 	def removeThumbs( self ):
@@ -1577,7 +1634,7 @@ class RecordWindow(gtk.Window):
 		#self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
 		#shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
-		self.shutterButton.set_border_width( self.ui.pipBorder )
+		#self.shutterButton.set_border_width( self.ui.pipBorder )
 
 		shutterBox.add( self.shutterButton )
 		self.add( shutterBox )
@@ -1593,6 +1650,21 @@ class RecordWindow(gtk.Window):
 		else:
 			if (self.shutterButton.get_image() != self.ui.shutterCamImg):
 				self.shutterButton.set_image( self.ui.shutterCamImg )
+
+
+class ProgressWindow(gtk.Window):
+	def __init__(self, ui):
+		gtk.Window.__init__(self)
+		self.ui = ui
+
+		self.progBar = gtk.ProgressBar()
+		#self.progBar.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		self.add( self.progBar )
+
+
+	def updateProgress( self, amt ):
+		self.progBar.set_fraction( amt )
+		print( amt )
 
 
 class PhotoToolbar(gtk.Toolbar):
