@@ -77,6 +77,10 @@ class UI:
 		self.HIDE_ON_UPDATE = True
 		self.RECD_INFO_ON = False
 
+		#init
+		self.mapped = False
+		self.centered = False
+
 		#thumb dimensions:
 		self.thumbTrayHt = 150
 		self.tw = 107
@@ -97,6 +101,8 @@ class UI:
 
 		#prep for when to show
 		self.shownRecd = None
+
+		self.setUpWindows()
 
 		#this includes the default sharing tab
 		self.toolbox = activity.ActivityToolbox(self.ca)
@@ -236,55 +242,6 @@ class UI:
 		self.mainBox.pack_end( self.thumbTray, expand=False )
 		self.thumbTray.show()
 
-		#image windows
-		self.windowStack = []
-
-		#live video windows
-		self.livePhotoWindow = PhotoCanvasWindow(self)
-		self.addToWindowStack( self.livePhotoWindow, self.vw, self.vh, self.ca )
-		self.livePhotoCanvas = PhotoCanvas(self)
-		self.livePhotoWindow.setPhotoCanvas(self.livePhotoCanvas)
-		self.livePhotoWindow.connect("button_release_event", self._mediaClickedForPlayback)
-
-		#border behind
-		self.pipBgdWindow = PipWindow(self)
-		self.addToWindowStack( self.pipBgdWindow, self.pgdw, self.pgdh, self.windowStack[len(self.windowStack)-1] )
-
-		self.liveVideoWindow = LiveVideoWindow()
-		self.addToWindowStack( self.liveVideoWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
-		self.liveVideoWindow.set_glive(self.ca.glive)
-		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.liveVideoWindow.connect("button_release_event", self._liveButtonReleaseCb)
-
-		#video playback windows
-		self.playOggWindow = PlayVideoWindow()
-		self.addToWindowStack( self.playOggWindow, self.vw, self.vh, self.windowStack[len(self.windowStack)-1] )
-		self.playOggWindow.set_gplay(self.ca.gplay)
-		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
-
-		#border behind
-		self.pipBgdWindow2 = PipWindow(self)
-		self.addToWindowStack( self.pipBgdWindow2, self.pgdw, self.pgdh, self.windowStack[len(self.windowStack)-1] )
-
-		self.playLiveWindow = LiveVideoWindow()
-		self.addToWindowStack( self.playLiveWindow, self.pipw, self.piph, self.windowStack[len(self.windowStack)-1] )
-		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
-
-		self.recordWindow = RecordWindow(self)
-		self.addToWindowStack( self.recordWindow, self.pgdw, self.pgdh, self.windowStack[len(self.windowStack)-1] )
-
-		self.maxWindow = MaxWindow(self)
-		self.addToWindowStack( self.maxWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
-
-		self.infWindow = InfWindow(self)
-		self.addToWindowStack( self.infWindow, self.maxw, self.maxh, self.windowStack[len(self.windowStack)-1] )
-
-		self.hideLiveWindows()
-		self.hidePlayWindows()
-		self.hideAudioWindows()
-
 		self.CENTER_SIZE_ALLOCATE_ID = self.centerBox.connect_after("size-allocate", self._centerSizeAllocateCb)
 		self.ca.show_all()
 
@@ -298,9 +255,103 @@ class UI:
 		if (centerKid != None):
 			self.centerBox.remove( centerKid )
 
+		self.centered = True
+		self.setUp()
+
+
+	def _mapEventCb( self, widget, event ):
+		#when your parent window is ready, turn on the feed of live video
+		self.liveVideoWindow.disconnect(self.MAP_EVENT_ID)
+		self.mapped = True
+		self.setUp()
+
+
+	def setUp( self ):
+		if (self.mapped and self.centered):
+
+			#set correct window sizes
+			self.setUpWindowsSizes()
+
+			#listen for ctrl+c & game key buttons
+			self.ca.connect('key-press-event', self._keyPressEventCb)
+			#overlay widgets can go away after they've been on screen for a while
+			self.HIDE_WIDGET_TIMEOUT_ID = 0
+			self.hiddenWidgets = False
+			self.resetWidgetFadeTimer()
+			self.showLiveVideoTags()
+
+			self.recordWindow.shutterButton.set_sensitive(True)
+			self.updateVideoComponents()
+			self.ca.glive.play()
+
+			#initialize the app with the default thumbs
+			self.ca.m.setupThumbs( self.ca.m.MODE )
+
+
+	def setUpWindows( self ):
+		#image windows
+		self.windowStack = []
+
+		#live video windows
+		self.livePhotoWindow = PhotoCanvasWindow(self)
+		self.addToWindowStack( self.livePhotoWindow, self.ca )
+		self.livePhotoCanvas = PhotoCanvas(self)
+		self.livePhotoWindow.setPhotoCanvas(self.livePhotoCanvas)
+		self.livePhotoWindow.connect("button_release_event", self._mediaClickedForPlayback)
+
+		#border behind
+		self.pipBgdWindow = PipWindow(self)
+		self.addToWindowStack( self.pipBgdWindow, self.windowStack[len(self.windowStack)-1] )
+
+		self.liveVideoWindow = LiveVideoWindow()
+		self.addToWindowStack( self.liveVideoWindow, self.windowStack[len(self.windowStack)-1] )
+		self.liveVideoWindow.set_glive(self.ca.glive)
+		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
+		self.liveVideoWindow.connect("button_release_event", self._liveButtonReleaseCb)
+
+		#video playback windows
+		self.playOggWindow = PlayVideoWindow()
+		self.addToWindowStack( self.playOggWindow, self.windowStack[len(self.windowStack)-1] )
+		self.playOggWindow.set_gplay(self.ca.gplay)
+		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
+		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
+
+		#border behind
+		self.pipBgdWindow2 = PipWindow(self)
+		self.addToWindowStack( self.pipBgdWindow2, self.windowStack[len(self.windowStack)-1] )
+
+		self.playLiveWindow = LiveVideoWindow()
+		self.addToWindowStack( self.playLiveWindow, self.windowStack[len(self.windowStack)-1] )
+		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
+		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
+
+		self.recordWindow = RecordWindow(self)
+		self.addToWindowStack( self.recordWindow, self.windowStack[len(self.windowStack)-1] )
+
+		self.maxWindow = MaxWindow(self)
+		self.addToWindowStack( self.maxWindow, self.windowStack[len(self.windowStack)-1] )
+
+		self.infWindow = InfWindow(self)
+		self.addToWindowStack( self.infWindow, self.windowStack[len(self.windowStack)-1] )
+
+		self.hideLiveWindows()
+		self.hidePlayWindows()
+		self.hideAudioWindows()
 		self.MAP_EVENT_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].show_all()
+
+
+	def setUpWindowsSizes( self ):
+		self.livePhotoWindow.resize( self.vw, self.vh )
+		self.pipBgdWindow.resize( self.pgdw, self.pgdh )
+		self.liveVideoWindow.resize( self.vw, self.vh )
+		self.playOggWindow.resize( self.vw, self.vh )
+		self.pipBgdWindow2.resize( self.pgdw, self.pgdh )
+		self.playLiveWindow.resize( self.pipw, self.piph )
+		self.recordWindow.resize( self.pgdw, self.pgdh )
+		self.maxWindow.resize( self.maxw, self.maxh )
+		self.infWindow.resize( self.maxw, self.maxh )
 
 
 	def _toolbarChangeCb( self, tbox, num ):
@@ -313,9 +364,8 @@ class UI:
 			self.ca.m.doAudioMode()
 
 
-	def addToWindowStack( self, win, w, h, parent ):
+	def addToWindowStack( self, win, parent ):
 		self.windowStack.append( win )
-		win.resize( w, h )
 		win.set_transient_for( parent )
 		win.set_type_hint( gtk.gdk.WINDOW_TYPE_HINT_DIALOG )
 		win.set_decorated( False )
@@ -669,8 +719,8 @@ class UI:
 
 	def moveWinOffscreen( self, win ):
 		#we move offscreen to resize or else we get flashes on screen, and setting hide() doesn't allow resize & moves
-		offW = (gtk.gdk.screen_width() + 100)
-		offH = (gtk.gdk.screen_height() + 100)
+		offW = (gtk.gdk.screen_width() + 1000)
+		offH = (gtk.gdk.screen_height() + 1000)
 		self.smartMove(win, offW, offH)
 
 
@@ -863,26 +913,6 @@ class UI:
 	def shutterClickCb( self, arg ):
 		#todo: play a click sound here
 		self.ca.m.doShutter()
-
-
-	def _mapEventCb( self, widget, event ):
-		#when your parent window is ready, turn on the feed of live video
-		self.liveVideoWindow.disconnect(self.MAP_EVENT_ID)
-
-		#listen for ctrl+c & game key buttons
-		self.ca.connect('key-press-event', self._keyPressEventCb)
-		#overlay widgets can go away after they've been on screen for a while
-		self.HIDE_WIDGET_TIMEOUT_ID = 0
-		self.hiddenWidgets = False
-		self.resetWidgetFadeTimer()
-		self.showLiveVideoTags()
-
-		self.recordWindow.shutterButton.set_sensitive(True)
-		self.updateVideoComponents()
-		self.ca.glive.play()
-
-		#initialize the app with the default thumbs
-		self.ca.m.setupThumbs( self.ca.m.MODE )
 
 
 	def updateVideoComponents( self ):
@@ -1540,7 +1570,11 @@ class RecordWindow(gtk.Window):
 		shutterBox.add( self.shutterButton )
 		self.add( shutterBox )
 
+
 	def updateGfx( self ):
+		if (True):
+			return
+
 		if (self.ui.ca.m.MODE == self.ui.ca.m.MODE_AUDIO):
 			if (self.shutterButton.get_image() != self.ui.shutterMicImg):
 				self.shutterButton.set_image( self.ui.shutterMicImg )
