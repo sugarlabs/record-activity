@@ -287,7 +287,6 @@ class UI:
 			self.showLiveVideoTags()
 
 			self.recordWindow.shutterButton.set_sensitive(True)
-			print("p2")
 			self.updateVideoComponents()
 			self.ca.glive.play()
 
@@ -374,18 +373,13 @@ class UI:
 
 
 	def _toolbarChangeCb( self, tbox, num ):
-		print("toolbar change 1!")
 		num = num - 1 #offset the default activity tab
 		if (num == self.ca.m.MODE_PHOTO) and (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
-			print("do Photo!")
 			self.ca.m.doPhotoMode()
 		elif(num == self.ca.m.MODE_VIDEO) and (self.ca.m.MODE != self.ca.m.MODE_VIDEO):
-			print("do Video!")
 			self.ca.m.doVideoMode()
 		elif(num == self.ca.m.MODE_AUDIO) and (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
-			print("do Audio!")
 			self.ca.m.doAudioMode()
-		print("toolbar change 2!")
 
 
 	def addToWindowStack( self, win, parent ):
@@ -528,12 +522,16 @@ class UI:
 
 		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (self.shownRecd != None):
-				if (self.shownRecd.isClipboardCopyable( )):
-					tempImgPath = self.doClipboardCopyStart( self.shownRecd )
-					gtk.Clipboard().set_with_data( [('text/uri-list', 0, 0)], self._clipboardGetFuncCb, self._clipboardClearFuncCb, tempImgPath )
-					return True
+				self.copyToClipboard( self.shownRecd )
 
 		return False
+
+
+	def copyToClipboard( self, recd ):
+		if (recd.isClipboardCopyable( )):
+			tempImgPath = self.doClipboardCopyStart( recd )
+			gtk.Clipboard().set_with_data( [('text/uri-list', 0, 0)], self._clipboardGetFuncCb, self._clipboardClearFuncCb, tempImgPath )
+			return True
 
 
 	def doClipboardCopyStart( self, recd ):
@@ -578,7 +576,6 @@ class UI:
 			self.livePhotoCanvas.setImage( img )
 
 			self.liveMode = False
-			print("p3")
 			self.updateVideoComponents()
 
 			self.showRecdMeta(recd)
@@ -680,7 +677,6 @@ class UI:
 			self.ca.gplay.stop()
 			self.showLiveVideoTags()
 			self.liveMode = True
-			print("p4")
 			self.updateVideoComponents()
 
 
@@ -695,7 +691,6 @@ class UI:
 		self.showLiveVideoTags()
 		self.liveMode = True
 		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, False )
-		print("p5")
 		self.updateVideoComponents()
 
 
@@ -718,13 +713,14 @@ class UI:
 		#todo: use real time
 		self.recTime = self.recTime + 500.0
 		if (self.recTime >= 10000.0 ):
-			self.progressWindow.updateProgress( 1.0 )
 			if (self.ca.m.RECORDING):
 				self.shutterClickCb( None )
+			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
 
 			return False
 		else:
-			self.progressWindow.updateProgress( self.recTime/10000.0 )
+			secsRemaining = (10000 - self.recTime)/1000
+			self.progressWindow.updateProgress( self.recTime/10000.0, str(secsRemaining) + " " + self.ca.istrSecondsRemaining )
 			return True
 
 
@@ -747,7 +743,6 @@ class UI:
 		self.showLiveVideoTags()
 		self.LAST_MODE = -1 #force an update
 		self.recordWindow.updateGfx()
-		print("p6")
 		self.updateVideoComponents()
 		self.resetWidgetFadeTimer()
 
@@ -766,12 +761,10 @@ class UI:
 		window.set_glive(self.ca.glive)
 		self.ca.glive.stop()
 		self.ca.glive.play()
-		print("force reset video")
 
 
 	def doFullscreen( self ):
 		self.fullScreen = not self.fullScreen
-		print("p7")
 		self.updateVideoComponents()
 
 
@@ -784,7 +777,6 @@ class UI:
 
 	def setImgLocDim( self, win ):
 		imgDim = self.getImgDim( self.fullScreen )
-		print("imgDim", imgDim )
 		self.smartResize( win, imgDim[0], imgDim[1] )
 		imgLoc = self.getImgLoc( self.fullScreen )
 		self.smartMove( win, imgLoc[0], imgLoc[1] )
@@ -997,13 +989,11 @@ class UI:
 
 
 	def updateVideoComponents( self ):
-		print("uvc 1")
 		if (	(self.LAST_MODE == self.ca.m.MODE)
 				and (self.LAST_FULLSCREEN == self.fullScreen)
 				and (self.LAST_LIVE == self.liveMode)
 				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)):
 			return
-		print("uvc 2")
 
 
 		#something's changing so start counting anew
@@ -1123,9 +1113,6 @@ class UI:
 		for i in range (0, len(self.windowStack)):
 			for j in range (0, len(pos)):
 				if (self.windowStack[i] == pos[j]["window"]):
-					if (pos[j]["window"] == self.playLiveWindow):
-						print("WTF?", pos[j]["position"])
-
 					if (pos[j]["position"] == "img"):
 						self.setImgLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "max"):
@@ -1181,7 +1168,6 @@ class UI:
 			self.centerBox.add( self.infoBox )
 			self.centerBox.show_all()
 
-		print("p8")
 		self.updateVideoComponents()
 
 
@@ -1211,8 +1197,6 @@ class UI:
 
 
 	def showAudio( self, recd ):
-		print("showing Audio 1")
-
 		self.liveMode = False
 
 		#returns the small file to start with, and gets updated when the fullscreen arrives on the mesh
@@ -1222,7 +1206,6 @@ class UI:
 		self.livePhotoCanvas.setImage( img )
 		self.shownRecd = recd
 
-		print("p9")
 		self.updateVideoComponents()
 
 		mediaFilepath = recd.getMediaFilepath( True )
@@ -1230,7 +1213,6 @@ class UI:
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
 			self.showRecdMeta(recd)
-			print("showing Audio 2")
 
 
 	def deleteThumbSelection( self, recd ):
@@ -1254,7 +1236,6 @@ class UI:
 				self.startLiveAudio()
 
 			self.liveMode = True
-			print("p10")
 			self.updateVideoComponents()
 
 			self.showLiveVideoTags()
@@ -1273,14 +1254,11 @@ class UI:
 
 		self.showLiveVideoTags()
 		self.liveMode = True
-		print("p11")
 		self.updateVideoComponents()
 
 
 	def updateShownMedia( self, recd ):
-		print("updateShownMedia 1")
 		if (self.shownRecd == recd):
-			print("updateShownMedia 2")
 			#todo: better method name
 			self.showThumbSelection( recd )
 
@@ -1293,7 +1271,6 @@ class UI:
 			self.ca.glive.play()
 
 		self.liveMode = False
-		print("p12")
 		self.updateVideoComponents()
 
 		#todo: yank from the datastore here, yo
@@ -1562,7 +1539,6 @@ class xoPanel(P5):
 			#todo: scale mr xo
 			ctx.scale( .5, .5 )
 			self.xoGuy.render_cairo( ctx )
-			print("see me?")
 
 
 class MaxWindow(gtk.Window):
@@ -1685,15 +1661,19 @@ class ProgressWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
+		self.str = None
 
 		self.progBar = gtk.ProgressBar()
 		#self.progBar.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		self.add( self.progBar )
 
 
-	def updateProgress( self, amt ):
+	def updateProgress( self, amt, str ):
 		#todo: set sentences here too with updates
 		self.progBar.set_fraction( amt )
+		if (str != None and str != self.str):
+			self.str = str
+			self.progBar.set_text( self.str )
 		print( amt )
 
 

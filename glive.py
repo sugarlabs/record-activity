@@ -344,7 +344,6 @@ class Glive:
 					self.muxPipe().get_bus().disconnect(self.MUX_MESSAGE_ID)
 					self.muxPipe().get_bus().remove_signal_watch()
 
-				#todo: write to rainbow tmp
 				wavFilepath = os.path.join(self.ca.tempPath, "output.wav")
 				muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg") #ogv
 				#todo: ensure that decoding is required
@@ -371,22 +370,23 @@ class Glive:
 
 
 	def _transcodeUpdateCb( self ):
+		print("xcode?!!!")
 		position, duration = self.queryPosition( self.muxPipe() )
+		print( position, duration )
 		if position != gst.CLOCK_TIME_NONE:
 			value = position * 100.0 / duration
-			print( "transcoding: " + str( value ) + "%" )
+			self.ca.ui.progressWin.updateProgress( value, self.ca.istrTranscoding )
 		return True
 
 
 	def queryPosition( self, pipe ):
-		"Returns a (position, duration) tuple"
 		try:
-			position, format = self.player.query_position(gst.FORMAT_TIME)
+			position, format = pipe.query_position(gst.FORMAT_TIME)
 		except:
 			position = gst.CLOCK_TIME_NONE
 
 		try:
-			duration, format = self.player.query_duration(gst.FORMAT_TIME)
+			duration, format = pipe.query_duration(gst.FORMAT_TIME)
 		except:
 			duration = gst.CLOCK_TIME_NONE
 

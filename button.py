@@ -19,7 +19,7 @@ class RecdButton(TrayButton, gobject.GObject):
 
 		self.setup_rollover_options( recd.title )
 		#todo: add drag and drop
-		#todo: add copy to clipboard
+		#todo: add copy to clipboard only when available!
 
 
 	def getImg( self ):
@@ -74,11 +74,20 @@ class RecdButton(TrayButton, gobject.GObject):
 		palette = Palette(info)
 		self.set_palette(palette)
 
-		menu_item = gtk.MenuItem( 'Remove' )
-		menu_item.connect('activate', self._item_remove_cb)
-		palette.menu.append(menu_item)
-		menu_item.show()
+		rem_menu_item = gtk.MenuItem( self.ui.ca.istrRemove )
+		rem_menu_item.connect('activate', self._itemRemoveCb)
+		palette.menu.append(rem_menu_item)
+		rem_menu_item.show()
+
+		copy_menu_item = gtk.MenuItem( self.ui.ca.istrCopyToClipboard )
+		copy_menu_item.connect('activate', self._itemCopyToClipboardCb)
+		palette.menu.append(copy_menu_item)
+		copy_menu_item.show()
 
 
 	def _item_remove_cb(self, widget):
-		self.ui.deleteThumbSelection( self.recd );
+		self.ui.deleteThumbSelection( self.recd )
+
+
+	def _itemCopyToClipboard(self, widget):
+		self.ui.copyToClipboard( self.recd )
