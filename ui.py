@@ -115,14 +115,16 @@ class UI:
 
 
 	def _toolboxSizeAllocateCb( self, widget, event ):
-		toolboxHt = self.toolbox.get_size_request()[0]
+		toolboxHt = self.toolbox.size_request()[1]
 		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+toolboxHt)
 		self.vw = int(self.vh/.75)
 		self.letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
 		self.letterBoxVW = (self.vw/2)-(self.inset*2)
 		self.letterBoxVH = int(self.letterBoxVW*.75)
+
 		#now that we know how big the toolbox is, we can layout more
-		self.layout()
+		gobject.idle_add( self.layout )
+		#self.layout()
 
 
 	def layout( self ):
@@ -152,15 +154,11 @@ class UI:
 
 		#or this guy...
 		self.infoBox = gtk.EventBox()
-		#self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorHilite.gColor ) #todo: segfault
+		self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorHilite.gColor ) #todo: segfault (?!!)
 		iinfoBox = gtk.VBox(spacing=self.inset)
 		self.infoBox.add( iinfoBox )
 		iinfoBox.set_size_request(self.vw, -1)
 		iinfoBox.set_border_width(self.inset)
-
-
-		if True:
-			return
 
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( self.letterBoxW, -1 )
@@ -304,22 +302,6 @@ class UI:
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].show_all()
 
-		#listen for ctrl+c & game key buttons
-		self.ca.connect('key-press-event', self._keyPressEventCb)
-		#overlay widgets can go away after they've been on screen for a while
-		self.HIDE_WIDGET_TIMEOUT_ID = 0
-		self.hiddenWidgets = False
-		self.resetWidgetFadeTimer()
-		self.showLiveVideoTags()
-
-		self.recordWindow.shutterButton.set_sensitive(True)
-		self.updateVideoComponents()
-		self.ca.glive.play()
-
-		#initialize the app with the default thumbs
-		self.ca.m.setupThumbs( self.ca.m.MODE )
-
-
 
 	def _toolbarChangeCb( self, tbox, num ):
 		num = num - 1 #offset the default activity tab
@@ -384,7 +366,6 @@ class UI:
 
 	def _mouseMightaMovedCb( self ):
 		x, y = self.ca.get_pointer()
-		self.updateRecWindow( x, y )
 
 		if (x != self.mx or y != self.my):
 			self.hideWidgetsTimer = 0
@@ -807,25 +788,43 @@ class UI:
 
 	def getDim( self, pos, full ):
 		if (pos == "pip"):
-			#return [self.pipw, self.piph]
-			return self.getPipDim()
+			return self.getPipDim( full )
 		elif(pos == "pgd"):
-			#return [self.pgdw, self.pgdh]
-			return self.getPgdDim()
+			return self.getPgdDim( full )
 		elif(pos == "max"):
-			#return [self.maxw, self.maxh]
-			return self.getMaxDim()
+			return self.getMaxDim( full )
 		elif(pos == "img"):
 			return self.getImgDim( full )
 		elif(pos == "eye"):
-			#return [self.pgdw, self.pgdh]
 			return self.getEyeDim( full )
 		elif(pos == "inf"):
-			#return [self.letterBoxVW, self.letterBoxVH]
 			return self.getInfDim( full )
 		elif(pos == "inb"):
-			#return [self.maxw, self.maxh]
 			return self.getInbDim( full )
+
+
+	def getMaxDim( self, full ):
+		return [self.maxw, self.maxh]
+
+
+	def getPipDim( self, full ):
+		return [self.pipw, self.piph]
+
+
+	def getPgdDim( self, full ):
+		return [self.pgdw, self.pgdh]
+
+
+	def getEyeDim( self, full ):
+		return [self.pgdw, self.pgdh]
+
+
+	def getInfDim( self, full ):
+		return [self.letterBoxVW, self.letterBoxVH]
+
+
+	def getInbDim( self, full ):
+		return [self.maxw, self.maxh]
 
 
 	def getLoc( self, pos, full ):
@@ -862,15 +861,28 @@ class UI:
 
 
 	def shutterClickCb( self, arg ):
-		#todo: play a click here
+		#todo: play a click sound here
 		self.ca.m.doShutter()
 
 
 	def _mapEventCb( self, widget, event ):
 		#when your parent window is ready, turn on the feed of live video
 		self.liveVideoWindow.disconnect(self.MAP_EVENT_ID)
-		self.mapped = True
-		self.checkReadyToSetup()
+
+		#listen for ctrl+c & game key buttons
+		self.ca.connect('key-press-event', self._keyPressEventCb)
+		#overlay widgets can go away after they've been on screen for a while
+		self.HIDE_WIDGET_TIMEOUT_ID = 0
+		self.hiddenWidgets = False
+		self.resetWidgetFadeTimer()
+		self.showLiveVideoTags()
+
+		self.recordWindow.shutterButton.set_sensitive(True)
+		self.updateVideoComponents()
+		self.ca.glive.play()
+
+		#initialize the app with the default thumbs
+		self.ca.m.setupThumbs( self.ca.m.MODE )
 
 
 	def updateVideoComponents( self ):
