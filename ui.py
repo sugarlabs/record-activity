@@ -1359,17 +1359,15 @@ class UI:
 		self.xoGuySvgData = xoGuySvgFile.read()
 		infoOffSvgFile.close()
 
-		camSvgFile = open(os.path.join(self.ca.gfxPath, 'device-camera.svg'), 'r')
-		camSvgData = camSvgFile.read()
-		camSvg = self.loadSvg(camSvgData, None, None )
-		camSvgFile.close()
-		camSvgCairo = 
-		self.xoGuy.render_cairo( ctx )
+		camImgFile = os.path.join(self.ca.gfxPath, 'device-camera.png')
+		camImgPixbuf = gtk.gdk.pixbuf_new_from_file(camImgFile)
+		self.camImg = gtk.Image()
+		self.camImg.set_from_pixbuf( camImgPixbuf )
 
-		micSvgFile = open(os.path.join(self.ca.gfxPath, 'device-microphone.svg'), 'r')
-		micSvgData = micSvgFile.read()
-		self.micSvg = self.loadSvg(micSvgData, None, None)
-		micSvgFile.close()
+		micImgFile = os.path.join(self.ca.gfxPath, 'device-microphone.png')
+		micImgPixbuf = gtk.gdk.pixbuf_new_from_file(micImgFile)
+		self.micImg = gtk.Image()
+		self.micImg.set_from_pixbuf( micImgPixbuf )
 
 
 	def loadColors( self ):
@@ -1632,7 +1630,7 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
-		self.shutterButton.set_image( self.ui.camSvg )
+		self.shutterButton.set_image( self.ui.camImg )
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		#todo: this is insensitive until we're all set up
 		#self.shutterButton.set_sensitive(False)
@@ -1645,15 +1643,12 @@ class RecordWindow(gtk.Window):
 
 
 	def updateGfx( self ):
-		if (True):
-			return
-
 		if (self.ui.ca.m.MODE == self.ui.ca.m.MODE_AUDIO):
-			if (self.shutterButton.get_image() != self.ui.shutterMicImg):
-				self.shutterButton.set_image( self.ui.shutterMicImg )
+			if (self.shutterButton.get_image() != self.ui.micImg):
+				self.shutterButton.set_image( self.ui.micImg )
 		else:
-			if (self.shutterButton.get_image() != self.ui.shutterCamImg):
-				self.shutterButton.set_image( self.ui.shutterCamImg )
+			if (self.shutterButton.get_image() != self.ui.camImg):
+				self.shutterButton.set_image( self.ui.camImg )
 
 
 class ProgressWindow(gtk.Window):

@@ -272,6 +272,7 @@ class Glive:
 
 
 	def startRecordingAudio(self):
+		self.audioPixbuf = None
 		self.pipe().set_state(gst.STATE_READY)
 
 		self.takePhoto()

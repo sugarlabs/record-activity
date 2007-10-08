@@ -1,9 +1,0 @@
-<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
-	<!ENTITY stroke_color "#010101">
-	<!ENTITY fill_color "#FFFFFF">
-]><svg enable-background="new 0 0 55 55" height="55px" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="device-camera">
-	<g>
-		<path d="M52.159,27.454    c0,0-11.265,13.547-24.785,13.556C13.854,41.021,2.591,27.473,2.591,27.473S13.854,13.99,27.374,13.99    C40.895,13.981,52.159,27.454,52.159,27.454z" fill="&fill_color;" stroke="&stroke_color;" stroke-linejoin="round" stroke-width="3.5"/>
-		<path d="M20.218,27.499c0,3.951,3.207,7.156,7.155,7.156    c3.945,0,7.152-3.205,7.152-7.156c0-3.944-3.207-7.158-7.152-7.158C23.424,20.342,20.218,23.555,20.218,27.499z" fill="none" stroke="&stroke_color;" stroke-width="3.5"/>
-	</g>
-</g></svg>
