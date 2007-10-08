@@ -1328,11 +1328,6 @@ class UI:
 		self.thumbVideoSvg = self.loadSvg(self.thumbVideoSvgData, self.colorStroke.hex, self.colorFill.hex)
 		thumbVideoSvgFile.close()
 
-#		closeSvgFile = open(os.path.join(self.ca.gfxPath, 'thumb_close.svg'), 'r')
-#		closeSvgData = closeSvgFile.read()
-#		self.closeSvg = self.loadSvg(closeSvgData, self.colorStroke.hex, self.colorFill.hex)
-#		closeSvgFile.close()
-
 		modWaitSvgFile = open(os.path.join(self.ca.gfxPath, 'wait.svg'), 'r')
 		modWaitSvgData = modWaitSvgFile.read()
 		self.modWaitSvg = self.loadSvg( modWaitSvgData, None, None )
@@ -1349,19 +1344,9 @@ class UI:
 		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
 		maxReduceSvgFile.close()
 
-		shutterCamImgFile = os.path.join(self.ca.gfxPath, 'device-cam.png')
-		shutterCamImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterCamImgFile)
-		self.shutterCamImg = gtk.Image()
-		self.shutterCamImg.set_from_pixbuf( shutterCamImgPixbuf )
-
-		shutterMicImgFile = os.path.join(self.ca.gfxPath, 'device-mic.png')
-		shutterMicImgPixbuf = gtk.gdk.pixbuf_new_from_file(shutterMicImgFile)
-		self.shutterMicImg = gtk.Image()
-		self.shutterMicImg.set_from_pixbuf( shutterMicImgPixbuf )
-
 		infoOnSvgFile = open(os.path.join(self.ca.gfxPath, 'info-on.svg'), 'r')
 		infoOnSvgData = infoOnSvgFile.read()
-		self.infoOnSvg = self.loadSvg(infoOnSvgData, None, None )
+		infoOnSvg = self.loadSvg(infoOnSvgData, None, None )
 		infoOnSvgFile.close()
 
 		infoOffSvgFile = open(os.path.join(self.ca.gfxPath, 'info-off.svg'), 'r')
@@ -1369,9 +1354,22 @@ class UI:
 		self.infoOffSvg = self.loadSvg(infoOffSvgData, None, None )
 		infoOffSvgFile.close()
 
+		#todo: load from sugar
 		xoGuySvgFile = open(os.path.join(self.ca.gfxPath, 'xo-guy.svg'), 'r')
 		self.xoGuySvgData = xoGuySvgFile.read()
 		infoOffSvgFile.close()
+
+		camSvgFile = open(os.path.join(self.ca.gfxPath, 'device-camera.svg'), 'r')
+		camSvgData = camSvgFile.read()
+		camSvg = self.loadSvg(camSvgData, None, None )
+		camSvgFile.close()
+		camSvgCairo = 
+		self.xoGuy.render_cairo( ctx )
+
+		micSvgFile = open(os.path.join(self.ca.gfxPath, 'device-microphone.svg'), 'r')
+		micSvgData = micSvgFile.read()
+		self.micSvg = self.loadSvg(micSvgData, None, None)
+		micSvgFile.close()
 
 
 	def loadColors( self ):
@@ -1622,11 +1620,6 @@ class InfButton(P5Button):
 	def draw(self, ctx, w, h):
 		self.ui.infoOnSvg.render_cairo( ctx )
 
-#		if (not self.ui.RECD_INFO_ON):
-#			self.ui.infoOnSvg.render_cairo( ctx )
-#		else:
-#			self.ui.infoOffSvg.render_cairo( ctx )
-
 
 	def fireButton(self, actionCommand):
 		if (actionCommand == self.infS):
@@ -1639,7 +1632,7 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
-		#self.shutterButton.set_image( self.ui.shutterCamImg )
+		self.shutterButton.set_image( self.ui.camSvg )
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		#todo: this is insensitive until we're all set up
 		#self.shutterButton.set_sensitive(False)
