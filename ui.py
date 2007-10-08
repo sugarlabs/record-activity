@@ -850,7 +850,7 @@ class UI:
 		if (not full):
 			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 		else:
-			return [self.inset, gtk.gdk.screen_height()-(self.inset+controlBarHt)]
+			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
 	def getInfLoc( self ):
@@ -908,8 +908,8 @@ class UI:
 			return self.getInfDim( full )
 		elif(pos == "inb"):
 			return self.getInbDim( full )
-		elif(pos == "pgd"):
-			return self.getPgdDim( full )
+		elif(pos == "prg"):
+			return self.getPrgDim( full )
 
 
 	def getMaxDim( self, full ):
@@ -937,11 +937,17 @@ class UI:
 
 
 	def getPrgDim( self, full ):
-		return [self.vw-self.recordButtWd, self.controlBarHt]
+		if (not full):
+			return [self.vw-self.recordButtWd, self.controlBarHt]
+		else:
+			return [gtk.gdk.screen_width()-(self.inset+self.inset+self.recordButtWd), self.controlBarHt]
 
 
 	def getPrgLoc( self, full ):
-		return [self.centerBoxPos[0]+self.recordButtWd, self.centerBoxPos[1]+self.vh]
+		if (not full):
+			return [self.centerBoxPos[0]+self.recordButtWd, self.centerBoxPos[1]+self.vh]
+		else:
+			return [self.inset+self.recordButtWd, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
 	def getLoc( self, pos, full ):
@@ -1018,6 +1024,7 @@ class UI:
 					pos.append({"position":"img", "window":self.liveVideoWindow})
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
+					pos.append({"position":"prg", "window":self.progressWindow} )
 				else:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
@@ -1634,8 +1641,8 @@ class RecordWindow(gtk.Window):
 		#todo: this is insensitive until we're all set up
 		#self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
-		#shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
-		#self.shutterButton.set_border_width( self.ui.pipBorder )
+		shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		self.shutterButton.set_border_width( self.ui.pipBorder )
 
 		shutterBox.add( self.shutterButton )
 		self.add( shutterBox )
@@ -1659,13 +1666,23 @@ class ProgressWindow(gtk.Window):
 		self.ui = ui
 		self.str = None
 
+		eb = gtk.EventBox()
+		eb.modify_fg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		eb.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		self.add( eb )
+
+		vb = gtk.VBox()
+		vb.set_border_width(5)
+		eb.add(vb)
+
 		self.progBar = gtk.ProgressBar()
-		#self.progBar.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
-		self.add( self.progBar )
+		#todo: set the bg'd color here correctly
+		#self.progBar.modify_fg( gtk.STATE_INSENSITIVE, self.ui.colorGreen.gColor )
+		self.progBar.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
+		vb.add( self.progBar )
 
 
 	def updateProgress( self, amt, str ):
-		#todo: set sentences here too with updates
 		self.progBar.set_fraction( amt )
 		if (str != None and str != self.str):
 			self.str = str
