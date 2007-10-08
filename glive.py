@@ -370,9 +370,7 @@ class Glive:
 
 
 	def _transcodeUpdateCb( self ):
-		print("xcode?!!!")
 		position, duration = self.queryPosition( self.muxPipe() )
-		print( position, duration )
 		if position != gst.CLOCK_TIME_NONE:
 			value = position * 100.0 / duration
 			self.ca.ui.progressWin.updateProgress( value, self.ca.istrTranscoding )

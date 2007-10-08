@@ -847,14 +847,10 @@ class UI:
 
 
 	def getEyeLoc( self, full ):
-		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			x = (gtk.gdk.screen_width()/2) - (self.recordButtWd/2)
-			if (full):
-				return [x, gtk.gdk.screen_height()-(self.inset+self.pgdh)]
-			else:
-				return [x, self.centerBoxPos[1]+self.vh]
-		else:
+		if (not full):
 			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
+		else:
+			return [self.inset, gtk.gdk.screen_height()-(self.inset+controlBarHt)]
 
 
 	def getInfLoc( self ):
