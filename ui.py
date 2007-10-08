@@ -134,7 +134,6 @@ class UI:
 
 		#now that we know how big the toolbox is, we can layout more
 		gobject.idle_add( self.layout )
-		#self.layout()
 
 
 	def layout( self ):
@@ -151,14 +150,16 @@ class UI:
 		topBox.pack_start( leftFill, expand=True )
 
 		self.centerBox = gtk.EventBox()
-		topBox.pack_start( self.centerBox, expand=False )
-		#filled with this guy for sizings..
+		self.centerBox.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
+		topBox.pack_start( self.centerBox, expand=True )
+		self.centerBox.set_size_request(self.vw, -1)
 		centerSizer = gtk.VBox()
 		centerSizer.set_size_request(self.vw, -1)
 		self.centerBox.add(centerSizer)
 
 		#into the center box we can put this guy...
 		self.backgdCanvasBox = gtk.VBox()
+		self.backgdCanvasBox.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
 		self.backgdCanvasBox.set_size_request(self.vw, -1)
 		self.backgdCanvas = BackgroundCanvas(self)
 		self.backgdCanvas.set_size_request(self.vw, self.vh)
@@ -166,7 +167,7 @@ class UI:
 
 		#or this guy...
 		self.infoBox = gtk.EventBox()
-		self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorHilite.gColor ) #todo: segfault (?!!)
+		self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorHilite.gColor )
 		iinfoBox = gtk.VBox(spacing=self.inset)
 		self.infoBox.add( iinfoBox )
 		iinfoBox.set_size_request(self.vw, -1)
@@ -848,7 +849,10 @@ class UI:
 
 	def getEyeLoc( self, full ):
 		if (not full):
-			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
+			if (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
+				return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
+			else:
+				return [(self.centerBoxPos[0]+(self.vw/2))-self.recordButtWd/2, self.centerBoxPos[1]+self.vh]
 		else:
 			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
@@ -1024,7 +1028,6 @@ class UI:
 					pos.append({"position":"img", "window":self.liveVideoWindow})
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
-					pos.append({"position":"prg", "window":self.progressWindow} )
 				else:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
