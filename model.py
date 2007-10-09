@@ -218,6 +218,8 @@ class Model:
 
 
 	def stopRecordingAudio( self ):
+		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
+		self.ca.ui.progressWindow.updateProgress( 1, "Stopped recording audio" )
 		self.setUpdating( True )
 		self.ca.glive.stopRecordingAudio( )
 		self.setRecording( False )
@@ -297,12 +299,11 @@ class Model:
 
 
 	def stopRecordingVideo( self ):
-		print("stop recording video")
+		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
+		self.ca.ui.progressWindow.updateProgress( 1, "Stopped recording video" )
 		self.setUpdating( True )
-
 		self.ca.ui.hideLiveWindows()
 		self.ca.ui.hidePlayWindows()
-
 		self.ca.glive.stopRecordingVideo()
 
 

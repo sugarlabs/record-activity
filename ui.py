@@ -76,6 +76,7 @@ class UI:
 		self.LAST_RECD_INFO = False
 		self.HIDE_ON_UPDATE = True
 		self.RECD_INFO_ON = False
+		self.UPDATE_RECORDING_ID = 0
 
 		#init
 		self.mapped = False
@@ -707,7 +708,7 @@ class UI:
 
 	def beginRecordingTimer( self ):
 		self.recTime = 0.0
-		gobject.timeout_add( 500, self.updateRecordingTimer )
+		self.UPDATE_RECORDING_ID = gobject.timeout_add( 500, self.updateRecordingTimer )
 
 
 	def updateRecordingTimer( self ):
@@ -718,6 +719,7 @@ class UI:
 				self.shutterClickCb( None )
 			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
 
+			gobject.source_remove( self.UPDATE_RECORDING_ID )
 			return False
 		else:
 			secsRemaining = (10000 - self.recTime)/1000
