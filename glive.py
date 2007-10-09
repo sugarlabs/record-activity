@@ -228,6 +228,8 @@ class Glive:
 		self.audio = False
 		if (self.audioPixbuf != None):
 			self.ca.m.saveAudio(audioFile, self.audioPixbuf)
+		else:
+			self.ca.m.cannotSaveVideo()
 
 
 	def takePhoto(self):

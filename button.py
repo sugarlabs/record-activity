@@ -61,7 +61,7 @@ class RecdButton(TrayButton, gobject.GObject):
 				img.show()
 				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
 			else:
-				pb = self.ui.thumbAudioSvg.get_pixbuf()
+				pb = self.ui.thumbVideoSvg.get_pixbuf()
 				img.set_from_pixbuf( pb )
 				img.show()
 				ipb.composite(pb, 8, 22, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )

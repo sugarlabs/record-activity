@@ -218,6 +218,7 @@ class Model:
 
 
 	def stopRecordingAudio( self ):
+		print("stop recording audio")
 		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
 		self.ca.ui.progressWindow.updateProgress( 1, self.ca.istrStoppedRecordingAudio )
 		self.ca.ui.TRANSCODING = True
@@ -226,7 +227,6 @@ class Model:
 		self.ca.ui.updateVideoComponents()
 
 		self.ca.glive.stopRecordingAudio( )
-
 
 
 	def saveAudio( self, tempPath, pixbuf ):
