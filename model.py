@@ -220,7 +220,7 @@ class Model:
 	def stopRecordingAudio( self ):
 		print("stop recording audio")
 		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
-		self.ca.ui.progressWindow.updateProgress( 1, self.ca.istrStoppedRecordingAudio )
+		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.ca.ui.TRANSCODING = True
 		self.setUpdating( True )
 		self.setRecording( False )
@@ -252,7 +252,7 @@ class Model:
 		audioHash.append( recd )
 		self.thumbAdded( self.TYPE_AUDIO )
 
-		#SJ KLEIN AUDIO SAVE TO DISK BEGIN
+#		SJ KLEIN AUDIO SAVE TO DISK BEGIN
 #		audioPath = os.path.join(os.path.expanduser("~"), "Journal", "Audio")
 #		if (not os.path.exists(audioPath)):
 #			os.makedirs(audioPath)
@@ -264,10 +264,9 @@ class Model:
 #		audioImageFilepath = os.path.join( audioPath, whoWhen + ".png" )
 #		audioImageFilepath = self.getUniqueFilepath(audioImageFilepath, 0)
 #		shutil.copy( imagePath, audioImageFilepath )
-		#SJ KLEIN AUDIO SAVE TO DISK END
+#		SJ KLEIN AUDIO SAVE TO DISK END
 
 		self.doPostSaveVideo()
-
 		self.meshShareRecd( recd )
 
 
@@ -301,7 +300,7 @@ class Model:
 
 	def stopRecordingVideo( self ):
 		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
-		self.ca.ui.progressWindow.updateProgress( 1, self.ca.istrStoppedRecordingVideo )
+		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.setUpdating( True )
 		self.ca.ui.TRANSCODING = True
 		self.ca.ui.updateVideoComponents()
@@ -350,6 +349,7 @@ class Model:
 		if (self.ca.props.active):
 			self.ca.glive.play()
 
+		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.setRecording( False )
 		self.setUpdating( False )
 

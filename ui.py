@@ -197,6 +197,7 @@ class UI:
 		self.namePanel.pack_start( nameLabel, expand=False )
 		nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(80)
+		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, self.colorHilite.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
 		self.namePanel.pack_start(self.nameTextfield)
@@ -423,8 +424,6 @@ class UI:
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
 		self.moveWinOffscreen( self.infWindow )
-		#self.moveWinOffscreen( self.progressWindow)
-		#self.moveWinOffscreen( self.recordWindow )
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.liveVideoWindow )
@@ -873,18 +872,18 @@ class UI:
 				return [self.recordButtWd, self.controlBarHt]
 
 
-	def getInfLoc( self ):
+	def getInbLoc( self, full ):
 		return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.letterBoxVW), self.centerBoxPos[1]+self.inset]
 
 
 	def setInfLocDim( self, win ):
-		dim = getInfDim( self.FULLSCREEN )
+		dim = self.getInfDim( self.FULLSCREEN )
 		self.smartResize( win, dim[0], dim[1] )
-		loc = self.getInfLoc()
+		loc = self.getInfLoc( self.FULLSCREEN )
 		self.smartMove( win, loc[0], loc[1] )
 
 
-	def getInbLoc( self, full ):
+	def getInfLoc( self, full ):
 		if (full):
 			return [(gtk.gdk.screen_width() + 100), (gtk.gdk.screen_height() + 100)]
 		else:
@@ -892,6 +891,8 @@ class UI:
 
 
 	def setInbLocDim( self, win ):
+		dim = self.getInbDim( self.FULLSCREEN )
+		self.smartResize( win, dim[0], dim[1] )
 		loc = self.getInbLoc(self.FULLSCREEN)
 		self.smartMove( win, loc[0], loc[1] )
 
@@ -950,7 +951,7 @@ class UI:
 
 
 	def getInbDim( self, full ):
-		return [self.maxw, self.maxh]
+		return [self.letterBoxVW, self.letterBoxVH]
 
 
 	def getPrgDim( self, full ):
@@ -1025,18 +1026,18 @@ class UI:
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
-				pos.append({"position":"inf", "window":self.livePhotoWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
+				pos.append({"position":"inb", "window":self.livePhotoWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
-				pos.append({"position":"inf", "window":self.playOggWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
+				pos.append({"position":"inb", "window":self.playOggWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
-				pos.append({"position":"inf", "window":self.livePhotoWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
+				pos.append({"position":"inb", "window":self.livePhotoWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 		elif (not self.RECD_INFO_ON and not self.TRANSCODING):
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				if (self.LIVEMODE):
@@ -1048,7 +1049,7 @@ class UI:
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
-					pos.append({"position":"inb", "window":self.infWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.playLiveWindow} )
@@ -1060,7 +1061,7 @@ class UI:
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 					pos.append({"position":"pip", "window":self.playLiveWindow} )
-					pos.append({"position":"inb", "window":self.infWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
@@ -1106,7 +1107,7 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"max", "window":self.maxWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1115,7 +1116,7 @@ class UI:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1124,7 +1125,7 @@ class UI:
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
-				pos.append({"position":"inb", "window":self.infWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"eye", "window":self.recordWindow} )
 				pos.append({"position":"prg", "window":self.progressWindow} )
@@ -1359,7 +1360,7 @@ class UI:
 
 		infoOnSvgFile = open(os.path.join(self.ca.gfxPath, 'info-on.svg'), 'r')
 		infoOnSvgData = infoOnSvgFile.read()
-		infoOnSvg = self.loadSvg(infoOnSvgData, None, None )
+		self.infoOnSvg = self.loadSvg(infoOnSvgData, None, None )
 		infoOnSvgFile.close()
 
 		infoOffSvgFile = open(os.path.join(self.ca.gfxPath, 'info-off.svg'), 'r')
