@@ -847,8 +847,10 @@ class UI:
 
 
 	def setEyeLocDim( self, win ):
-		eyeLoc = self.getEyeLoc( self.FULLSCREEN )
-		self.smartMove( win, eyeLoc[0], eyeLoc[1] )
+		dim = self.getEyeDim( self.FULLSCREEN )
+		self.smartResize( win, dim[0], dim[1] )
+		loc = self.getEyeLoc( self.FULLSCREEN )
+		self.smartMove( win, loc[0], loc[1] )
 
 
 	def getEyeLoc( self, full ):
@@ -861,12 +863,23 @@ class UI:
 			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
+	def getEyeDim( self, full ):
+		if (not full):
+			return [self.recordButtWd, self.controlBarHt]
+		else:
+			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+				return [gtk.gdk.screen_width()-(self.inset*2), self.controlBarHt]
+			else:
+				return [self.recordButtWd, self.controlBarHt]
+
+
 	def getInfLoc( self ):
 		return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.letterBoxVW), self.centerBoxPos[1]+self.inset]
 
 
 	def setInfLocDim( self, win ):
-		self.smartResize( win, self.letterBoxVW, self.letterBoxVH )
+		dim = getInfDim( self.FULLSCREEN )
+		self.smartResize( win, dim[0], dim[1] )
 		loc = self.getInfLoc()
 		self.smartMove( win, loc[0], loc[1] )
 
@@ -930,10 +943,6 @@ class UI:
 
 	def getPgdDim( self, full ):
 		return [self.pgdw, self.pgdh]
-
-
-	def getEyeDim( self, full ):
-		return [self.recordButtWd, self.controlBarHt]
 
 
 	def getInfDim( self, full ):
@@ -1288,17 +1297,12 @@ class UI:
 		self.LIVEMODE = False
 		self.updateVideoComponents()
 
-		#todo: yank from the datastore here, yo
-		#todo: use os.path calls here, see jukebox
-		#~~> urllib.quote(os.path.abspath(file_path))
-
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath == None):
 			mediaFilepath = recd.getThumbFilepath( True )
 
 		#todo: might need to pause the player...
 		videoUrl = "file://" + str( mediaFilepath )
-		print( "videoUrl: ", videoUrl )
 		self.ca.gplay.setLocation(videoUrl)
 
 		self.shownRecd = recd
@@ -1639,15 +1643,30 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
+		self.shutterButton.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
 		self.shutterButton.set_image( self.ui.camImg )
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
 		self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
+		shutterBox.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
 		shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		self.shutterButton.set_border_width( self.ui.pipBorder )
 
+		hbox = gtk.HBox()
+		self.add( hbox )
+		leftPanel = gtk.VBox()
+		leftEvent = gtk.EventBox()
+		leftEvent.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		leftEvent.add( leftPanel )
+		hbox.pack_start( leftEvent, expand=True )
 		shutterBox.add( self.shutterButton )
-		self.add( shutterBox )
+		hbox.pack_start( shutterBox, expand=False )
+
+		rightPanel = gtk.VBox()
+		rightEvent = gtk.EventBox()
+		rightEvent.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		rightEvent.add( rightPanel )
+		hbox.pack_start( rightEvent, expand=True )
 
 
 	def updateGfx( self ):
@@ -1686,7 +1705,9 @@ class ProgressWindow(gtk.Window):
 		if (str != None and str != self.str):
 			self.str = str
 			self.progBar.set_text( self.str )
-		print( amt )
+		if (amt >= 1):
+			self.progBar.set_fraction( 0 )
+
 
 
 class PhotoToolbar(gtk.Toolbar):
