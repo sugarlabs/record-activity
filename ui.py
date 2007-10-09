@@ -1632,8 +1632,7 @@ class RecordWindow(gtk.Window):
 		self.shutterButton = gtk.Button()
 		self.shutterButton.set_image( self.ui.camImg )
 		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
-		#todo: this is insensitive until we're all set up
-		#self.shutterButton.set_sensitive(False)
+		self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
 		shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		self.shutterButton.set_border_width( self.ui.pipBorder )
