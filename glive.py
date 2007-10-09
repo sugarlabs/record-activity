@@ -265,6 +265,7 @@ class Glive:
 		self.record = True
 		self.audio = True
 		if (self.record):
+			#todo: bug?!
 			self.el("videoTee").link(self.el("movieQueue"))
 
 			if (self.audio):

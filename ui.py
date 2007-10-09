@@ -510,22 +510,36 @@ class UI:
 		#we listen here for CTRL+C events and game keys, and pass on events to gtk.Entry fields
 		keyname = gtk.gdk.keyval_name(event.keyval)
 
-		#xev...
-		print( "keyname:", keyname )
-
-		#check: KP_End
-		if (keyname == 'KP_Page_Up'):
-			print("gamekey O")
-		elif (keyname == 'KP_Page_Down'):
-			print("gamekey X")
-		elif (keyname == 'KP_End'):
-			print("gamekey CHECK")
-		elif (keyname == 'KP_Home'):
-			print("gamekey SQUARE")
-
-		if (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
+		if (keyname == 'KP_Page_Up'): #O, up
+			print("GAME UP")
+			if (self.LIVEMODE):
+				if (not self.ca.m.UPDATING):
+					self.doShutter()
+			else:
+				self.LIVEMODE = True
+				self.updateVideoComponents()
+		elif (keyname == 'KP_Page_Down'): #x, down
+			print("GAME X")
+			elf.ca.m.showLastThumb()
+		elif (keyname == 'KP_Home'): #square, left
+			print("GAME LEFT")
+			if (not self.LIVEMODE):
+				self.ca.m.showPrevThumb( self.shownRecd )
+		elif (keyname == 'KP_End'): #check, right
+			print("GAME RIGHT")
+			if (not self.LIVEMODE):
+				self.ca.m.showNextThumb( self.shownRecd )
+		elif (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (self.shownRecd != None):
 				self.copyToClipboard( self.shownRecd )
+		elif (keyname == 'Escape'):
+			if (self.FULLSCREEN):
+				self.FULLSCREEN = False
+				self.updateVideoComponents()
+		elif (keyname == "SpaceBar"): #todo
+			if (self.LIVEMODE):
+				if (not self.ca.m.UPDATING):
+					self.doShutter()
 
 		return False
 
@@ -717,7 +731,7 @@ class UI:
 		self.recTime = self.recTime + 500.0
 		if (self.recTime >= 10000.0 ):
 			if (self.ca.m.RECORDING):
-				self.shutterClickCb( None )
+				self.doShutter( None )
 			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
 
 			gobject.source_remove( self.UPDATE_RECORDING_ID )
@@ -1004,6 +1018,10 @@ class UI:
 
 
 	def shutterClickCb( self, arg ):
+		self.doShutter()
+
+
+	def doShutter( self ):
 		#todo:
 		#playWave(sound='didjeridu')
 		#audioOut()

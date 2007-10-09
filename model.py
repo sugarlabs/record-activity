@@ -41,6 +41,7 @@ import xml.dom.minidom
 from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
 from hashlib import md5
+import operator
 
 from recorded import Recorded
 from color import Color
@@ -180,6 +181,42 @@ class Model:
 			self.ca.ui.addThumb( hash[len(hash)-1] )
 
 		self.setUpdating( False )
+
+
+	def showNextThumb( self, shownRecd ):
+		print("showNext")
+		if (shownRecd == None):
+			self.showLastThumb()
+		else:
+			if (len(hash) > 0):
+				hash = self.mediaHashs[self.MODE]
+				i = operator.indexOf( hash, shownRecd )
+				i = i-1
+				if (i<0):
+					i = len(hash)-1
+				self.ca.ui.showThumbSelection( hash[i] )
+
+
+
+	def showPrevThumb( self, shownRecd ):
+		print("showPrev")
+		if (shownRecd == None):
+			self.showLastThumb()
+		else:
+			if (len(hash) > 0):
+				hash = self.mediaHashs[self.MODE]
+				i = operator.indexOf( hash, shownRecd )
+				i = i-1
+				if (i<0):
+					i = len(hash)-1
+				self.ca.ui.showThumbSelection( hash[i] )
+
+
+	def showLastThumb( self ):
+		print("showLast")
+		hash = self.mediaHashs[self.MODE]
+		if (len(hash) > 0):
+			self.ca.ui.showThumbSelection( hash[len(hash)-1] )
 
 
 	def getHash( self ):
