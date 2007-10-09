@@ -67,13 +67,15 @@ class UI:
 		self.loadGfx()
 
 		#ui modes
-		self.fullScreen = False
-		self.liveMode = True
+		self.FULLSCREEN = False
+		self.LIVEMODE = True
 
 		self.LAST_MODE = -1
 		self.LAST_FULLSCREEN = False
 		self.LAST_LIVE = True
 		self.LAST_RECD_INFO = False
+		self.LAST_TRANSCODING = False
+		self.TRANSCODING = False
 		self.HIDE_ON_UPDATE = True
 		self.RECD_INFO_ON = False
 		self.UPDATE_RECORDING_ID = 0
@@ -424,13 +426,13 @@ class UI:
 		#self.moveWinOffscreen( self.progressWindow)
 		#self.moveWinOffscreen( self.recordWindow )
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			if (not self.liveMode):
+			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.liveVideoWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			if (not self.liveMode):
+			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.playLiveWindow )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			if (not self.liveMode):
+			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.liveVideoWindow )
 		self.LAST_MODE = -1
 
@@ -467,25 +469,25 @@ class UI:
 
 	def mouseInWidget( self, mx, my ):
 		if (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
-			if (self.inWidget( mx, my, self.getLoc("max", self.fullScreen), self.getDim("max", self.fullScreen))):
+			if (self.inWidget( mx, my, self.getLoc("max", self.FULLSCREEN), self.getDim("max", self.FULLSCREEN))):
 				return True
 
-		if (not self.liveMode):
-			if (self.inWidget( mx, my, self.getLoc("pgd", self.fullScreen), self.getDim("pgd", self.fullScreen))):
+		if (not self.LIVEMODE):
+			if (self.inWidget( mx, my, self.getLoc("pgd", self.FULLSCREEN), self.getDim("pgd", self.FULLSCREEN))):
 				return True
 
-			if (self.inWidget( mx, my, self.getLoc("inb", self.fullScreen), self.getDim("inb", self.fullScreen))):
+			if (self.inWidget( mx, my, self.getLoc("inb", self.FULLSCREEN), self.getDim("inb", self.FULLSCREEN))):
 				return True
 
-		if (self.liveMode):
-			if (self.inWidget( mx, my, self.getLoc("eye", self.fullScreen), self.getDim("eye", self.fullScreen))):
+		if (self.LIVEMODE):
+			if (self.inWidget( mx, my, self.getLoc("eye", self.FULLSCREEN), self.getDim("eye", self.FULLSCREEN))):
 				return True
 
 		return False
 
 
 	def _mediaClickedForPlayback(self, widget, event):
-		if (not self.liveMode):
+		if (not self.LIVEMODE):
 			if (self.shownRecd != None):
 				if (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
 					self.showThumbSelection( self.shownRecd )
@@ -577,7 +579,7 @@ class UI:
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 			self.livePhotoCanvas.setImage( img )
 
-			self.liveMode = False
+			self.LIVEMODE = False
 			self.updateVideoComponents()
 
 			self.showRecdMeta(recd)
@@ -674,11 +676,11 @@ class UI:
 
 		self.RECD_INFO_ON = False
 
-		if (self.liveMode != True):
+		if (self.LIVEMODE != True):
 			#todo: updating here?
 			self.ca.gplay.stop()
 			self.showLiveVideoTags()
-			self.liveMode = True
+			self.LIVEMODE = True
 			self.updateVideoComponents()
 
 
@@ -687,11 +689,11 @@ class UI:
 
 		self.RECD_INFO_ON = False
 		#if you are big on the screen, don't go changing anything, ok?
-		if (self.liveMode):
+		if (self.LIVEMODE):
 			return
 
 		self.showLiveVideoTags()
-		self.liveMode = True
+		self.LIVEMODE = True
 		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, False )
 		self.updateVideoComponents()
 
@@ -729,8 +731,8 @@ class UI:
 
 	def updateModeChange(self):
 		#this is called when a menubar button is clicked
-		self.liveMode = True
-		self.fullScreen = False
+		self.LIVEMODE = True
+		self.FULLSCREEN = False
 		self.RECD_INFO_ON = False
 
 		#set up the x & xv x-ition (if need be)
@@ -767,7 +769,7 @@ class UI:
 
 
 	def doFullscreen( self ):
-		self.fullScreen = not self.fullScreen
+		self.FULLSCREEN = not self.FULLSCREEN
 		self.updateVideoComponents()
 
 
@@ -779,16 +781,16 @@ class UI:
 
 
 	def setImgLocDim( self, win ):
-		imgDim = self.getImgDim( self.fullScreen )
+		imgDim = self.getImgDim( self.FULLSCREEN )
 		self.smartResize( win, imgDim[0], imgDim[1] )
-		imgLoc = self.getImgLoc( self.fullScreen )
+		imgLoc = self.getImgLoc( self.FULLSCREEN )
 		self.smartMove( win, imgLoc[0], imgLoc[1] )
 
 
 	def setPrgLocDim( self, win ):
-		prgDim = self.getPrgDim( self.fullScreen )
+		prgDim = self.getPrgDim( self.FULLSCREEN )
 		self.smartResize( win, prgDim[0], prgDim[1] )
-		prgLoc = self.getPrgLoc( self.fullScreen )
+		prgLoc = self.getPrgLoc( self.FULLSCREEN )
 		self.smartMove( win, prgLoc[0], prgLoc[1] )
 
 
@@ -809,7 +811,7 @@ class UI:
 	def setPipLocDim( self, win ):
 		self.smartResize( win, self.pipw, self.piph )
 
-		loc = self.getPipLoc( self.fullScreen )
+		loc = self.getPipLoc( self.FULLSCREEN )
 		self.smartMove( win, loc[0], loc[1] )
 
 
@@ -821,7 +823,7 @@ class UI:
 
 
 	def setPipBgdLocDim( self, win ):
-		pgdLoc = self.getPgdLoc( self.fullScreen )
+		pgdLoc = self.getPgdLoc( self.FULLSCREEN )
 		self.smartMove( win, pgdLoc[0], pgdLoc[1] )
 
 
@@ -833,7 +835,7 @@ class UI:
 
 
 	def setMaxLocDim( self, win ):
-		maxLoc = self.getMaxLoc( self.fullScreen )
+		maxLoc = self.getMaxLoc( self.FULLSCREEN )
 		self.smartMove( win, maxLoc[0], maxLoc[1] )
 
 
@@ -845,7 +847,7 @@ class UI:
 
 
 	def setEyeLocDim( self, win ):
-		eyeLoc = self.getEyeLoc( self.fullScreen )
+		eyeLoc = self.getEyeLoc( self.FULLSCREEN )
 		self.smartMove( win, eyeLoc[0], eyeLoc[1] )
 
 
@@ -877,7 +879,7 @@ class UI:
 
 
 	def setInbLocDim( self, win ):
-		loc = self.getInbLoc(self.fullScreen)
+		loc = self.getInbLoc(self.FULLSCREEN)
 		self.smartMove( win, loc[0], loc[1] )
 
 
@@ -992,23 +994,25 @@ class UI:
 
 
 	def shutterClickCb( self, arg ):
-		#todo: play a click sound here
+		#todo:
+		#playWave(sound='didjeridu')
+		#audioOut()
 		self.ca.m.doShutter()
 
 
 	def updateVideoComponents( self ):
 		if (	(self.LAST_MODE == self.ca.m.MODE)
-				and (self.LAST_FULLSCREEN == self.fullScreen)
-				and (self.LAST_LIVE == self.liveMode)
-				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)):
+				and (self.LAST_FULLSCREEN == self.FULLSCREEN)
+				and (self.LAST_LIVE == self.LIVEMODE)
+				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)
+				and (self.LAST_TRANSCODING == self.TRANSCODING)):
 			return
-
 
 		#something's changing so start counting anew
 		self.resetWidgetFadeTimer()
 
 		pos = []
-		if (self.RECD_INFO_ON):
+		if (self.RECD_INFO_ON and not self.TRANSCODING):
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
@@ -1024,9 +1028,9 @@ class UI:
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inf", "window":self.livePhotoWindow} )
 				pos.append({"position":"inb", "window":self.infWindow} )
-		else:
+		elif (not self.RECD_INFO_ON and not self.TRANSCODING):
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-				if (self.liveMode):
+				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.liveVideoWindow})
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1037,7 +1041,7 @@ class UI:
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"inb", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-				if (self.liveMode):
+				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.playLiveWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1049,7 +1053,7 @@ class UI:
 					pos.append({"position":"pip", "window":self.playLiveWindow} )
 					pos.append({"position":"inb", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-				if (self.liveMode):
+				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
 					pos.append({"position":"prg", "window":self.progressWindow} )
@@ -1058,9 +1062,11 @@ class UI:
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"inb", "window":self.infWindow} )
+		elif (self.TRANSCODING):
+			pos.append({"position":"prg", "window":self.progressWindow} )
+
 
 		if (self.HIDE_ON_UPDATE):
-			#hide everything
 			for i in range (0, len(self.windowStack)):
 				self.windowStack[i].hide_all()
 
@@ -1077,16 +1083,17 @@ class UI:
 				self.windowStack[i].show_all()
 
 		self.LAST_MODE = self.ca.m.MODE
-		self.LAST_FULLSCREEN = self.fullScreen
-		self.LAST_LIVE = self.liveMode
+		self.LAST_FULLSCREEN = self.FULLSCREEN
+		self.LAST_LIVE = self.LIVEMODE
 		self.LAST_RECD_INFO = self.RECD_INFO_ON
+		self.LAST_TRANSCODING = self.TRANSCODING
 		self.HIDE_ON_UPDATE = True
 
 
 	def showWidgets( self ):
 		pos = []
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			if (not self.liveMode):
+			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"max", "window":self.maxWindow} )
@@ -1095,7 +1102,7 @@ class UI:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			if (not self.liveMode):
+			if (not self.LIVEMODE):
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
@@ -1105,7 +1112,7 @@ class UI:
 				pos.append({"position":"eye", "window":self.recordWindow} )
 				pos.append({"position":"prg", "window":self.progressWindow} )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			if (not self.liveMode):
+			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inb", "window":self.infWindow} )
@@ -1205,7 +1212,7 @@ class UI:
 
 
 	def showAudio( self, recd ):
-		self.liveMode = False
+		self.LIVEMODE = False
 
 		#returns the small file to start with, and gets updated when the fullscreen arrives on the mesh
 		#todo: gracefully replace the picture without restarting the audio
@@ -1243,7 +1250,7 @@ class UI:
 				self.livePhotoCanvas.setImage( None )
 				self.startLiveAudio()
 
-			self.liveMode = True
+			self.LIVEMODE = True
 			self.updateVideoComponents()
 
 			self.showLiveVideoTags()
@@ -1261,7 +1268,7 @@ class UI:
 		#self.ca.glive.play()
 
 		self.showLiveVideoTags()
-		self.liveMode = True
+		self.LIVEMODE = True
 		self.updateVideoComponents()
 
 
@@ -1278,7 +1285,7 @@ class UI:
 			self.ca.glive.stop()
 			self.ca.glive.play()
 
-		self.liveMode = False
+		self.LIVEMODE = False
 		self.updateVideoComponents()
 
 		#todo: yank from the datastore here, yo
@@ -1576,7 +1583,7 @@ class MaxButton(P5Button):
 
 
 	def draw(self, ctx, w, h):
-		if (self.ui.fullScreen):
+		if (self.ui.FULLSCREEN):
 			self.ui.maxEnlargeSvg.render_cairo( ctx )
 		else:
 			self.ui.maxReduceSvg.render_cairo( ctx )

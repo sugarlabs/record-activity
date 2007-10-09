@@ -85,9 +85,9 @@ class RecdButton(TrayButton, gobject.GObject):
 		copy_menu_item.show()
 
 
-	def _item_remove_cb(self, widget):
+	def _itemRemoveCb(self, widget):
 		self.ui.deleteThumbSelection( self.recd )
 
 
-	def _itemCopyToClipboard(self, widget):
+	def _itemCopyToClipboardCb(self, widget):
 		self.ui.copyToClipboard( self.recd )

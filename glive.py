@@ -374,7 +374,8 @@ class Glive:
 		position, duration = self.queryPosition( self.muxPipe() )
 		if position != gst.CLOCK_TIME_NONE:
 			value = position * 100.0 / duration
-			self.ca.ui.progressWin.updateProgress( value, self.ca.istrTranscoding )
+			value = value/100
+			self.ca.ui.progressWindow.updateProgress( value, self.ca.istrTranscoding )
 		return True
 
 

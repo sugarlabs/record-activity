@@ -219,18 +219,19 @@ class Model:
 
 	def stopRecordingAudio( self ):
 		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
-		self.ca.ui.progressWindow.updateProgress( 1, "Stopped recording audio" )
+		self.ca.ui.progressWindow.updateProgress( 1, self.ca.istrStoppedRecordingAudio )
+		self.ca.ui.TRANSCODING = True
 		self.setUpdating( True )
-		self.ca.glive.stopRecordingAudio( )
 		self.setRecording( False )
+		self.ca.ui.updateVideoComponents()
+
+		self.ca.glive.stopRecordingAudio( )
+
 
 
 	def saveAudio( self, tempPath, pixbuf ):
 		print("save audio")
 		self.setUpdating( True )
-		#todo: necc?
-		self.ca.ui.hideLiveWindows()
-		self.ca.ui.hidePlayWindows()
 
 		recd = self.createNewRecorded( self.TYPE_AUDIO )
 		os.rename( tempPath, os.path.join(self.ca.tempPath,recd.mediaFilename))
@@ -300,10 +301,10 @@ class Model:
 
 	def stopRecordingVideo( self ):
 		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
-		self.ca.ui.progressWindow.updateProgress( 1, "Stopped recording video" )
+		self.ca.ui.progressWindow.updateProgress( 1, self.ca.istrStoppedRecordingVideo )
 		self.setUpdating( True )
-		self.ca.ui.hideLiveWindows()
-		self.ca.ui.hidePlayWindows()
+		self.ca.ui.TRANSCODING = True
+		self.ca.ui.updateVideoComponents()
 		self.ca.glive.stopRecordingVideo()
 
 
@@ -342,7 +343,7 @@ class Model:
 		#prep the ui for your return
 		self.ca.ui.LAST_MODE = -1
 		self.ca.ui.HIDE_ON_UPDATE = False
-		print("p1")
+		self.ca.ui.TRANSCODING = False
 		self.ca.ui.updateVideoComponents()
 
 		#resume live video from the camera (if the activity is active)
@@ -354,7 +355,6 @@ class Model:
 
 
 	def stoppedRecordingVideo( self ):
-		print("stoppedRecordingVideo")
 		self.setUpdating( False )
 
 
@@ -364,40 +364,30 @@ class Model:
 
 
 	def savePhoto( self, pixbuf ):
-		print( "0 savePhoto", pixbuf.get_height() )
 		recd = self.createNewRecorded( self.TYPE_PHOTO )
 
 		imgpath = os.path.join(self.ca.tempPath, recd.mediaFilename)
-		print( "1 savePhoto", imgpath )
 		pixbuf.save( imgpath, "jpeg" )
 
 		thumbpath = os.path.join(self.ca.tempPath, recd.thumbFilename)
 		#todo: generate this dynamically
 		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
 		thumbImg.write_to_png(thumbpath)
-		#todo: use this code...?
-		#thumb = pixbuf.scale_simple( self._thuPho.tw, self._thuPho.th, gtk.gdk.INTERP_BILINEAR )
-		#thumb.save( thumbpath, "jpeg", {"quality":"85"} )
 
 		#now that we've saved both the image and its pixbuf, we get their md5s
-		print( "2 savePhoto", imgpath )
 		self.createNewRecordedMd5Sums( recd )
-		print( "3 savePhoto", imgpath )
 		self.addRecd( recd )
-		print( "4 savePhoto", imgpath )
 
 		self.meshShareRecd( recd )
 
 
 	def removeMediaFromDatastore( self, recd ):
-		print("removeMediaFromDatastore 1")
 		#before this method is called, the media are removed from the file
 		if (recd.datastoreId == None):
 			return
 
 		try:
 			recd.datastoreOb.destroy()
-			print("removeMediaFromDatastore 2")
 			datastore.delete( recd.datastoreId )
 
 			del recd.datastoreId
@@ -406,10 +396,8 @@ class Model:
 			del recd.datastoreOb
 			recd.datastoreOb = None
 
-			print("removeMediaFromDatastore 3")
 		finally:
 			#todo: add error message here
-			print("removeMediaFromDatastore 4")
 			pass
 
 
@@ -448,22 +436,11 @@ class Model:
 		#to create a file, use the hardware_id+time *and* check if available or not
 		nowtime = int(time.time())
 		recd.time = nowtime
+		recd.type = type
 
 		mediaThumbFilename = str(recd.hashKey) + "_" + str(recd.time)
 		mediaFilename = mediaThumbFilename
-
-		recd.type = type
-		titleStarter = ""
-		if (type == self.TYPE_PHOTO):
-			mediaFilename = mediaFilename + ".jpg"
-			titleStarter = "Photo"
-		if (type == self.TYPE_VIDEO):
-			mediaFilename = mediaFilename + ".ogg" #ogv
-			titleStarter = "Video"
-		if (type == self.TYPE_AUDIO):
-			mediaFilename = mediaFilename + ".wav"
-			titleStarter = "Audio"
-
+		mediaFilename = mediaFilename + "." + self.mediaTypes[type][self.ca.keyExt]
 		mediaFilepath = os.path.join( self.ca.tempPath, mediaFilename )
 		mediaFilepath = self.getUniqueFilepath( mediaFilepath, 0 )
 		recd.mediaFilename = os.path.basename( mediaFilepath )
@@ -474,7 +451,7 @@ class Model:
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
 		recd.photographer = self.ca.nickName
-		recd.title = titleStarter + " by " + str(recd.photographer)
+		recd.title = self.mediaTypes[type][self.ca.keyName] + " by " + str(recd.photographer)
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill

@@ -63,7 +63,6 @@ class RecordActivity(activity.Activity):
 		self.istrPhoto = _('Photo')
 		self.istrVideo = _('Video')
 		self.istrAudio = _('Audio')
-		self.istrClickToShoot = _('Click to Take Picture')
 		self.istrTitle = _('Title:')
 		self.istrRecorder = _('Recorder:')
 		self.istrDate = _('Date:')
@@ -72,6 +71,9 @@ class RecordActivity(activity.Activity):
 		self.istrFinishedRecording = _("Finished recording")
 		self.istrSecondsRemaining = _("seconds remaining")
 		self.istrRemove = _("Remove")
+		self.istrStoppedRecordingVideo = _("Stopped recording video")
+		self.istrStoppedRecordingAudio = _("Stopped recording audio")
+		self.istrCopyToClipboard = _("Copy to clipboard")
 		self.recdTitle = "title"
 		self.recdTime = "time"
 		self.recdPhotographer = "photographer"
