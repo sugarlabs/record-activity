@@ -200,11 +200,11 @@ class UI:
 		self.infoBoxTop.pack_start( self.infoBoxTopRight )
 
 		#todo: move the name panel to where we need it
-		self.namePanel = gtk.VBox(spacing=self.inset)
+		self.namePanel = gtk.HBox(spacing=self.inset)
 #		self.infoBoxTopLeft.pack_start(self.namePanel, expand=False)
-		nameLabel = gtk.Label(self.ca.istrTitle)
-		self.namePanel.pack_start( nameLabel, expand=False )
-		nameLabel.set_alignment(0, .5)
+		self.nameLabel = gtk.Label(self.ca.istrTitle)
+		self.namePanel.pack_start( self.nameLabel, expand=False )
+		self.nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(80)
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, self.colorWhite.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
@@ -1241,10 +1241,14 @@ class UI:
 
 		if (not self.RECD_INFO_ON):
 			self.centerBox.hide_all()
-			#self.centerBox.add( self.backgdCanvasBox )
+			bottomKid = self.bottomCenter.get_child()
+			if (bottomKid != None):
+				self.bottomCenter.remove( bottomKid )
 		else:
 			self.centerBox.add( self.infoBox )
 			self.centerBox.show_all()
+			self.bottomCenter.add( self.namePanel )
+			self.bottomCenter.show_all()
 
 		self.updateVideoComponents()
 
