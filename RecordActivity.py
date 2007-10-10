@@ -260,7 +260,7 @@ class RecordActivity(activity.Activity):
 			mediaObject.metadata['icon-color'] = colors
 
 			mtype = self.m.mediaTypes[recd.type]
-			mmime = mtype[self.typeMime]
+			mmime = mtype[self.keyMime]
 			mediaObject.metadata['mime_type'] = mmime
 
 			#todo: make sure the file is still available before you ever get to this point...

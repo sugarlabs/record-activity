@@ -74,15 +74,20 @@ class RecdButton(TrayButton, gobject.GObject):
 		palette = Palette(info)
 		self.set_palette(palette)
 
-		rem_menu_item = gtk.MenuItem( self.ui.ca.istrRemove )
-		rem_menu_item.connect('activate', self._itemRemoveCb)
+		self.rem_menu_item = gtk.MenuItem( self.ui.ca.istrRemove )
+		self.ACTIVATE_REMOVE_ID = rem_menu_item.connect('activate', self._itemRemoveCb)
 		palette.menu.append(rem_menu_item)
 		rem_menu_item.show()
 
-		copy_menu_item = gtk.MenuItem( self.ui.ca.istrCopyToClipboard )
-		copy_menu_item.connect('activate', self._itemCopyToClipboardCb)
+		self.copy_menu_item = gtk.MenuItem( self.ui.ca.istrCopyToClipboard )
+		self.ACTIVATE_COPY_ID = copy_menu_item.connect('activate', self._itemCopyToClipboardCb)
 		palette.menu.append(copy_menu_item)
 		copy_menu_item.show()
+
+
+	def cleanUp( self ):
+		self.rem_menu_item.disconnect( self.ACTIVATE_REMOVE_ID )
+		self.copy_menu_item.disconnect( self.ACTIVATE_COPY_ID )
 
 
 	def _itemRemoveCb(self, widget):

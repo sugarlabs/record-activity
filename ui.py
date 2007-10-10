@@ -128,6 +128,8 @@ class UI:
 
 
 	def _toolboxSizeAllocateCb( self, widget, event ):
+		self.toolbox.disconnect( self.TOOLBOX_SIZE_ALLOCATE_ID)
+
 		toolboxHt = self.toolbox.size_request()[1]
 		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+toolboxHt+self.controlBarHt)
 		self.vw = int(self.vh/.75)
@@ -513,14 +515,19 @@ class UI:
 		if (keyname == 'KP_Page_Up'): #O, up
 			print("GAME UP")
 			if (self.LIVEMODE):
+				if (self.RECD_INFO_ON):
+					self.self.infoButtonClicked()
+					return
 				if (not self.ca.m.UPDATING):
 					self.doShutter()
 			else:
-				self.LIVEMODE = True
-				self.updateVideoComponents()
+				if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+					self.resumeLiveVideo()
+				else:
+					self.resumePlayLiveVideo()
 		elif (keyname == 'KP_Page_Down'): #x, down
 			print("GAME X")
-			elf.ca.m.showLastThumb()
+			self.ca.m.showLastThumb()
 		elif (keyname == 'KP_Home'): #square, left
 			print("GAME LEFT")
 			if (not self.LIVEMODE):
@@ -535,11 +542,19 @@ class UI:
 		elif (keyname == 'Escape'):
 			if (self.FULLSCREEN):
 				self.FULLSCREEN = False
-				self.updateVideoComponents()
-		elif (keyname == "SpaceBar"): #todo
+				if (self.RECD_INFO_ON):
+					self.infoButtonClicked()
+				else:
+					self.updateVideoComponents()
+		elif (keyname == "Spacebar"): #todo
 			if (self.LIVEMODE):
 				if (not self.ca.m.UPDATING):
 					self.doShutter()
+		elif (keyname == 'i'):
+			print("i")
+			if (not self.LIVEMODE):
+				print("NOT LIVEMODE")
+				self.infoButtonClicked()
 
 		return False
 
@@ -685,6 +700,10 @@ class UI:
 
 
 	def _liveButtonReleaseCb(self, widget, event):
+		self.resumeLiveVideo()
+
+
+	def resumeLiveVideo( self ):
 		self.livePhotoCanvas.setImage( None )
 
 		self.RECD_INFO_ON = False
@@ -698,6 +717,10 @@ class UI:
 
 
 	def _playLiveButtonReleaseCb(self, widget, event):
+		self.resumePlayLiveVideo()
+
+
+	def resumePlayLiveVideo( self ):
 		self.ca.gplay.stop()
 
 		self.RECD_INFO_ON = False
@@ -1089,8 +1112,9 @@ class UI:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
-					pos.append({"position":"inb", "window":self.infWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 		elif (self.TRANSCODING):
+			#todo: enlarge
 			pos.append({"position":"prg", "window":self.progressWindow} )
 
 
@@ -1174,10 +1198,6 @@ class UI:
 						self.setPrgLocDim( pos[j]["window"])
 
 
-	def removeThumbs( self ):
-		pass
-
-
 	def removeThumb( self, recd ):
 		kids = self.thumbTray.get_children()
 		for i in range (0, len(kids)):
@@ -1188,9 +1208,17 @@ class UI:
 
 	def addThumb( self, recd ):
 		butt = RecdButton( self, recd )
-		butt.connect("clicked", self._thumbClicked, recd )
+		butt.connect( "clicked", self._thumbClicked, recd )
 		self.thumbTray.add_item( butt, len(self.thumbTray.get_children()) )
 		butt.show()
+		print("thumb added")
+
+
+	def removeThumbs( self ):
+		kids = self.thumbTray.get_children()
+		for i in range (0, len(kids)):
+			self.thumbTray.remove_item(kids[i])
+			kids[i].cleanUp()
 
 
 	def _thumbClicked( self, button, recd ):

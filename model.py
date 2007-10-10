@@ -171,7 +171,7 @@ class Model:
 		return self.MODE == self.MODE_PHOTO
 
 
-	def setupThumbs( self, type ):
+	def addThumb( self, type ):
 		if (not type == self.MODE):
 			return
 
@@ -179,8 +179,22 @@ class Model:
 		hash = self.mediaHashs[type]
 		if (len(hash) > 0):
 			self.ca.ui.addThumb( hash[len(hash)-1] )
-
 		self.setUpdating( False )
+
+
+	def setupThumbs( self, type ):
+		if (not type == self.MODE):
+			return
+
+		#todo: clear the thumbs in the tray
+		self.ca.ui.removeAllThumbs()
+
+		self.setUpdating( True )
+		hash = self.mediaHashs[type]
+		for i in range (0, len(hash)):
+			self.ca.ui.addThumb( hash[i] )
+		self.ca.ui.updateModeChange()
+		self.setUpdating(False)
 
 
 	def showNextThumb( self, shownRecd ):
@@ -188,14 +202,14 @@ class Model:
 		if (shownRecd == None):
 			self.showLastThumb()
 		else:
+			hash = self.mediaHashs[self.MODE]
 			if (len(hash) > 0):
 				hash = self.mediaHashs[self.MODE]
 				i = operator.indexOf( hash, shownRecd )
-				i = i-1
-				if (i<0):
-					i = len(hash)-1
+				i = i+1
+				if (i>=len(hash)):
+					i = 0
 				self.ca.ui.showThumbSelection( hash[i] )
-
 
 
 	def showPrevThumb( self, shownRecd ):
@@ -203,6 +217,7 @@ class Model:
 		if (shownRecd == None):
 			self.showLastThumb()
 		else:
+			hash = self.mediaHashs[self.MODE]
 			if (len(hash) > 0):
 				hash = self.mediaHashs[self.MODE]
 				i = operator.indexOf( hash, shownRecd )
@@ -288,21 +303,6 @@ class Model:
 		audioHash = self.mediaHashs[self.TYPE_AUDIO]
 		audioHash.append( recd )
 		self.thumbAdded( self.TYPE_AUDIO )
-
-#		SJ KLEIN AUDIO SAVE TO DISK BEGIN
-#		audioPath = os.path.join(os.path.expanduser("~"), "Journal", "Audio")
-#		if (not os.path.exists(audioPath)):
-#			os.makedirs(audioPath)
-
-#		whoWhen = self.ca.nickName + "_" + str(strftime( "%a_%b_%d__%I:%M:%S_%p", time.localtime(recd.time) ))
-#		audioFilepath = os.path.join( audioPath, whoWhen + ".wav" )
-#		audioFilepath = self.getUniqueFilepath(audioFilepath, 0)
-#		shutil.copy( os.path.join(self.ca.tempPath,recd.mediaFilename), audioFilepath )
-#		audioImageFilepath = os.path.join( audioPath, whoWhen + ".png" )
-#		audioImageFilepath = self.getUniqueFilepath(audioImageFilepath, 0)
-#		shutil.copy( imagePath, audioImageFilepath )
-#		SJ KLEIN AUDIO SAVE TO DISK END
-
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
 
@@ -567,41 +567,31 @@ class Model:
 	def thumbAdded( self, type ):
 		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback
 		#this happens b/c this might get called from a gstreamer callback
-		gobject.idle_add(self.setupThumbs, type)
+		gobject.idle_add(self.addThumb, type)
 
 
 	def doVideoMode( self ):
 		if (self.MODE == self.MODE_VIDEO):
 			return
 
-		self.setUpdating(True)
 		self.MODE = self.MODE_VIDEO
+		self.setUpdating(True)
 		gobject.idle_add( self.setupThumbs, self.MODE )
-		#todo: move these into the setupThumbs call for the idle call
-		self.ca.ui.updateModeChange()
-		self.setUpdating(False)
 
 
 	def doPhotoMode( self ):
 		if (self.MODE == self.MODE_PHOTO):
 			return
 
-		self.setUpdating(True)
 		self.MODE = self.MODE_PHOTO
-		gobject.idle_add( self.setupThumbs, self.MODE )
-		self.ca.ui.updateModeChange()
-		self.setUpdating(False)
 
 
 	def doAudioMode( self ):
 		if (self.MODE == self.MODE_AUDIO):
 			return
 
-		self.setUpdating(True)
 		self.MODE = self.MODE_AUDIO
 		gobject.idle_add( self.setupThumbs, self.MODE )
-		self.ca.ui.updateModeChange()
-		self.setUpdating(False)
 
 
 	def setConstants( self ):
