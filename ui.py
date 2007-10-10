@@ -794,7 +794,7 @@ class UI:
 		#if returning from another activity, active won't be false and needs to be to get started
 		if (self.ca.glive.getPipeType() == pipetype
 			and self.ca.glive.window == window
-			and self.ca.ACTIVE
+			and self.ca.props.active
 			and not force):
 			return
 

@@ -187,7 +187,7 @@ class Model:
 			return
 
 		#todo: clear the thumbs in the tray
-		self.ca.ui.removeAllThumbs()
+		self.ca.ui.removeThumbs()
 
 		self.setUpdating( True )
 		hash = self.mediaHashs[type]
