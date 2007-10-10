@@ -298,7 +298,7 @@ class UI:
 			self.ca.glive.play()
 
 			#initialize the app with the default thumbs
-			self.ca.m.setupThumbs( self.ca.m.MODE )
+			self.ca.m.setupThumbs( self.ca.m.MODE, True )
 
 
 	def setUpWindows( self ):
