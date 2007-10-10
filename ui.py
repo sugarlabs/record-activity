@@ -199,8 +199,10 @@ class UI:
 		self.infoBoxTopRight.set_size_request(self.letterBoxVW, -1)
 		self.infoBoxTop.pack_start( self.infoBoxTopRight )
 
-		#todo: move the name panel to where we need it
 		self.namePanel = gtk.HBox(spacing=self.inset)
+		leftNamePanel = gtk.VBox()
+		leftNamePanel.set_size_request( 40, -1 )
+		self.namePanel.pack_start( leftNamePanel, expand=True )
 #		self.infoBoxTopLeft.pack_start(self.namePanel, expand=False)
 		self.nameLabel = gtk.Label(self.ca.istrTitle)
 		self.namePanel.pack_start( self.nameLabel, expand=False )
@@ -210,10 +212,14 @@ class UI:
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
 		self.namePanel.pack_start(self.nameTextfield)
+		rightNamePanel = gtk.VBox()
+		rightNamePanel.set_size_request( 40, -1 )
+		self.namePanel.pack_start( rightNamePanel, expand=True )
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
-		photographerLabel = gtk.Label(self.ca.istrRecorder)
+		photographerLabel = gtk.Label("<b>" + self.ca.istrRecorder + "</b>")
+		photographerLabel.set_use_markup( True )
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
 		photoNamePanel = gtk.HBox(spacing=self.inset)
@@ -249,8 +255,6 @@ class UI:
 		iinfoBox.pack_start(infoBotBox, expand=False)
 
 		thumbnailsEventBox = gtk.EventBox()
-		#segFault?!!
-		#thumbnailsEventBox.modify_bg( gtk.STATE_NORMAL, self.colorTray.gColor )
 		thumbnailsEventBox.set_size_request( -1, self.thumbTrayHt )
 		thumbnailsBox = gtk.HBox( )
 		thumbnailsEventBox.add( thumbnailsBox )
