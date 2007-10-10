@@ -154,13 +154,19 @@ class UI:
 		leftFill.add( self.leftFillBox )
 		topBox.pack_start( leftFill, expand=True )
 
+		centerVBox = gtk.VBox()
+		topBox.pack_start( centerVBox, expand=True )
 		self.centerBox = gtk.EventBox()
-		self.centerBox.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
-		topBox.pack_start( self.centerBox, expand=True )
 		self.centerBox.set_size_request(self.vw, -1)
+		centerVBox.pack_start( self.centerBox, expand=True )
 		centerSizer = gtk.VBox()
 		centerSizer.set_size_request(self.vw, -1)
 		self.centerBox.add(centerSizer)
+
+		self.bottomCenter = gtk.EventBox()
+		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
+		self.bottomCenter.set_size_request(self.vw, self.controlBarHt)
+		centerVBox.pack_start( self.bottomCenter, expand=False )
 
 		#into the center box we can put this guy...
 		self.backgdCanvasBox = gtk.VBox()
@@ -193,13 +199,14 @@ class UI:
 		self.infoBoxTopRight.set_size_request(self.letterBoxVW, -1)
 		self.infoBoxTop.pack_start( self.infoBoxTopRight )
 
+		#todo: move the name panel to where we need it
 		self.namePanel = gtk.VBox(spacing=self.inset)
-		self.infoBoxTopLeft.pack_start(self.namePanel, expand=False)
+#		self.infoBoxTopLeft.pack_start(self.namePanel, expand=False)
 		nameLabel = gtk.Label(self.ca.istrTitle)
 		self.namePanel.pack_start( nameLabel, expand=False )
 		nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(80)
-		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, self.colorHilite.gColor )
+		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, self.colorWhite.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
 		self.namePanel.pack_start(self.nameTextfield)
@@ -359,7 +366,6 @@ class UI:
 
 
 	def setUpWindowsSizes( self ):
-		print("a")
 		imgDim = self.getImgDim( False )
 		self.livePhotoWindow.resize( imgDim[0], imgDim[1] )
 		pgdDim = self.getPgdDim( False )
