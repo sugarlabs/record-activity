@@ -359,6 +359,7 @@ class UI:
 
 
 	def setUpWindowsSizes( self ):
+		print("a")
 		imgDim = self.getImgDim( False )
 		self.livePhotoWindow.resize( imgDim[0], imgDim[1] )
 		pgdDim = self.getPgdDim( False )
@@ -1498,7 +1499,7 @@ class PhotoCanvas(P5):
 		self.ui = ui
 		self.img = None
 		self.drawImg = None
-		self.scalingImageCb = 0
+		self.SCALING_IMG_ID = 0
 		self.cacheWid = -1
 
 
@@ -1513,9 +1514,9 @@ class PhotoCanvas(P5):
 
 			#only scale images when you need to, otherwise you're wasting cycles, fool!
 			if (self.cacheWid != w):
-				if (self.scalingImageCb == 0):
+				if (self.SCALING_IMG_ID == 0):
 					self.drawImg = None
-					self.scalingImageCb = gobject.idle_add( self.resizeImage, w, h )
+					self.SCALING_IMG_ID = gobject.idle_add( self.resizeImage, w, h )
 
 			if (self.drawImg != None):
 				#center the image based on the image size, and w & h
@@ -1528,15 +1529,15 @@ class PhotoCanvas(P5):
 	def setImage(self, img):
 		self.cacheWid = -1
 		self.img = img
-
-#		if (self.img == None):
-#			self.drawImg = None
 		self.drawImg = None
-
 		self.queue_draw()
 
 
 	def resizeImage(self, w, h):
+		self.SCALING_IMG_ID = 0
+		if (self.img == None):
+			return
+
 		#use image size in case 640 no more
 		scaleImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
 		sCtx = cairo.Context(scaleImg)
@@ -1547,7 +1548,6 @@ class PhotoCanvas(P5):
 		self.drawImg = scaleImg
 		self.cacheWid = w
 		self.queue_draw()
-		self.scalingImageCb = 0
 
 
 class PipWindow(gtk.Window):

@@ -584,6 +584,8 @@ class Model:
 			return
 
 		self.MODE = self.MODE_PHOTO
+		self.setUpdating(True)
+		gobject.idle_add( self.setupThumbs, self.MODE )
 
 
 	def doAudioMode( self ):
@@ -591,6 +593,7 @@ class Model:
 			return
 
 		self.MODE = self.MODE_AUDIO
+		self.setUpdating(True)
 		gobject.idle_add( self.setupThumbs, self.MODE )
 
 
