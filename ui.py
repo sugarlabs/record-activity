@@ -204,7 +204,8 @@ class UI:
 		leftNamePanel.set_size_request( 40, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
 #		self.infoBoxTopLeft.pack_start(self.namePanel, expand=False)
-		self.nameLabel = gtk.Label(self.ca.istrTitle)
+		self.nameLabel = gtk.Label("<b>"+self.ca.istrTitle+":</b>")
+		self.nameLabel.set_use_markup( True )
 		self.namePanel.pack_start( self.nameLabel, expand=False )
 		self.nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(80)
@@ -218,7 +219,7 @@ class UI:
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
-		photographerLabel = gtk.Label("<b>" + self.ca.istrRecorder + "</b>")
+		photographerLabel = gtk.Label("<b>" + self.ca.istrRecorder + ":</b>")
 		photographerLabel.set_use_markup( True )
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
@@ -235,14 +236,16 @@ class UI:
 
 		self.datePanel = gtk.HBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.datePanel, expand=False)
-		dateLabel = gtk.Label(self.ca.istrDate)
+		dateLabel = gtk.Label("<b>"+self.ca.istrDate+":</b>")
+		dateLabel.set_use_markup(True)
 		self.datePanel.pack_start(dateLabel, expand=False)
 		self.dateDateLabel = gtk.Label("")
 		self.dateDateLabel.set_alignment(0, .5)
 		self.datePanel.pack_start(self.dateDateLabel)
 
 		self.tagsPanel = gtk.VBox(spacing=self.inset)
-		tagsLabel = gtk.Label(self.ca.istrTags)
+		tagsLabel = gtk.Label("<b>"+self.ca.istrTags+":</b>")
+		tagsLabel.set_use_markup(True)
 		tagsLabel.set_alignment(0, .5)
 		self.tagsPanel.pack_start(tagsLabel, expand=False)
 		self.tagsBuffer = gtk.TextBuffer()
@@ -935,7 +938,7 @@ class UI:
 		if (full):
 			return [(gtk.gdk.screen_width() + 100), (gtk.gdk.screen_height() + 100)]
 		else:
-			return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.maxw), (self.centerBoxPos[1]+self.vh)-(self.maxh+self.inset)]
+			return [(self.centerBoxPos[0]+self.vw)-(self.maxw), (self.centerBoxPos[1]+self.vh)]
 
 
 	def setInbLocDim( self, win ):
@@ -1056,9 +1059,8 @@ class UI:
 
 
 	def doShutter( self ):
-		#todo:
-		#playWave(sound='didjeridu')
-		#audioOut()
+		clickWav = os.path.join(self.ca.gfxPath, 'click.wav')
+		os.system( "aplay -t wav " + str(clickWav) )
 		self.ca.m.doShutter()
 
 
@@ -1219,10 +1221,10 @@ class UI:
 
 	def addThumb( self, recd ):
 		butt = RecdButton( self, recd )
-		butt.connect( "clicked", self._thumbClicked, recd )
+		BUTT_CLICKED_ID = butt.connect( "clicked", self._thumbClicked, recd )
+		butt.setButtClickedId(BUTT_CLICKED_ID)
 		self.thumbTray.add_item( butt, len(self.thumbTray.get_children()) )
 		butt.show()
-		print("thumb added")
 
 
 	def removeThumbs( self ):
@@ -1230,6 +1232,7 @@ class UI:
 		for i in range (0, len(kids)):
 			self.thumbTray.remove_item(kids[i])
 			kids[i].cleanUp()
+			kids[i].disconnect( butt.getButtClickedId() )
 
 
 	def _thumbClicked( self, button, recd ):

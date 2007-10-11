@@ -66,7 +66,7 @@ class RecordActivity(activity.Activity):
 		self.istrTimelapse = _('Time Lapse')
 		self.istrAnimation = _('Animation')
 		self.istrPanorama = _('Panorama')
-		self.istr = _("by")
+		self.istrBy = _("by")
 		self.istrTitle = _('Title')
 		self.istrRecorder = _('Recorder')
 		self.istrDate = _('Date')
@@ -93,9 +93,9 @@ class RecordActivity(activity.Activity):
 		self.istrLargeFile = _("Large file")
 		self.istrSmallFile = _("Small file")
 		self.istrSilent = _("silent")
-		self.rotate = _("rotate")
-		self.clickToTakePicture = _("Click to take picture")
-		self.clickToAddPicture = _("Click to add picture")
+		self.istrRotate = _("rotate")
+		self.istrClickToTakePicture = _("Click to take picture")
+		self.istrClickToAddPicture = _("Click to add picture")
 
 
 		self.recdTitle = "title"

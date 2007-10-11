@@ -70,6 +70,14 @@ class RecdButton(TrayButton, gobject.GObject):
 		return img
 
 
+	def setButtClickedId( self, id ):
+		self.BUTT_CLICKED_ID = id
+
+
+	def getButtClickedId( self ):
+		return self.BUTT_CLICKED_ID
+
+
 	def setup_rollover_options( self, info ):
 		palette = Palette(info)
 		self.set_palette(palette)
