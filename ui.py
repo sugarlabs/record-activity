@@ -164,6 +164,7 @@ class UI:
 		self.centerBox.add(centerSizer)
 
 		self.bottomCenter = gtk.EventBox()
+		self.bottomCenter.set_border_width(self.inset)
 		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
 		self.bottomCenter.set_size_request(self.vw, self.controlBarHt)
 		centerVBox.pack_start( self.bottomCenter, expand=False )
@@ -214,7 +215,7 @@ class UI:
 		self.nameTextfield.set_alignment(0)
 		self.namePanel.pack_start(self.nameTextfield)
 		rightNamePanel = gtk.VBox()
-		rightNamePanel.set_size_request( 40, -1 )
+		rightNamePanel.set_size_request( 50, -1 ) #todo: dynamically calc this
 		self.namePanel.pack_start( rightNamePanel, expand=True )
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
