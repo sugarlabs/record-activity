@@ -114,11 +114,11 @@ class UI:
 		#this includes the default sharing tab
 		self.toolbox = activity.ActivityToolbox(self.ca)
 		self.ca.set_toolbox(self.toolbox)
-		self.photoToolbar = PhotoToolbar(self.ca)
+		self.photoToolbar = PhotoToolbar(self)
 		self.toolbox.add_toolbar( self.ca.istrPhoto, self.photoToolbar )
-		self.videoToolbar = VideoToolbar(self.ca)
+		self.videoToolbar = VideoToolbar(self)
 		self.toolbox.add_toolbar( self.ca.istrVideo, self.videoToolbar )
-		self.audioToolbar = AudioToolbar(self.ca)
+		self.audioToolbar = AudioToolbar(self)
 		self.toolbox.add_toolbar( self.ca.istrAudio, self.audioToolbar )
 		self.tbars = {self.ca.m.MODE_PHOTO:self.photoToolbar,self.ca.m.MODE_VIDEO:self.videoToolbar,self.ca.m.MODE_AUDIO:self.audioToolbar}
 		self.toolbox.set_current_toolbar(self.ca.m.MODE+1)
@@ -164,7 +164,7 @@ class UI:
 		self.centerBox.add(centerSizer)
 
 		self.bottomCenter = gtk.EventBox()
-		self.bottomCenter.set_border_width(self.inset)
+		#self.bottomCenter.set_border_width(self.inset)
 		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
 		self.bottomCenter.set_size_request(self.vw, self.controlBarHt)
 		centerVBox.pack_start( self.bottomCenter, expand=False )
@@ -200,11 +200,10 @@ class UI:
 		self.infoBoxTopRight.set_size_request(self.letterBoxVW, -1)
 		self.infoBoxTop.pack_start( self.infoBoxTopRight )
 
-		self.namePanel = gtk.HBox(spacing=self.inset)
+		self.namePanel = gtk.HBox()
 		leftNamePanel = gtk.VBox()
 		leftNamePanel.set_size_request( 40, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
-#		self.infoBoxTopLeft.pack_start(self.namePanel, expand=False)
 		self.nameLabel = gtk.Label("<b>"+self.ca.istrTitle+":</b>")
 		self.nameLabel.set_use_markup( True )
 		self.namePanel.pack_start( self.nameLabel, expand=False )
@@ -1254,11 +1253,11 @@ class UI:
 				self.bottomCenter.remove( bottomKid )
 		else:
 			self.centerBox.add( self.infoBox )
-			self.centerBox.show_all()
+			self.centerBox.show_all( )
 			self.bottomCenter.add( self.namePanel )
-			self.bottomCenter.show_all()
+			self.bottomCenter.show_all( )
 
-		self.updateVideoComponents()
+		self.updateVideoComponents( )
 
 
 	def showPostProcessGfx( self, show ):
@@ -1266,7 +1265,7 @@ class UI:
 		if (centerKid != None):
 			self.centerBox.remove( centerKid )
 
-		if (show):
+		if ( show ):
 			self.centerBox.add( self.backgdCanvasBox )
 			self.centerBox.show_all()
 		else:
@@ -1432,6 +1431,10 @@ class UI:
 		infoOffSvgData = infoOffSvgFile.read()
 		self.infoOffSvg = self.loadSvg(infoOffSvgData, None, None )
 		infoOffSvgFile.close()
+
+		self.photoModeImgPath = os.path.join( self.ca.gfxPath, 'photo_mode.png' )
+		self.videoModeImgPath = os.path.join( self.ca.gfxPath, 'video_mode.png' )
+		self.audioModeImgPath = os.path.join( self.ca.gfxPath, 'audio_mode.png' )
 
 		#todo: load from sugar
 		xoGuySvgFile = open(os.path.join(self.ca.gfxPath, 'xo-guy.svg'), 'r')
@@ -1776,9 +1779,38 @@ class ProgressWindow(gtk.Window):
 
 
 class PhotoToolbar(gtk.Toolbar):
-	def __init__(self, pc):
+	def __init__(self, ui):
 		gtk.Toolbar.__init__(self)
-		self.ca = pc
+		self.ui = ui
+
+		img = gtk.Image()
+		img.set_from_file( self.ui.photoModeImgPath )
+		imgItem = gtk.ToolItem()
+		imgItem.add( img )
+		self.insert(imgItem, -1)
+
+		separator = gtk.SeparatorToolItem()
+		separator.set_draw(False)
+		separator.set_expand(True)
+		self.insert(separator, -1)
+		separator.show()
+
+		timerLabel = gtk.Label( self.ui.ca.istrTimer )
+		timerLabelItem = gtk.ToolItem()
+		timerLabelItem.add( timerLabel )
+		timerLabelItem.set_expand(False)
+		self.insert( timerLabelItem, -1 )
+		timerCb = gtk.combo_box_new_text()
+		#todo: internationalize
+		timerCb.append_text( "Immediate" )
+		timerCb.append_text( "5 seconds" )
+		timerCb.append_text( "10 seconds" )
+		timerCb.append_text( "30 seconds" )
+		timerCb.set_active(0)
+		timerItem = gtk.ToolItem()
+		timerItem.set_expand(False)
+		timerItem.add( timerCb)
+		self.insert( timerItem, -1 )
 
 
 class VideoToolbar(gtk.Toolbar):
