@@ -1814,12 +1814,73 @@ class PhotoToolbar(gtk.Toolbar):
 
 
 class VideoToolbar(gtk.Toolbar):
-	def __init__(self, pc):
+	def __init__(self, ui):
 		gtk.Toolbar.__init__(self)
-		self.ca = pc
+		self.ui = ui
 
+		img = gtk.Image()
+		img.set_from_file( self.ui.videoModeImgPath )
+		imgItem = gtk.ToolItem()
+		imgItem.add( img )
+		self.insert(imgItem, -1)
+
+		separator = gtk.SeparatorToolItem()
+		separator.set_draw(False)
+		separator.set_expand(True)
+		self.insert(separator, -1)
+		separator.show()
+
+		timerLabel = gtk.Label( self.ui.ca.istrTimer )
+		timerLabelItem = gtk.ToolItem()
+		timerLabelItem.add( timerLabel )
+		timerLabelItem.set_expand(False)
+		self.insert( timerLabelItem, -1 )
+		timerCb = gtk.combo_box_new_text()
+		#todo: internationalize
+		timerCb.append_text( "Immediate" )
+		timerCb.append_text( "5 seconds" )
+		timerCb.append_text( "10 seconds" )
+		timerCb.append_text( "30 seconds" )
+		timerCb.set_active(0)
+		timerItem = gtk.ToolItem()
+		timerItem.set_expand(False)
+		timerItem.add( timerCb)
+		self.insert( timerItem, -1 )
+
+		#todo: duration
 
 class AudioToolbar(gtk.Toolbar):
-	def __init__(self, pc):
+	def __init__(self, ui):
 		gtk.Toolbar.__init__(self)
-		self.ca = pc
+		self.ui = ui
+
+		img = gtk.Image()
+		img.set_from_file( self.ui.audioModeImgPath )
+		imgItem = gtk.ToolItem()
+		imgItem.add( img )
+		self.insert(imgItem, -1)
+
+		separator = gtk.SeparatorToolItem()
+		separator.set_draw(False)
+		separator.set_expand(True)
+		self.insert(separator, -1)
+		separator.show()
+
+		timerLabel = gtk.Label( self.ui.ca.istrTimer )
+		timerLabelItem = gtk.ToolItem()
+		timerLabelItem.add( timerLabel )
+		timerLabelItem.set_expand(False)
+		self.insert( timerLabelItem, -1 )
+		timerCb = gtk.combo_box_new_text()
+		#todo: internationalize
+		timerCb.append_text( "Immediate" )
+		timerCb.append_text( "5 seconds" )
+		timerCb.append_text( "10 seconds" )
+		timerCb.append_text( "30 seconds" )
+		timerCb.set_active(0)
+		timerItem = gtk.ToolItem()
+		timerItem.set_expand(False)
+		timerItem.add( timerCb)
+		self.insert( timerItem, -1 )
+
+		#todo: duration
