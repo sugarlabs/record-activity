@@ -216,7 +216,8 @@ class Glive:
 			bus = pipeline.get_bus()
 			bus.enable_sync_message_emission()
 			bus.add_signal_watch()
-			self.SYNC_ID = bus.connect('sync-message::element', self.onSyncMessage)
+			self.SYNC_ID = bus.connect('sync-message::element', self._onSyncMessage)
+			self.MESSAGE_ID = bus.connect('message', self._onMessage)
 
 		self.pipes.append(pipeline)
 
@@ -418,12 +419,22 @@ class Glive:
 			self.ca.m.stoppedRecordingVideo()
 
 
-	def onSyncMessage(self, bus, message):
+	def _onSyncMessage(self, bus, message):
 		if message.structure is None:
 			return
 		if message.structure.get_name() == 'prepare-xwindow-id':
 			self.window.set_sink(message.src)
 			message.src.set_property('force-aspect-ratio', True)
+
+
+	def _onMessage(self, bus, message):
+		t = message.type
+		if t == gst.MESSAGE_EOS:
+			print("MESSAGE_EOS")
+		elif t == gst.MESSAGE_ERROR:
+			err, debug = message.parse_error()
+			#todo: if we come out of suspend/resume with errors, then get us back up and running...
+			print "MESSAGE ERROR: %s" % err, debug
 
 
 	def showLiveVideo(self):

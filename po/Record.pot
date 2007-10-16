@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-10 22:52-0400\n"
+"POT-Creation-Date: 2007-10-16 16:21-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,122 +44,137 @@ msgstr ""
 msgid "Panorama"
 msgstr ""
 
-#: RecordActivity.py:69
-msgid "by"
-msgstr ""
-
+#. TRANS: photo by photographer, e.g., "Sunset by Mary"
 #: RecordActivity.py:70
-msgid "Title"
+#, python-format
+msgid "%(1)s by %(2)s"
 msgstr ""
 
 #: RecordActivity.py:71
-msgid "Recorder"
+msgid "Title:"
 msgstr ""
 
 #: RecordActivity.py:72
-msgid "Date"
+msgid "Recorder:"
 msgstr ""
 
 #: RecordActivity.py:73
-msgid "Tags"
+msgid "Date:"
 msgstr ""
 
 #: RecordActivity.py:74
-msgid "Saving"
+msgid "Tags:"
 msgstr ""
 
 #: RecordActivity.py:75
-msgid "Finished recording"
+msgid "Saving"
 msgstr ""
 
 #: RecordActivity.py:76
-msgid "seconds remaining"
+msgid "Finished recording"
 msgstr ""
 
 #: RecordActivity.py:77
-msgid "Remove"
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
 msgstr ""
 
 #: RecordActivity.py:78
-msgid "Stopped recording"
+#, python-format
+msgid "%(1)s seconds remaining"
 msgstr ""
 
 #: RecordActivity.py:79
-msgid "Copy to clipboard"
+msgid "Remove"
 msgstr ""
 
 #: RecordActivity.py:80
-msgid "Timer"
+msgid "Stopped recording"
 msgstr ""
 
 #: RecordActivity.py:81
-msgid "Duration"
+msgid "Copy to clipboard"
 msgstr ""
 
 #: RecordActivity.py:82
-msgid "seconds"
+msgid "Timer:"
 msgstr ""
 
 #: RecordActivity.py:83
-msgid "minutes"
+msgid "Duration:"
 msgstr ""
 
 #: RecordActivity.py:84
-msgid "Play"
+msgid "Immediate"
 msgstr ""
 
 #: RecordActivity.py:85
-msgid "Pause"
+#, python-format
+msgid "%(1)s seconds"
 msgstr ""
 
 #: RecordActivity.py:86
-msgid "Add frame"
+#, python-format
+msgid "%(1)s minutes"
 msgstr ""
 
 #: RecordActivity.py:87
-msgid "Remove frame"
+msgid "Play"
 msgstr ""
 
 #: RecordActivity.py:88
-msgid "Frames per second"
+msgid "Pause"
 msgstr ""
 
 #: RecordActivity.py:89
-msgid "Quality"
+msgid "Add frame"
 msgstr ""
 
 #: RecordActivity.py:90
-msgid "Best quality"
+msgid "Remove frame"
 msgstr ""
 
 #: RecordActivity.py:91
-msgid "High quality"
+#, python-format
+msgid "%(1)s frames per second"
 msgstr ""
 
 #: RecordActivity.py:92
-msgid "Low quality"
+msgid "Quality:"
 msgstr ""
 
 #: RecordActivity.py:93
-msgid "Large file"
+msgid "Best quality"
 msgstr ""
 
 #: RecordActivity.py:94
-msgid "Small file"
+msgid "High quality"
 msgstr ""
 
 #: RecordActivity.py:95
-msgid "silent"
+msgid "Low quality"
 msgstr ""
 
 #: RecordActivity.py:96
-msgid "rotate"
+msgid "Large file"
 msgstr ""
 
 #: RecordActivity.py:97
-msgid "Click to take picture"
+msgid "Small file"
 msgstr ""
 
 #: RecordActivity.py:98
+msgid "Silent"
+msgstr ""
+
+#: RecordActivity.py:99
+msgid "Rotate"
+msgstr ""
+
+#: RecordActivity.py:100
+msgid "Click to take picture"
+msgstr ""
+
+#: RecordActivity.py:101
 msgid "Click to add picture"
 msgstr ""
