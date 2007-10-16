@@ -394,12 +394,11 @@ class UI:
 
 
 	def _toolbarChangeCb( self, tbox, num ):
-		if (num != 0):
-			if (self.ca.m.RECORDING or self.ca.m.UPDATING): #todo: are these the conditions?
-				self.toolbox.set_current_toolbar( self.ca.m.MODE+1 )
-				return
+		if (num != 0) and (self.ca.m.RECORDING or self.ca.m.UPDATING):
+			self.toolbox.set_current_toolbar( self.ca.m.MODE+1 )
 		else:
 			num = num - 1 #offset the default activity tab
+			print( num )
 			if (num == self.ca.m.MODE_PHOTO) and (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
 				self.ca.m.doPhotoMode()
 			elif(num == self.ca.m.MODE_VIDEO) and (self.ca.m.MODE != self.ca.m.MODE_VIDEO):
@@ -1845,7 +1844,6 @@ class VideoToolbar(gtk.Toolbar):
 		self.insert( timerLabelItem, -1 )
 		self.timerCb = gtk.combo_box_new_text()
 
-		#todo: internationalize correctly as phrase
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
 			if (i == 0):
 				self.timerCb.append_text( self.ui.ca.istrNow )
