@@ -610,3 +610,21 @@ class Model:
 
 		self.UPDATING = True
 		self.RECORDING = False
+
+		self.TIMER_0 = 0
+		self.TIMER_5 = 5
+		self.TIMER_10 = 10
+		self.TIMER = self.TIMER_0
+		self.TIMERS = []
+		self.TIMERS.append(self.TIMER_0)
+		self.TIMERS.append(self.TIMER_5)
+		self.TIMERS.append(self.TIMER_10)
+
+		self.DURATION_15 = 15
+		self.DURATION_30 = 30
+		self.DURATION_45 = 45
+		self.DURATION = self.DURATION_15
+		self.DURATIONS = []
+		self.DURATIONS.append(self.DURATION_15)
+		self.DURATIONS.append(self.DURATION_30)
+		self.DURATIONS.append(self.DURATION_45)

@@ -394,13 +394,18 @@ class UI:
 
 
 	def _toolbarChangeCb( self, tbox, num ):
-		num = num - 1 #offset the default activity tab
-		if (num == self.ca.m.MODE_PHOTO) and (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
-			self.ca.m.doPhotoMode()
-		elif(num == self.ca.m.MODE_VIDEO) and (self.ca.m.MODE != self.ca.m.MODE_VIDEO):
-			self.ca.m.doVideoMode()
-		elif(num == self.ca.m.MODE_AUDIO) and (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
-			self.ca.m.doAudioMode()
+		if (num != 0):
+			if (self.ca.m.RECORDING or self.ca.m.UPDATING): #todo: are these the conditions?
+				self.toolbox.set_current_toolbar( self.ca.m.MODE+1 )
+				return
+		else:
+			num = num - 1 #offset the default activity tab
+			if (num == self.ca.m.MODE_PHOTO) and (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
+				self.ca.m.doPhotoMode()
+			elif(num == self.ca.m.MODE_VIDEO) and (self.ca.m.MODE != self.ca.m.MODE_VIDEO):
+				self.ca.m.doVideoMode()
+			elif(num == self.ca.m.MODE_AUDIO) and (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
+				self.ca.m.doAudioMode()
 
 
 	def addToWindowStack( self, win, parent ):
@@ -521,6 +526,8 @@ class UI:
 
 
 	def _keyPressEventCb( self, widget, event):
+		#todo: add the bugs we're fighting here...
+
 		self.resetWidgetFadeTimer()
 
 		#we listen here for CTRL+C events and game keys, and pass on events to gtk.Entry fields
@@ -656,14 +663,13 @@ class UI:
 
 
 	def updateButtonSensitivities( self ):
-
 		#todo: make the gtk.entry uneditable
-		#todo: change this button which is now in a window
 		self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING )
 
 		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
 
 		#todo: handle what to do when switching and compressing...
+		self.toolbox.set_sensitive( switchStuff )
 		#self.modeToolbar.picButt.set_sensitive( switchStuff )
 		#self.modeToolbar.vidButt.set_sensitive( switchStuff )
 		#self.modeToolbar.audButt.set_sensitive( switchStuff )
@@ -1800,16 +1806,19 @@ class PhotoToolbar(gtk.Toolbar):
 		timerLabelItem.add( timerLabel )
 		timerLabelItem.set_expand(False)
 		self.insert( timerLabelItem, -1 )
-		timerCb = gtk.combo_box_new_text()
-		#todo: internationalize
-		timerCb.append_text( "Immediate" )
-		timerCb.append_text( "5 seconds" )
-		timerCb.append_text( "10 seconds" )
-		timerCb.append_text( "30 seconds" )
-		timerCb.set_active(0)
+		self.timerCb = gtk.combo_box_new_text()
+
+		#todo: internationalize correctly as phrase
+		for i in range (0, len(self.ui.ca.m.TIMERS)):
+			if (i == 0):
+				self.timerCb.append_text( "Immediate" )
+			else:
+				self.timerCb.append_text( str(self.ui.ca.m.TIMERS[i]) + " seconds" )
+		self.timerCb.set_active(0)
+
 		timerItem = gtk.ToolItem()
 		timerItem.set_expand(False)
-		timerItem.add( timerCb)
+		timerItem.add(self.timerCb)
 		self.insert( timerItem, -1 )
 
 
@@ -1835,19 +1844,39 @@ class VideoToolbar(gtk.Toolbar):
 		timerLabelItem.add( timerLabel )
 		timerLabelItem.set_expand(False)
 		self.insert( timerLabelItem, -1 )
-		timerCb = gtk.combo_box_new_text()
-		#todo: internationalize
-		timerCb.append_text( "Immediate" )
-		timerCb.append_text( "5 seconds" )
-		timerCb.append_text( "10 seconds" )
-		timerCb.append_text( "30 seconds" )
-		timerCb.set_active(0)
+		self.timerCb = gtk.combo_box_new_text()
+
+		#todo: internationalize correctly as phrase
+		for i in range (0, len(self.ui.ca.m.TIMERS)):
+			if (i == 0):
+				self.timerCb.append_text( "Immediate" )
+			else:
+				self.timerCb.append_text( str(self.ui.ca.m.TIMERS[i]) + " seconds" )
+		self.timerCb.set_active(0)
+
 		timerItem = gtk.ToolItem()
 		timerItem.set_expand(False)
-		timerItem.add( timerCb)
+		timerItem.add(self.timerCb)
 		self.insert( timerItem, -1 )
 
-		#todo: duration
+		durLabel = gtk.Label( self.ui.ca.istrDuration )
+		durLabelItem = gtk.ToolItem()
+		durLabelItem.add( durLabel )
+		durLabelItem.set_expand(False)
+		self.insert( durLabelItem, -1 )
+		#todo: disable when filming
+		self.durCb = gtk.combo_box_new_text()
+
+		#todo: internationalize correctly as phrase
+		for i in range (0, len(self.ui.ca.m.DURATIONS)):
+			self.durCb.append_text( str(self.ui.ca.m.DURATIONS[i]) + " seconds" )
+		self.durCb.set_active(0)
+
+		durItem = gtk.ToolItem()
+		durItem.set_expand(False)
+		durItem.add(self.durCb)
+		self.insert(durItem, -1 )
+
 
 class AudioToolbar(gtk.Toolbar):
 	def __init__(self, ui):
@@ -1871,16 +1900,36 @@ class AudioToolbar(gtk.Toolbar):
 		timerLabelItem.add( timerLabel )
 		timerLabelItem.set_expand(False)
 		self.insert( timerLabelItem, -1 )
-		timerCb = gtk.combo_box_new_text()
-		#todo: internationalize
-		timerCb.append_text( "Immediate" )
-		timerCb.append_text( "5 seconds" )
-		timerCb.append_text( "10 seconds" )
-		timerCb.append_text( "30 seconds" )
-		timerCb.set_active(0)
+		self.timerCb = gtk.combo_box_new_text()
+
+		#todo: internationalize correctly as phrase
+		for i in range (0, len(self.ui.ca.m.TIMERS)):
+			if (i == 0):
+				self.timerCb.append_text( "Immediate" )
+			else:
+				self.timerCb.append_text( str(self.ui.ca.m.TIMERS[i]) + " seconds" )
+		self.timerCb.set_active(0)
+
 		timerItem = gtk.ToolItem()
 		timerItem.set_expand(False)
-		timerItem.add( timerCb)
+		timerItem.add(self.timerCb)
 		self.insert( timerItem, -1 )
 
-		#todo: duration
+		durLabel = gtk.Label( self.ui.ca.istrDuration )
+		durLabelItem = gtk.ToolItem()
+		durLabelItem.add( durLabel )
+		durLabelItem.set_expand(False)
+		self.insert( durLabelItem, -1 )
+		#todo: set these to static values & also disable when filming
+		self.durCb = gtk.combo_box_new_text()
+
+		#todo: internationalize correctly as phrase
+		for i in range (0, len(self.ui.ca.m.DURATIONS)):
+			self.durCb.append_text( str(self.ui.ca.m.DURATIONS[i]) + " seconds" )
+		self.durCb.set_active(0)
+
+		self.durCb.set_active(0)
+		durItem = gtk.ToolItem()
+		durItem.set_expand(False)
+		durItem.add(self.durCb)
+		self.insert(durItem, -1 )
