@@ -1808,12 +1808,11 @@ class PhotoToolbar(gtk.Toolbar):
 		self.insert( timerLabelItem, -1 )
 		self.timerCb = gtk.combo_box_new_text()
 
-		#todo: internationalize correctly as phrase
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
 			if (i == 0):
-				self.timerCb.append_text( "Immediate" )
+				self.timerCb.append_text( self.ui.ca.istrNow )
 			else:
-				self.timerCb.append_text( str(self.ui.ca.m.TIMERS[i]) + " seconds" )
+				self.timerCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
 		self.timerCb.set_active(0)
 
 		timerItem = gtk.ToolItem()
@@ -1849,9 +1848,9 @@ class VideoToolbar(gtk.Toolbar):
 		#todo: internationalize correctly as phrase
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
 			if (i == 0):
-				self.timerCb.append_text( "Immediate" )
+				self.timerCb.append_text( self.ui.ca.istrNow )
 			else:
-				self.timerCb.append_text( str(self.ui.ca.m.TIMERS[i]) + " seconds" )
+				self.timerCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
 		self.timerCb.set_active(0)
 
 		timerItem = gtk.ToolItem()
@@ -1869,7 +1868,7 @@ class VideoToolbar(gtk.Toolbar):
 
 		#todo: internationalize correctly as phrase
 		for i in range (0, len(self.ui.ca.m.DURATIONS)):
-			self.durCb.append_text( str(self.ui.ca.m.DURATIONS[i]) + " seconds" )
+			self.durCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
 		self.durCb.set_active(0)
 
 		durItem = gtk.ToolItem()
@@ -1902,12 +1901,11 @@ class AudioToolbar(gtk.Toolbar):
 		self.insert( timerLabelItem, -1 )
 		self.timerCb = gtk.combo_box_new_text()
 
-		#todo: internationalize correctly as phrase
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
 			if (i == 0):
-				self.timerCb.append_text( "Immediate" )
+				self.timerCb.append_text( self.ui.ca.istrNow )
 			else:
-				self.timerCb.append_text( str(self.ui.ca.m.TIMERS[i]) + " seconds" )
+				self.timerCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
 		self.timerCb.set_active(0)
 
 		timerItem = gtk.ToolItem()
@@ -1925,7 +1923,7 @@ class AudioToolbar(gtk.Toolbar):
 
 		#todo: internationalize correctly as phrase
 		for i in range (0, len(self.ui.ca.m.DURATIONS)):
-			self.durCb.append_text( str(self.ui.ca.m.DURATIONS[i]) + " seconds" )
+			self.durCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
 		self.durCb.set_active(0)
 
 		self.durCb.set_active(0)
