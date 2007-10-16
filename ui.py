@@ -1221,7 +1221,8 @@ class UI:
 		for i in range (0, len(kids)):
 			if (kids[i].recd == recd):
 				self.thumbTray.remove_item(kids[i])
-				#todo: remove listeners...
+				kids[i].cleanUp()
+				kids[i].disconnect( kids[i].getButtClickedId() )
 
 
 	def addThumb( self, recd ):
@@ -1237,7 +1238,7 @@ class UI:
 		for i in range (0, len(kids)):
 			self.thumbTray.remove_item(kids[i])
 			kids[i].cleanUp()
-			kids[i].disconnect( butt.getButtClickedId() )
+			kids[i].disconnect( kids[i].getButtClickedId() )
 
 
 	def _thumbClicked( self, button, recd ):
