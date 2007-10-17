@@ -379,7 +379,7 @@ class Glive:
 		if position != gst.CLOCK_TIME_NONE:
 			value = position * 100.0 / duration
 			value = value/100
-			self.ca.ui.progressWindow.updateProgress( value, self.ca.istrTranscoding )
+			self.ca.ui.progressWindow.updateProgress( value, self.ca.istrSaving )
 		return True
 
 
