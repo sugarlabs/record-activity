@@ -159,16 +159,20 @@ class UI:
 		topBox.pack_start( leftFill, expand=True )
 
 		centerVBox = gtk.VBox()
+		centerVBox.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
 		topBox.pack_start( centerVBox, expand=True )
 		self.centerBox = gtk.EventBox()
 		self.centerBox.set_size_request(self.vw, -1)
 		centerVBox.pack_start( self.centerBox, expand=True )
+		centerVBox.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
 		centerSizer = gtk.VBox()
 		centerSizer.set_size_request(self.vw, -1)
+		centerSizer.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
+		centerSizers.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
 		self.centerBox.add(centerSizer)
 
 		self.bottomCenter = gtk.EventBox()
-		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, self.colorRed.gColor)
+		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
 		self.bottomCenter.set_size_request(self.vw, self.controlBarHt)
 		centerVBox.pack_start( self.bottomCenter, expand=False )
 
@@ -777,7 +781,7 @@ class UI:
 			return False
 		else:
 			secsRemaining = (10000 - self.recTime)/1000
-			self.progressWindow.updateProgress( self.recTime/10000.0, str(secsRemaining) + " " + self.ca.istrSecondsRemaining )
+			self.progressWindow.updateProgress( self.recTime/10000.0, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
 			return True
 
 
@@ -1289,8 +1293,6 @@ class UI:
 		if ( show ):
 			self.centerBox.add( self.backgdCanvasBox )
 			self.centerBox.show_all()
-		else:
-			self.centerBox.hide_all()
 
 
 	def showThumbSelection( self, recd ):
