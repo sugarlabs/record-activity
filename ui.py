@@ -151,6 +151,7 @@ class UI:
 		leftFill = gtk.VBox()
 		leftFill.set_size_request( self.letterBoxW, -1 )
 		self.leftFillBox = gtk.EventBox()
+		self.leftFillBox.modify_bg( gtk.STATE_NORMAL, self.colorBlack.gColor )
 		leftFill.add( self.leftFillBox )
 		topBox.pack_start( leftFill, expand=True )
 
@@ -164,8 +165,7 @@ class UI:
 		self.centerBox.add(centerSizer)
 
 		self.bottomCenter = gtk.EventBox()
-		#self.bottomCenter.set_border_width(self.inset)
-		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
+		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, self.colorRed.gColor)
 		self.bottomCenter.set_size_request(self.vw, self.controlBarHt)
 		centerVBox.pack_start( self.bottomCenter, expand=False )
 
@@ -188,6 +188,7 @@ class UI:
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( self.letterBoxW, -1 )
 		self.rightFillBox = gtk.EventBox()
+		self.rightFillBox.modify_bg( gtk.STATE_NORMAL, self.colorBlack.gColor )
 		rightFill.add( self.rightFillBox )
 		topBox.pack_start( rightFill, expand=True )
 
@@ -204,7 +205,7 @@ class UI:
 		leftNamePanel = gtk.VBox()
 		leftNamePanel.set_size_request( 40, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
-		self.nameLabel = gtk.Label("<b>"+self.ca.istrTitle+":</b>")
+		self.nameLabel = gtk.Label("<b>"+self.ca.istrTitle+" </b>") #todo: add a real spacer here
 		self.nameLabel.set_use_markup( True )
 		self.namePanel.pack_start( self.nameLabel, expand=False )
 		self.nameLabel.set_alignment(0, .5)
@@ -219,7 +220,7 @@ class UI:
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
-		photographerLabel = gtk.Label("<b>" + self.ca.istrRecorder + ":</b>")
+		photographerLabel = gtk.Label("<b>" + self.ca.istrRecorder + "</b>")
 		photographerLabel.set_use_markup( True )
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
@@ -236,7 +237,7 @@ class UI:
 
 		self.datePanel = gtk.HBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.datePanel, expand=False)
-		dateLabel = gtk.Label("<b>"+self.ca.istrDate+":</b>")
+		dateLabel = gtk.Label("<b>"+self.ca.istrDate+"</b>")
 		dateLabel.set_use_markup(True)
 		self.datePanel.pack_start(dateLabel, expand=False)
 		self.dateDateLabel = gtk.Label("")
@@ -244,7 +245,7 @@ class UI:
 		self.datePanel.pack_start(self.dateDateLabel)
 
 		self.tagsPanel = gtk.VBox(spacing=self.inset)
-		tagsLabel = gtk.Label("<b>"+self.ca.istrTags+":</b>")
+		tagsLabel = gtk.Label("<b>"+self.ca.istrTags+"</b>")
 		tagsLabel.set_use_markup(True)
 		tagsLabel.set_alignment(0, .5)
 		self.tagsPanel.pack_start(tagsLabel, expand=False)
@@ -661,17 +662,12 @@ class UI:
 
 
 	def updateButtonSensitivities( self ):
-		#todo: make the gtk.entry uneditable
 		self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING )
 
 		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
-
-		#todo: handle what to do when switching and compressing...
-		self.toolbox.set_sensitive( switchStuff )
-		#self.modeToolbar.picButt.set_sensitive( switchStuff )
-		#self.modeToolbar.vidButt.set_sensitive( switchStuff )
-		#self.modeToolbar.audButt.set_sensitive( switchStuff )
-
+		self.photoToolbar.set_sensitive( switchStuff )
+		self.videoToolbar.set_sensitive( switchStuff )
+		self.audioToolbar.set_sensitive( switchStuff )
 
 		if (self.ca.m.UPDATING):
 			self.ca.ui.setWaitCursor()
@@ -680,12 +676,7 @@ class UI:
 
 		if (self.ca.m.RECORDING):
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
-			#self.leftFillBox.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
-			#self.rightFillBox.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
-		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
-			#self.leftFillBox.modify_bg( gtk.STATE_NORMAL, None )
-			#self.rightFillBox.modify_bg( gtk.STATE_NORMAL, None )
 
 
 	def hideLiveWindows( self ):
@@ -1063,8 +1054,18 @@ class UI:
 
 
 	def doShutter( self ):
-		clickWav = os.path.join(self.ca.gfxPath, 'click.wav')
-		os.system( "aplay -t wav " + str(clickWav) )
+		clickWav = None
+		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
+		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO or self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			if (not self.ca.m.RECORDING):
+				clickWav = os.path.join(self.ca.gfxPath, 'videoStartShutter.wav')
+			else:
+				clickWav = os.path.join(self.ca.gfxPath, 'videoStopShutter.wav')
+
+		if (clickWav != None):
+			os.system( "aplay -t wav " + str(clickWav) )
+
 		self.ca.m.doShutter()
 
 
@@ -1261,7 +1262,6 @@ class UI:
 			self.centerBox.remove( centerKid )
 
 		if (not self.RECD_INFO_ON):
-			self.centerBox.hide_all()
 			bottomKid = self.bottomCenter.get_child()
 			if (bottomKid != None):
 				self.bottomCenter.remove( bottomKid )
@@ -1828,6 +1828,9 @@ class PhotoToolbar(gtk.Toolbar):
 		timerItem.add(self.timerCb)
 		self.insert( timerItem, -1 )
 
+	def set_sensitive( self, sen ):
+		self.timerCb.set_sensitive( sen )
+
 
 class VideoToolbar(gtk.Toolbar):
 	def __init__(self, ui):
@@ -1847,10 +1850,10 @@ class VideoToolbar(gtk.Toolbar):
 		separator.show()
 
 		timerLabel = gtk.Label( self.ui.ca.istrTimer )
-		timerLabelItem = gtk.ToolItem()
-		timerLabelItem.add( timerLabel )
-		timerLabelItem.set_expand(False)
-		self.insert( timerLabelItem, -1 )
+		self.timerLabelItem = gtk.ToolItem()
+		self.timerLabelItem.add( timerLabel )
+		self.timerLabelItem.set_expand(False)
+		self.insert( self.timerLabelItem, -1 )
 		self.timerCb = gtk.combo_box_new_text()
 
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
@@ -1865,15 +1868,19 @@ class VideoToolbar(gtk.Toolbar):
 		timerItem.add(self.timerCb)
 		self.insert( timerItem, -1 )
 
+		separator2 = gtk.SeparatorToolItem()
+		separator2.set_draw(False)
+		separator2.set_expand(False)
+		separator2.set_size_request( 10, -1 )
+		self.insert( separator2, -1 )
+
 		durLabel = gtk.Label( self.ui.ca.istrDuration )
 		durLabelItem = gtk.ToolItem()
 		durLabelItem.add( durLabel )
 		durLabelItem.set_expand(False)
 		self.insert( durLabelItem, -1 )
-		#todo: disable when filming
 		self.durCb = gtk.combo_box_new_text()
 
-		#todo: internationalize correctly as phrase
 		for i in range (0, len(self.ui.ca.m.DURATIONS)):
 			self.durCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
 		self.durCb.set_active(0)
@@ -1882,6 +1889,11 @@ class VideoToolbar(gtk.Toolbar):
 		durItem.set_expand(False)
 		durItem.add(self.durCb)
 		self.insert(durItem, -1 )
+
+	def set_sensitive( self, sen ):
+		self.timerCb.set_sensitive( sen )
+		self.durCb.set_sensitive( sen )
+		self.timeLabel.set_sensitive( sen )
 
 
 class AudioToolbar(gtk.Toolbar):
@@ -1920,6 +1932,12 @@ class AudioToolbar(gtk.Toolbar):
 		timerItem.add(self.timerCb)
 		self.insert( timerItem, -1 )
 
+		separator2 = gtk.SeparatorToolItem()
+		separator2.set_draw(False)
+		separator2.set_expand(False)
+		separator2.set_size_request( 10, -1 )
+		self.insert( separator2, -1 )
+
 		durLabel = gtk.Label( self.ui.ca.istrDuration )
 		durLabelItem = gtk.ToolItem()
 		durLabelItem.add( durLabel )
@@ -1938,3 +1956,7 @@ class AudioToolbar(gtk.Toolbar):
 		durItem.set_expand(False)
 		durItem.add(self.durCb)
 		self.insert(durItem, -1 )
+
+#	def set_sensitive( self, sen ):
+#		self.timerCb.set_sensitive( sen )
+#		self.durCb.set_sensitive( sen )

@@ -571,7 +571,6 @@ class Model:
 
 
 	def doVideoMode( self ):
-		print("doVideoMode and mode is: " + str(self.MODE))
 		if (self.MODE == self.MODE_VIDEO):
 			return
 
@@ -581,7 +580,6 @@ class Model:
 
 
 	def doPhotoMode( self ):
-		print("doPhotoMode and mode is: " + str(self.MODE))
 		if (self.MODE == self.MODE_PHOTO):
 			return
 
@@ -591,7 +589,6 @@ class Model:
 
 
 	def doAudioMode( self ):
-		print("doAudioMode and mode is: " + str(self.MODE))
 		if (self.MODE == self.MODE_AUDIO):
 			return
 
