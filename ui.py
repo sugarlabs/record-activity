@@ -163,12 +163,11 @@ class UI:
 		topBox.pack_start( centerVBox, expand=True )
 		self.centerBox = gtk.EventBox()
 		self.centerBox.set_size_request(self.vw, -1)
+		self.centerBox.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
 		centerVBox.pack_start( self.centerBox, expand=True )
-		centerVBox.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
 		centerSizer = gtk.VBox()
 		centerSizer.set_size_request(self.vw, -1)
 		centerSizer.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
-		centerSizers.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
 		self.centerBox.add(centerSizer)
 
 		self.bottomCenter = gtk.EventBox()
@@ -681,9 +680,13 @@ class UI:
 		self.audioToolbar.set_sensitive( switchStuff )
 
 		if (self.ca.m.UPDATING):
-			self.ca.ui.setWaitCursor()
+			self.ca.ui.setWaitCursor( self.ca.window )
+			for i in range (0, len(self.windowStack)):
+				self.ca.ui.setWaitCursor( self.windowStack[i] )
 		else:
-			self.ca.ui.setDefaultCursor( )
+			self.ca.ui.setDefaultCursor( self.ca.window )
+			for i in range (0, len(self.windowStack)):
+				self.ca.ui.setDefaultCursor( self.windowStack[i] )
 
 		if (self.ca.m.RECORDING):
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
@@ -772,7 +775,14 @@ class UI:
 	def updateRecordingTimer( self ):
 		#todo: use real time
 		self.recTime = self.recTime + 500.0
-		if (self.recTime >= 10000.0 ):
+
+		duration = 10000.0
+		if (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+			duration = (self.ca.m.videoToolbar.getDuration()*1000)+0.0
+		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			duration = (self.ca.m.audioToolbar.getDuration()*1000)+0.0
+
+		if (self.recTime >= duration ):
 			if (self.ca.m.RECORDING):
 				self.doShutter( None )
 			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
@@ -780,8 +790,8 @@ class UI:
 			gobject.source_remove( self.UPDATE_RECORDING_ID )
 			return False
 		else:
-			secsRemaining = (10000 - self.recTime)/1000
-			self.progressWindow.updateProgress( self.recTime/10000.0, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
+			secsRemaining = (duration - self.recTime)/1000
+			self.progressWindow.updateProgress( self.recTime/duration, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
 			return True
 
 
@@ -1410,12 +1420,12 @@ class UI:
 		self.tagsBuffer.set_text("")
 
 
-	def setWaitCursor( self ):
-		self.ca.window.set_cursor( gtk.gdk.Cursor(gtk.gdk.WATCH) )
+	def setWaitCursor( self, win ):
+		win.set_cursor( gtk.gdk.Cursor(gtk.gdk.WATCH) )
 
 
-	def setDefaultCursor( self ):
-		self.ca.window.set_cursor( None )
+	def setDefaultCursor( self, win ):
+		win.set_cursor( None )
 
 
 	def loadGfx( self ):
@@ -1785,8 +1795,6 @@ class ProgressWindow(gtk.Window):
 		eb.add(vb)
 
 		self.progBar = gtk.ProgressBar()
-		#todo: set the bg'd color here correctly
-		#self.progBar.modify_fg( gtk.STATE_INSENSITIVE, self.ui.colorGreen.gColor )
 		self.progBar.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
 		vb.add( self.progBar )
 
@@ -1798,7 +1806,6 @@ class ProgressWindow(gtk.Window):
 			self.progBar.set_text( self.str )
 		if (amt >= 1):
 			self.progBar.set_fraction( 0 )
-
 
 
 class PhotoToolbar(gtk.Toolbar):
@@ -1898,6 +1905,10 @@ class VideoToolbar(gtk.Toolbar):
 		self.insert(durItem, -1 )
 
 
+	def getDuration(self):
+		return self.ui.ca.m.DURATIONS[self.durCb.get_active()]
+
+
 class AudioToolbar(gtk.Toolbar):
 	def __init__(self, ui):
 		gtk.Toolbar.__init__(self)
@@ -1945,10 +1956,8 @@ class AudioToolbar(gtk.Toolbar):
 		durLabelItem.add( durLabel )
 		durLabelItem.set_expand(False)
 		self.insert( durLabelItem, -1 )
-		#todo: set these to static values & also disable when filming
 		self.durCb = gtk.combo_box_new_text()
 
-		#todo: internationalize correctly as phrase
 		for i in range (0, len(self.ui.ca.m.DURATIONS)):
 			self.durCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
 		self.durCb.set_active(0)
@@ -1958,3 +1967,6 @@ class AudioToolbar(gtk.Toolbar):
 		durItem.set_expand(False)
 		durItem.add(self.durCb)
 		self.insert(durItem, -1 )
+
+	def getDuration(self):
+		return self.ui.ca.m.DURATIONS[self.durCb.get_active()]
