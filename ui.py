@@ -1075,28 +1075,9 @@ class UI:
 
 
 	def doShutter( self ):
-		clickWav = None
-		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-			clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
-		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO or self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			if (not self.ca.m.RECORDING):
-				clickWav = os.path.join(self.ca.gfxPath, 'videoStartShutter.wav')
-			else:
-				clickWav = os.path.join(self.ca.gfxPath, 'videoStopShutter.wav')
-
-		if (clickWav != None):
-			os.system( "aplay -t wav " + str(clickWav) )
-
+		clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
+		os.system( "aplay -t wav " + str(clickWav) )
 		self.ca.m.doShutter()
-
-
-	def jiltVideoComponents( self ):
-		livePos = self.liveVideoWindow.get_position()
-		self.liveVideoWindow.move( livePos[0]+10, livePos[1]+10 )
-		self.liveVideoWindow.move( livePos[0], livePos[1] )
-		playLivePos = self.playLiveWindow.get_position()
-		self.playLiveWindow.move( playLivePos[0]+10, playLivePos[1]+10 )
-		self.playLiveWindow.move( playLivePos[0], playLivePos[1] )
 
 
 	def updateVideoComponents( self ):

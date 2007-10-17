@@ -436,13 +436,6 @@ class Glive:
 			err, debug = message.parse_error()
 			print "MESSAGE ERROR: %s" % err, debug
 
-#			self.ca.ui.jiltVideoComponents()
-#			self.ca.stopPipes()
-#			self.ca.ui.jiltVideoComponents()
-#			self.ca.restartPipes()
-#			self.ca.ui.jiltVideoComponents()
-			self.play()
-
 
 	def showLiveVideo(self):
 		self.el('audioTee').unlink(self.el('audioWavenc'))
