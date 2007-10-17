@@ -115,10 +115,13 @@ class UI:
 		self.toolbox = activity.ActivityToolbox(self.ca)
 		self.ca.set_toolbox(self.toolbox)
 		self.photoToolbar = PhotoToolbar(self)
+		self.photoToolbar.set_sensitive( False )
 		self.toolbox.add_toolbar( self.ca.istrPhoto, self.photoToolbar )
 		self.videoToolbar = VideoToolbar(self)
+		self.videoToolbar.set_sensitive( False )
 		self.toolbox.add_toolbar( self.ca.istrVideo, self.videoToolbar )
 		self.audioToolbar = AudioToolbar(self)
+		self.audioToolbar.set_sensitive( False )
 		self.toolbox.add_toolbar( self.ca.istrAudio, self.audioToolbar )
 		self.tbars = {self.ca.m.MODE_PHOTO:self.photoToolbar,self.ca.m.MODE_VIDEO:self.videoToolbar,self.ca.m.MODE_AUDIO:self.audioToolbar}
 		self.toolbox.set_current_toolbar(self.ca.m.MODE+1)
@@ -314,6 +317,10 @@ class UI:
 
 			#initialize the app with the default thumbs
 			self.ca.m.setupThumbs( self.ca.m.MODE, True )
+
+			self.photoToolbar.set_sensitive( True )
+			self.videoToolbar.set_sensitive( True )
+			self.audioToolbar.set_sensitive( True )
 
 
 	def setUpWindows( self ):
@@ -1828,8 +1835,6 @@ class PhotoToolbar(gtk.Toolbar):
 		timerItem.add(self.timerCb)
 		self.insert( timerItem, -1 )
 
-	def set_sensitive( self, sen ):
-		self.timerCb.set_sensitive( sen )
 
 
 class VideoToolbar(gtk.Toolbar):
@@ -1850,10 +1855,10 @@ class VideoToolbar(gtk.Toolbar):
 		separator.show()
 
 		timerLabel = gtk.Label( self.ui.ca.istrTimer )
-		self.timerLabelItem = gtk.ToolItem()
-		self.timerLabelItem.add( timerLabel )
-		self.timerLabelItem.set_expand(False)
-		self.insert( self.timerLabelItem, -1 )
+		timerLabelItem = gtk.ToolItem()
+		timerLabelItem.add( timerLabel )
+		timerLabelItem.set_expand(False)
+		self.insert( timerLabelItem, -1 )
 		self.timerCb = gtk.combo_box_new_text()
 
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
@@ -1889,11 +1894,6 @@ class VideoToolbar(gtk.Toolbar):
 		durItem.set_expand(False)
 		durItem.add(self.durCb)
 		self.insert(durItem, -1 )
-
-	def set_sensitive( self, sen ):
-		self.timerCb.set_sensitive( sen )
-		self.durCb.set_sensitive( sen )
-		self.timeLabel.set_sensitive( sen )
 
 
 class AudioToolbar(gtk.Toolbar):
@@ -1956,7 +1956,3 @@ class AudioToolbar(gtk.Toolbar):
 		durItem.set_expand(False)
 		durItem.add(self.durCb)
 		self.insert(durItem, -1 )
-
-#	def set_sensitive( self, sen ):
-#		self.timerCb.set_sensitive( sen )
-#		self.durCb.set_sensitive( sen )
