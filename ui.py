@@ -682,11 +682,11 @@ class UI:
 		if (self.ca.m.UPDATING):
 			self.ca.ui.setWaitCursor( self.ca.window )
 			for i in range (0, len(self.windowStack)):
-				self.ca.ui.setWaitCursor( self.windowStack[i] )
+				self.ca.ui.setWaitCursor( self.windowStack[i].window )
 		else:
 			self.ca.ui.setDefaultCursor( self.ca.window )
 			for i in range (0, len(self.windowStack)):
-				self.ca.ui.setDefaultCursor( self.windowStack[i] )
+				self.ca.ui.setDefaultCursor( self.windowStack[i].window )
 
 		if (self.ca.m.RECORDING):
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
@@ -778,9 +778,9 @@ class UI:
 
 		duration = 10000.0
 		if (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			duration = (self.ca.m.videoToolbar.getDuration()*1000)+0.0
+			duration = (self.videoToolbar.getDuration()*1000)+0.0
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			duration = (self.ca.m.audioToolbar.getDuration()*1000)+0.0
+			duration = (self.audioToolbar.getDuration()*1000)+0.0
 
 		if (self.recTime >= duration ):
 			if (self.ca.m.RECORDING):
