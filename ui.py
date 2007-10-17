@@ -690,6 +690,7 @@ class UI:
 
 		if (self.ca.m.RECORDING):
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
 
