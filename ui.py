@@ -398,7 +398,6 @@ class UI:
 			self.toolbox.set_current_toolbar( self.ca.m.MODE+1 )
 		else:
 			num = num - 1 #offset the default activity tab
-			print( num )
 			if (num == self.ca.m.MODE_PHOTO) and (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
 				self.ca.m.doPhotoMode()
 			elif(num == self.ca.m.MODE_VIDEO) and (self.ca.m.MODE != self.ca.m.MODE_VIDEO):
@@ -1067,6 +1066,15 @@ class UI:
 		clickWav = os.path.join(self.ca.gfxPath, 'click.wav')
 		os.system( "aplay -t wav " + str(clickWav) )
 		self.ca.m.doShutter()
+
+
+	def jiltVideoComponents( self ):
+		livePos = self.liveVideoWindow.get_position()
+		self.liveVideoWindow.move( livePos[0]+10, livePos[1]+10 )
+		self.liveVideoWindow.move( livePos[0], livePos[1] )
+		playLivePos = self.playLiveWindow.get_position()
+		self.playLiveWindow.move( playLivePos[0]+10, playLivePos[1]+10 )
+		self.playLiveWindow.move( playLivePos[0], playLivePos[1] )
 
 
 	def updateVideoComponents( self ):

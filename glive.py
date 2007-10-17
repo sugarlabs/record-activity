@@ -432,9 +432,16 @@ class Glive:
 		if t == gst.MESSAGE_EOS:
 			print("MESSAGE_EOS")
 		elif t == gst.MESSAGE_ERROR:
-			err, debug = message.parse_error()
 			#todo: if we come out of suspend/resume with errors, then get us back up and running...
+			err, debug = message.parse_error()
 			print "MESSAGE ERROR: %s" % err, debug
+
+#			self.ca.ui.jiltVideoComponents()
+#			self.ca.stopPipes()
+#			self.ca.ui.jiltVideoComponents()
+#			self.ca.restartPipes()
+#			self.ca.ui.jiltVideoComponents()
+			self.play()
 
 
 	def showLiveVideo(self):
