@@ -182,7 +182,7 @@ class Model:
 		self.setUpdating( False )
 
 
-	def setupMode( self, type, init ):
+	def setupMode( self, type, update ):
 		if (not type == self.MODE):
 			return
 
@@ -191,13 +191,13 @@ class Model:
 		hash = self.mediaHashs[type]
 		for i in range (0, len(hash)):
 			self.ca.ui.addThumb( hash[i] )
-		if (not init):
+		if (update):
 			self.ca.ui.updateModeChange()
 		self.setUpdating(False)
+ 		self.ca.ui.debugWindows()
 
 
 	def showNextThumb( self, shownRecd ):
-		print("showNext")
 		if (shownRecd == None):
 			self.showLastThumb()
 		else:
@@ -212,7 +212,6 @@ class Model:
 
 
 	def showPrevThumb( self, shownRecd ):
-		print("showPrev")
 		if (shownRecd == None):
 			self.showLastThumb()
 		else:
@@ -377,7 +376,7 @@ class Model:
 
 		#prep the ui for your return
 		self.ca.ui.LAST_MODE = -1
-		self.ca.ui.HIDE_ON_UPDATE = False
+		#self.ca.ui.HIDE_ON_UPDATE = False
 		self.ca.ui.TRANSCODING = False
 		self.ca.ui.updateVideoComponents()
 
@@ -584,6 +583,7 @@ class Model:
 
 		self.MODE = self.MODE_PHOTO
 		self.setUpdating(True)
+		print("doPhotoMode")
 		gobject.idle_add( self.setupMode, self.MODE, True )
 
 

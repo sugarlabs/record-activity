@@ -384,23 +384,22 @@ class UI:
 
 
 	def setUpWindowsSizes( self ):
+		pipDim = self.getPipDim(False)
+		eyeDim = self.getEyeDim(False)
 		imgDim = self.getImgDim( False )
-		self.livePhotoWindow.resize( imgDim[0], imgDim[1] )
 		pgdDim = self.getPgdDim( False )
+		maxDim = self.getMaxDim( False )
+		infDim = self.getInfDim( False )
+		prgDim = self.getPrgDim( False )
+		self.livePhotoWindow.resize( imgDim[0], imgDim[1] )
 		self.pipBgdWindow.resize( pgdDim[0], pgdDim[1] )
 		self.liveVideoWindow.resize( imgDim[0], imgDim[1] )
 		self.playOggWindow.resize( imgDim[0], imgDim[1] )
 		self.playLiveWindow.resize( imgDim[0], imgDim[1] )
 		self.pipBgdWindow2.resize( pgdDim[0], pgdDim[1] )
-		pipDim = self.getPipDim(False)
-		self.playLiveWindow.resize( pipDim[0], pipDim[1] )
-		eyeDim = self.getEyeDim(False)
 		self.recordWindow.resize( eyeDim[0], eyeDim[1] )
-		maxDim = self.getMaxDim( False )
 		self.maxWindow.resize( maxDim[0], maxDim[1] )
-		infDim = self.getInfDim( False )
 		self.infWindow.resize( infDim[0], infDim[1] )
-		prgDim = self.getPrgDim( False )
 		self.progressWindow.resize( prgDim[0], prgDim[1] )
 
 
@@ -1082,12 +1081,15 @@ class UI:
 
 
 	def updateVideoComponents( self ):
+		print("uvc 1")
 		if (	(self.LAST_MODE == self.ca.m.MODE)
 				and (self.LAST_FULLSCREEN == self.FULLSCREEN)
 				and (self.LAST_LIVE == self.LIVEMODE)
 				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)
 				and (self.LAST_TRANSCODING == self.TRANSCODING)):
 			return
+
+		print( "uvc 2", self.TRANSCODING )
 
 		#something's changing so start counting anew
 		self.resetWidgetFadeTimer()
@@ -1146,7 +1148,9 @@ class UI:
 		elif (self.TRANSCODING):
 			#todo: enlarge
 			pos.append({"position":"prg", "window":self.progressWindow} )
+			print("XCODE")
 
+		print( "pos#", len(pos), self.HIDE_ON_UPDATE )
 
 		if (self.HIDE_ON_UPDATE):
 			for i in range (0, len(self.windowStack)):
@@ -1170,6 +1174,11 @@ class UI:
 		self.LAST_RECD_INFO = self.RECD_INFO_ON
 		self.LAST_TRANSCODING = self.TRANSCODING
 		self.HIDE_ON_UPDATE = True
+
+
+	def debugWindows( self ):
+		for i in range (0, len(self.windowStack)):
+			print self.windowStack[i], self.windowStack[i].get_size(), self.windowStack[i].get_position()
 
 
 	def showWidgets( self ):
@@ -1278,6 +1287,9 @@ class UI:
 
 
 	def showPostProcessGfx( self, show ):
+		if (True):
+			return
+
 		centerKid = self.centerBox.get_child()
 		if (centerKid != None):
 			self.centerBox.remove( centerKid )
