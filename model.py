@@ -376,7 +376,6 @@ class Model:
 
 		#prep the ui for your return
 		self.ca.ui.LAST_MODE = -1
-		#self.ca.ui.HIDE_ON_UPDATE = False
 		self.ca.ui.TRANSCODING = False
 		self.ca.ui.updateVideoComponents()
 

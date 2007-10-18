@@ -76,7 +76,6 @@ class UI:
 		self.LAST_RECD_INFO = False
 		self.LAST_TRANSCODING = False
 		self.TRANSCODING = False
-		self.HIDE_ON_UPDATE = True
 		self.RECD_INFO_ON = False
 		self.UPDATE_RECORDING_ID = 0
 
@@ -1148,13 +1147,6 @@ class UI:
 		elif (self.TRANSCODING):
 			#todo: enlarge
 			pos.append({"position":"prg", "window":self.progressWindow} )
-			print("XCODE")
-
-		print( "pos#", len(pos), self.HIDE_ON_UPDATE )
-
-		if (self.HIDE_ON_UPDATE):
-			for i in range (0, len(self.windowStack)):
-				self.windowStack[i].hide_all()
 
 		#todo: only move away the windows *not* moved in the call below:
 		self.hideLiveWindows()
@@ -1163,17 +1155,11 @@ class UI:
 
 		self.updatePos( pos )
 
-		#show everything
-		if (self.HIDE_ON_UPDATE):
-			for i in range (0, len(self.windowStack)):
-				self.windowStack[i].show_all()
-
 		self.LAST_MODE = self.ca.m.MODE
 		self.LAST_FULLSCREEN = self.FULLSCREEN
 		self.LAST_LIVE = self.LIVEMODE
 		self.LAST_RECD_INFO = self.RECD_INFO_ON
 		self.LAST_TRANSCODING = self.TRANSCODING
-		self.HIDE_ON_UPDATE = True
 
 
 	def debugWindows( self ):
