@@ -182,13 +182,12 @@ class Model:
 		self.setUpdating( False )
 
 
-	def setupThumbs( self, type, init ):
+	def setupMode( self, type, init ):
 		if (not type == self.MODE):
 			return
 
-		self.ca.ui.removeThumbs()
-
 		self.setUpdating( True )
+		self.ca.ui.removeThumbs()
 		hash = self.mediaHashs[type]
 		for i in range (0, len(hash)):
 			self.ca.ui.addThumb( hash[i] )
@@ -576,7 +575,7 @@ class Model:
 
 		self.MODE = self.MODE_VIDEO
 		self.setUpdating(True)
-		gobject.idle_add( self.setupThumbs, self.MODE, False )
+		gobject.idle_add( self.setupMode, self.MODE, True )
 
 
 	def doPhotoMode( self ):
@@ -585,7 +584,7 @@ class Model:
 
 		self.MODE = self.MODE_PHOTO
 		self.setUpdating(True)
-		gobject.idle_add( self.setupThumbs, self.MODE, False )
+		gobject.idle_add( self.setupMode, self.MODE, True )
 
 
 	def doAudioMode( self ):
@@ -594,7 +593,7 @@ class Model:
 
 		self.MODE = self.MODE_AUDIO
 		self.setUpdating(True)
-		gobject.idle_add( self.setupThumbs, self.MODE, False )
+		gobject.idle_add( self.setupMode, self.MODE, True )
 
 
 	def setConstants( self ):

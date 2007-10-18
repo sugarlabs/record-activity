@@ -319,7 +319,7 @@ class UI:
 			self.ca.glive.play()
 
 			#initialize the app with the default thumbs
-			self.ca.m.setupThumbs( self.ca.m.MODE, True )
+			self.ca.m.setupMode( self.ca.m.MODE, False )
 
 			self.photoToolbar.set_sensitive( True )
 			self.videoToolbar.set_sensitive( True )
