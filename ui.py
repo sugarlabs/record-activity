@@ -36,6 +36,7 @@ import time
 from time import strftime
 import math
 import shutil
+import time
 
 import pygst
 pygst.require('0.10')
@@ -428,7 +429,7 @@ class UI:
 		#only show the clutter when the mouse moves
 		self.mx = -1
 		self.my = -1
-		self.hideWidgetsTimer = 0
+		self.hideWidgetsTimer = time.time()
 		if (self.hiddenWidgets):
 			self.showWidgets()
 			self.hiddenWidgets = False
@@ -466,25 +467,26 @@ class UI:
 
 	def _mouseMightaMovedCb( self ):
 		x, y = self.ca.get_pointer()
+		passedTime = 0
 
 		if (x != self.mx or y != self.my):
-			self.hideWidgetsTimer = 0
+			self.hideWidgetsTimer = time.time()
 			if (self.hiddenWidgets):
 				self.showWidgets()
 				self.hiddenWidgets = False
 		else:
-			#todo: use time here?
-			self.hideWidgetsTimer = self.hideWidgetsTimer + 500
+			passedTime = time.time() - self.hideWidgetsTimer
 
 		if (self.ca.m.RECORDING):
-			self.hideWidgetsTimer = 0
+			self.hideWidgetsTimer = time.time()
+			passedTime = 0
 
-		if (self.hideWidgetsTimer > 2000):
+		if (passedTime > 2000):
 			if (not self.hiddenWidgets):
 				if (self.mouseInWidget(x,y)):
-					self.hideWidgetsTimer = 0
+					self.hideWidgetsTimer = time.time()
 				elif (self.RECD_INFO_ON):
-					self.hideWidgetsTimer = 0
+					self.hideWidgetsTimer = time.time()
 				else:
 					self.hideWidgets()
 					self.hiddenWidgets = True
@@ -772,13 +774,12 @@ class UI:
 
 
 	def beginRecordingTimer( self ):
-		self.recTime = 0.0
+		self.recTime = time.time()
 		self.UPDATE_RECORDING_ID = gobject.timeout_add( 500, self.updateRecordingTimer )
 
 
 	def updateRecordingTimer( self ):
-		#todo: use real time
-		self.recTime = self.recTime + 500.0
+		passedTime = time.time() - self.recTime
 
 		duration = 10000.0
 		if (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
@@ -786,7 +787,7 @@ class UI:
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			duration = (self.audioToolbar.getDuration()*1000)+0.0
 
-		if (self.recTime >= duration ):
+		if (passedTime >= duration ):
 			if (self.ca.m.RECORDING):
 				self.doShutter( None )
 			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
@@ -794,8 +795,8 @@ class UI:
 			gobject.source_remove( self.UPDATE_RECORDING_ID )
 			return False
 		else:
-			secsRemaining = (duration - self.recTime)/1000
-			self.progressWindow.updateProgress( self.recTime/duration, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
+			secsRemaining = (duration - passedTime)/1000
+			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
 			return True
 
 
