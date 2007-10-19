@@ -486,7 +486,7 @@ class Model:
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
 		recd.photographer = self.ca.nickName
-		recd.title = self.mediaTypes[type][self.ca.keyName] + " by " + str(recd.photographer)
+		recd.title = self.ca.istrBy % {"1":self.mediaTypes[type][self.ca.keyName], "2":str(recd.photographer)}
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill
