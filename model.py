@@ -305,17 +305,18 @@ class Model:
 
 
 	def startRecordingVideo( self ):
-		print("start recording video")
 		self.setUpdating( True )
 		self.setRecording( True )
+		#let the red eye kick in before we start the video underway
+		gobject.idle_add( self.beginRecordingVideo )
 
+
+	def beginRecordingVideo( self ):
 		self.ca.ui.recordVideo()
-
 		self.setUpdating( False )
 
 
 	def startRecordingAudio( self ):
-		print("start recording audio")
 		self.setUpdating( True )
 		self.setRecording( True )
 		self.ca.ui.recordAudio()
@@ -333,7 +334,7 @@ class Model:
 
 
 	def stopRecordingVideo( self ):
-		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
+		gobject.source_remove( self.ca.ui.UPDATE_DURATION_ID )
 		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.setUpdating( True )
 		self.ca.ui.TRANSCODING = True

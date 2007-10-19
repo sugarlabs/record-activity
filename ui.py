@@ -78,7 +78,8 @@ class UI:
 		self.LAST_TRANSCODING = False
 		self.TRANSCODING = False
 		self.RECD_INFO_ON = False
-		self.UPDATE_RECORDING_ID = 0
+		self.UPDATE_DURATION_ID = 0
+		self.UPDATE_TIMER_ID = 0
 
 		#init
 		self.mapped = False
@@ -659,16 +660,8 @@ class UI:
 
 	def showLiveVideoTags( self ):
 		self.shownRecd = None
-
-		#todo: figure this out without the ui collapsing around it
-		self.namePanel.hide()
-		self.photographerPanel.hide()
-		self.datePanel.hide()
-		self.tagsPanel.hide()
-		self.tagsBuffer.set_text("")
-
 		self.livePhotoCanvas.setImage( None )
-		self.resetWidgetFadeTimer()
+		self.resetWidgetFadeTimer( )
 
 
 	def updateButtonSensitivities( self ):
@@ -738,11 +731,12 @@ class UI:
 		self.RECD_INFO_ON = False
 
 		if (self.LIVEMODE != True):
-			#todo: updating here?
+			self.ca.m.setUpdating(True)
 			self.ca.gplay.stop()
 			self.showLiveVideoTags()
 			self.LIVEMODE = True
 			self.updateVideoComponents()
+			self.ca.m.setUpdating(False)
 
 
 	def _playLiveButtonReleaseCb(self, widget, event):
@@ -775,10 +769,10 @@ class UI:
 
 	def beginRecordingTimer( self ):
 		self.recTime = time.time()
-		self.UPDATE_RECORDING_ID = gobject.timeout_add( 500, self.updateRecordingTimer )
+		self.UPDATE_DURATION_ID = gobject.timeout_add( 500, self._updateDurationCb )
 
 
-	def updateRecordingTimer( self ):
+	def _updateDurationCb( self ):
 		passedTime = time.time() - self.recTime
 
 		duration = 10000.0
@@ -792,7 +786,7 @@ class UI:
 				self.doShutter( None )
 			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
 
-			gobject.source_remove( self.UPDATE_RECORDING_ID )
+			gobject.source_remove( self.UPDATE_DURATION_ID )
 			return False
 		else:
 			secsRemaining = (duration - passedTime)/1000
@@ -1080,8 +1074,52 @@ class UI:
 
 
 	def doShutter( self ):
-		clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
-		os.system( "aplay -t wav " + str(clickWav) )
+		if (self.UPDATE_TIMER_ID != 0):
+			timerTime = 0
+			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+				timerTime = self.photoToolbar.getTimer()
+			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+				timerTime = self.videoToolbar.getTimer()
+			elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
+				timerTime = self.audioToolbar.getTimer()
+
+			if (timerTime > 0):
+				self.timerStartTime = time.time()
+				self.UPDATE_TIMER_ID = gobject.timeout_add( self._updateTimerCb, 500 )
+			else:
+				self.clickShutter()
+
+		else:
+			self.clickShutter()
+
+
+	def _updateTimerCb( self ):
+		nowTime = time.time()
+		timePassed = nowTime - self.timerStartTime
+
+		timerTime = 0
+		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			timerTime = self.photoToolbar.getTimer()
+		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+			timerTime = self.videoToolbar.getTimer()
+		elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
+			timerTime = self.audioToolbar.getTimer()
+
+		if (timePassed >= timerTime):
+			self.progressWindow.updateProgress( 1, "" )
+			gobject.source_remove( self.UPDATE_TIMER_ID )
+			self.clickShutter()
+			return False
+		else:
+			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
+			return True
+
+
+	def clickShutter( self ):
+		if (not self.ca.m.RECORDING): #don't append a sound to the end of a video or audio.  maybe play a click afterwards?
+			clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
+			os.system( "aplay -t wav " + str(clickWav) )
+
 		self.ca.m.doShutter()
 
 
@@ -1890,6 +1928,10 @@ class VideoToolbar(gtk.Toolbar):
 		self.insert(durItem, -1 )
 
 
+	def getTimer(self):
+		return self.ui.ca.m.TIMERS[self.timerCb.get_active()]
+
+
 	def getDuration(self):
 		return self.ui.ca.m.DURATIONS[self.durCb.get_active()]
 
@@ -1952,6 +1994,11 @@ class AudioToolbar(gtk.Toolbar):
 		durItem.set_expand(False)
 		durItem.add(self.durCb)
 		self.insert(durItem, -1 )
+
+
+	def getTimer(self):
+		return self.ui.ca.m.TIMERS[self.timerCb.get_active()]
+
 
 	def getDuration(self):
 		return self.ui.ca.m.DURATIONS[self.durCb.get_active()]
