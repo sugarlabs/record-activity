@@ -2,6 +2,7 @@ import gtk
 import os
 import gobject
 import rsvg
+import gc
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.tray import TrayButton

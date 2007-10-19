@@ -1074,7 +1074,7 @@ class UI:
 
 
 	def doShutter( self ):
-		if (self.UPDATE_TIMER_ID != 0):
+		if (self.UPDATE_TIMER_ID == 0):
 			timerTime = 0
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				timerTime = self.photoToolbar.getTimer()
@@ -1083,9 +1083,10 @@ class UI:
 			elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
 				timerTime = self.audioToolbar.getTimer()
 
+			print( "timerTime", timerTime )
 			if (timerTime > 0):
 				self.timerStartTime = time.time()
-				self.UPDATE_TIMER_ID = gobject.timeout_add( self._updateTimerCb, 500 )
+				self.UPDATE_TIMER_ID = gobject.timeout_add( 500, self._updateTimerCb )
 			else:
 				self.clickShutter()
 
@@ -1095,7 +1096,8 @@ class UI:
 
 	def _updateTimerCb( self ):
 		nowTime = time.time()
-		timePassed = nowTime - self.timerStartTime
+		passedTime = nowTime - self.timerStartTime
+		print( "updateTimer, passed:", passedTime )
 
 		timerTime = 0
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
@@ -1108,10 +1110,12 @@ class UI:
 		if (timePassed >= timerTime):
 			self.progressWindow.updateProgress( 1, "" )
 			gobject.source_remove( self.UPDATE_TIMER_ID )
+			self.UPDATE_TIMER_ID = 0
 			self.clickShutter()
 			return False
 		else:
-			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
+			secsRemaining = 
+			self.progressWindow.updateProgress( passedTime/timerTime, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
 			return True
 
 
@@ -1867,6 +1871,9 @@ class PhotoToolbar(gtk.Toolbar):
 		timerItem.add(self.timerCb)
 		self.insert( timerItem, -1 )
 
+
+	def getTimer(self):
+		return self.ui.ca.m.TIMERS[self.timerCb.get_active()]
 
 
 class VideoToolbar(gtk.Toolbar):

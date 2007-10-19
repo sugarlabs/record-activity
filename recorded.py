@@ -160,34 +160,27 @@ class Recorded:
 
 
 	def getMediaFilepath( self, meshReq ):
-		print("getMediaFilepath 1")
 		if (self.datastoreId == None):
 			if (not self.buddy):
 				#just taken by you, so it is in the tempSessionDir
-				print("getMediaFilepath 3")
 				mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
 				return os.path.abspath(mediaFilepath)
 			else:
 				if (self.downloadedFromBuddy):
-					print("getMediaFilepath 4")
 					#the user has requested the high-res version, and it has downloaded
 					mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
-					print("getMediaFilepath 5")
 					#you should request it from someone and return None for the request to handle...
 					#e.g., thumbs for pics, or "coming attractions" for videos ;-)
 					#todo: always re-request?
 					#todo: notify to the user that the request is underway or not possible...
 					if ( (self.ca.meshClient != None) and meshReq):
-						print("getMediaFilepath 6")
 						self.ca.meshClient.requestMediaBits( self )
-						print("getMediaFilepath 7")
 					return None
 
 		else:
 			#pulling from the datastore, regardless of who took it
-			print("getMediaFilepath 8")
 
 			#first, get the datastoreObject and hold the reference in this Recorded instance
 			if (self.datastoreOb == None):
@@ -198,5 +191,4 @@ class Recorded:
 
 			#if this is a buddy's media and you only ever got a thumbnail, then return null and query for the real deal...
 
-			print("getMediaFilepath 9")
 			return self.datastoreOb.file_path
