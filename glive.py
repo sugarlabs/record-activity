@@ -52,6 +52,9 @@ class Glive:
 
 		self.TRANSCODE_UPDATE_INTERVAL = 200
 
+		self.VIDEO_WIDTH_SMALL = 160
+		self.VIDEO_HEIGHT_SMALL = 120
+
 		self.thumbPipes = []
 		self.muxPipes = []
 		self._nextPipe()
@@ -141,7 +144,7 @@ class Glive:
 		n = str(len(self.pipes))
 		v4l2 = False
 		if (self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_"+n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_"+n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate=15/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width="+str(self.VIDEO_WIDTH_SMALL)+",height="+str(self.VIDEO_HEIGHT_SMALL)+" ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
 			v4l2 = True
 
 			videoTee = pipeline.get_by_name('videoTee_'+n)
@@ -170,7 +173,7 @@ class Glive:
 			videoTee.unlink(picQueue)
 
 		elif (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width="+str(self.ca.ui.pipw)+",height="+str(self.ca.ui.piph)+" ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
@@ -370,7 +373,7 @@ class Glive:
 			else:
 				self.record = False
 				self.audio = False
-				self.ca.m.saveVideo(self.thumbBuf, str(oggFilepath))
+				self.ca.m.saveVideo(self.thumbBuf, str(oggFilepath), self.VIDEO_WIDTH_SMALL, self.VIDEO_HEIGHT_SMALL)
 				self.ca.m.stoppedRecordingVideo()
 
 
@@ -378,7 +381,7 @@ class Glive:
 		position, duration = self.queryPosition( self.muxPipe() )
 		if position != gst.CLOCK_TIME_NONE:
 			value = position * 100.0 / duration
-			value = value/100
+			value = value/100.0
 			self.ca.ui.progressWindow.updateProgress( value, self.ca.istrSaving )
 		return True
 
@@ -415,7 +418,7 @@ class Glive:
 			muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg") #ogv
 			os.remove( wavFilepath )
 			os.remove( oggFilepath )
-			self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath))
+			self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath), self.VIDEO_WIDTH_SMALL, self.VIDEO_HEIGHT_SMALL)
 			self.ca.m.stoppedRecordingVideo()
 
 

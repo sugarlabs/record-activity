@@ -279,14 +279,14 @@ class Model:
 
 
 	def saveAudio( self, tempPath, pixbuf ):
-		print("save audio")
 		self.setUpdating( True )
 
 		recd = self.createNewRecorded( self.TYPE_AUDIO )
 		os.rename( tempPath, os.path.join(self.ca.tempPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(self.ca.tempPath, recd.thumbFilename)
-		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
+		scale = float((self.ca.ui.tw+0.0)/(pixbuf.get_width()+0.0))
+		thumbImg = self.generateThumbnail(pixbuf, scale)
 		thumbImg.write_to_png(thumbPath)
 
 		imagePath = os.path.join(self.ca.tempPath, "audioPicture.png")
@@ -341,12 +341,13 @@ class Model:
 		self.ca.glive.stopRecordingVideo()
 
 
-	def saveVideo( self, pixbuf, tempPath ):
+	def saveVideo( self, pixbuf, tempPath, wid, hit ):
 		recd = self.createNewRecorded( self.TYPE_VIDEO )
 		os.rename( tempPath, os.path.join(self.ca.tempPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(self.ca.tempPath, recd.thumbFilename)
-		thumbImg = self.generateThumbnail(pixbuf, float(.66875) ) #todo: dynamic creation of this ratio
+		scale = float((self.ca.ui.tw+0.0)/(wid+0.0))
+		thumbImg = self.generateThumbnail(pixbuf, scale )
 		thumbImg.write_to_png(thumbPath)
 
 		self.createNewRecordedMd5Sums( recd )
@@ -403,9 +404,11 @@ class Model:
 		pixbuf.save( imgpath, "jpeg" )
 
 		thumbpath = os.path.join(self.ca.tempPath, recd.thumbFilename)
-		#todo: generate this dynamically
-		thumbImg = self.generateThumbnail(pixbuf, float(0.1671875))
+		scale = float((self.ca.ui.tw+0.0)/(pixbuf.get_width()+0.0))
+		thumbImg = self.generateThumbnail(pixbuf, scale)
 		thumbImg.write_to_png(thumbpath)
+
+		gc.collect()
 
 		#now that we've saved both the image and its pixbuf, we get their md5s
 		self.createNewRecordedMd5Sums( recd )
@@ -458,8 +461,7 @@ class Model:
 		self.mediaHashs[recd.type].append( recd )
 
 		#updateUi
-		#todo: gobject idle?
-		self.thumbAdded( recd.type )
+		gobject.idle_add( self.thumbAdded, recd.type )
 
 
 	def createNewRecorded( self, type ):
@@ -533,10 +535,12 @@ class Model:
 		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.tw, self.ca.ui.th)
 		tctx = cairo.Context(thumbImg)
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-
 		tctx.scale(scale, scale)
 		tctx.set_source_surface(img, 0, 0)
 		tctx.paint()
+
+		gc.collect()
+
 		return thumbImg
 
 

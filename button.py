@@ -23,50 +23,43 @@ class RecdButton(TrayButton, gobject.GObject):
 
 
 	def getImg( self ):
-		#todo: remove mem refs
-
 		img = gtk.Image()
 		ipb = self.recd.getThumbPixbuf()
+		xoff = 0
+		yoff = 0
+		pb = None
 		if (self.recd.type == self.ui.ca.m.TYPE_PHOTO):
+			xoff = 8
+			yoff = 8
 			if (self.recd.buddy):
 				thumbPhotoSvg = self.ui.loadSvg(self.ui.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbPhotoSvg.get_pixbuf()
-				img.set_from_pixbuf( pb )
-				img.show()
-				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
 			else:
 				pb = self.ui.thumbPhotoSvg.get_pixbuf()
-				img.set_from_pixbuf( pb )
-				img.show()
-				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
 
-		if (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
+		elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
+			xoff = 8
+			yoff = 22
 			if (self.recd.buddy):
 				thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbVideoSvg.get_pixbuf()
-				img.set_from_pixbuf( pb )
-				img.show()
-				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
 			else:
 				pb = self.ui.thumbVideoSvg.get_pixbuf()
-				img.set_from_pixbuf( pb )
-				img.show()
-				ipb.composite(pb, 8, 22, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
 
-		if (self.recd.type == self.ui.ca.m.TYPE_AUDIO):
+		elif (self.recd.type == self.ui.ca.m.TYPE_AUDIO):
 			if (self.recd.buddy):
 				thumbAudioSvg = self.ui.loadSvg(self.ui.thumbAudioSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbAudioSvg.get_pixbuf()
-				img.set_from_pixbuf( pb )
-				img.show()
-				ipb.composite(pb, 8, 8, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
 			else:
 				pb = self.ui.thumbVideoSvg.get_pixbuf()
-				img.set_from_pixbuf( pb )
-				img.show()
-				ipb.composite(pb, 8, 22, ipb.get_width(), ipb.get_height(), 0, 0, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
 
+		img.set_from_pixbuf( pb )
+		img.show()
+		ipb.composite(pb, xoff, yoff, ipb.get_width(), ipb.get_height(), xoff, yoff, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
 		img.set_from_pixbuf(pb)
+
+		gc.collect()
+
 		return img
 
 
