@@ -194,7 +194,7 @@ class Model:
 		if (update):
 			self.ca.ui.updateModeChange()
 		self.setUpdating(False)
- 		self.ca.ui.debugWindows()
+ 		#self.ca.ui.debugWindows()
 
 
 	def showNextThumb( self, shownRecd ):
@@ -268,7 +268,6 @@ class Model:
 
 
 	def stopRecordingAudio( self ):
-		print("stop recording audio")
 		gobject.source_remove( self.ca.ui.UPDATE_RECORDING_ID )
 		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.ca.ui.TRANSCODING = True

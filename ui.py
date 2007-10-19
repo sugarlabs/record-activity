@@ -1080,15 +1080,12 @@ class UI:
 
 
 	def updateVideoComponents( self ):
-		print("uvc 1")
 		if (	(self.LAST_MODE == self.ca.m.MODE)
 				and (self.LAST_FULLSCREEN == self.FULLSCREEN)
 				and (self.LAST_LIVE == self.LIVEMODE)
 				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)
 				and (self.LAST_TRANSCODING == self.TRANSCODING)):
 			return
-
-		print( "uvc 2", self.TRANSCODING )
 
 		#something's changing so start counting anew
 		self.resetWidgetFadeTimer()
@@ -1146,14 +1143,20 @@ class UI:
 					pos.append({"position":"inf", "window":self.infWindow} )
 		elif (self.TRANSCODING):
 			#todo: enlarge
+			print("transcoding...")
 			pos.append({"position":"prg", "window":self.progressWindow} )
+
+		for i in range (0, len(self.windowStack)):
+			self.windowStack[i].hide_all()
 
 		#todo: only move away the windows *not* moved in the call below:
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 		self.hideAudioWindows()
-
 		self.updatePos( pos )
+
+		for i in range (0, len(self.windowStack)):
+			self.windowStack[i].show_all()
 
 		self.LAST_MODE = self.ca.m.MODE
 		self.LAST_FULLSCREEN = self.FULLSCREEN
@@ -1780,6 +1783,7 @@ class ProgressWindow(gtk.Window):
 
 
 	def updateProgress( self, amt, str ):
+		print("update: ", amt, str )
 		self.progBar.set_fraction( amt )
 		if (str != None and str != self.str):
 			self.str = str
