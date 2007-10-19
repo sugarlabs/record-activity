@@ -581,7 +581,6 @@ class Model:
 
 		self.MODE = self.MODE_PHOTO
 		self.setUpdating(True)
-		print("doPhotoMode")
 		gobject.idle_add( self.setupMode, self.MODE, True )
 
 

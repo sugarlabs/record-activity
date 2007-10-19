@@ -692,6 +692,11 @@ class UI:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
 
+	def hideAllWindows( self ):
+		for i in range (0, len(self.windowStack)):
+			self.moveWinOffscreen( self.windowStack[i] )
+
+
 	def hideLiveWindows( self ):
 		self.moveWinOffscreen( self.livePhotoWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
@@ -1143,16 +1148,12 @@ class UI:
 					pos.append({"position":"inf", "window":self.infWindow} )
 		elif (self.TRANSCODING):
 			#todo: enlarge
-			print("transcoding...")
 			pos.append({"position":"prg", "window":self.progressWindow} )
 
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].hide_all()
 
-		#todo: only move away the windows *not* moved in the call below:
-		self.hideLiveWindows()
-		self.hidePlayWindows()
-		self.hideAudioWindows()
+		self.hideAllWindows()
 		self.updatePos( pos )
 
 		for i in range (0, len(self.windowStack)):
@@ -1783,7 +1784,6 @@ class ProgressWindow(gtk.Window):
 
 
 	def updateProgress( self, amt, str ):
-		print("update: ", amt, str )
 		self.progBar.set_fraction( amt )
 		if (str != None and str != self.str):
 			self.str = str
