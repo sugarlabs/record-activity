@@ -1104,7 +1104,7 @@ class UI:
 					timerTime = self.photoToolbar.getTimer()
 				elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 					timerTime = self.videoToolbar.getTimer()
-				elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
+				elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 					timerTime = self.audioToolbar.getTimer()
 
 				if (timerTime > 0):
@@ -1140,7 +1140,7 @@ class UI:
 			timerTime = self.photoToolbar.getTimer()
 		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 			timerTime = self.videoToolbar.getTimer()
-		elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
+		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			timerTime = self.audioToolbar.getTimer()
 
 		if (passedTime >= timerTime):

@@ -19,8 +19,7 @@ class RecdButton(TrayButton, gobject.GObject):
 		self.set_icon_widget( img )
 
 		self.setup_rollover_options( recd.title )
-		#todo: add drag and drop
-		#todo: add copy to clipboard only when available!
+		#todo: add copy to clipboard only when available from the mesh
 
 
 	def getImg( self ):
@@ -48,6 +47,8 @@ class RecdButton(TrayButton, gobject.GObject):
 				pb = self.ui.thumbVideoSvg.get_pixbuf()
 
 		elif (self.recd.type == self.ui.ca.m.TYPE_AUDIO):
+			xoff = 8
+			yoff = 22
 			if (self.recd.buddy):
 				thumbAudioSvg = self.ui.loadSvg(self.ui.thumbAudioSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbAudioSvg.get_pixbuf()
