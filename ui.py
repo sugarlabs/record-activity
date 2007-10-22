@@ -1109,7 +1109,7 @@ class UI:
 
 				if (timerTime > 0):
 					self.COUNTINGDOWN = True
-					self.updateVideoComponents()
+					self.updateCountdownComponents()
 					self.timerStartTime = time.time()
 					self.UPDATE_TIMER_ID = gobject.timeout_add( 500, self._updateTimerCb )
 				else:
@@ -1160,7 +1160,24 @@ class UI:
 
 		self.ca.m.doShutter()
 		self.COUNTINGDOWN = False
-		self.updateVideoComponents()
+		self.updateCountdownComponents()
+
+
+	def updateCountdownComponents( self ):
+		if (not self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			return
+
+		if (self.LAST_COUNTINGDOWN != self.COUNTINGDOWN):
+			pos = []
+			if (self.COUNTINGDOWN):
+				pos.append({"position":"tmr", "window":self.progressWindow} )
+				self.moveWinOffscreen(self.recordWindow)
+			else:
+				pos.append({"position":"eye", "window":self.recordWindow} )
+				self.moveWinOffscreen(self.progressWindow)
+
+			self.updatePos( pos )
+			self.LAST_COUNTINGDOWN = self.COUNTINGDOWN
 
 
 	def updateVideoComponents( self ):
@@ -1169,8 +1186,7 @@ class UI:
 				and (self.LAST_LIVE == self.LIVEMODE)
 				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)
 				and (self.LAST_TRANSCODING == self.TRANSCODING)
-				and ((self.LAST_COUNTINGDOWN == self.COUNTINGDOWN) and (self.ca.m.MODE == self.ca.m.MODE_PHOTO))
-					):
+			):
 			return
 
 		#something's changing so start counting anew
@@ -1249,7 +1265,6 @@ class UI:
 		self.LAST_LIVE = self.LIVEMODE
 		self.LAST_RECD_INFO = self.RECD_INFO_ON
 		self.LAST_TRANSCODING = self.TRANSCODING
-		self.LAST_COUNTINGDOWN = self.COUNTINGDOWN
 
 
 	def debugWindows( self ):
