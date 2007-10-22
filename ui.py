@@ -607,7 +607,6 @@ class UI:
 
 		tempImgPath = os.path.join( self.ca.tempPath, recd.mediaFilename)
 		tempImgPath = self.ca.m.getUniqueFilepath(tempImgPath,0)
-		print( imgPath_s, " -- ", tempImgPath )
 		shutil.copyfile( imgPath_s, tempImgPath )
 		return tempImgPath
 
@@ -777,21 +776,21 @@ class UI:
 	def _updateDurationCb( self ):
 		passedTime = time.time() - self.recTime
 
-		duration = 10000.0
+		duration = 10.0
 		if (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-			duration = (self.videoToolbar.getDuration()*1000)+0.0
+			duration = self.videoToolbar.getDuration()+0.0
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
-			duration = (self.audioToolbar.getDuration()*1000)+0.0
+			duration = self.audioToolbar.getDuration()+0.0
 
 		if (passedTime >= duration ):
-			if (self.ca.m.RECORDING):
-				self.doShutter( None )
-			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
-
 			gobject.source_remove( self.UPDATE_DURATION_ID )
+			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
+			if (self.ca.m.RECORDING):
+				gobject.idle_add( self.doShutter )
+
 			return False
 		else:
-			secsRemaining = (duration - passedTime)/1000
+			secsRemaining = duration - passedTime
 			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
 			return True
 
@@ -1106,7 +1105,6 @@ class UI:
 			elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
 				timerTime = self.audioToolbar.getTimer()
 
-			print( "timerTime", timerTime )
 			if (timerTime > 0):
 				if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 					self.COUNTINGDOWN = True
