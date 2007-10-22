@@ -1123,7 +1123,6 @@ class UI:
 	def _updateTimerCb( self ):
 		nowTime = time.time()
 		passedTime = nowTime - self.timerStartTime
-		print( "updateTimer, passed:", passedTime )
 
 		timerTime = 0
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
@@ -1137,7 +1136,7 @@ class UI:
 			self.progressWindow.updateProgress( 1, "" )
 			gobject.source_remove( self.UPDATE_TIMER_ID )
 			self.UPDATE_TIMER_ID = 0
-			self.clickShutter()
+			gobject.idle_add( self.clickShutter )
 			return False
 		else:
 			secsRemaining = timerTime-passedTime
