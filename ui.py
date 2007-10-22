@@ -1735,12 +1735,11 @@ class xoPanel(P5):
 
 	def draw(self, ctx, w, h):
 		#todo: 2x buffer
-
 		self.background( ctx, self.ui.colorHilite, w, h )
 
 		if (self.xoGuy != None):
 			#todo: scale mr xo
-			ctx.scale( .5, .5 )
+			ctx.scale( .6, .6 )
 			self.xoGuy.render_cairo( ctx )
 
 

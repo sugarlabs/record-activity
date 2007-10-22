@@ -99,6 +99,10 @@ class RecordActivity(activity.Activity):
 		self.istrRotate = _("Rotate")
 		self.istrClickToTakePicture = _("Click to take picture")
 		self.istrClickToAddPicture = _("Click to add picture")
+		#TRANS: Downloading Photo from Mary
+		self.istrDownloadingFrom = _("Downloading %(1)s from %(2)s")
+		#TRANS: Cannot download this Photo
+		self.istrCannotDownload = _("Cannot download this %(1)s")
 
 
 		self.recdTitle = "title"
