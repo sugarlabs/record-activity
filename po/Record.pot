@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-16 16:21-0400\n"
+"POT-Creation-Date: 2007-10-22 13:38-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -177,4 +177,16 @@ msgstr ""
 
 #: RecordActivity.py:101
 msgid "Click to add picture"
+msgstr ""
+
+#. TRANS: Downloading Photo from Mary
+#: RecordActivity.py:103
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr ""
+
+#. TRANS: Cannot download this Photo
+#: RecordActivity.py:105
+#, python-format
+msgid "Cannot download this %(1)s"
 msgstr ""
