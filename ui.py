@@ -439,6 +439,9 @@ class UI:
 
 		#remove, then add
 		self.doMouseListener( False )
+		if (self.HIDE_WIDGET_TIMEOUT_ID != 0):
+			gobject.source_remove( self.HIDE_WIDGET_TIMEOUT_ID)
+
 		self.HIDE_WIDGET_TIMEOUT_ID = gobject.timeout_add( 500, self._mouseMightaMovedCb )
 
 
@@ -455,7 +458,6 @@ class UI:
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
-		self.moveWinOffscreen( self.infWindow )
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.liveVideoWindow )
@@ -484,7 +486,7 @@ class UI:
 			self.hideWidgetsTimer = time.time()
 			passedTime = 0
 
-		if (passedTime > 2000):
+		if (passedTime >= 2):
 			if (not self.hiddenWidgets):
 				if (self.mouseInWidget(x,y)):
 					self.hideWidgetsTimer = time.time()
