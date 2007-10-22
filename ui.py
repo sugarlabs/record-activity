@@ -76,7 +76,9 @@ class UI:
 		self.LAST_LIVE = True
 		self.LAST_RECD_INFO = False
 		self.LAST_TRANSCODING = False
+		self.LAST_COUNTINGDOWN = False
 		self.TRANSCODING = False
+		self.COUNTINGDOWN = False
 		self.RECD_INFO_ON = False
 		self.UPDATE_DURATION_ID = 0
 		self.UPDATE_TIMER_ID = 0
@@ -859,6 +861,13 @@ class UI:
 		self.smartMove( win, prgLoc[0], prgLoc[1] )
 
 
+	def setTmrLocDim( self, win ):
+		tmrDim = self.getTmrDim( self.FULLSCREEN )
+		self.smartResize( win, tmrDim[0], tmrDim[1] )
+		tmrLoc = self.getTmrLoc( self.FULLSCREEN )
+		self.smartMove( win, tmrLoc[0], tmrLoc[1] )
+
+
 	def getImgDim( self, full ):
 		if (full):
 			return [gtk.gdk.screen_width(), gtk.gdk.screen_height()]
@@ -871,6 +880,20 @@ class UI:
 			return[0, 0]
 		else:
 			return[self.centerBoxPos[0], self.centerBoxPos[1]]
+
+
+	def getTmrLoc( self, full ):
+		if (not full):
+			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
+		else:
+			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
+
+
+	def getTmrDim( self, full ):
+		if (not full):
+			return [self.vw, self.controlBarHt]
+		else:
+			return [gtk.gdk.screen_width()-(self.inset+self.inset), self.controlBarHt]
 
 
 	def setPipLocDim( self, win ):
@@ -1085,6 +1108,9 @@ class UI:
 
 			print( "timerTime", timerTime )
 			if (timerTime > 0):
+				if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+					self.COUNTINGDOWN = True
+				self.updateVideoComponents()
 				self.timerStartTime = time.time()
 				self.UPDATE_TIMER_ID = gobject.timeout_add( 500, self._updateTimerCb )
 			else:
@@ -1114,17 +1140,20 @@ class UI:
 			self.clickShutter()
 			return False
 		else:
-			secsRemaining = 
+			secsRemaining = timerTime-passesdTime
 			self.progressWindow.updateProgress( passedTime/timerTime, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
 			return True
 
 
 	def clickShutter( self ):
 		if (not self.ca.m.RECORDING): #don't append a sound to the end of a video or audio.  maybe play a click afterwards?
+			#todo: make smaller button click sound
 			clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
 			os.system( "aplay -t wav " + str(clickWav) )
 
 		self.ca.m.doShutter()
+		self.COUNTINGDOWN = False
+		self.updateVideoComponents
 
 
 	def updateVideoComponents( self ):
@@ -1132,7 +1161,8 @@ class UI:
 				and (self.LAST_FULLSCREEN == self.FULLSCREEN)
 				and (self.LAST_LIVE == self.LIVEMODE)
 				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)
-				and (self.LAST_TRANSCODING == self.TRANSCODING)):
+				and (self.LAST_TRANSCODING == self.TRANSCODING)
+				and (self.LAST_COUNTINGDOWN == self.COUNTINGDOWN)):
 			return
 
 		#something's changing so start counting anew
@@ -1158,9 +1188,14 @@ class UI:
 		elif (not self.RECD_INFO_ON and not self.TRANSCODING):
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				if (self.LIVEMODE):
-					pos.append({"position":"img", "window":self.liveVideoWindow})
-					pos.append({"position":"max", "window":self.maxWindow} )
-					pos.append({"position":"eye", "window":self.recordWindow} )
+					if (not self.COUNTINGDOWN):
+						pos.append({"position":"img", "window":self.liveVideoWindow} )
+						pos.append({"position":"max", "window":self.maxWindow} )
+						pos.append({"position":"eye", "window":self.recordWindow} )
+					else:
+						pos.append({"position":"img", "window":self.liveVideoWindow} )
+						pos.append({"position":"max", "window":self.maxWindow} )
+						pos.append({"position":"tmr", "window":self.progressWindow} )
 				else:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
@@ -1190,8 +1225,7 @@ class UI:
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"inf", "window":self.infWindow} )
 		elif (self.TRANSCODING):
-			#todo: enlarge
-			pos.append({"position":"prg", "window":self.progressWindow} )
+			pos.append({"position":"tmr", "window":self.progressWindow} )
 
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].hide_all()
@@ -1207,6 +1241,7 @@ class UI:
 		self.LAST_LIVE = self.LIVEMODE
 		self.LAST_RECD_INFO = self.RECD_INFO_ON
 		self.LAST_TRANSCODING = self.TRANSCODING
+		self.LAST_COUNTINGDOWN = self.COUNTINGDOWN
 
 
 	def debugWindows( self ):
@@ -1268,6 +1303,8 @@ class UI:
 						self.setInbLocDim( pos[j]["window"])
 					elif (pos[j]["position"] == "prg"):
 						self.setPrgLocDim( pos[j]["window"])
+					elif (pos[j]["position"] == "tmr"):
+						self.setTmrLocDim( pos[j]["window"])
 
 
 	def removeThumb( self, recd ):
