@@ -792,7 +792,7 @@ class UI:
 			return False
 		else:
 			secsRemaining = (duration - passedTime)/1000
-			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
+			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
 			return True
 
 
@@ -1133,15 +1133,15 @@ class UI:
 		elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
 			timerTime = self.audioToolbar.getTimer()
 
-		if (timePassed >= timerTime):
+		if (passedTime >= timerTime):
 			self.progressWindow.updateProgress( 1, "" )
 			gobject.source_remove( self.UPDATE_TIMER_ID )
 			self.UPDATE_TIMER_ID = 0
 			self.clickShutter()
 			return False
 		else:
-			secsRemaining = timerTime-passesdTime
-			self.progressWindow.updateProgress( passedTime/timerTime, self.ca.istrSecondsRemaining % {"1":str(secsRemaining)} )
+			secsRemaining = timerTime-passedTime
+			self.progressWindow.updateProgress( passedTime/timerTime, self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
 			return True
 
 
@@ -1153,7 +1153,7 @@ class UI:
 
 		self.ca.m.doShutter()
 		self.COUNTINGDOWN = False
-		self.updateVideoComponents
+		self.updateVideoComponents()
 
 
 	def updateVideoComponents( self ):
