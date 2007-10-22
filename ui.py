@@ -791,7 +791,7 @@ class UI:
 			return False
 		else:
 			secsRemaining = duration - passedTime
-			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
+			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrDuration + " " + self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
 			return True
 
 
@@ -1148,7 +1148,7 @@ class UI:
 			return False
 		else:
 			secsRemaining = timerTime-passedTime
-			self.progressWindow.updateProgress( passedTime/timerTime, self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
+			self.progressWindow.updateProgress( passedTime/timerTime, self.ca.istrTimer + " " + self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
 			return True
 
 
