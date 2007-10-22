@@ -1097,25 +1097,38 @@ class UI:
 
 	def doShutter( self ):
 		if (self.UPDATE_TIMER_ID == 0):
-			timerTime = 0
-			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
-				timerTime = self.photoToolbar.getTimer()
-			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
-				timerTime = self.videoToolbar.getTimer()
-			elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
-				timerTime = self.audioToolbar.getTimer()
-
-			if (timerTime > 0):
+			if (not self.ca.m.RECORDING):
+				#there is no update timer running, so we need to find out if there is a timer needed
+				timerTime = 0
 				if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+					timerTime = self.photoToolbar.getTimer()
+				elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+					timerTime = self.videoToolbar.getTimer()
+				elif (self.ca.m.MODE == self.c.am.MODE_AUDIO):
+					timerTime = self.audioToolbar.getTimer()
+
+				if (timerTime > 0):
 					self.COUNTINGDOWN = True
-				self.updateVideoComponents()
-				self.timerStartTime = time.time()
-				self.UPDATE_TIMER_ID = gobject.timeout_add( 500, self._updateTimerCb )
+					self.updateVideoComponents()
+					self.timerStartTime = time.time()
+					self.UPDATE_TIMER_ID = gobject.timeout_add( 500, self._updateTimerCb )
+				else:
+					self.clickShutter()
 			else:
+				#or, if there is no countdown, it might be because we are recording
 				self.clickShutter()
 
+
 		else:
-			self.clickShutter()
+			#we're timing down something, but interrupted by user click or the timer completing
+			self._completeTimer()
+			gobject.idle_add( self.clickShutter )
+
+
+	def _completeTimer( self ):
+		self.progressWindow.updateProgress( 1, "" )
+		gobject.source_remove( self.UPDATE_TIMER_ID )
+		self.UPDATE_TIMER_ID = 0
 
 
 	def _updateTimerCb( self ):
@@ -1131,10 +1144,7 @@ class UI:
 			timerTime = self.audioToolbar.getTimer()
 
 		if (passedTime >= timerTime):
-			self.progressWindow.updateProgress( 1, "" )
-			gobject.source_remove( self.UPDATE_TIMER_ID )
-			self.UPDATE_TIMER_ID = 0
-			gobject.idle_add( self.clickShutter )
+			self.doShutter()
 			return False
 		else:
 			secsRemaining = timerTime-passedTime
@@ -1159,7 +1169,8 @@ class UI:
 				and (self.LAST_LIVE == self.LIVEMODE)
 				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)
 				and (self.LAST_TRANSCODING == self.TRANSCODING)
-				and (self.LAST_COUNTINGDOWN == self.COUNTINGDOWN)):
+				and ((self.LAST_COUNTINGDOWN == self.COUNTINGDOWN) and (self.ca.m.MODE == self.ca.m.MODE_PHOTO))
+					):
 			return
 
 		#something's changing so start counting anew
