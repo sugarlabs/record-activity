@@ -231,11 +231,13 @@ class UI:
 		rightNamePanel = gtk.VBox()
 		rightNamePanel.set_size_request( 10, -1 )
 		self.namePanel.pack_start( rightNamePanel, expand=True )
-		self.infButton = InfButton( self )
-		self.namePanel.pack_start( self.infButton, expand=False )
+		infButton = InfButton( self )
+		self.namePanel.pack_start( infButton, expand=False )
 
 		self.scrubberPanel = gtk.HBox()
-		self.scrubberPanel.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+		infButtonScrubber = InfButton( self )
+		self.scrubberPanel.pack_start( infButtonScrubber, expand=False )
+
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
@@ -1154,11 +1156,11 @@ class UI:
 
 	def clickShutter( self ):
 		if (not self.ca.m.RECORDING): #don't append a sound to the end of a video or audio.  maybe play a click afterwards?
-			#todo: make smaller button click sound
 			clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
 			os.system( "aplay -t wav " + str(clickWav) )
 
 		self.ca.m.doShutter()
+		#todo: play click sound after recording video/audio
 		self.COUNTINGDOWN = False
 		self.updateCountdownComponents()
 
@@ -1399,7 +1401,12 @@ class UI:
 		bottomKid = self.bottomCenter.get_child()
 		if (bottomKid != None):
 			self.bottomCenter.remove( bottomKid )
-		self.bottomCenter.add( self.namePanel )
+
+		if (recd.type == self.ca.m.TYPE_PHOTO):
+			self.bottomCenter.add( self.namePanel )
+		elif (recd.type == self.ca.m.TYPE_VIDEO or recd.type == self.ca.m.TYPE_AUDIO):
+			self.bottomCenter.add( self.scrubberPanel )
+			print("added scrubber panel")
 		self.bottomCenter.show_all()
 
 		self.resetWidgetFadeTimer()
