@@ -84,6 +84,21 @@ class Gplay:
 			self.play()
 
 
+	def queryPosition(self):
+		"Returns a (position, duration) tuple"
+		try:
+			position, format = self.getPlayer().query_position(gst.FORMAT_TIME)
+		except:
+			position = gst.CLOCK_TIME_NONE
+
+		try:
+			duration, format = self.getPlayer().query_duration(gst.FORMAT_TIME)
+		except:
+			duration = gst.CLOCK_TIME_NONE
+
+		return (position, duration)
+
+
 	def seek(self, location):
 		event = gst.event_new_seek(1.0, gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE, gst.SEEK_TYPE_SET, location, gst.SEEK_TYPE_NONE, 0)
 		res = self.getPlayer().send_event(event)

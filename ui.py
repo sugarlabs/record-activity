@@ -1859,11 +1859,11 @@ class ScrubberWindow(gtk.Window):
 
 
 	def set_button_play(self):
-		self.button.set_icon_widget(self.play_image)
+		self.button.set_image(self.play_image)
 
 
 	def set_button_pause(self):
-		self.button.set_icon_widget(self.pause_image)
+		self.button.set_image(self.pause_image)
 
 
 	def play_toggled(self):
@@ -1920,7 +1920,7 @@ class ScrubberWindow(gtk.Window):
 
 
 	def _updateScaleCb(self):
-		self.p_position, self.p_duration = self.ui.ca.gplay.query_position()
+		self.p_position, self.p_duration = self.ui.ca.gplay.queryPosition()
 		if self.p_position != gst.CLOCK_TIME_NONE:
 			value = self.p_position * 100.0 / self.p_duration
 			self.adjustment.set_value(value)
