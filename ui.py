@@ -236,6 +236,8 @@ class UI:
 
 		self.scrubberPanel = gtk.HBox()
 		infButtonScrubber = InfButton( self )
+		leftFill = gtk.HBox()
+		self.scrubberPanel.pack_start( leftFill, expand=True )
 		self.scrubberPanel.pack_start( infButtonScrubber, expand=False )
 
 
@@ -1261,6 +1263,8 @@ class UI:
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"scr", "window":self.scrubWindow} )
 		elif (self.TRANSCODING):
+			if (self.FULLSCREEN):
+				pos.append({"position":"img", "window":self.livePhotoWindow} )
 			pos.append({"position":"tmr", "window":self.progressWindow} )
 
 		for i in range (0, len(self.windowStack)):
@@ -1394,6 +1398,7 @@ class UI:
 
 
 	def showPostProcessGfx( self, show ):
+		#not self.FULLSCREEN
 		centerKid = self.centerBox.get_child()
 		if (centerKid != None):
 			self.centerBox.remove( centerKid )
@@ -1401,6 +1406,12 @@ class UI:
 		if ( show ):
 			self.centerBox.add( self.backgdCanvasBox )
 			self.centerBox.show_all()
+
+		#else
+		#camImgFile = os.path.join(self.ca.gfxPath, 'device-camera.png')
+		#pixbuf = gtk.gdk.pixbuf_new_from_file(camImgFile)
+		#img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+		#self.livePhotoCanvas.setImage( img )
 
 
 	def showThumbSelection( self, recd ):
@@ -1422,7 +1433,6 @@ class UI:
 			self.bottomCenter.add( self.namePanel )
 		elif (recd.type == self.ca.m.TYPE_VIDEO or recd.type == self.ca.m.TYPE_AUDIO):
 			self.bottomCenter.add( self.scrubberPanel )
-			print("added scrubber panel")
 		self.bottomCenter.show_all()
 
 		self.resetWidgetFadeTimer()
@@ -1772,6 +1782,30 @@ class ScrubberWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
+		self.hbox = gtk.HBox()
+		self.add( self.hbox )
+
+		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
+		self.pause_image.show()
+		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
+		self.play_image.show()
+
+		self.button = gtk.Button()
+		self.button.set_icon_widget(self.play_image)
+		self.button.set_property('can-default', True)
+		self.button.show()
+		#self.button.connect('clicked', self._button_clicked_cb)
+
+		self.hbox.pack_start(self.button, expand=False)
+
+		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
+		self.hscale = gtk.HScale(self.adjustment)
+		self.hscale.set_draw_value(False)
+		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+		#self.hscale.connect('button-press-event', self.scale_button_press_cb)
+		#self.hscale.connect('button-release-event', self.scale_button_release_cb)
+		self.pack_start(self.hscale, expand=True)
+
 
 
 class MaxWindow(gtk.Window):
