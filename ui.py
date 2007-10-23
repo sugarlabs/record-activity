@@ -24,7 +24,11 @@ from gtk import keysyms
 import gobject
 import cairo
 import os
+
+import pygst
+pygst.require('0.10')
 import gst
+import gst.interfaces
 
 #parse svg
 import rsvg
@@ -38,6 +42,8 @@ from time import strftime
 import math
 import shutil
 import time
+
+from sugar.graphics.toolcombobox import ToolComboBox
 
 import pygst
 pygst.require('0.10')
@@ -359,14 +365,14 @@ class UI:
 		self.pipBgdWindow = PipWindow(self)
 		self.addToWindowStack( self.pipBgdWindow, self.windowStack[len(self.windowStack)-1] )
 
-		self.liveVideoWindow = LiveVideoWindow()
+		self.liveVideoWindow = LiveVideoWindow(self.colorBlack.gColor)
 		self.addToWindowStack( self.liveVideoWindow, self.windowStack[len(self.windowStack)-1] )
 		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self._liveButtonReleaseCb)
 
 		#video playback windows
-		self.playOggWindow = PlayVideoWindow()
+		self.playOggWindow = PlayVideoWindow(self.colorBlack.gColor)
 		self.addToWindowStack( self.playOggWindow, self.windowStack[len(self.windowStack)-1] )
 		self.playOggWindow.set_gplay(self.ca.gplay)
 		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
@@ -376,7 +382,7 @@ class UI:
 		self.pipBgdWindow2 = PipWindow(self)
 		self.addToWindowStack( self.pipBgdWindow2, self.windowStack[len(self.windowStack)-1] )
 
-		self.playLiveWindow = LiveVideoWindow()
+		self.playLiveWindow = LiveVideoWindow(self.colorBlack.gColor)
 		self.addToWindowStack( self.playLiveWindow, self.windowStack[len(self.windowStack)-1] )
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
@@ -1875,7 +1881,7 @@ class ScrubberWindow(gtk.Window):
 			self.set_button_pause()
 
 
-	def scale_button_press_cb(self, widget, event):
+	def _scaleButtonPressCb(self, widget, event):
 		self.button.set_sensitive(False)
 		self.was_playing = self.ui.ca.gplay.is_playing()
 		if self.was_playing:
@@ -1891,7 +1897,7 @@ class ScrubberWindow(gtk.Window):
 			self.CHANGED_ID = self.hscale.connect('value-changed', self.scale_value_changed_cb)
 
 
-	def scale_button_release_cb(self, widget, event):
+	def _scaleButtonReleaseCb(self, widget, event):
 		# see seek.cstop_seek
 		widget.disconnect(self.CHANGED_ID)
 		self.CHANGED_ID = -1
@@ -2086,28 +2092,19 @@ class PhotoToolbar(gtk.Toolbar):
 		self.insert(separator, -1)
 		separator.show()
 
-		timerLabel = gtk.Label( self.ui.ca.istrTimer )
-		timerLabelItem = gtk.ToolItem()
-		timerLabelItem.add( timerLabel )
-		timerLabelItem.set_expand(False)
-		self.insert( timerLabelItem, -1 )
-		self.timerCb = gtk.combo_box_new_text()
-
+		timerCbb = gtk.combo_box_new_text()
+		self.timerCb = ToolComboBox(combo=timerCbb, label_text=self.ui.ca.istrTimer)
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
 			if (i == 0):
-				self.timerCb.append_text( self.ui.ca.istrNow )
+				self.timerCb.combo.append_text( self.ui.ca.istrNow )
 			else:
-				self.timerCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
-		self.timerCb.set_active(0)
-
-		timerItem = gtk.ToolItem()
-		timerItem.set_expand(False)
-		timerItem.add(self.timerCb)
-		self.insert( timerItem, -1 )
+				self.timerCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
+		self.timerCb.combo.set_active(0)
+		self.insert( self.timerCb, -1 )
 
 
 	def getTimer(self):
-		return self.ui.ca.m.TIMERS[self.timerCb.get_active()]
+		return self.ui.ca.m.TIMERS[self.timerCb.combo.get_active()]
 
 
 class VideoToolbar(gtk.Toolbar):
@@ -2127,24 +2124,15 @@ class VideoToolbar(gtk.Toolbar):
 		self.insert(separator, -1)
 		separator.show()
 
-		timerLabel = gtk.Label( self.ui.ca.istrTimer )
-		timerLabelItem = gtk.ToolItem()
-		timerLabelItem.add( timerLabel )
-		timerLabelItem.set_expand(False)
-		self.insert( timerLabelItem, -1 )
-		self.timerCb = gtk.combo_box_new_text()
-
+		timerCbb = gtk.combo_box_new_text()
+		self.timerCb = ToolComboBox(combo=timerCbb, label_text=self.ui.ca.istrTimer)
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
 			if (i == 0):
-				self.timerCb.append_text( self.ui.ca.istrNow )
+				self.timerCb.combo.append_text( self.ui.ca.istrNow )
 			else:
-				self.timerCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
-		self.timerCb.set_active(0)
-
-		timerItem = gtk.ToolItem()
-		timerItem.set_expand(False)
-		timerItem.add(self.timerCb)
-		self.insert( timerItem, -1 )
+				self.timerCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
+		self.timerCb.combo.set_active(0)
+		self.insert( self.timerCb, -1 )
 
 		separator2 = gtk.SeparatorToolItem()
 		separator2.set_draw(False)
@@ -2152,29 +2140,20 @@ class VideoToolbar(gtk.Toolbar):
 		separator2.set_size_request( self.ui.inset, -1 )
 		self.insert( separator2, -1 )
 
-		durLabel = gtk.Label( self.ui.ca.istrDuration )
-		durLabelItem = gtk.ToolItem()
-		durLabelItem.add( durLabel )
-		durLabelItem.set_expand(False)
-		self.insert( durLabelItem, -1 )
-		self.durCb = gtk.combo_box_new_text()
-
+		durCbb = gtk.combo_box_new_text()
+		self.durCb = ToolComboBox(combo=durCbb, label_text=self.ui.ca.istrDuration)
 		for i in range (0, len(self.ui.ca.m.DURATIONS)):
-			self.durCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
-		self.durCb.set_active(0)
-
-		durItem = gtk.ToolItem()
-		durItem.set_expand(False)
-		durItem.add(self.durCb)
-		self.insert(durItem, -1 )
+			self.durCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
+		self.durCb.combo.set_active(0)
+		self.insert(self.durCb, -1 )
 
 
 	def getTimer(self):
-		return self.ui.ca.m.TIMERS[self.timerCb.get_active()]
+		return self.ui.ca.m.TIMERS[self.timerCb.combo.get_active()]
 
 
 	def getDuration(self):
-		return self.ui.ca.m.DURATIONS[self.durCb.get_active()]
+		return self.ui.ca.m.DURATIONS[self.durCb.combo.get_active()]
 
 
 class AudioToolbar(gtk.Toolbar):
@@ -2194,24 +2173,15 @@ class AudioToolbar(gtk.Toolbar):
 		self.insert(separator, -1)
 		separator.show()
 
-		timerLabel = gtk.Label( self.ui.ca.istrTimer )
-		timerLabelItem = gtk.ToolItem()
-		timerLabelItem.add( timerLabel )
-		timerLabelItem.set_expand(False)
-		self.insert( timerLabelItem, -1 )
-		self.timerCb = gtk.combo_box_new_text()
-
+		timerCbb = gtk.combo_box_new_text()
+		self.timerCb = ToolComboBox(combo=timerCbb, label_text=self.ui.ca.istrTimer)
 		for i in range (0, len(self.ui.ca.m.TIMERS)):
 			if (i == 0):
-				self.timerCb.append_text( self.ui.ca.istrNow )
+				self.timerCb.combo.append_text( self.ui.ca.istrNow )
 			else:
-				self.timerCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
-		self.timerCb.set_active(0)
-
-		timerItem = gtk.ToolItem()
-		timerItem.set_expand(False)
-		timerItem.add(self.timerCb)
-		self.insert( timerItem, -1 )
+				self.timerCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
+		self.timerCb.combo.set_active(0)
+		self.insert( self.timerCb, -1 )
 
 		separator2 = gtk.SeparatorToolItem()
 		separator2.set_draw(False)
@@ -2219,27 +2189,17 @@ class AudioToolbar(gtk.Toolbar):
 		separator2.set_size_request( self.ui.inset, -1 )
 		self.insert( separator2, -1 )
 
-		durLabel = gtk.Label( self.ui.ca.istrDuration )
-		durLabelItem = gtk.ToolItem()
-		durLabelItem.add( durLabel )
-		durLabelItem.set_expand(False)
-		self.insert( durLabelItem, -1 )
-		self.durCb = gtk.combo_box_new_text()
-
+		durCbb = gtk.combo_box_new_text()
+		self.durCb = ToolComboBox(combo=durCbb, label_text=self.ui.ca.istrDuration)
 		for i in range (0, len(self.ui.ca.m.DURATIONS)):
-			self.durCb.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
-		self.durCb.set_active(0)
-
-		self.durCb.set_active(0)
-		durItem = gtk.ToolItem()
-		durItem.set_expand(False)
-		durItem.add(self.durCb)
-		self.insert(durItem, -1 )
+			self.durCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
+		self.durCb.combo.set_active(0)
+		self.insert(self.durCb, -1 )
 
 
 	def getTimer(self):
-		return self.ui.ca.m.TIMERS[self.timerCb.get_active()]
+		return self.ui.ca.m.TIMERS[self.timerCb.combo.get_active()]
 
 
 	def getDuration(self):
-		return self.ui.ca.m.DURATIONS[self.durCb.get_active()]
+		return self.ui.ca.m.DURATIONS[self.durCb.combo.get_active()]

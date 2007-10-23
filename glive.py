@@ -452,12 +452,14 @@ class Glive:
 
 
 class LiveVideoWindow(gtk.Window):
-	def __init__(self):
+	def __init__(self, bgd ):
 		gtk.Window.__init__(self)
 
 		self.imagesink = None
 		self.glive = None
 
+		self.modify_bg( gtk.STATE_NORMAL, bgd )
+		self.modify_bg( gtk.STATE_INSENSITIVE, bgd )
 		self.unset_flags(gtk.DOUBLE_BUFFERED)
 		self.set_flags(gtk.APP_PAINTABLE)
 
