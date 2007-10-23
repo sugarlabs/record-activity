@@ -106,7 +106,7 @@ class UI:
 		#component spacing
 		self.inset = 10
 		#height of the record button, progress bar, etc.
-		self.controlBarHt = 50
+		self.controlBarHt = 49
 		self.recordButtWd = 75
 
 		#prep for when to show
@@ -211,7 +211,7 @@ class UI:
 		self.infoBoxTop.pack_start( self.infoBoxTopRight )
 
 		self.namePanel = gtk.HBox()
-		leftInfBalance = gtk.Vbox()
+		leftInfBalance = gtk.VBox()
 		leftInfBalance.set_size_request( self.controlBarHt, -1 )
 		leftInfBalance.modify_bg( gtk.STATE_NORMAL, self.colorWhite.gColor )
 		self.namePanel.pack_start( leftInfBalance, expand=False )
@@ -235,7 +235,7 @@ class UI:
 		self.namePanel.pack_start( self.infButton, expand=False )
 
 		self.scrubberPanel = gtk.HBox()
-		self.scrubberPanel.modify_bg( gtk.STATE_INSENSITIVE, self.colorRed.gColor )
+		self.scrubberPanel.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
@@ -498,6 +498,8 @@ class UI:
 			if (not self.hiddenWidgets):
 				if (self.mouseInWidget(x,y)):
 					self.hideWidgetsTimer = time.time()
+				elif (self.RECD_INFO_ON):
+					self.hideWidgetsTimer = time.time()
 				else:
 					self.hideWidgets()
 					self.hiddenWidgets = True
@@ -670,6 +672,8 @@ class UI:
 	def showLiveVideoTags( self ):
 		self.shownRecd = None
 		self.livePhotoCanvas.setImage( None )
+		self.nameTextfield.set_text("")
+		self.tagsBuffer.set_text("")
 
 #		kids = self.bottomCenter.get_children()
 #		haveInfButton = False
@@ -743,9 +747,13 @@ class UI:
 	def resumeLiveVideo( self ):
 		self.livePhotoCanvas.setImage( None )
 
+		bottomKid = self.bottomCenter.get_child()
+		if (bottomKid != None):
+			self.bottomCenter.remove( bottomKid )
+
 		self.RECD_INFO_ON = False
 
-		if (self.LIVEMODE != True):
+		if (not self.LIVEMODE):
 			self.ca.m.setUpdating(True)
 			self.ca.gplay.stop()
 			self.showLiveVideoTags()

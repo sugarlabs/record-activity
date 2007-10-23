@@ -124,6 +124,7 @@ class RecordActivity(activity.Activity):
 		self.keyName = "name"
 		self.keyMime = "mime"
 		self.keyExt = "ext"
+		self.keyIstr = "istr"
 
 		self.set_title( self.istrActivityName )
 
