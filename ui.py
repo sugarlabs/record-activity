@@ -474,6 +474,7 @@ class UI:
 		if (self.FULLSCREEN):
 			self.moveWinOffscreen( self.recordWindow )
 			self.moveWinOffscreen( self.progressWindow )
+			self.moveWinOffscreen( self.scrubWindow )
 
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (not self.LIVEMODE):
@@ -1322,6 +1323,7 @@ class UI:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
+				pos.append({"position":"scr", "window":self.scrubWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1330,6 +1332,7 @@ class UI:
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
+				pos.append({"position":"scr", "window":self.scrubWindow} )
 			else:
 				pos.append({"position":"eye", "window":self.recordWindow} )
 				pos.append({"position":"prg", "window":self.progressWindow} )
@@ -1803,12 +1806,15 @@ class ScrubberWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.hbox = gtk.HBox()
+		self.hbox = gtk.HBox(spacing=self.ui.inset)
+		self.hbox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		self.hbox.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
 		self.add( self.hbox )
 
 		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
 		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
 		self.button = gtk.Button()
+		self.button.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		self.button.set_image(self.play_image)
 		self.button.set_property('can-default', True)
 		self.button.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
@@ -1821,9 +1827,12 @@ class ScrubberWindow(gtk.Window):
 		self.hscale = gtk.HScale(self.adjustment)
 		self.hscale.set_draw_value(False)
 		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+		hscaleBox = gtk.EventBox()
+		hscaleBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		hscaleBox.add( self.hscale )
 		#self.hscale.connect('button-press-event', self.scale_button_press_cb)
 		#self.hscale.connect('button-release-event', self.scale_button_release_cb)
-		self.hbox.pack_start(self.hscale, expand=True)
+		self.hbox.pack_start(hscaleBox, expand=True)
 
 
 
