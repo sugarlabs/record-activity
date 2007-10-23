@@ -1526,13 +1526,11 @@ class UI:
 		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		self.liveVideoWindow.set_glive(self.ca.glive)
 
-		#self.ca.glive.stop()
-		#self.ca.glive.play()
-
 		self.showLiveVideoTags()
 		self.LIVEMODE = True
 		self.updateVideoComponents()
 		self.ca.m.setUpdating(False)
+
 
 	def updateShownMedia( self, recd ):
 		if (self.shownRecd == recd):
@@ -1554,6 +1552,7 @@ class UI:
 			mediaFilepath = recd.getThumbFilepath( True )
 		videoUrl = "file://" + str( mediaFilepath )
 		self.ca.gplay.setLocation(videoUrl)
+		self.scrubWindow.doPlay()
 
 		self.shownRecd = recd
 		self.showRecdMeta(recd)
@@ -1818,6 +1817,8 @@ class ScrubberWindow(gtk.Window):
 		self.UPDATE_SCALE_ID = 0
 		self.CHANGED_ID = 0
 		self.was_playing = False
+		self.p_position = gst.CLOCK_TIME_NONE
+		self.p_duration = gst.CLOCK_TIME_NONE
 
 		self.hbox = gtk.HBox()
 		self.hbox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
@@ -1838,7 +1839,7 @@ class ScrubberWindow(gtk.Window):
 		self.button.set_border_width( self.ui.inset/2 )
 		self.button.show()
 
-		self.button.connect('clicked', self._button_clicked_cb)
+		self.button.connect('clicked', self._buttonClickedCb)
 		self.hbox.pack_start(buttBox, expand=False)
 
 		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
@@ -1853,8 +1854,14 @@ class ScrubberWindow(gtk.Window):
 		self.hscale.connect('button-release-event', self._scaleButtonReleaseCb)
 		self.hbox.pack_start(hscaleBox, expand=True)
 
+#		rightBox = gtk.EventBox()
+#		rightBox.set_size_request( self.ui.inset, -1 )
+#		rightBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+#		rightBox.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
+#		self.hbox.pack_start(rightBox, expand=False)
 
-	def _button_clicked_cb(self, widget):
+
+	def _buttonClickedCb(self, widget):
 		self.play_toggled()
 
 
@@ -1867,6 +1874,11 @@ class ScrubberWindow(gtk.Window):
 
 
 	def play_toggled(self):
+		self.p_position, self.p_duration = self.ui.ca.gplay.queryPosition()
+		if (self.p_position == self.p_duration):
+			self.ui.ca.gplay.seek(0)
+			self.ui.ca.gplay.pause()
+
 		if self.ui.ca.gplay.is_playing():
 			self.ui.ca.gplay.pause()
 			self.set_button_play()
@@ -1875,10 +1887,14 @@ class ScrubberWindow(gtk.Window):
 			#	#todo: check if we have "error", and also to disable everything
 			#	self.button.set_disabled()
 			#else:
-			self.ui.ca.gplay.play()
-			if self.UPDATE_SCALE_ID == 0:
-				self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
-			self.set_button_pause()
+			self.doPlay()
+
+
+	def doPlay(self):
+		self.ui.ca.gplay.play()
+		if self.UPDATE_SCALE_ID == 0:
+			self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
+		self.set_button_pause()
 
 
 	def _scaleButtonPressCb(self, widget, event):
@@ -1924,6 +1940,10 @@ class ScrubberWindow(gtk.Window):
 		if self.p_position != gst.CLOCK_TIME_NONE:
 			value = self.p_position * 100.0 / self.p_duration
 			self.adjustment.set_value(value)
+
+			if self.ui.ca.gplay.is_playing() and (self.p_position == self.p_duration):
+				self.ui.ca.gplay.pause()
+				self.set_button_play()
 
 		return True
 
