@@ -1807,6 +1807,8 @@ class ScrubberWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
+		self.UPDATE_INTERVAL = 200
+
 		self.hbox = gtk.HBox()
 		self.hbox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		self.hbox.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
@@ -1826,8 +1828,8 @@ class ScrubberWindow(gtk.Window):
 		self.button.set_border_width( self.ui.inset/2 )
 		self.button.show()
 
-		#self.button.connect('clicked', self._button_clicked_cb)
-		self.hbox.pack_start(buttBox, expand=False)#, padding=self.ui.inset/2)
+		self.button.connect('clicked', self._button_clicked_cb)
+		self.hbox.pack_start(buttBox, expand=False)
 
 		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
 		self.hscale = gtk.HScale(self.adjustment)
@@ -1839,6 +1841,36 @@ class ScrubberWindow(gtk.Window):
 		#self.hscale.connect('button-press-event', self.scale_button_press_cb)
 		#self.hscale.connect('button-release-event', self.scale_button_release_cb)
 		self.hbox.pack_start(hscaleBox, expand=True)
+
+
+	def _button_clicked_cb(self, widget):
+		self.play_toggled()
+
+
+	def set_button_play(self):
+		self.button.set_icon_widget(self.play_image)
+
+
+	def set_button_pause(self):
+		self.button.set_icon_widget(self.pause_image)
+
+
+	def play_toggled(self):
+		if self.ui.ca.gplay.is_playing():
+			self.ui.ca.gplay.pause()
+			self.set_button_play()
+		else:
+			if self.ui.ca.gplay.error:
+				self.button.set_disabled()
+			else:
+				self.ui.ca.gplay.play()
+				if self.UPDATE_SCALE_ID == -1:
+					self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
+				self.set_button_pause()
+
+
+	def _updateScaleCb(self):
+		pass
 
 
 class MaxWindow(gtk.Window):
