@@ -921,7 +921,7 @@ class UI:
 
 	def getScrLoc( self, full ):
 		if (full):
-			return [gtk.gdk.screen_width()-(self.inset+self.pipdw+self.inset+self.inset), self.controlBarHt]
+			return [(self.inset+self.pgdw+self.inset), gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 		else:
 			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 
