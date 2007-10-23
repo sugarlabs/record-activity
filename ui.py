@@ -387,8 +387,8 @@ class UI:
 		self.maxWindow = MaxWindow(self)
 		self.addToWindowStack( self.maxWindow, self.windowStack[len(self.windowStack)-1] )
 
-		#self.infWindow = InfWindow(self)
-		#self.addToWindowStack( self.infWindow, self.windowStack[len(self.windowStack)-1] )
+		self.scrubWindow = ScrubberWindow(self)
+		self.addToWindowStack( self.scrubWindow, self.windowStack[len(self.windowStack)-1] )
 
 		self.hideLiveWindows()
 		self.hidePlayWindows()
@@ -468,6 +468,11 @@ class UI:
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
+
+		if (self.FULLSCREEN):
+			self.moveWinOffscreen( self.recordWindow )
+			self.moveWinOffscreen( self.progressWindow )
+
 		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.liveVideoWindow )
@@ -723,6 +728,7 @@ class UI:
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.progressWindow )
+		self.moveWinOffscreen( self.scrubWindow )
 
 
 	def hidePlayWindows( self ):
@@ -732,6 +738,7 @@ class UI:
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.progressWindow )
+		self.moveWinOffscreen( self.scrubWindow )
 
 
 	def hideAudioWindows( self ):
@@ -740,6 +747,7 @@ class UI:
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.progressWindow )
+		self.moveWinOffscreen( self.scrubWindow )
 
 
 	def _liveButtonReleaseCb(self, widget, event):
@@ -833,6 +841,10 @@ class UI:
 			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, True )
 		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD, True )
+
+		bottomKid = self.bottomCenter.get_child()
+		if (bottomKid != None):
+			self.bottomCenter.remove( bottomKid )
 
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
@@ -1156,11 +1168,13 @@ class UI:
 
 	def clickShutter( self ):
 		if (not self.ca.m.RECORDING): #don't append a sound to the end of a video or audio.  maybe play a click afterwards?
-			clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
-			os.system( "aplay -t wav " + str(clickWav) )
+			os.system( "aplay -t wav " + str(self.clickWav) )
 
+		wasRec = self.ca.m.RECORDING
 		self.ca.m.doShutter()
-		#todo: play click sound after recording video/audio
+		if (wasRec):
+			os.system( "aplay -t wav " + str(self.clickWav) )
+
 		self.COUNTINGDOWN = False
 		self.updateCountdownComponents()
 
@@ -1235,6 +1249,7 @@ class UI:
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 					pos.append({"position":"pip", "window":self.playLiveWindow} )
+					pos.append({"position":"scr", "window":self.scrubWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
@@ -1244,6 +1259,7 @@ class UI:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
+					pos.append({"position":"scr", "window":self.scrubWindow} )
 		elif (self.TRANSCODING):
 			pos.append({"position":"tmr", "window":self.progressWindow} )
 
@@ -1578,6 +1594,8 @@ class UI:
 		self.micImg = gtk.Image()
 		self.micImg.set_from_pixbuf( micImgPixbuf )
 
+		self.clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
+
 
 	def loadColors( self ):
 		profileColor = profile.get_color()
@@ -1748,6 +1766,12 @@ class xoPanel(P5):
 			#todo: scale mr xo
 			ctx.scale( .6, .6 )
 			self.xoGuy.render_cairo( ctx )
+
+
+class ScrubberWindow(gtk.Window):
+	def __init__(self, ui):
+		gtk.Window.__init__(self)
+		self.ui = ui
 
 
 class MaxWindow(gtk.Window):
