@@ -24,6 +24,7 @@ from gtk import keysyms
 import gobject
 import cairo
 import os
+import gst
 
 #parse svg
 import rsvg
@@ -1807,7 +1808,10 @@ class ScrubberWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.UPDATE_INTERVAL = 200
+		self.UPDATE_INTERVAL = 500
+		self.UPDATE_SCALE_ID = 0
+		self.CHANGED_ID = 0
+		self.was_playing = False
 
 		self.hbox = gtk.HBox()
 		self.hbox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
@@ -1838,8 +1842,9 @@ class ScrubberWindow(gtk.Window):
 		hscaleBox = gtk.EventBox()
 		hscaleBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		hscaleBox.add( self.hscale )
-		#self.hscale.connect('button-press-event', self.scale_button_press_cb)
-		#self.hscale.connect('button-release-event', self.scale_button_release_cb)
+		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+		self.hscale.connect('button-press-event', self._scaleButtonPressCb)
+		self.hscale.connect('button-release-event', self._scaleButtonReleaseCb)
 		self.hbox.pack_start(hscaleBox, expand=True)
 
 
@@ -1860,17 +1865,61 @@ class ScrubberWindow(gtk.Window):
 			self.ui.ca.gplay.pause()
 			self.set_button_play()
 		else:
-			if self.ui.ca.gplay.error:
-				self.button.set_disabled()
-			else:
-				self.ui.ca.gplay.play()
-				if self.UPDATE_SCALE_ID == -1:
-					self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
-				self.set_button_pause()
+			#if self.ui.ca.gplay.error:
+			#	#todo: check if we have "error", and also to disable everything
+			#	self.button.set_disabled()
+			#else:
+			self.ui.ca.gplay.play()
+			if self.UPDATE_SCALE_ID == 0:
+				self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
+			self.set_button_pause()
+
+
+	def scale_button_press_cb(self, widget, event):
+		self.button.set_sensitive(False)
+		self.was_playing = self.ui.ca.gplay.is_playing()
+		if self.was_playing:
+			self.self.ui.ca.gplay.pause()
+
+		# don't timeout-update position during seek
+		if self.UPDATE_SCALE_ID != 0:
+			gobject.source_remove(self.UPDATE_SCALE_ID)
+			self.UPDATE_SCALE_ID = 0
+
+		# make sure we get changed notifies
+		if self.CHANGED_ID == 0:
+			self.CHANGED_ID = self.hscale.connect('value-changed', self.scale_value_changed_cb)
+
+
+	def scale_button_release_cb(self, widget, event):
+		# see seek.cstop_seek
+		widget.disconnect(self.CHANGED_ID)
+		self.CHANGED_ID = -1
+
+		self.button.set_sensitive(True)
+		if self.was_playing:
+			self.ui.ca.gplay.play()
+
+		if self.UPDATE_SCALE_ID != -1:
+			print('Had a previous update timeout id')
+		else:
+			self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
+
+
+	def scale_value_changed_cb(self, scale):
+		real = long(scale.get_value() * self.p_duration / 100) # in ns
+		self.player.seek(real)
+		# allow for a preroll
+		self.player.get_state(timeout=50*gst.MSECOND) # 50 ms
 
 
 	def _updateScaleCb(self):
-		pass
+		self.p_position, self.p_duration = self.ui.ca.gplay.query_position()
+		if self.p_position != gst.CLOCK_TIME_NONE:
+			value = self.p_position * 100.0 / self.p_duration
+			self.adjustment.set_value(value)
+
+		return True
 
 
 class MaxWindow(gtk.Window):
