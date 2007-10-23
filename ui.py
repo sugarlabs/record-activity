@@ -156,7 +156,7 @@ class UI:
 
 		leftFill = gtk.VBox()
 		leftFill.set_size_request( self.letterBoxW, -1 )
-		self.leftFillBox = gtk.EventBox()
+		self.leftFillBox = gtk.EventBox( )
 		self.leftFillBox.modify_bg( gtk.STATE_NORMAL, self.colorBlack.gColor )
 		leftFill.add( self.leftFillBox )
 		topBox.pack_start( leftFill, expand=True )
@@ -214,18 +214,21 @@ class UI:
 		leftNamePanel = gtk.VBox()
 		leftNamePanel.set_size_request( 40, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
-		self.nameLabel = gtk.Label("<b>"+self.ca.istrTitle+" </b>") #todo: add a real spacer here
+		self.nameLabel = gtk.Label("<b>"+self.ca.istrTitle+"</b>")
 		self.nameLabel.set_use_markup( True )
-		self.namePanel.pack_start( self.nameLabel, expand=False )
+		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.inset )
 		self.nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(80)
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, self.colorWhite.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
+		self.nameTextfield.set_size_request( -1, self.controlBarHt-self.inset )
 		self.namePanel.pack_start(self.nameTextfield)
 		rightNamePanel = gtk.VBox()
-		rightNamePanel.set_size_request( 50, -1 ) #todo: dynamically calc this
+		rightNamePanel.set_size_request( 30, -1 ) #todo: dynamically calc this
 		self.namePanel.pack_start( rightNamePanel, expand=True )
+		self.infButton = InfButton( self )
+		self.namePanel.pack_start( self.infButton, expand=False )
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
@@ -375,8 +378,8 @@ class UI:
 		self.maxWindow = MaxWindow(self)
 		self.addToWindowStack( self.maxWindow, self.windowStack[len(self.windowStack)-1] )
 
-		self.infWindow = InfWindow(self)
-		self.addToWindowStack( self.infWindow, self.windowStack[len(self.windowStack)-1] )
+		#self.infWindow = InfWindow(self)
+		#self.addToWindowStack( self.infWindow, self.windowStack[len(self.windowStack)-1] )
 
 		self.hideLiveWindows()
 		self.hidePlayWindows()
@@ -392,7 +395,6 @@ class UI:
 		imgDim = self.getImgDim( False )
 		pgdDim = self.getPgdDim( False )
 		maxDim = self.getMaxDim( False )
-		infDim = self.getInfDim( False )
 		prgDim = self.getPrgDim( False )
 		self.livePhotoWindow.resize( imgDim[0], imgDim[1] )
 		self.pipBgdWindow.resize( pgdDim[0], pgdDim[1] )
@@ -402,7 +404,6 @@ class UI:
 		self.pipBgdWindow2.resize( pgdDim[0], pgdDim[1] )
 		self.recordWindow.resize( eyeDim[0], eyeDim[1] )
 		self.maxWindow.resize( maxDim[0], maxDim[1] )
-		self.infWindow.resize( infDim[0], infDim[1] )
 		self.progressWindow.resize( prgDim[0], prgDim[1] )
 
 
@@ -489,8 +490,6 @@ class UI:
 		if (passedTime >= 2):
 			if (not self.hiddenWidgets):
 				if (self.mouseInWidget(x,y)):
-					self.hideWidgetsTimer = time.time()
-				elif (self.RECD_INFO_ON):
 					self.hideWidgetsTimer = time.time()
 				else:
 					self.hideWidgets()
@@ -664,6 +663,15 @@ class UI:
 	def showLiveVideoTags( self ):
 		self.shownRecd = None
 		self.livePhotoCanvas.setImage( None )
+
+#		kids = self.bottomCenter.get_children()
+#		haveInfButton = False
+#		for i in range(0, len(kids)):
+#			if (self.infButton == kids[i]):
+#				haveInfButton = True
+#		if (haveInfButton):
+#			self.bottomCenter.remove( self.infButton )
+
 		self.resetWidgetFadeTimer( )
 
 
@@ -701,7 +709,6 @@ class UI:
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
-		self.moveWinOffscreen( self.infWindow )
 		self.moveWinOffscreen( self.progressWindow )
 
 
@@ -711,7 +718,6 @@ class UI:
 		self.moveWinOffscreen( self.playLiveWindow )
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.recordWindow )
-		self.moveWinOffscreen( self.infWindow )
 		self.moveWinOffscreen( self.progressWindow )
 
 
@@ -720,7 +726,6 @@ class UI:
 		self.moveWinOffscreen( self.liveVideoWindow )
 		self.moveWinOffscreen( self.recordWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
-		self.moveWinOffscreen( self.infWindow )
 		self.moveWinOffscreen( self.progressWindow )
 
 
@@ -966,20 +971,6 @@ class UI:
 		return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.letterBoxVW), self.centerBoxPos[1]+self.inset]
 
 
-	def setInfLocDim( self, win ):
-		dim = self.getInfDim( self.FULLSCREEN )
-		self.smartResize( win, dim[0], dim[1] )
-		loc = self.getInfLoc( self.FULLSCREEN )
-		self.smartMove( win, loc[0], loc[1] )
-
-
-	def getInfLoc( self, full ):
-		if (full):
-			return [(gtk.gdk.screen_width() + 100), (gtk.gdk.screen_height() + 100)]
-		else:
-			return [(self.centerBoxPos[0]+self.vw)-(self.maxw), (self.centerBoxPos[1]+self.vh)]
-
-
 	def setInbLocDim( self, win ):
 		dim = self.getInbDim( self.FULLSCREEN )
 		self.smartResize( win, dim[0], dim[1] )
@@ -1016,8 +1007,6 @@ class UI:
 			return self.getImgDim( full )
 		elif(pos == "eye"):
 			return self.getEyeDim( full )
-		elif(pos == "inf"):
-			return self.getInfDim( full )
 		elif(pos == "inb"):
 			return self.getInbDim( full )
 		elif(pos == "prg"):
@@ -1034,10 +1023,6 @@ class UI:
 
 	def getPgdDim( self, full ):
 		return [self.pgdw, self.pgdh]
-
-
-	def getInfDim( self, full ):
-		return [self.maxw, self.maxh]
 
 
 	def getInbDim( self, full ):
@@ -1069,8 +1054,6 @@ class UI:
 			return self.getImgLoc( full )
 		elif(pos == "eye"):
 			return self.getEyeLoc( full )
-		elif(pos == "inf"):
-			return self.getInfLoc( full )
 		elif(pos == "inb"):
 			return self.getInbLoc( full )
 		elif(pos == "prg"):
@@ -1200,17 +1183,14 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inb", "window":self.livePhotoWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
 				pos.append({"position":"inb", "window":self.playOggWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inb", "window":self.livePhotoWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
 		elif (not self.RECD_INFO_ON and not self.TRANSCODING):
 			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
 				if (self.LIVEMODE):
@@ -1227,7 +1207,6 @@ class UI:
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
-					pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.playLiveWindow} )
@@ -1239,7 +1218,6 @@ class UI:
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 					pos.append({"position":"pip", "window":self.playLiveWindow} )
-					pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
@@ -1249,7 +1227,6 @@ class UI:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
-					pos.append({"position":"inf", "window":self.infWindow} )
 		elif (self.TRANSCODING):
 			pos.append({"position":"tmr", "window":self.progressWindow} )
 
@@ -1281,7 +1258,6 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"max", "window":self.maxWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1290,7 +1266,6 @@ class UI:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1299,7 +1274,6 @@ class UI:
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"eye", "window":self.recordWindow} )
 				pos.append({"position":"prg", "window":self.progressWindow} )
@@ -1322,8 +1296,6 @@ class UI:
 						self.setPipBgdLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "eye"):
 						self.setEyeLocDim( pos[j]["window"] )
-					elif (pos[j]["position"] == "inf"):
-						self.setInfLocDim( pos[j]["window"] )
 					elif (pos[j]["position"] == "inb"):
 						self.setInbLocDim( pos[j]["window"])
 					elif (pos[j]["position"] == "prg"):
@@ -1404,6 +1376,8 @@ class UI:
 			self.showAudio( recd )
 
 		self.photoXoPanel.updateXoColors()
+		self.bottomCenter.add( self.namePanel )
+		self.bottomCenter.show_all()
 		self.resetWidgetFadeTimer()
 
 
@@ -1787,18 +1761,13 @@ class MaxButton(P5Button):
 			self.ui.doFullscreen()
 
 
-class InfWindow(gtk.Window):
-	def __init__(self, ui):
-		gtk.Window.__init__(self)
-		self.ui = ui
-		self.infButton = InfButton(self.ui)
-		self.add( self.infButton )
-
-
 class InfButton(P5Button):
 	def __init__(self, ui):
 		P5Button.__init__(self)
 		self.ui = ui
+
+		self.set_size_request( self.ui.maxw, self.ui.maxh )
+
 		xs = []
 		ys = []
 		xs.append(0)
@@ -1818,6 +1787,7 @@ class InfButton(P5Button):
 
 
 	def draw(self, ctx, w, h):
+		self.background( ctx, self.ui.colorWhite, w, h )
 		self.ui.infoOnSvg.render_cairo( ctx )
 
 
