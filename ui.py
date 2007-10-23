@@ -212,7 +212,7 @@ class UI:
 
 		self.namePanel = gtk.HBox()
 		leftNamePanel = gtk.VBox()
-		leftNamePanel.set_size_request( 40, -1 )
+		leftNamePanel.set_size_request( 10, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
 		self.nameLabel = gtk.Label("<b>"+self.ca.istrTitle+"</b>")
 		self.nameLabel.set_use_markup( True )
@@ -225,7 +225,7 @@ class UI:
 		self.nameTextfield.set_size_request( -1, self.controlBarHt-self.inset )
 		self.namePanel.pack_start(self.nameTextfield)
 		rightNamePanel = gtk.VBox()
-		rightNamePanel.set_size_request( 30, -1 ) #todo: dynamically calc this
+		rightNamePanel.set_size_request( 10, -1 )
 		self.namePanel.pack_start( rightNamePanel, expand=True )
 		self.infButton = InfButton( self )
 		self.namePanel.pack_start( self.infButton, expand=False )
@@ -1529,7 +1529,7 @@ class UI:
 		self.videoModeImgPath = os.path.join( self.ca.gfxPath, 'video_mode.png' )
 		self.audioModeImgPath = os.path.join( self.ca.gfxPath, 'audio_mode.png' )
 
-		#todo: load from sugar
+		#todo: load from sugar, query its size for my purposes
 		xoGuySvgFile = open(os.path.join(self.ca.gfxPath, 'xo-guy.svg'), 'r')
 		self.xoGuySvgData = xoGuySvgFile.read()
 		infoOffSvgFile.close()
@@ -1944,7 +1944,7 @@ class VideoToolbar(gtk.Toolbar):
 		separator2 = gtk.SeparatorToolItem()
 		separator2.set_draw(False)
 		separator2.set_expand(False)
-		separator2.set_size_request( 10, -1 )
+		separator2.set_size_request( self.ui.inset, -1 )
 		self.insert( separator2, -1 )
 
 		durLabel = gtk.Label( self.ui.ca.istrDuration )
@@ -2011,7 +2011,7 @@ class AudioToolbar(gtk.Toolbar):
 		separator2 = gtk.SeparatorToolItem()
 		separator2.set_draw(False)
 		separator2.set_expand(False)
-		separator2.set_size_request( 10, -1 )
+		separator2.set_size_request( self.ui.inset, -1 )
 		self.insert( separator2, -1 )
 
 		durLabel = gtk.Label( self.ui.ca.istrDuration )
