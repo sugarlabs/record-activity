@@ -1439,6 +1439,8 @@ class UI:
 
 
 	def showThumbSelection( self, recd ):
+		lastRecd = self.shownRecd
+
 		#do we need to know the type, since we're showing based on the mode of the app?
 		if (recd.type == self.ca.m.TYPE_PHOTO):
 			self.showPhoto( recd )
@@ -1447,17 +1449,18 @@ class UI:
 		elif (recd.type == self.ca.m.TYPE_AUDIO):
 			self.showAudio( recd )
 
-		self.photoXoPanel.updateXoColors()
+		if (recd != lastRecd):
+			self.photoXoPanel.updateXoColors()
 
-		bottomKid = self.bottomCenter.get_child()
-		if (bottomKid != None):
-			self.bottomCenter.remove( bottomKid )
+			bottomKid = self.bottomCenter.get_child()
+			if (bottomKid != None):
+				self.bottomCenter.remove( bottomKid )
 
-		if (recd.type == self.ca.m.TYPE_PHOTO):
-			self.bottomCenter.add( self.namePanel )
-		elif (recd.type == self.ca.m.TYPE_VIDEO or recd.type == self.ca.m.TYPE_AUDIO):
-			self.bottomCenter.add( self.scrubberPanel )
-		self.bottomCenter.show_all()
+			if (recd.type == self.ca.m.TYPE_PHOTO):
+				self.bottomCenter.add( self.namePanel )
+			elif (recd.type == self.ca.m.TYPE_VIDEO or recd.type == self.ca.m.TYPE_AUDIO):
+				self.bottomCenter.add( self.scrubberPanel )
+			self.bottomCenter.show_all()
 
 		self.resetWidgetFadeTimer()
 
@@ -1530,20 +1533,18 @@ class UI:
 
 
 	def showVideo( self, recd ):
-		#todo: this can be cleaned up for when playing subsequent videos
-		if (self.ca.glive.isXv()):
-			self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
-			self.ca.glive.stop()
-			self.ca.glive.play()
+		if (self.LIVEMODE):
+			if (self.ca.glive.isXv()):
+				self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+				self.ca.glive.stop()
+				self.ca.glive.play()
 
-		self.LIVEMODE = False
-		self.updateVideoComponents()
+			self.LIVEMODE = False
+			self.updateVideoComponents()
 
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath == None):
 			mediaFilepath = recd.getThumbFilepath( True )
-
-		#todo: might need to pause the player...
 		videoUrl = "file://" + str( mediaFilepath )
 		self.ca.gplay.setLocation(videoUrl)
 
@@ -1838,7 +1839,6 @@ class ScrubberWindow(gtk.Window):
 		#self.hscale.connect('button-press-event', self.scale_button_press_cb)
 		#self.hscale.connect('button-release-event', self.scale_button_release_cb)
 		self.hbox.pack_start(hscaleBox, expand=True)
-
 
 
 class MaxWindow(gtk.Window):
