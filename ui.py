@@ -211,6 +211,10 @@ class UI:
 		self.infoBoxTop.pack_start( self.infoBoxTopRight )
 
 		self.namePanel = gtk.HBox()
+		leftInfBalance = gtk.Vbox()
+		leftInfBalance.set_size_request( self.controlBarHt, -1 )
+		leftInfBalance.modify_bg( gtk.STATE_NORMAL, self.colorWhite.gColor )
+		self.namePanel.pack_start( leftInfBalance, expand=False )
 		leftNamePanel = gtk.VBox()
 		leftNamePanel.set_size_request( 10, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
@@ -229,6 +233,9 @@ class UI:
 		self.namePanel.pack_start( rightNamePanel, expand=True )
 		self.infButton = InfButton( self )
 		self.namePanel.pack_start( self.infButton, expand=False )
+
+		self.scrubberPanel = gtk.HBox()
+		self.scrubberPanel.modify_bg( gtk.STATE_INSENSITIVE, self.colorRed.gColor )
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
@@ -1340,10 +1347,17 @@ class UI:
 		if (centerKid != None):
 			self.centerBox.remove( centerKid )
 
+		bottomKid = self.bottomCenter.get_child()
+		if (bottomKid != None):
+			self.bottomCenter.remove( bottomKid )
+
 		if (not self.RECD_INFO_ON):
-			bottomKid = self.bottomCenter.get_child()
-			if (bottomKid != None):
-				self.bottomCenter.remove( bottomKid )
+			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+				self.bottomCenter.add( self.namePanel )
+				self.bottomCenter.show_all( )
+			else:
+				self.bottomCenter.add( self.scrubberPanel )
+				self.bottomCenter.show_all( )
 		else:
 			self.centerBox.add( self.infoBox )
 			self.centerBox.show_all( )
@@ -1373,8 +1387,13 @@ class UI:
 			self.showAudio( recd )
 
 		self.photoXoPanel.updateXoColors()
+
+		bottomKid = self.bottomCenter.get_child()
+		if (bottomKid != None):
+			self.bottomCenter.remove( bottomKid )
 		self.bottomCenter.add( self.namePanel )
 		self.bottomCenter.show_all()
+
 		self.resetWidgetFadeTimer()
 
 
@@ -1593,7 +1612,6 @@ class BackgroundCanvas(P5):
 		self.background( ctx, self.ui.colorBlack, w, h )
 		ctx.translate( (w/2)-(h/2), 0 )
 		self.ui.modWaitSvg.render_cairo( ctx )
-		print("drawing background...")
 
 
 class PhotoCanvasWindow(gtk.Window):
