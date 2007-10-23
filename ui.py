@@ -576,7 +576,7 @@ class UI:
 			print("GAME UP")
 			if (self.LIVEMODE):
 				if (self.RECD_INFO_ON):
-					self.self.infoButtonClicked()
+					self.infoButtonClicked()
 					return
 				if (not self.ca.m.UPDATING):
 					self.doShutter()
@@ -1885,7 +1885,7 @@ class ScrubberWindow(gtk.Window):
 		self.button.set_sensitive(False)
 		self.was_playing = self.ui.ca.gplay.is_playing()
 		if self.was_playing:
-			self.self.ui.ca.gplay.pause()
+			self.ui.ca.gplay.pause()
 
 		# don't timeout-update position during seek
 		if self.UPDATE_SCALE_ID != 0:
@@ -1900,13 +1900,13 @@ class ScrubberWindow(gtk.Window):
 	def _scaleButtonReleaseCb(self, widget, event):
 		# see seek.cstop_seek
 		widget.disconnect(self.CHANGED_ID)
-		self.CHANGED_ID = -1
+		self.CHANGED_ID = 0
 
 		self.button.set_sensitive(True)
 		if self.was_playing:
 			self.ui.ca.gplay.play()
 
-		if self.UPDATE_SCALE_ID != -1:
+		if self.UPDATE_SCALE_ID != 0:
 			print('Had a previous update timeout id')
 		else:
 			self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
@@ -1914,9 +1914,9 @@ class ScrubberWindow(gtk.Window):
 
 	def scale_value_changed_cb(self, scale):
 		real = long(scale.get_value() * self.p_duration / 100) # in ns
-		self.player.seek(real)
+		self.ui.ca.gplay.seek(real)
 		# allow for a preroll
-		self.player.get_state(timeout=50*gst.MSECOND) # 50 ms
+		self.ui.ca.gplay.get_state(timeout=50*gst.MSECOND) # 50 ms
 
 
 	def _updateScaleCb(self):
