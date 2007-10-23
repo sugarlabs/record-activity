@@ -1354,9 +1354,6 @@ class UI:
 
 
 	def showPostProcessGfx( self, show ):
-		if (True):
-			return
-
 		centerKid = self.centerBox.get_child()
 		if (centerKid != None):
 			self.centerBox.remove( centerKid )
@@ -1593,9 +1590,10 @@ class BackgroundCanvas(P5):
 		self.ui = ui
 
 	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorBg, w, h )
+		self.background( ctx, self.ui.colorBlack, w, h )
 		ctx.translate( (w/2)-(h/2), 0 )
 		self.ui.modWaitSvg.render_cairo( ctx )
+		print("drawing background...")
 
 
 class PhotoCanvasWindow(gtk.Window):
