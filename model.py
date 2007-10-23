@@ -59,9 +59,9 @@ class Model:
 		self.setConstants()
 
 		self.mediaTypes = {}
-		self.mediaTypes[self.TYPE_PHOTO] = {self.ca.keyName:"photo", self.ca.keyMime:"image/jpeg", self.ca.keyExt:"jpg", self.ca.keyIstr:self.ca.keyIstrPhoto}
-		self.mediaTypes[self.TYPE_VIDEO] = {self.ca.keyName:"video", self.ca.keyMime:"video/ogg", self.ca.keyExt:"ogg", self.ca.keyIstr:self.ca.keyIstrVideo}
-		self.mediaTypes[self.TYPE_AUDIO] = {self.ca.keyName:"audio", self.ca.keyMime:"audio/x-wav", self.ca.keyExt:"wav", self.ca.keyIstr:self.ca.keyIstrAudio}
+		self.mediaTypes[self.TYPE_PHOTO] = {self.ca.keyName:"photo", self.ca.keyMime:"image/jpeg", self.ca.keyExt:"jpg", self.ca.keyIstr:self.ca.istrPhoto}
+		self.mediaTypes[self.TYPE_VIDEO] = {self.ca.keyName:"video", self.ca.keyMime:"video/ogg", self.ca.keyExt:"ogg", self.ca.keyIstr:self.ca.istrVideo}
+		self.mediaTypes[self.TYPE_AUDIO] = {self.ca.keyName:"audio", self.ca.keyMime:"audio/x-wav", self.ca.keyExt:"wav", self.ca.keyIstr:self.ca.istrAudio}
 
 		self.mediaHashs = {}
 		for key,value in self.mediaTypes.items():
@@ -488,7 +488,7 @@ class Model:
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
 		recd.photographer = self.ca.nickName
-		stringType = self.mediaTypes[type][self.ca.keyIstrName]
+		stringType = self.mediaTypes[type][self.ca.keyIstr]
 		recd.title = self.ca.istrBy % {"1":stringType, "2":str(recd.photographer)}
 
 		recd.colorStroke = self.ca.ui.colorStroke
