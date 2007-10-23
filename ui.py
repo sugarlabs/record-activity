@@ -692,6 +692,8 @@ class UI:
 		self.nameTextfield.set_text("")
 		self.tagsBuffer.set_text("")
 
+		self.scrubWindow.removeCallbacks()
+
 #		kids = self.bottomCenter.get_children()
 #		haveInfButton = False
 #		for i in range(0, len(kids)):
@@ -1849,16 +1851,16 @@ class ScrubberWindow(gtk.Window):
 		hscaleBox = gtk.EventBox()
 		hscaleBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		hscaleBox.add( self.hscale )
-		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
 		self.hscale.connect('button-press-event', self._scaleButtonPressCb)
 		self.hscale.connect('button-release-event', self._scaleButtonReleaseCb)
 		self.hbox.pack_start(hscaleBox, expand=True)
 
-#		rightBox = gtk.EventBox()
-#		rightBox.set_size_request( self.ui.inset, -1 )
-#		rightBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
-#		rightBox.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
-#		self.hbox.pack_start(rightBox, expand=False)
+
+	def removeCallbacks( self ):
+		if (self.UPDATE_SCALE_ID != 0):
+			gobject.remove(self.UPDATE_SCALE_ID)
+		if (self.CHANGED_ID != 0):
+			gobject.remove(self.CHANGED_ID)
 
 
 	def _buttonClickedCb(self, widget):
@@ -1910,7 +1912,7 @@ class ScrubberWindow(gtk.Window):
 
 		# make sure we get changed notifies
 		if self.CHANGED_ID == 0:
-			self.CHANGED_ID = self.hscale.connect('value-changed', self.scale_value_changed_cb)
+			self.CHANGED_ID = self.hscale.connect('value-changed', self._scaleValueChangedCb)
 
 
 	def _scaleButtonReleaseCb(self, widget, event):
@@ -1928,7 +1930,7 @@ class ScrubberWindow(gtk.Window):
 			self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
 
 
-	def scale_value_changed_cb(self, scale):
+	def _scaleValueChangedCb(self, scale):
 		real = long(scale.get_value() * self.p_duration / 100) # in ns
 		self.ui.ca.gplay.seek(real)
 		# allow for a preroll
@@ -1939,6 +1941,11 @@ class ScrubberWindow(gtk.Window):
 		self.p_position, self.p_duration = self.ui.ca.gplay.queryPosition()
 		if self.p_position != gst.CLOCK_TIME_NONE:
 			value = self.p_position * 100.0 / self.p_duration
+			if (value > 99):
+				value = 99
+			elif (value < 0):
+				value = 0
+
 			self.adjustment.set_value(value)
 
 			if self.ui.ca.gplay.is_playing() and (self.p_position == self.p_duration):
