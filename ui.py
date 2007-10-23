@@ -1511,10 +1511,11 @@ class UI:
 
 
 	def startLiveAudio( self ):
+		self.ca.m.setUpdating(True)
+
 		#todo: finesse the stopping of the play pipes
 		self.ca.gplay.stop()
 
-		#todo: updating
 		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		self.liveVideoWindow.set_glive(self.ca.glive)
 
@@ -1524,11 +1525,10 @@ class UI:
 		self.showLiveVideoTags()
 		self.LIVEMODE = True
 		self.updateVideoComponents()
-
+		self.ca.m.setUpdating(False)
 
 	def updateShownMedia( self, recd ):
 		if (self.shownRecd == recd):
-			#todo: better method name
 			self.showThumbSelection( recd )
 
 
