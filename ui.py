@@ -1806,22 +1806,27 @@ class ScrubberWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.hbox = gtk.HBox(spacing=self.ui.inset)
+		self.hbox = gtk.HBox()
 		self.hbox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		self.hbox.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
 		self.add( self.hbox )
 
 		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
 		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
+
 		self.button = gtk.Button()
-		self.button.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		buttBox = gtk.EventBox()
+		buttBox.add(self.button)
+		buttBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
 		self.button.set_image(self.play_image)
 		self.button.set_property('can-default', True)
 		self.button.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
+		buttBox.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
+		self.button.set_border_width( self.ui.inset/2 )
 		self.button.show()
-		#self.button.connect('clicked', self._button_clicked_cb)
 
-		self.hbox.pack_start(self.button, expand=False)
+		#self.button.connect('clicked', self._button_clicked_cb)
+		self.hbox.pack_start(buttBox, expand=False)#, padding=self.ui.inset/2)
 
 		self.adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
 		self.hscale = gtk.HScale(self.adjustment)
@@ -1926,7 +1931,7 @@ class RecordWindow(gtk.Window):
 		shutterBox = gtk.EventBox()
 		shutterBox.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
 		shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
-		self.shutterButton.set_border_width( self.ui.pipBorder )
+		self.shutterButton.set_border_width( self.ui.inset )
 
 		hbox = gtk.HBox()
 		self.add( hbox )
