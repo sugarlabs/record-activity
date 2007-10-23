@@ -905,6 +905,27 @@ class UI:
 		self.smartMove( win, tmrLoc[0], tmrLoc[1] )
 
 
+	def setScrLocDim( self, win ):
+		scrDim = self.getScrDim( self.FULLSCREEN )
+		self.smartResize( win, scrDim[0], scrDim[1] )
+		scrLoc = self.getScrLoc( self.FULLSCREEN )
+		self.smartMove( win, scrLoc[0], scrLoc[1] )
+
+
+	def getScrDim( self, full ):
+		if (full):
+			return [gtk.gdk.screen_width()-(self.inset+self.pgdw+self.inset+self.inset), self.controlBarHt]
+		else:
+			return [self.vw-self.controlBarHt, self.controlBarHt]
+
+
+	def getScrLoc( self, full ):
+		if (full):
+			return [gtk.gdk.screen_width()-(self.inset+self.pipdw+self.inset+self.inset), self.controlBarHt]
+		else:
+			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
+
+
 	def getImgDim( self, full ):
 		if (full):
 			return [gtk.gdk.screen_width(), gtk.gdk.screen_height()]
@@ -1263,8 +1284,6 @@ class UI:
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"scr", "window":self.scrubWindow} )
 		elif (self.TRANSCODING):
-			if (self.FULLSCREEN):
-				pos.append({"position":"img", "window":self.livePhotoWindow} )
 			pos.append({"position":"tmr", "window":self.progressWindow} )
 
 		for i in range (0, len(self.windowStack)):
@@ -1339,6 +1358,8 @@ class UI:
 						self.setPrgLocDim( pos[j]["window"])
 					elif (pos[j]["position"] == "tmr"):
 						self.setTmrLocDim( pos[j]["window"])
+					elif (pos[j]["position"] == "scr"):
+						self.setScrLocDim( pos[j]["window"])
 
 
 	def removeThumb( self, recd ):
@@ -1786,13 +1807,11 @@ class ScrubberWindow(gtk.Window):
 		self.add( self.hbox )
 
 		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-		self.pause_image.show()
 		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
-		self.play_image.show()
-
 		self.button = gtk.Button()
-		self.button.set_icon_widget(self.play_image)
+		self.button.set_image(self.play_image)
 		self.button.set_property('can-default', True)
+		self.button.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
 		self.button.show()
 		#self.button.connect('clicked', self._button_clicked_cb)
 
@@ -1804,7 +1823,7 @@ class ScrubberWindow(gtk.Window):
 		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
 		#self.hscale.connect('button-press-event', self.scale_button_press_cb)
 		#self.hscale.connect('button-release-event', self.scale_button_release_cb)
-		self.pack_start(self.hscale, expand=True)
+		self.hbox.pack_start(self.hscale, expand=True)
 
 
 
