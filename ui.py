@@ -1702,6 +1702,8 @@ class PhotoCanvasWindow(gtk.Window):
 		gtk.Window.__init__(self)
 		self.ui = ui
 		self.photoCanvas = None
+		self.modify_bg( gtk.STATE_NORMAL, self.ui.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorBlack.gColor )
 
 
 	def setPhotoCanvas( self, photoCanvas ):
@@ -1717,6 +1719,8 @@ class PhotoCanvas(P5):
 		self.drawImg = None
 		self.SCALING_IMG_ID = 0
 		self.cacheWid = -1
+		self.modify_bg( gtk.STATE_NORMAL, self.ui.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorBlack.gColor )
 
 
 	def draw(self, ctx, w, h):
@@ -1865,9 +1869,9 @@ class ScrubberWindow(gtk.Window):
 
 	def removeCallbacks( self ):
 		if (self.UPDATE_SCALE_ID != 0):
-			gobject.remove(self.UPDATE_SCALE_ID)
+			gobject.source_remove(self.UPDATE_SCALE_ID)
 		if (self.CHANGED_ID != 0):
-			gobject.remove(self.CHANGED_ID)
+			gobject.source_remove(self.CHANGED_ID)
 
 
 	def _buttonClickedCb(self, widget):

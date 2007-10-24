@@ -269,7 +269,6 @@ class Glive:
 		self.record = True
 		self.audio = True
 		if (self.record):
-			#todo: bug?!
 			self.el("videoTee").link(self.el("movieQueue"))
 
 			if (self.audio):
@@ -294,7 +293,11 @@ class Glive:
 	def stopRecordingVideo(self):
 		#sometimes we hang here because we're trying to open an empty file or nonexistant file
 		self.stop()
+		gobject.idle_add( self._stoppedRecordingVideo )
 
+
+	def _stoppedRecordingVideo(self):
+		print("_stopped")
 		if ( len(self.thumbPipes) > 0 ):
 			thumbline = self.thumbPipes[len(self.thumbPipes)-1]
 			n = str(len(self.thumbPipes)-1)
@@ -302,15 +305,13 @@ class Glive:
 
 		n = str(len(self.thumbPipes))
 		f = str(len(self.pipes)-2)
-		oggFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
 
-		#todo: test ~~> need to check *exists* and the filesize here to prevent stalling... & maybe earlier?
+		oggFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
 		if (not os.path.exists(oggFilepath)):
 			self.record = False
 			self.ca.m.cannotSaveVideo()
 			self.ca.m.stoppedRecordingVideo()
 			return
-
 		oggSize = os.path.getsize(oggFilepath)
 		if (oggSize <= 0):
 			self.record = False

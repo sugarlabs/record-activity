@@ -336,13 +336,13 @@ class Model:
 
 
 	def stopRecordingVideo( self ):
+		self.ca.glive.stopRecordingVideo()
 		gobject.source_remove( self.ca.ui.UPDATE_DURATION_ID )
 		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.setUpdating( True )
 		self.ca.ui.TRANSCODING = True
 		self.ca.ui.FULLSCREEN = False
 		self.ca.ui.updateVideoComponents()
-		self.ca.glive.stopRecordingVideo()
 
 
 	def saveVideo( self, pixbuf, tempPath, wid, hit ):
