@@ -515,6 +515,7 @@ class RecordActivity(activity.Activity):
 			self.recTube = RecordTube(tube_conn, self._get_buddy, self.hashedKey, self._logger)
 			self.recTube.connect("new-recd", self._newRecdCb)
 
+
 	def _get_buddy(self, cs_handle):
 		"""Get a Buddy from a channel specific handle."""
 		self._logger.debug('Trying to find owner of handle %u...', cs_handle)
