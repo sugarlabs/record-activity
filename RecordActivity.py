@@ -295,6 +295,8 @@ class RecordActivity(activity.Activity):
 			mmime = mtype[self.keyMime]
 			mediaObject.metadata['mime_type'] = mmime
 
+			mediaObject.metadata['activity'] = self._activity_id
+
 			#todo: make sure the file is still available before you ever get to this point...
 			mediaFile = recd.getMediaFilepath(False)
 			mediaObject.file_path = mediaFile
