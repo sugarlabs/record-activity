@@ -203,9 +203,9 @@ class UI:
 
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( self.letterBoxW, -1 )
-		self.rightFillBox = gtk.EventBox()
-		self.rightFillBox.modify_bg( gtk.STATE_NORMAL, self.colorBlack.gColor )
-		rightFill.add( self.rightFillBox )
+		rightFillBox = gtk.EventBox()
+		rightFillBox.modify_bg( gtk.STATE_NORMAL, self.colorBlack.gColor )
+		rightFill.add( rightFillBox )
 		topBox.pack_start( rightFill, expand=True )
 
 		#info box innards:
@@ -339,15 +339,20 @@ class UI:
 			self.showLiveVideoTags()
 
 			self.recordWindow.shutterButton.set_sensitive(True)
-			self.updateVideoComponents()
-			self.ca.glive.play()
-
-			#initialize the app with the default thumbs
-			self.ca.m.setupMode( self.ca.m.MODE, False )
 
 			self.photoToolbar.set_sensitive( True )
 			self.videoToolbar.set_sensitive( True )
 			self.audioToolbar.set_sensitive( True )
+
+			#initialize the app with the default thumbs
+			self.ca.m.setupMode( self.ca.m.MODE, False )
+
+			gobject.idle_add( self.finalSetUp )
+
+
+	def finalSetUp( self ):
+		self.updateVideoComponents()
+		self.ca.glive.play()
 
 
 	def setUpWindows( self ):
@@ -402,7 +407,9 @@ class UI:
 		self.hideLiveWindows()
 		self.hidePlayWindows()
 		self.hideAudioWindows()
-		self.MAP_EVENT_ID = self.liveVideoWindow.connect("map-event", self._mapEventCb)
+
+		self.MAP_EVENT_ID = self.liveVideoWindow.connect_after("map-event", self._mapEventCb)
+
 		for i in range (0, len(self.windowStack)):
 			self.windowStack[i].show_all()
 
