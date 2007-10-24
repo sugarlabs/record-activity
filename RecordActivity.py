@@ -34,9 +34,7 @@ from sugar.datastore import datastore
 
 from model import Model
 from ui import UI
-from mesh import MeshClient
-from mesh import MeshXMLRPCServer
-from mesh import HttpServer
+from recordtube import RecordTube
 from glive import Glive
 from gplay import Gplay
 

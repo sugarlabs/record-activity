@@ -1,3 +1,13 @@
+import gobject
+# will eventually be imported from sugar
+from sugar.presence.tubeconn import TubeConnection
+SERVICE = "org.laptop.RecordActivity"
+IFACE = SERVICE
+PATH = "/org/laptop/RecordActivity"
+from dbus import Interface
+from dbus.service import method, signal
+from dbus.gobject_service import ExportedGObject
+
 class RecordTube(ExportedGObject):
 	"""The bit that talks over the TUBES!!!"""
 
