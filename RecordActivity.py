@@ -60,7 +60,6 @@ class RecordActivity(activity.Activity):
 
 
 	def _initme( self, userdata=None ):
-		#todo: all other international strings here
 		self.istrActivityName = _('Record')
 		self.istrPhoto = _('Photo')
 		self.istrVideo = _('Video')
@@ -294,6 +293,7 @@ class RecordActivity(activity.Activity):
 			#todo: make sure the file is still available before you ever get to this point...
 			mediaFile = recd.getMediaFilepath(False)
 			mediaObject.file_path = mediaFile
+			mediaObject.transfer_ownership = True
 
 			datastore.write( mediaObject )
 			self.doPostMediaSave( xmlFile, el, recd, mediaObject )
@@ -432,13 +432,11 @@ def _setup(self):
 		#todo: rainbow
 
 		# #4422
-		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
+#		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
+		self.tempPath = os.path.join( self.get_activity_root(), "tmp" )
 		if (os.path.exists(self.tempPath)):
 			shutil.rmtree( self.tempPath )
 		os.makedirs(self.tempPath)
-
-#		self.tempPath = self.get_activity_root()
-		print( "tempPath", self.tempPath )
 
 
 	def close( self ):
