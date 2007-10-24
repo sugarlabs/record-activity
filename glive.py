@@ -161,12 +161,10 @@ class Glive:
 			movieQueue = pipeline.get_by_name("movieQueue_"+n)
 			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
 			movieFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
-			print("movieFilepath", movieFilepath)
 			movieFilesink.set_property("location", movieFilepath )
 
 			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
 			audioFilepath = os.path.join(self.ca.tempPath, "output.wav")
-			print("audioFilepath", audioFilepath)
 			audioFilesink.set_property("location", audioFilepath )
 			audioTee = pipeline.get_by_name('audioTee_'+n)
 			audioWavenc = pipeline.get_by_name('audioWavenc_'+n)

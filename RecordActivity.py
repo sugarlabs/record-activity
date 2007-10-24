@@ -346,47 +346,47 @@ class RecordActivity(activity.Activity):
 #		self.meshClient = MeshClient(self)
 #		self.meshXMLRPCServer = MeshXMLRPCServer(self)
 
-def _setup(self):
-	#sets up the tubes...
-	if self._shared_activity is None:
-		self._logger.error('Failed to share or join activity')
-		return
-
-	# Work out what our room is called and whether we have Tubes already
-	bus_name, conn_path, channel_paths = self._shared_activity.get_channels()
-	room = None
-	tubes_chan = None
-	text_chan = None
-	for channel_path in channel_paths:
-		channel = telepathy.client.Channel(bus_name, channel_path)
-		htype, handle = channel.GetHandle()
-		if htype == telepathy.HANDLE_TYPE_ROOM:
-			self._logger.debug('Found our room: it has handle#%d "%s"', handle, self.conn.InspectHandles(htype, [handle])[0])
-			room = handle
-			ctype = channel.GetChannelType()
-			if ctype == telepathy.CHANNEL_TYPE_TUBES:
-				self._logger.debug('Found our Tubes channel at %s', channel_path)
-				tubes_chan = channel
-			elif ctype == telepathy.CHANNEL_TYPE_TEXT:
-				self._logger.debug('Found our Text channel at %s', channel_path)
-				text_chan = channel
-
-	if room is None:
-		self._logger.error("Presence service didn't create a room")
-		return
-	if text_chan is None:
-			self._logger.error("Presence service didn't create a text channel")
+	def _setup(self):
+		#sets up the tubes...
+		if self._shared_activity is None:
+			self._logger.error('Failed to share or join activity')
 			return
 
-	# Make sure we have a Tubes channel - PS doesn't yet provide one
-	if tubes_chan is None:
-		self._logger.debug("Didn't find our Tubes channel, requesting one...")
-		tubes_chan = self.conn.request_channel(telepathy.CHANNEL_TYPE_TUBES, telepathy.HANDLE_TYPE_ROOM, room, True)
+		# Work out what our room is called and whether we have Tubes already
+		bus_name, conn_path, channel_paths = self._shared_activity.get_channels()
+		room = None
+		tubes_chan = None
+		text_chan = None
+		for channel_path in channel_paths:
+			channel = telepathy.client.Channel(bus_name, channel_path)
+			htype, handle = channel.GetHandle()
+			if htype == telepathy.HANDLE_TYPE_ROOM:
+				self._logger.debug('Found our room: it has handle#%d "%s"', handle, self.conn.InspectHandles(htype, [handle])[0])
+				room = handle
+				ctype = channel.GetChannelType()
+				if ctype == telepathy.CHANNEL_TYPE_TUBES:
+					self._logger.debug('Found our Tubes channel at %s', channel_path)
+					tubes_chan = channel
+				elif ctype == telepathy.CHANNEL_TYPE_TEXT:
+					self._logger.debug('Found our Text channel at %s', channel_path)
+					text_chan = channel
 
-	self.tubes_chan = tubes_chan
-	self.text_chan = text_chan
+		if room is None:
+			self._logger.error("Presence service didn't create a room")
+			return
+		if text_chan is None:
+				self._logger.error("Presence service didn't create a text channel")
+				return
 
-	tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal('NewTube', self._new_tube_cb)
+		# Make sure we have a Tubes channel - PS doesn't yet provide one
+		if tubes_chan is None:
+			self._logger.debug("Didn't find our Tubes channel, requesting one...")
+			tubes_chan = self.conn.request_channel(telepathy.CHANNEL_TYPE_TUBES, telepathy.HANDLE_TYPE_ROOM, room, True)
+
+		self.tubes_chan = tubes_chan
+		self.text_chan = text_chan
+
+		tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal('NewTube', self._new_tube_cb)
 
 
 	def _new_tube_cb(self, id, initiator, type, service, params, state):
