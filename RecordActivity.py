@@ -463,6 +463,15 @@ class RecordActivity(activity.Activity):
 		self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes( reply_handler=self._list_tubes_reply_cb, error_handler=self._list_tubes_error_cb)
 
 
+	def _list_tubes_reply_cb(self, tubes):
+		for tube_info in tubes:
+			self._new_tube_cb(*tube_info)
+
+
+	def _list_tubes_error_cb(self, e):
+		self._logger.error('ListTubes() failed: %s', e)
+
+
 	def _setup(self):
 		#sets up the tubes...
 		if self._shared_activity is None:
