@@ -384,10 +384,14 @@ class RecordActivity(activity.Activity):
 
 	def recreateTemp( self ):
 		#todo: rainbow
-		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
-		if (os.path.exists(self.tempPath)):
-			shutil.rmtree( self.tempPath )
-		os.makedirs(self.tempPath)
+
+		# #4422
+#		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
+#		if (os.path.exists(self.tempPath)):
+#			shutil.rmtree( self.tempPath )
+#		os.makedirs(self.tempPath)
+
+		self.tempPath = self.get_activity_root()
 
 
 	def close( self ):
