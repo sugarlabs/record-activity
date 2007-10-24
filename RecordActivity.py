@@ -23,6 +23,8 @@ import gobject
 import os
 import shutil
 
+import logging
+
 import xml.dom.minidom
 
 from sugar import util
@@ -48,8 +50,8 @@ class RecordActivity(activity.Activity):
 
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
-		#handle the initial notify::active callback differently
 		self.JUST_LAUNCHED = True
+		self._logger = logging.getLogger('record-activity')
 		#connect these right away
 		self.connect( "shared", self._sharedCb )
 		self.connect( "notify::active", self._activeCb )
@@ -143,14 +145,6 @@ class RecordActivity(activity.Activity):
 		self.basePath = activity.get_bundle_path()
 		self.gfxPath = os.path.join(self.basePath, "gfx")
 		self.recreateTemp()
-
-		#todo: also tubes
-		h = hash(self.instanceId)
-		self.xmlRpcPort = 1024 + (h%32255) * 2
-		self.httpPort = self.xmlRpcPort + 1
-		self.httpServer = None
-		self.meshClient = None
-		self.meshXMLRPCServer = None
 
 		#the main classes
 		self.glive = Glive( self )
@@ -349,9 +343,61 @@ class RecordActivity(activity.Activity):
 
 
 	def startMesh( self ):
-		self.httpServer = HttpServer(self)
-		self.meshClient = MeshClient(self)
-		self.meshXMLRPCServer = MeshXMLRPCServer(self)
+		self._setup()
+#		self.httpServer = HttpServer(self)
+#		self.meshClient = MeshClient(self)
+#		self.meshXMLRPCServer = MeshXMLRPCServer(self)
+
+def _setup(self):
+	#sets up the tubes...
+	if self._shared_activity is None:
+		self._logger.error('Failed to share or join activity')
+		return
+
+	# Work out what our room is called and whether we have Tubes already
+	bus_name, conn_path, channel_paths = self._shared_activity.get_channels()
+	room = None
+	tubes_chan = None
+	text_chan = None
+	for channel_path in channel_paths:
+		channel = telepathy.client.Channel(bus_name, channel_path)
+		htype, handle = channel.GetHandle()
+		if htype == telepathy.HANDLE_TYPE_ROOM:
+			self._logger.debug('Found our room: it has handle#%d "%s"', handle, self.conn.InspectHandles(htype, [handle])[0])
+			room = handle
+			ctype = channel.GetChannelType()
+			if ctype == telepathy.CHANNEL_TYPE_TUBES:
+				self._logger.debug('Found our Tubes channel at %s', channel_path)
+				tubes_chan = channel
+			elif ctype == telepathy.CHANNEL_TYPE_TEXT:
+				self._logger.debug('Found our Text channel at %s', channel_path)
+				text_chan = channel
+
+	if room is None:
+		self._logger.error("Presence service didn't create a room")
+		return
+	if text_chan is None:
+			self._logger.error("Presence service didn't create a text channel")
+			return
+
+	# Make sure we have a Tubes channel - PS doesn't yet provide one
+	if tubes_chan is None:
+		self._logger.debug("Didn't find our Tubes channel, requesting one...")
+		tubes_chan = self.conn.request_channel(telepathy.CHANNEL_TYPE_TUBES, telepathy.HANDLE_TYPE_ROOM, room, True)
+
+	self.tubes_chan = tubes_chan
+	self.text_chan = text_chan
+
+	tubes_chan[telepathy.CHANNEL_TYPE_TUBES].connect_to_signal('NewTube', self._new_tube_cb)
+
+
+	def _new_tube_cb(self, id, initiator, type, service, params, state):
+		self._logger.debug('New tube: ID=%d initator=%d type=%d service=%s params=%r state=%d', id, initiator, type, service, params, state)
+		if (type == telepathy.TUBE_TYPE_DBUS and service == SERVICE):
+			if state == telepathy.TUBE_STATE_LOCAL_PENDING:
+				self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
+			tube_conn = TubeConnection(self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
+			self.hellotube = RecordTube(tube_conn, self._get_buddy, self._filepath, self.hashedKey, self._logger)
 
 
 	def _activeCb( self, widget, pspec ):
