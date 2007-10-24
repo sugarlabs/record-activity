@@ -30,7 +30,6 @@ import pygtk
 pygtk.require('2.0')
 import shutil
 import gc
-
 import math
 import gtk.gdk
 import sugar.env
@@ -366,8 +365,9 @@ class Model:
 
 	def meshShareRecd( self, recd ):
 		#hey, i just took a cool video.audio.photo!  let me show you!
-		if (self.ca.meshClient != None):
-			self.ca.meshClient.notifyBudsOfNewPhoto( recd )
+		if (self.ca.recTube != None):
+			recdXml =  
+			self.ca.recTube.notifyBudsOfNewRecd( self.ca.hashedKey, recdXml )
 
 
 	def cannotSaveVideo( self ):

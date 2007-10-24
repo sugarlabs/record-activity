@@ -130,7 +130,7 @@ class RecordActivity(activity.Activity):
 		self.I_AM_SAVED = False
 
 		#get the Presence Service
-		self.rectube = None  # Shared session
+		self.recTube = None  # Shared session
 		self.connect( "shared", self._sharedCb )
 		self.pservice = presenceservice.get_instance()
 		name, path = self.pservice.get_preferred_connection()
@@ -493,8 +493,8 @@ class RecordActivity(activity.Activity):
 			if state == telepathy.TUBE_STATE_LOCAL_PENDING:
 				self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
 			tube_conn = TubeConnection(self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
-			self.rectube = RecordTube(tube_conn, self._get_buddy, self.hashedKey, self._logger)
-
+			self.recTube = RecordTube(tube_conn, self._get_buddy, self.hashedKey, self._logger)
+			self.hellotube.connect("new-recd", self._newRecdCb)
 
 	def _get_buddy(self, cs_handle):
 		"""Get a Buddy from a channel specific handle."""
@@ -514,3 +514,7 @@ class RecordActivity(activity.Activity):
 			# XXX: deal with failure to get the handle owner
 			assert handle != 0
 		return self.pservice.get_buddy_by_telepathy_handle(self.tp_conn_name, self.tp_conn_path, handle)
+
+
+	def _newRecdCb( self, xmlString ):
+		print( "xmlString:", xmlString )
