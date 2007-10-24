@@ -386,12 +386,13 @@ class RecordActivity(activity.Activity):
 		#todo: rainbow
 
 		# #4422
-#		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
-#		if (os.path.exists(self.tempPath)):
-#			shutil.rmtree( self.tempPath )
-#		os.makedirs(self.tempPath)
+		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
+		if (os.path.exists(self.tempPath)):
+			shutil.rmtree( self.tempPath )
+		os.makedirs(self.tempPath)
 
-		self.tempPath = self.get_activity_root()
+#		self.tempPath = self.get_activity_root()
+		print( "tempPath", self.tempPath )
 
 
 	def close( self ):
