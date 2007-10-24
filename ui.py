@@ -1484,20 +1484,19 @@ class UI:
 	def showAudio( self, recd ):
 		self.LIVEMODE = False
 
-		#returns the small file to start with, and gets updated when the fullscreen arrives on the mesh
-		#todo: gracefully replace the picture without restarting the audio
-		pixbuf = recd.getAudioImagePixbuf()
-		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-		self.livePhotoCanvas.setImage( img )
-		self.shownRecd = recd
-
-		self.updateVideoComponents()
+		if (recd != self.shownRecd):
+			pixbuf = recd.getAudioImagePixbuf()
+			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+			self.livePhotoCanvas.setImage( img )
+			self.shownRecd = recd
+			self.updateVideoComponents()
 
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath != None):
+			self.showRecdMeta(recd)
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
-			self.showRecdMeta(recd)
+			self.scrubWindow.doPlay()
 
 
 	def deleteThumbSelection( self, recd ):
@@ -1724,7 +1723,7 @@ class PhotoCanvas(P5):
 
 
 	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorBg, w, h )
+		self.background( ctx, self.ui.colorBlack, w, h )
 
 		if (self.img != None):
 
@@ -1870,8 +1869,10 @@ class ScrubberWindow(gtk.Window):
 	def removeCallbacks( self ):
 		if (self.UPDATE_SCALE_ID != 0):
 			gobject.source_remove(self.UPDATE_SCALE_ID)
+			self.UPDATE_SCALE_ID = 0
 		if (self.CHANGED_ID != 0):
 			gobject.source_remove(self.CHANGED_ID)
+			self.CHANGED_ID = 0
 
 
 	def _buttonClickedCb(self, widget):

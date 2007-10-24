@@ -226,11 +226,14 @@ class Glive:
 
 
 	def stopRecordingAudio( self ):
-		audioFile = self.el("audioFilesink").get_property("location")
 		self.stop()
+		gobject.idle_add( self.stoppedRecordingAudio )
+
+	def stoppedRecordingAudio( self ):
 		self.record = False
 		self.audio = False
 		if (self.audioPixbuf != None):
+			audioFile = self.el("audioFilesink").get_property("location")
 			self.ca.m.saveAudio(audioFile, self.audioPixbuf)
 		else:
 			self.ca.m.cannotSaveVideo()
