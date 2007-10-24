@@ -334,7 +334,10 @@ class RecordActivity(activity.Activity):
 
 
 	def _sharedCb( self, activity ):
-		self.startMesh()
+		self._logger.debug('My activity was shared')
+		self._setup()
+		self._logger.debug('This is my activity: making a tube...')
+		id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube( SERVICE, {})
 
 
 	def _meshJoinedCb( self, activity ):
@@ -343,9 +346,9 @@ class RecordActivity(activity.Activity):
 
 	def startMesh( self ):
 		self._setup()
-#		self.httpServer = HttpServer(self)
-#		self.meshClient = MeshClient(self)
-#		self.meshXMLRPCServer = MeshXMLRPCServer(self)
+		self._logger.debug('This is not my activity: waiting for a tube...')
+		self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes( reply_handler=self._list_tubes_reply_cb, error_handler=self._list_tubes_error_cb)
+
 
 	def _setup(self):
 		#sets up the tubes...
