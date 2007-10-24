@@ -22,15 +22,21 @@ import gtk
 import gobject
 import os
 import shutil
-
+import telepathy
+import telepathy.client
 import logging
-
 import xml.dom.minidom
+from xml.dom.minidom import getDOMImplementation
+from xml.dom.minidom import parse
+from gettext import gettext as _
 
 from sugar import util
 from sugar.activity import activity
 from sugar import profile
 from sugar.datastore import datastore
+from sugar.presence import presenceservice
+from sugar.presence.tubeconn import TubeConnection
+SERVICE = "org.laptop.RecordActivity"
 
 from model import Model
 from ui import UI
@@ -38,11 +44,6 @@ from recordtube import RecordTube
 from glive import Glive
 from gplay import Gplay
 
-from gettext import gettext as _
-
-import xml.dom.minidom
-from xml.dom.minidom import getDOMImplementation
-from xml.dom.minidom import parse
 
 class RecordActivity(activity.Activity):
 
@@ -50,9 +51,6 @@ class RecordActivity(activity.Activity):
 		activity.Activity.__init__(self, handle)
 		self.JUST_LAUNCHED = True
 		self._logger = logging.getLogger('record-activity')
-		self.rectube = None  # Shared session
-		#connect these right away
-		self.connect( "shared", self._sharedCb )
 		self.connect( "notify::active", self._activeCb )
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
@@ -104,7 +102,6 @@ class RecordActivity(activity.Activity):
 		#TRANS: Cannot download this Photo
 		self.istrCannotDownload = _("Cannot download this %(1)s")
 
-
 		self.recdTitle = "title"
 		self.recdTime = "time"
 		self.recdPhotographer = "photographer"
@@ -132,6 +129,15 @@ class RecordActivity(activity.Activity):
 		self.I_AM_CLOSING = False
 		self.I_AM_SAVED = False
 
+		#get the Presence Service
+		self.rectube = None  # Shared session
+		self.connect( "shared", self._sharedCb )
+		self.pservice = presenceservice.get_instance()
+		name, path = self.pservice.get_preferred_connection()
+		self.tp_conn_name = name
+		self.tp_conn_path = path
+		self.conn = telepathy.client.Connection(name, path)
+
 		#whoami?
 		key = profile.get_pubkey()
 		keyHash = util._sha_data(key)
@@ -154,7 +160,7 @@ class RecordActivity(activity.Activity):
 		if self._shared_activity:
 			#have you joined or shared this activity yourself?
 			if self.get_shared():
-				self.startMesh()
+				self._meshJoinedCb()
 			else:
 				self.connect("joined", self._meshJoinedCb)
 
@@ -336,16 +342,18 @@ class RecordActivity(activity.Activity):
 	def _sharedCb( self, activity ):
 		self._logger.debug('My activity was shared')
 		self._setup()
+
 		self._logger.debug('This is my activity: making a tube...')
 		id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube( SERVICE, {})
 
 
 	def _meshJoinedCb( self, activity ):
-		self.startMesh()
+		if not self._shared_activity:
+			return
 
-
-	def startMesh( self ):
+		self._logger.debug('Joined an existing shared activity')
 		self._setup()
+
 		self._logger.debug('This is not my activity: waiting for a tube...')
 		self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes( reply_handler=self._list_tubes_reply_cb, error_handler=self._list_tubes_error_cb)
 
