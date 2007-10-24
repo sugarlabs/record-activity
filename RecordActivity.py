@@ -118,6 +118,8 @@ class RecordActivity(activity.Activity):
 		self.recdAlbum = "album"
 		self.recdType = "type"
 		self.recdBuddyThumb = "buddyThumb"
+		self.recdRecd = "recd"
+		self.recdThumb = "thumb"
 		self.keyName = "name"
 		self.keyMime = "mime"
 		self.keyExt = "ext"
@@ -209,22 +211,20 @@ class RecordActivity(activity.Activity):
 			self.checkDestroy( album, xmlFile )
 
 
-	def saveIt( self, xmlFile, el, recd ):
-		#presume we don't need to serialize...
-		needToDatastoreMedia = False
+	def getRecdXml( self, recd ):
+		impl = getDOMImplementation()
+		recdXml = impl.createDocument(None, self.recdRecd, None)
+		root = recdXml.documentElement
+		self.addRecdXmlAttrs( root, recd )
 
-		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
-			pixbuf = recd.getThumbPixbuf( )
-			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
-			el.setAttribute(self.recdBuddyThumb, buddyThumb )
-			recd.savedMedia = True
-			self.saveXml( xmlFile, el, recd )
-		else:
-			recd.savedMedia = False
-			self.saveMedia( xmlFile, el, recd )
+		pixbuf = recd.getThumbPixbuf( )
+		thumb = str( self._get_base64_pixbuf_data(pixbuf) )
+		root.setAttribute(self.recdThumb, thumb )
+
+		return recdXml
 
 
-	def saveXml( self, xmlFile, el, recd ):
+	def addRecdXmlAttrs( self, el, recd ):
 		el.setAttribute(self.recdType, str(recd.type))
 
 		if (recd.type == self.m.TYPE_AUDIO):
@@ -245,6 +245,25 @@ class RecordActivity(activity.Activity):
 		el.setAttribute(self.recdThumbBytes, str(recd.thumbBytes))
 		if (recd.datastoreId != None):
 			el.setAttribute(self.recdDatastoreId, str(recd.datastoreId))
+
+
+	def saveIt( self, xmlFile, el, recd ):
+		#presume we don't need to serialize...
+		needToDatastoreMedia = False
+
+		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
+			pixbuf = recd.getThumbPixbuf( )
+			buddyThumb = str( self._get_base64_pixbuf_data(pixbuf) )
+			el.setAttribute(self.recdBuddyThumb, buddyThumb )
+			recd.savedMedia = True
+			self.saveXml( xmlFile, el, recd )
+		else:
+			recd.savedMedia = False
+			self.saveMedia( xmlFile, el, recd )
+
+
+	def saveXml( self, xmlFile, el, recd ):
+		self.addRecdXmlAttrs( el, recd )
 
 		recd.savedXml = True
 		self.checkDestroy( el.ownerDocument, xmlFile )
@@ -494,7 +513,7 @@ class RecordActivity(activity.Activity):
 				self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
 			tube_conn = TubeConnection(self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
 			self.recTube = RecordTube(tube_conn, self._get_buddy, self.hashedKey, self._logger)
-			self.hellotube.connect("new-recd", self._newRecdCb)
+			self.recTube.connect("new-recd", self._newRecdCb)
 
 	def _get_buddy(self, cs_handle):
 		"""Get a Buddy from a channel specific handle."""

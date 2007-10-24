@@ -366,7 +366,7 @@ class Model:
 	def meshShareRecd( self, recd ):
 		#hey, i just took a cool video.audio.photo!  let me show you!
 		if (self.ca.recTube != None):
-			recdXml =  
+			recdXml = self.ca.getRecdXml(recd)
 			self.ca.recTube.notifyBudsOfNewRecd( self.ca.hashedKey, recdXml )
 
 
