@@ -1517,7 +1517,10 @@ class UI:
 
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath == None):
-			mediaFilepath = recd.getThumbFilepath( True )
+			self.showRecdMeta(recd)
+			videoUrl = "file://" + str( mediaFilepath )
+			self.ca.gplay.setLocation(videoUrl)
+			self.scrubWindow.doPlay()
 
 		self.shownRecd = recd
 		self.showRecdMeta(recd)

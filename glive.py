@@ -52,8 +52,8 @@ class Glive:
 
 		self.TRANSCODE_UPDATE_INTERVAL = 200
 
-		self.VIDEO_WIDTH_SMALL = 160
-		self.VIDEO_HEIGHT_SMALL = 120
+		self.VIDEO_WIDTH_SMALL = 200
+		self.VIDEO_HEIGHT_SMALL = 150
 
 		self.thumbPipes = []
 		self.muxPipes = []
