@@ -1489,7 +1489,8 @@ class UI:
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 			self.livePhotoCanvas.setImage( img )
 			self.shownRecd = recd
-			self.updateVideoComponents()
+
+		self.updateVideoComponents()
 
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath != None):
@@ -1497,6 +1498,28 @@ class UI:
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
 			self.scrubWindow.doPlay()
+
+
+	def showVideo( self, recd ):
+		if (self.LIVEMODE):
+			if (self.ca.glive.isXv()):
+				self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
+				self.ca.glive.stop()
+				self.ca.glive.play()
+
+		self.LIVEMODE = False
+
+		self.updateVideoComponents()
+
+		mediaFilepath = recd.getMediaFilepath( True )
+		if (mediaFilepath == None):
+			mediaFilepath = recd.getThumbFilepath( True )
+			videoUrl = "file://" + str( mediaFilepath )
+			self.ca.gplay.setLocation(videoUrl)
+			self.scrubWindow.doPlay()
+
+		self.shownRecd = recd
+		self.showRecdMeta(recd)
 
 
 	def deleteThumbSelection( self, recd ):
@@ -1543,27 +1566,6 @@ class UI:
 	def updateShownMedia( self, recd ):
 		if (self.shownRecd == recd):
 			self.showThumbSelection( recd )
-
-
-	def showVideo( self, recd ):
-		if (self.LIVEMODE):
-			if (self.ca.glive.isXv()):
-				self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
-				self.ca.glive.stop()
-				self.ca.glive.play()
-
-			self.LIVEMODE = False
-			self.updateVideoComponents()
-
-		mediaFilepath = recd.getMediaFilepath( True )
-		if (mediaFilepath == None):
-			mediaFilepath = recd.getThumbFilepath( True )
-		videoUrl = "file://" + str( mediaFilepath )
-		self.ca.gplay.setLocation(videoUrl)
-		self.scrubWindow.doPlay()
-
-		self.shownRecd = recd
-		self.showRecdMeta(recd)
 
 
 	def showRecdMeta( self, recd ):
