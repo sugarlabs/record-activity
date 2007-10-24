@@ -17,13 +17,12 @@ class RecordTube(ExportedGObject):
 	}
 
 
-	def __init__(self, tube, get_buddy, thePdfPath, myHashKey, logger ):
+	def __init__(self, tube, get_buddy, myHashKey, logger ):
 		super(HelloTube, self).__init__(tube, PATH)
 		self._logger = logger
 		self.tube = tube
 		self._get_buddy = get_buddy  # Converts handle to Buddy object
 		self.myHashKey = myHashKey
-		self.thePdfPath = thePdfPath
 		if (self.thePdfPath != None):
 			self.tube.add_signal_receiver(self.hello_cb, 'Hello', IFACE, path=PATH, sender_keyword='sender')
 		else:
