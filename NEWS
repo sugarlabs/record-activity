@@ -8,8 +8,17 @@
 * #4209 worked around (jedierikb)
 * #1557 addressed (jedierikb)
 
-28
-* when finished post-processing video, and not the active activity, setup the ui correctly so that video pipelines can return their display (closes #2894)
+33
+* bug with slow creation of audio thumbnails (jedierikb)
+
+32
+* changed audio/wav mimetype to audio/x-wav for entry into the journal
+
+31
+* #4010 audio/wav mimetype for entry into the journal
+
+30
+* ogg not ogv
 
 27
 * delete (jedierikb)
