@@ -50,6 +50,7 @@ class RecordActivity(activity.Activity):
 		activity.Activity.__init__(self, handle)
 		self.JUST_LAUNCHED = True
 		self._logger = logging.getLogger('record-activity')
+		self.rectube = None  # Shared session
 		#connect these right away
 		self.connect( "shared", self._sharedCb )
 		self.connect( "notify::active", self._activeCb )
@@ -395,7 +396,7 @@ class RecordActivity(activity.Activity):
 			if state == telepathy.TUBE_STATE_LOCAL_PENDING:
 				self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
 			tube_conn = TubeConnection(self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
-			self.hellotube = RecordTube(tube_conn, self._get_buddy, self._filepath, self.hashedKey, self._logger)
+			self.rectube = RecordTube(tube_conn, self._get_buddy, self._filepath, self.hashedKey, self._logger)
 
 
 	def _activeCb( self, widget, pspec ):
