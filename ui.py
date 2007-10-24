@@ -700,6 +700,7 @@ class UI:
 		self.tagsBuffer.set_text("")
 
 		self.scrubWindow.removeCallbacks()
+		self.scrubWindow.reset()
 
 #		kids = self.bottomCenter.get_children()
 #		haveInfButton = False
@@ -1468,15 +1469,18 @@ class UI:
 		if (recd != lastRecd):
 			self.photoXoPanel.updateXoColors()
 
-			bottomKid = self.bottomCenter.get_child()
-			if (bottomKid != None):
-				self.bottomCenter.remove( bottomKid )
+		bottomKid = self.bottomCenter.get_child()
+		if (bottomKid != None):
+			self.bottomCenter.remove( bottomKid )
 
-			if (recd.type == self.ca.m.TYPE_PHOTO):
-				self.bottomCenter.add( self.namePanel )
-			elif (recd.type == self.ca.m.TYPE_VIDEO or recd.type == self.ca.m.TYPE_AUDIO):
+		if (recd.type == self.ca.m.TYPE_PHOTO):
+			self.bottomCenter.add( self.namePanel )
+		elif (recd.type == self.ca.m.TYPE_VIDEO or recd.type == self.ca.m.TYPE_AUDIO):
+			if (not self.RECD_INFO_ON):
 				self.bottomCenter.add( self.scrubberPanel )
-			self.bottomCenter.show_all()
+			else:
+				self.bottomCenter.add( self.namePanel )
+		self.bottomCenter.show_all()
 
 		self.resetWidgetFadeTimer()
 
@@ -1514,9 +1518,6 @@ class UI:
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath == None):
 			mediaFilepath = recd.getThumbFilepath( True )
-			videoUrl = "file://" + str( mediaFilepath )
-			self.ca.gplay.setLocation(videoUrl)
-			self.scrubWindow.doPlay()
 
 		self.shownRecd = recd
 		self.showRecdMeta(recd)
@@ -1550,8 +1551,6 @@ class UI:
 
 	def startLiveAudio( self ):
 		self.ca.m.setUpdating(True)
-
-		#todo: finesse the stopping of the play pipes
 		self.ca.gplay.stop()
 
 		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
@@ -1875,6 +1874,10 @@ class ScrubberWindow(gtk.Window):
 		if (self.CHANGED_ID != 0):
 			gobject.source_remove(self.CHANGED_ID)
 			self.CHANGED_ID = 0
+
+
+	def reset(self):
+			self.adjustment.set_value(0)
 
 
 	def _buttonClickedCb(self, widget):
