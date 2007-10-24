@@ -1516,7 +1516,7 @@ class UI:
 		self.updateVideoComponents()
 
 		mediaFilepath = recd.getMediaFilepath( True )
-		if (mediaFilepath == None):
+		if (mediaFilepath != None):
 			self.showRecdMeta(recd)
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
