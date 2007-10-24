@@ -7,6 +7,7 @@
 * #3774 fixed (jedierikb)
 * #4209 worked around (jedierikb)
 * #1557 addressed (jedierikb)
+* #3588 fixed (jedierikb)
 
 33
 * bug with slow creation of audio thumbnails (jedierikb)
