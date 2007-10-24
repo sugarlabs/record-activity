@@ -1,3 +1,13 @@
+34
+* frs ui (jedierikb, mikhak)
+* notify::active #2026 should close #3097, #3616 (jedierikb)
+* #4111, #4189 fixed (jedierikb)
+* #1063, #3776 addressed (jedierikb), blocked by #4144
+* #809 fixed (jedierikb)
+* #3774 fixed (jedierikb)
+* #4209 worked around (jedierikb)
+* #1557 addressed (jedierikb)
+
 28
 * when finished post-processing video, and not the active activity, setup the ui correctly so that video pipelines can return their display (closes #2894)
 
