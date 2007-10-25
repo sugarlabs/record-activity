@@ -105,6 +105,7 @@ class Model:
 			thumbImg = recd.pixbufFromString( bt.nodeValue )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 			recd.thumbFilename = os.path.basename(thumbPath)
+			print("recd bt", recd.thumbFilename)
 
 		ai = el.getAttributeNode(self.ca.recdAudioImage)
 		if (not ai == None):

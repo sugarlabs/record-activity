@@ -115,13 +115,13 @@ class RecordActivity(activity.Activity):
 		self.recdThumbMd5 = "thumbMd5"
 		self.recdMediaBytes = "mediaBytes"
 		self.recdThumbBytes = "thumbBytes"
+		self.recdBuddyThumb = "buddyThumb"
 		self.recdDatastoreId = "datastoreId"
 		self.recdAudioImage = "audioImage"
 		self.recdAlbum = "album"
 		self.recdType = "type"
-		self.recdBuddyThumb = "buddyThumb"
 		self.recdRecd = "recd"
-		self.recdThumb = "thumb"
+		#self.recdThumb = "thumb"
 		self.keyName = "name"
 		self.keyMime = "mime"
 		self.keyExt = "ext"
@@ -221,7 +221,7 @@ class RecordActivity(activity.Activity):
 
 		pixbuf = recd.getThumbPixbuf( )
 		thumb = str( self._get_base64_pixbuf_data(pixbuf) )
-		root.setAttribute(self.recdThumb, thumb )
+		root.setAttribute(self.recdBuddyThumb, thumb )
 
 		writer = cStringIO.StringIO()
 		recdXml.writexml(writer)
@@ -559,7 +559,7 @@ class RecordActivity(activity.Activity):
 			return
 
 		recd = Recorded(self)
-		#todo: catch exceptions for bad xml
+		#todo: catch exceptions for bad/incomplete xml
 		self.m.fillRecdFromNode( recd, dom.documentElement )
 		recd.buddy = True
 		recd.downloadedFromBuddy = False
