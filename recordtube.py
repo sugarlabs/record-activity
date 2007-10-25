@@ -41,8 +41,7 @@ class RecordTube(ExportedGObject):
 			self._logger.debug("sender is my bus name, so ignore my own signal")
 			return
 		elif (recorder == self.myHashKey):
-			self._logger.debug('excuse me?  you are asking me to share this with myself?')
+			self._logger.debug('excuse me?  you are asking me to share a photo with myself?')
 			return
 
-		print("here is the xml:" + recdXml)
 		self.emit( "new-recd", str(recorder), str(recdXml) )

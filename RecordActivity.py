@@ -550,7 +550,6 @@ class RecordActivity(activity.Activity):
 
 
 	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
-		print( "xmlString:", xmlString, "from", recorder )
 		dom = None
 		try:
 			dom = xml.dom.minidom.parseString(xmlString)
