@@ -134,7 +134,7 @@ class Model:
 		recd = Recorded( self.ca )
 		addToHash = True
 
-		self.fillRecFromNode( recd, el )
+		self.fillRecdFromNode( recd, el )
 
 		recd.datastoreNode = el.getAttributeNode(self.ca.recdDatastoreId)
 		if (recd.datastoreNode != None):
