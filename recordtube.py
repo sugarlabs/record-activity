@@ -15,7 +15,7 @@ class RecordTube(ExportedGObject):
 		'filepart':
 			(gobject.SIGNAL_RUN_FIRST, None, [object,object,object,object,object,object,object]),
 		'new-recd':
-			(gobject.SIGNAL_RUN_FIRST, None, [object])
+			(gobject.SIGNAL_RUN_FIRST, None, [object,object])
 	}
 
 
