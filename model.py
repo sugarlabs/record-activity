@@ -546,7 +546,7 @@ class Model:
 			if (os.path.exists(mediaFile)):
 				os.remove(mediaFile)
 
-			thumbFile = recd.getThumbFilepath( False )
+			thumbFile = recd.getThumbFilepath( )
 			if (os.path.exists(thumbFile)):
 				os.remove(thumbFile)
 		else:

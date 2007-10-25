@@ -105,8 +105,7 @@ class Recorded:
 			return self.pixbufFromString( self.datastoreOb.metadata['preview'] )
 
 
-	def getThumbFilepath( self, meshReq ):
-		#todo: make sure this is used everywhere
+	def getThumbFilepath( self ):
 		if (self.datastoreId == None):
 			#just taken, so it is in the tempSessionDir
 			#so load file, convert to pixbuf, and return it here...
@@ -172,7 +171,7 @@ class Recorded:
 					return None
 
 		else:
-			#pulling from the datastore, regardless of who took it
+			#pulling from the datastore, regardless of who took it, cause we got it
 
 			#first, get the datastoreObject and hold the reference in this Recorded instance
 			if (self.datastoreOb == None):

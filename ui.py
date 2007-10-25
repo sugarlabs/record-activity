@@ -681,14 +681,19 @@ class UI:
 
 	def getPhotoPixbuf( self, recd ):
 		pixbuf = None
+
+		#this call will get the bits or request the bits if they're not available
 		imgPath = recd.getMediaFilepath( True )
 		if (not imgPath == None):
 			if ( os.path.isfile(imgPath) ):
 				pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
 
+
 		if (pixbuf == None):
 			#maybe it is not downloaded from the mesh yet...
+			#but we can show the low res thumb in the interim
 			pixbuf = recd.getThumbPixbuf()
+			#todo: get download status and update accordingly
 
 		return pixbuf
 
@@ -1493,15 +1498,19 @@ class UI:
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 			self.livePhotoCanvas.setImage( img )
 			self.shownRecd = recd
+			#todo: if i switch between multiple recds, when is their metadata saved?
+			self.showRecdMeta(recd)
 
 		self.updateVideoComponents()
 
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath != None):
-			self.showRecdMeta(recd)
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
 			self.scrubWindow.doPlay()
+		else:
+			pass
+			#todo: update the mesh download progress here
 
 
 	def showVideo( self, recd ):
@@ -1510,20 +1519,23 @@ class UI:
 				self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 				self.ca.glive.stop()
 				self.ca.glive.play()
-
 		self.LIVEMODE = False
 
 		self.updateVideoComponents()
+		self.showRecdMeta(recd)
 
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath != None):
-			self.showRecdMeta(recd)
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
 			self.scrubWindow.doPlay()
+		else:
+			thumbFilepath = recd.getThumbFilepath( )
+			thumbUrl = "file://" + str( thumbFilepath )
+			self.ca.gplay.setLocation(thumbUrl)
+			#todo: where do we show the thumb as the movie while it downloads?
 
 		self.shownRecd = recd
-		self.showRecdMeta(recd)
 
 
 	def deleteThumbSelection( self, recd ):

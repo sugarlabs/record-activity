@@ -78,10 +78,9 @@ class Gplay:
 
 		self.getPlayer().set_state(gst.STATE_READY)
 		self.getPlayer().set_property('uri', location)
-		if (location[len(location):] == "jpg"):
+		ext = location[len(location):]
+		if (ext == "jpg") or (ext == "png"):
 			self.pause()
-#		else:
-#			self.play()
 
 
 	def queryPosition(self):
