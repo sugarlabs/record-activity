@@ -29,6 +29,7 @@ import xml.dom.minidom
 from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
 from gettext import gettext as _
+import cStringIO
 
 from sugar import util
 from sugar.activity import activity
@@ -162,7 +163,7 @@ class RecordActivity(activity.Activity):
 		if self._shared_activity:
 			#have you joined or shared this activity yourself?
 			if self.get_shared():
-				self._meshJoinedCb()
+				self._meshJoinedCb( self )
 			else:
 				self.connect("joined", self._meshJoinedCb)
 
@@ -211,7 +212,7 @@ class RecordActivity(activity.Activity):
 			self.checkDestroy( album, xmlFile )
 
 
-	def getRecdXml( self, recd ):
+	def getRecdXmlString( self, recd ):
 		impl = getDOMImplementation()
 		recdXml = impl.createDocument(None, self.recdRecd, None)
 		root = recdXml.documentElement
@@ -221,7 +222,9 @@ class RecordActivity(activity.Activity):
 		thumb = str( self._get_base64_pixbuf_data(pixbuf) )
 		root.setAttribute(self.recdThumb, thumb )
 
-		return recdXml
+		writer = cStringIO.StringIO()
+		recdXml.writexml(writer)
+		return writer.getvalue()
 
 
 	def addRecdXmlAttrs( self, el, recd ):

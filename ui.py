@@ -443,7 +443,6 @@ class UI:
 				self.ca.m.doVideoMode()
 			elif(num == self.ca.m.MODE_AUDIO) and (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
 				self.ca.m.doAudioMode()
-				self.ca.recTube.notifyBudsOfNewRecd( "ok", "hi" )
 
 
 	def addToWindowStack( self, win, parent ):
