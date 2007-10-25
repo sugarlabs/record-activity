@@ -26,7 +26,7 @@ class RecordTube(ExportedGObject):
 		self.myHashKey = myHashKey
 		self._logger = logger
 
-		self.tube.add_signal_receiver(self._newRecdCb, 'notifyBudsOfNewRecd', IFACE, path=PATH, sender_keyword='sender')
+		self.tube.add_signal_receiver(self._newRecdTubeCb, 'notifyBudsOfNewRecd', IFACE, path=PATH, sender_keyword='sender')
 
 
 	@signal(dbus_interface=IFACE, signature='ss') #dual s for 2x strings
@@ -35,7 +35,7 @@ class RecordTube(ExportedGObject):
 		self._logger.debug('Ive taken a new photo!')
 
 
-	def _newRecdCb(self, recorder, recdXml, sender=None):
+	def _newRecdTubeCb(self, recorder, recdXml, sender=None):
 		self._logger.debug("_newRecdCb from " + recorder )
 		if sender == self.tube.get_unique_name():
 			self._logger.debug("sender is my bus name, so ignore my own signal")
@@ -44,5 +44,5 @@ class RecordTube(ExportedGObject):
 			self._logger.debug('excuse me?  you are asking me to share this with myself?')
 			return
 
-		print("here is the xml:", recdXml)
+		print("here is the xml:" + recdXml)
 		self.emit( "new-recd", recorder, recdXml)

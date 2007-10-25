@@ -545,5 +545,5 @@ class RecordActivity(activity.Activity):
 		return self.pservice.get_buddy_by_telepathy_handle(self.tp_conn_name, self.tp_conn_path, handle)
 
 
-	def _newRecdCb( self, recorder, xmlString ):
+	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
 		print( "xmlString:", xmlString, "from", recorder )
