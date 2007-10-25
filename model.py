@@ -114,6 +114,8 @@ class Model:
 			audioImg.save(audioImagePath, "png", {} )
 			recd.audioImageFilename = os.path.basename(audioImagePath)
 
+		return recd
+
 
 	def getByMd5( self, md5 ):
 		for mh in range (0, len(self.mediaHashs)):

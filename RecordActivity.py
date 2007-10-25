@@ -44,6 +44,7 @@ from ui import UI
 from recordtube import RecordTube
 from glive import Glive
 from gplay import Gplay
+from recorded import Recorded
 
 
 class RecordActivity(activity.Activity):
@@ -550,12 +551,17 @@ class RecordActivity(activity.Activity):
 
 	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
 		print( "xmlString:", xmlString, "from", recorder )
+		dom = None
 		try:
 			dom = xml.dom.minidom.parseString(xmlString)
-			recd = Recorded(self)
-			recd = self.m.fillRecdFromNode( recd, dom.documentElement )
-			recd.buddy = True
-			recd.downloadedFromBuddy = False
-			self.ca.m.addRecd( recd )
 		except:
 			self._logger.debug('Unable to parse xml from the mesh.  What kind of photo did %s take?!', recorder)
+		if (dom == None):
+			return
+
+		recd = Recorded(self)
+		#todo: catch exceptions for bad xml
+		self.m.fillRecdFromNode( recd, dom.documentElement )
+		recd.buddy = True
+		recd.downloadedFromBuddy = False
+		self.m.addRecd( recd )

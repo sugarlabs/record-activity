@@ -45,4 +45,4 @@ class RecordTube(ExportedGObject):
 			return
 
 		print("here is the xml:" + recdXml)
-		self.emit( "new-recd", recorder, recdXml)
+		self.emit( "new-recd", str(recorder), str(recdXml) )
