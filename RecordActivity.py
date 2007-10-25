@@ -547,3 +547,12 @@ class RecordActivity(activity.Activity):
 
 	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
 		print( "xmlString:", xmlString, "from", recorder )
+		try:
+			dom = xml.dom.minidom.parseString(xmlString)
+			recd = Recorded(self)
+			recd = self.m.fillRecdFromNode( recd, dom.documentElement )
+			recd.buddy = True
+			recd.downloadedFromBuddy = False
+			self.ca.m.addRecd( recd )
+		except:
+			self._logger.debug('Unable to parse xml from the mesh.  What kind of photo did %s take?!', recorder)

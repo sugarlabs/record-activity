@@ -101,12 +101,8 @@ class Recorded:
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getThumbPixbuf")
 				return None
-			pbl = gtk.gdk.PixbufLoader()
-			import base64
-			data = base64.b64decode(self.datastoreOb.metadata['preview'])
-			pbl.write(data)
-			pbl.close()
-			return pbl.get_pixbuf()
+
+			return self.pixbufFromString( self.datastoreOb.metadata['preview'] )
 
 
 	def getThumbFilepath( self, meshReq ):
@@ -124,16 +120,11 @@ class Recorded:
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getThumbPixbuf")
 				return None
-			pbl = gtk.gdk.PixbufLoader()
-			import base64
-			data = base64.b64decode(self.datastoreOb.metadata['preview'])
-			pbl.write(data)
-			pbl.close()
 
+			img = self.pixbufFromString( self.datastoreOb.metadata['preview'] )
 			thumbFilepath = os.path.join( self.ca.tempPath, "thumb.png")
 			thumbFilepath = self.ca.m.getUniqueFilepath(thumbFilepath, 0)
-			pbl.get_pixbuf().save(thumbFilepath, "png", {} )
-
+			img.save(thumbFilepath, "png", {} )
 			return thumbFilepath
 
 		return None
@@ -193,3 +184,12 @@ class Recorded:
 			#if this is a buddy's media and you only ever got a thumbnail, then return null and query for the real deal...
 
 			return self.datastoreOb.file_path
+
+
+	def pixbufFromString( self, str ):
+		pbl = gtk.gdk.PixbufLoader()
+		import base64
+		data = base64.b64decode( str )
+		pbl.write(data)
+		pbl.close()
+		return pbl.get_pixbuf()

@@ -77,22 +77,7 @@ class Model:
 				self.loadMedia( each, self.mediaHashs[key] )
 
 
-	def getByMd5( self, md5 ):
-		for mh in range (0, len(self.mediaHashs)):
-			for r in range (0, len(self.mediaHashs[mh])):
-				recd = self.mediaHashs[mh][r]
-				if (recd.thumbMd5 == md5):
-					return recd
-				elif (recd.mediaMd5 == md5):
-					return recd
-
-		return None
-
-
-	def loadMedia( self, el, hash ):
-		recd = Recorded( self.ca )
-		addToHash = True
-
+	def fillRecdFromNode( self, recd, el ):
 		recd.type = int(el.getAttribute(self.ca.recdType))
 		recd.title = el.getAttribute(self.ca.recdTitle)
 		recd.time = int(el.getAttribute(self.ca.recdTime))
@@ -113,11 +98,46 @@ class Model:
 		recd.mediaBytes = int( el.getAttribute(self.ca.recdMediaBytes) )
 		recd.thumbBytes = int( el.getAttribute(self.ca.recdThumbBytes) )
 
+		bt = el.getAttributeNode(self.ca.recdBuddyThumb)
+		if (not bt == None):
+			thumbPath = os.path.join(self.ca.tempPath, "datastoreThumb.jpg")
+			thumbPath = self.getUniqueFilepath( thumbPath, 0 )
+			thumbImg = recd.pixbufFromString( bt.nodeValue )
+			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
+			recd.thumbFilename = os.path.basename(thumbPath)
+
+		ai = el.getAttributeNode(self.ca.recdAudioImage)
+		if (not ai == None):
+			audioImg = recd.pixbufFromString( ai.nodeValue )
+			audioImagePath = os.path.join(self.ca.tempPath, "audioImage.png")
+			audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
+			audioImg.save(audioImagePath, "png", {} )
+			recd.audioImageFilename = os.path.basename(audioImagePath)
+
+
+	def getByMd5( self, md5 ):
+		for mh in range (0, len(self.mediaHashs)):
+			for r in range (0, len(self.mediaHashs[mh])):
+				recd = self.mediaHashs[mh][r]
+				if (recd.thumbMd5 == md5):
+					return recd
+				elif (recd.mediaMd5 == md5):
+					return recd
+
+		return None
+
+
+	def loadMedia( self, el, hash ):
+		recd = Recorded( self.ca )
+		addToHash = True
+
+		self.fillRecFromNode( recd, el )
+
 		recd.datastoreNode = el.getAttributeNode(self.ca.recdDatastoreId)
 		if (recd.datastoreNode != None):
 			recd.datastoreId = recd.datastoreNode.nodeValue
 			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
-			#todo: find better method here (e.g., datastore.exists(id))
+			#todo: find better method here (e.g., datastore.exists(id)) put trac here
 			self.loadMediaFromDatastore( recd )
 			if (recd.datastoreOb == None):
 				addToHash = False
@@ -125,39 +145,6 @@ class Model:
 				#name might have been changed in the journal, so reflect that here
 				recd.title = recd.datastoreOb.metadata['title']
 			recd.datastoreOb == None
-
-
-		bt = el.getAttributeNode(self.ca.recdBuddyThumb)
-		if (not bt == None):
-			#todo: consolidate this code into a function...
-			pbl = gtk.gdk.PixbufLoader()
-			import base64
-			data = base64.b64decode( bt.nodeValue )
-			pbl.write(data)
-			pbl.close()
-			thumbImg = pbl.get_pixbuf()
-
-			thumbPath = os.path.join(self.ca.tempPath, "datastoreThumb.jpg")
-			thumbPath = self.getUniqueFilepath( thumbPath, 0 )
-			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
-
-			recd.thumbFilename = os.path.basename(thumbPath)
-
-		ai = el.getAttributeNode(self.ca.recdAudioImage)
-		if (not ai == None):
-			#todo: consolidate this code into a function...
-			pbl = gtk.gdk.PixbufLoader()
-			import base64
-			data = base64.b64decode( ai.nodeValue )
-			pbl.write(data)
-			pbl.close()
-			audioImg = pbl.get_pixbuf()
-
-			audioImagePath = os.path.join(self.ca.tempPath, "audioImage.png")
-			audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
-			audioImg.save(audioImagePath, "png", {} )
-
-			recd.audioImageFilename = os.path.basename(audioImagePath)
 
 		if (addToHash):
 			hash.append( recd )
@@ -226,7 +213,6 @@ class Model:
 
 
 	def showLastThumb( self ):
-		print("showLast")
 		hash = self.mediaHashs[self.MODE]
 		if (len(hash) > 0):
 			self.ca.ui.showThumbSelection( hash[len(hash)-1] )
@@ -461,6 +447,7 @@ class Model:
 
 
 	def addRecd( self, recd ):
+		#mainly used for media coming in over the mesh
 		#todo: sort on time-taken, not on their arrival time over the mesh (?)
 		self.mediaHashs[recd.type].append( recd )
 
