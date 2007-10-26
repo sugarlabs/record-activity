@@ -51,16 +51,18 @@ class Recorded:
 		self.thumbFilename = None
 		self.audioImageFilename = None
 
-		#assume you took the picture
-		self.buddy = False
-		self.downloadedFromBuddy = False
-		self._triedMeshBuddies = []
-
 		#for flagging when you are being saved to the datastore for the first time...
 		#and just because you have a datastore id, doesn't mean you're saved
 		self.savedMedia = False
 		self.savedXml = False
 
+		#assume you took the picture
+		self.buddy = False
+		self.downloadedFromBuddy = False
+		self.triedMeshBuddies = []
+		self.meshDownloading = False
+		self.meshDownloadingFrom = ""
+		self.meshDownlodingPercent = 0.0
 
 
 	def setTitle( self, newTitle ):
@@ -162,13 +164,12 @@ class Recorded:
 					mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
-					#you should request it from someone and return None for the request to handle...
-					#e.g., thumbs for pics, or "coming attractions" for videos ;-)
-					#todo: always re-request?
-					#todo: notify to the user that the request is underway or not possible...
-					if ( (self.ca.meshClient != None) and meshReq):
-						self.ca.meshClient.requestMediaBits( self )
-					return None
+					if (self.meshDownloading):
+						return None
+					else:
+						if ( (self.ca.recTube != None) and meshReq):
+							self.ca.recTube.requestMediaBits( self )
+						return None
 
 		else:
 			#pulling from the datastore, regardless of who took it, cause we got it

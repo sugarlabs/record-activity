@@ -84,9 +84,11 @@ class UI:
 		self.LAST_RECD_INFO = False
 		self.LAST_TRANSCODING = False
 		self.LAST_COUNTINGDOWN = False
+		self.LAST_MESH_DOWNLOAD = False
 		self.TRANSCODING = False
 		self.COUNTINGDOWN = False
 		self.RECD_INFO_ON = False
+		self.MESH_DOWNLOAD = False
 		self.UPDATE_DURATION_ID = 0
 		self.UPDATE_TIMER_ID = 0
 
@@ -1501,16 +1503,18 @@ class UI:
 			#todo: if i switch between multiple recds, when is their metadata saved?
 			self.showRecdMeta(recd)
 
-		self.updateVideoComponents()
-
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath != None):
+			self.MESH_DOWNLOAD = False
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
 			self.scrubWindow.doPlay()
 		else:
+			self.MESH_DOWNLOAD = True
 			pass
-			#todo: update the mesh download progress here
+			#todo: update the mesh download progress here... but with what component?
+
+		self.updateVideoComponents()
 
 
 	def showVideo( self, recd ):
@@ -1521,11 +1525,11 @@ class UI:
 				self.ca.glive.play()
 		self.LIVEMODE = False
 
-		self.updateVideoComponents()
 		self.showRecdMeta(recd)
 
 		mediaFilepath = recd.getMediaFilepath( True )
 		if (mediaFilepath != None):
+			self.MESH_DOWNLOAD = False
 			videoUrl = "file://" + str( mediaFilepath )
 			self.ca.gplay.setLocation(videoUrl)
 			self.scrubWindow.doPlay()
@@ -1536,7 +1540,7 @@ class UI:
 			#todo: where do we show the thumb as the movie while it downloads?
 
 		self.shownRecd = recd
-
+		self.updateVideoComponents()
 
 	def deleteThumbSelection( self, recd ):
 		self.ca.m.deleteRecorded( recd )
