@@ -1,4 +1,4 @@
-#todo: access these same vars from ra
+#todo: access these same vars from the acitivity subclass
 SERVICE = "org.laptop.RecordActivity"
 IFACE = SERVICE
 PATH = "/org/laptop/RecordActivity"
@@ -9,7 +9,6 @@ from dbus.service import method, signal
 from dbus.gobject_service import ExportedGObject
 
 class RecordTube(ExportedGObject):
-	"""The bit that talks over the TUBES!!!"""
 
 	__gsignals__ = {
 		'filepart':
@@ -31,12 +30,11 @@ class RecordTube(ExportedGObject):
 
 	@signal(dbus_interface=IFACE, signature='ss') #dual s for 2x strings
 	def notifyBudsOfNewRecd(self, recorder, recdXml):
-		"""Say Hello to whoever else is in the tube."""
-		self._logger.debug('Ive taken a new photo!')
+		self._logger.debug('Ive taken a new pho-ideo-audio!  I hereby send you an xml thumb of said media via this interface.')
 
 
 	def _newRecdTubeCb(self, recorder, recdXml, sender=None):
-		self._logger.debug("_newRecdCb from " + recorder )
+		self._logger.debug("_newRecdTubeCb from " + recorder )
 		if sender == self.tube.get_unique_name():
 			self._logger.debug("sender is my bus name, so ignore my own signal")
 			return
@@ -45,3 +43,8 @@ class RecordTube(ExportedGObject):
 			return
 
 		self.emit( "new-recd", str(recorder), str(recdXml) )
+
+
+	@signal(dbus_interface=IFACE, signature='sss') #triple s for 3x strings
+	def requestRecdBits(self, whoWantsIt, whoTheyWantItFrom, recdMd5sumOfIt ):
+		self._logger.debug('I am requesting a high-res version of someones media.')

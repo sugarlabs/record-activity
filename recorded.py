@@ -29,7 +29,8 @@ class Recorded:
 
 		self.type = -1
 		self.time = None
-		self.photographer = None
+		self.recorderName = None
+		self.recorderHash = None
 		self.title = None
 		self.colorStroke = None
 		self.colorFill = None
@@ -63,6 +64,8 @@ class Recorded:
 		self.meshDownloading = False
 		self.meshDownloadingFrom = ""
 		self.meshDownlodingPercent = 0.0
+		#if someone is downloading this, then hold onto it
+		self.meshLocked = False
 
 
 	def setTitle( self, newTitle ):
@@ -168,7 +171,7 @@ class Recorded:
 						return None
 					else:
 						if ( (self.ca.recTube != None) and meshReq):
-							self.ca.recTube.requestMediaBits( self )
+							self.getRecdBitsFromMesh()
 						return None
 
 		else:
@@ -181,9 +184,16 @@ class Recorded:
 				print("RecordActivity error -- unable to get datastore object in getMediaFilepath")
 				return None
 
-			#if this is a buddy's media and you only ever got a thumbnail, then return null and query for the real deal...
-
 			return self.datastoreOb.file_path
+
+
+	def getRecdBitsFromMesh( self ):
+		if (self.meshDownloading):
+			print("we are in midst of downloading this file...")
+			return
+
+		#start with who took the photo
+		self.triedMeshBuddies.append( self.)
 
 
 	def pixbufFromString( self, str ):

@@ -106,7 +106,8 @@ class RecordActivity(activity.Activity):
 
 		self.recdTitle = "title"
 		self.recdTime = "time"
-		self.recdPhotographer = "photographer"
+		self.recdRecorderName = "photographer"
+		self.recdRecorderHash = "recorderHash"
 		self.recdColorStroke = "colorStroke"
 		self.recdColorFill = "colorFill"
 		self.recdHashKey = "hashKey"
@@ -219,6 +220,12 @@ class RecordActivity(activity.Activity):
 		root = recdXml.documentElement
 		self.addRecdXmlAttrs( root, recd )
 
+		#make sure we pop this off if its there, as it is only a local ref
+		dId = root.getAttributeNode(self.recdDatastoreId)
+		if (not dId == None):
+			root.removeAttribute(self.recdDatastoreId)
+
+		#append this for sending out to everone else
 		pixbuf = recd.getThumbPixbuf( )
 		thumb = str( self._get_base64_pixbuf_data(pixbuf) )
 		root.setAttribute(self.recdBuddyThumb, thumb )
@@ -238,7 +245,8 @@ class RecordActivity(activity.Activity):
 
 		el.setAttribute(self.recdTitle, recd.title)
 		el.setAttribute(self.recdTime, str(recd.time))
-		el.setAttribute(self.recdPhotographer, recd.photographer)
+		el.setAttribute(self.recdRecorderName, recd.recorderName)
+		el.setAttribute(self.recdRecorderHash, recd.recorderHash)
 		el.setAttribute(self.recdColorStroke, str(recd.colorStroke.hex) )
 		el.setAttribute(self.recdColorFill, str(recd.colorFill.hex) )
 		el.setAttribute(self.recdHashKey, str(recd.hashKey))

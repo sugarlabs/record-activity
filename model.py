@@ -81,7 +81,8 @@ class Model:
 		recd.type = int(el.getAttribute(self.ca.recdType))
 		recd.title = el.getAttribute(self.ca.recdTitle)
 		recd.time = int(el.getAttribute(self.ca.recdTime))
-		recd.photographer = el.getAttribute(self.ca.recdPhotographer)
+		recd.recorderName = el.getAttribute(self.ca.recdRecorderName)
+		recd.recorderHash = el.getAttribute(self.ca.recdRecorderHash)
 		colorStrokeHex = el.getAttribute(self.ca.recdColorStroke)
 		colorStroke = Color()
 		colorStroke.init_hex( colorStrokeHex )
@@ -479,9 +480,10 @@ class Model:
 		thumbFilepath = self.getUniqueFilepath( thumbFilepath, 0 )
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
-		recd.photographer = self.ca.nickName
+		recd.recorderName = self.ca.nickName
+		self.recorderHash = self.ca.hashedKey
 		stringType = self.mediaTypes[type][self.ca.keyIstr]
-		recd.title = self.ca.istrBy % {"1":stringType, "2":str(recd.photographer)}
+		recd.title = self.ca.istrBy % {"1":stringType, "2":str(recd.recorderName)}
 
 		recd.colorStroke = self.ca.ui.colorStroke
 		recd.colorFill = self.ca.ui.colorFill

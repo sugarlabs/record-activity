@@ -1587,7 +1587,7 @@ class UI:
 
 
 	def showRecdMeta( self, recd ):
-		self.photographerNameLabel.set_label( recd.photographer )
+		self.photographerNameLabel.set_label( recd.recorderName )
 		self.nameTextfield.set_text( recd.title )
 		self.nameTextfield.set_sensitive( True )
 		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
