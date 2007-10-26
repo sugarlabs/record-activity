@@ -13,7 +13,7 @@ class RecordTube(ExportedGObject):
 	__gsignals__ = {
 		'recd-bits-arrived':
 			(gobject.SIGNAL_RUN_FIRST, None, [object,object,object,object,object]),
-		'recd-requested':
+		'recd-request':
 			(gobject.SIGNAL_RUN_FIRST, None, [object,object]),
 		'new-recd':
 			(gobject.SIGNAL_RUN_FIRST, None, [object,object])
@@ -85,8 +85,8 @@ class RecordTube(ExportedGObject):
 		return True
 
 
-	@signal(dbus_interface=IFACE, signature='ssuuayss')
-	def broadcastRecdBits(self, filename, part, numparts, bytes, sendThisTo ):
+	@signal(dbus_interface=IFACE, signature='suuayss')
+	def broadcastRecdBits(self, md5, part, numparts, bytes, sendTo, fromWho ):
 		pass
 
 
