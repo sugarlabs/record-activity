@@ -610,6 +610,8 @@ class RecordActivity(activity.Activity):
 
 
 	def _meshCheckOnRecdRequest( self, recdRequesting ):
+		print("_meshCheckOnRecdRequest")
+
 		if (recdRequesting.downloadedFromBuddy):
 			if (recdRequesting.meshReqCallbackId != 0):
 				gobject.source_remove(recdRequesting.meshReqCallbackId)
@@ -663,7 +665,7 @@ class RecordActivity(activity.Activity):
 
 		#update that we've heard back about this, reset the timeout
 		gobject.source_remove(recd.meshReqCallbackId)
-		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._haveWeDownloadedYetCb)
+		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 
 		#update the progress bar
 		recd.meshDownlodingPercent = (part+0.0)/(numparts+0.0)

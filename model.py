@@ -542,6 +542,8 @@ class Model:
 
 
 	def deleteRecorded( self, recd ):
+		recd.deleted = True
+
 		#remove files from the filesystem if not on the datastore
 		if (recd.datastoreId == None):
 			mediaFile = recd.getMediaFilepath( False )
