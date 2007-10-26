@@ -536,6 +536,7 @@ class RecordActivity(activity.Activity):
 			self.recTube = RecordTube(tube_conn, self._get_buddy, self.hashedKey, self._logger)
 			self.recTube.connect("new-recd", self._newRecdCb)
 			self.recTube.connect("recd-request", self._recdRequestCb)
+			self.recTube.connect("recd-bits-arrived", self._recdBitsArrivedCb)
 
 
 	def _get_buddy(self, cs_handle):
@@ -627,10 +628,21 @@ class RecordActivity(activity.Activity):
 			return False
 
 
-
 	def _recdRequestCb( self, objectThatSentTheSignal, whoWantsIt, md5sumOfIt ):
 		#if we are here, it is because someone has been told we have what they want.
 		#we need to send them that thing, whatever that thing is
 		recd = self.m.getRecdByMd5( md5sumOfIt )
 		if (recd == None):
 			self._logger.debug('_recdRequestCb: we dont have the recd they asked for')
+			#todo: send announcements over the mesh
+		elif (recd.deleted):
+			self._logger.debug('_recdRequestCb: we have the recd, but it has been deleted, so we wont share')
+			#todo: send announcements over the mesh
+		else:
+			recd.meshUploading = True
+			sent = self.recTube.broadcastRecd( whoWantsIt, recd )
+			recd.meshUploading = False
+
+
+	def _recdBitsArrivedCb( self, md5, part, numparts, bytes, fromWho ):
+		print("new bits arrived!")

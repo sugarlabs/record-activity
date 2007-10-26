@@ -66,7 +66,7 @@ class Recorded:
 		self.meshDownlodingPercent = 0.0
 		self.meshDownloadProgress = False
 		#if someone is downloading this, then hold onto it
-		self.meshLocked = False
+		self.meshUploading = False
 		self.meshReqCallbackId = 0
 
 		self.deleted = False
