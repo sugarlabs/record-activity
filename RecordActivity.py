@@ -575,6 +575,62 @@ class RecordActivity(activity.Activity):
 		self.m.addRecd( recd )
 
 
+	def meshInitRoundRobin( self, recd ):
+		if (self.recd.meshDownloading):
+			self._logger.debug("meshInitRoundRobin: we are in midst of downloading this file...")
+			return
+
+		recd.meshDownloading = True
+
+		#start with who took the photo
+		recd.triedMeshBuddies.append( recd.recorderHash )
+		self.meshReqRecFromBuddy( recd, recd.recorderHash )
+
+
+	def meshNextRoundRobinBuddy( self, recd ):
+		pass
+
+
+	def nextRequestRecdBuddyBits( self, recd, buddy ):
+		self.recd.triedMeshBuddies.append( buddy )
+		self.getRecdBitsFromBuddy( recd, buddy )
+
+
+	def meshReqRecFromBuddy( self, recd, fromWho ):
+		self.recd.meshDownloadingFrom = who
+		self.meshDownloadProgress = False
+
+		#self.ca.ui.updateDownloadFrom( who ) #todo...
+
+		recd.meshReqCallbackId = gobject.timeout_add(10000, self._checkOnRecdRequest, recd)
+		self.ca.recTube.requestRecdBits( self.hashedKey, fromWho, self.recd.mediaMd5 )
+
+
+	def _checkOnRecdRequest( self, recdRequesting ):
+		if (recdRequesting.downloadedFromBuddy):
+			recdRequesting.meshReqCallbackId = 0
+			#todo: update the ui if need be
+			return False
+
+		if (recdRequesting.deleted):
+			recdRequesting.meshReqCallbackId = 0
+			return False
+
+		if (recdRequesting.meshDownloadProgress):
+			#we've received some bits since last we checked, so keep waiting...  they'll all get here eventually!
+			recdRequesting.meshDownloadProgress = False
+			return True
+		else:
+			#that buddy we asked info from isn't responding; next buddy!
+			recdRequesting.meshReqCallbackId = 0
+			self.meshNextRoundRobinBuddy( recdRequesting )
+			return False
+
+
+
 	def _recdRequestCb( self, objectThatSentTheSignal, whoWantsIt, md5sumOfIt ):
 		#if we are here, it is because someone has been told we have what they want.
-		pass
+		#we need to send them that thing, whatever that thing is
+		recd = self.m.getRecdByMd5( md5sumOfIt )
+		if (recd == None):
+			self._logger.debug('_recdRequestCb: we dont have the recd they asked for')

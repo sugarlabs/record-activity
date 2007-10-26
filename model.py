@@ -119,7 +119,7 @@ class Model:
 		return recd
 
 
-	def getByMd5( self, md5 ):
+	def getRecdByMd5( self, md5 ):
 		for mh in range (0, len(self.mediaHashs)):
 			for r in range (0, len(self.mediaHashs[mh])):
 				recd = self.mediaHashs[mh][r]

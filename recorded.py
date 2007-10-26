@@ -64,8 +64,12 @@ class Recorded:
 		self.meshDownloading = False
 		self.meshDownloadingFrom = ""
 		self.meshDownlodingPercent = 0.0
+		self.meshDownloadProgress = False
 		#if someone is downloading this, then hold onto it
 		self.meshLocked = False
+		self.meshReqCallbackId = 0
+
+		self.deleted = False
 
 
 	def setTitle( self, newTitle ):
@@ -172,7 +176,7 @@ class Recorded:
 						return None
 					else:
 						if ( (self.ca.recTube != None) and meshReq):
-							self.initRequestRecdBuddyBits()
+							self.ca.meshInitRoundRobin(self)
 						return None
 
 		else:
@@ -186,26 +190,6 @@ class Recorded:
 				return None
 
 			return self.datastoreOb.file_path
-
-
-	def initRequestRecdBuddyBits( self ):
-		if (self.meshDownloading):
-			print("we are in midst of downloading this file...")
-			return
-
-		#start with who took the photo
-		self.meshDownloading = True
-		self.triedMeshBuddies.append( self.recorderHash )
-		self.getRecdBitsFromBuddy( self.recorderHash )
-
-
-	def nextRequestRecdBuddyBits( self, buddy ):
-		self.triedMeshBuddies.append( buddy )
-		self.getRecdBitsFromBuddy( buddy )
-
-
-	def getRecdBitsFromBuddy( self, who ):
-		self.ca.recTube.requestRecdBits( self.ca.hashedKey, who, self.mediaMd5 )
 
 
 	def pixbufFromString( self, str ):
