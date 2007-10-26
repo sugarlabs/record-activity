@@ -168,10 +168,11 @@ class Recorded:
 					return os.path.abspath(mediaFilepath)
 				else:
 					if (self.meshDownloading):
+						print("we are in midst of downloading this file...")
 						return None
 					else:
 						if ( (self.ca.recTube != None) and meshReq):
-							self.getRecdBitsFromMesh()
+							self.initRequestRecdBuddyBits()
 						return None
 
 		else:
@@ -187,13 +188,24 @@ class Recorded:
 			return self.datastoreOb.file_path
 
 
-	def getRecdBitsFromMesh( self ):
+	def initRequestRecdBuddyBits( self ):
 		if (self.meshDownloading):
 			print("we are in midst of downloading this file...")
 			return
 
 		#start with who took the photo
-		self.triedMeshBuddies.append( self.)
+		self.meshDownloading = True
+		self.triedMeshBuddies.append( self.recorderHash )
+		self.getRecdBitsFromBuddy( self.recorderHash )
+
+
+	def nextRequestRecdBuddyBits( self, buddy ):
+		self.triedMeshBuddies.append( buddy )
+		self.getRecdBitsFromBuddy( buddy )
+
+
+	def getRecdBitsFromBuddy( self, who ):
+		self.ca.recTube.requestRecdBits( self.ca.hashedKey, who, self.mediaMd5 )
 
 
 	def pixbufFromString( self, str ):

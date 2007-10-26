@@ -535,6 +535,7 @@ class RecordActivity(activity.Activity):
 			tube_conn = TubeConnection(self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
 			self.recTube = RecordTube(tube_conn, self._get_buddy, self.hashedKey, self._logger)
 			self.recTube.connect("new-recd", self._newRecdCb)
+			self.recTube.connect("recd-request", self._recdRequestCb)
 
 
 	def _get_buddy(self, cs_handle):
@@ -572,3 +573,8 @@ class RecordActivity(activity.Activity):
 		recd.buddy = True
 		recd.downloadedFromBuddy = False
 		self.m.addRecd( recd )
+
+
+	def _recdRequestCb( self, objectThatSentTheSignal, whoWantsIt, md5sumOfIt ):
+		#if we are here, it is because someone has been told we have what they want.
+		pass
