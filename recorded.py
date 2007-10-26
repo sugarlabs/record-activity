@@ -64,7 +64,7 @@ class Recorded:
 		self.meshDownloading = False
 		self.meshDownloadingFrom = ""
 		self.meshDownlodingPercent = 0.0
-		self.meshDownloadProgress = False
+		self.meshDownloadingProgress = False
 		#if someone is downloading this, then hold onto it
 		self.meshUploading = False
 		self.meshReqCallbackId = 0
@@ -159,7 +159,7 @@ class Recorded:
 			return self.getThumbFilepath()
 
 
-	def getMediaFilepath( self, meshReq ):
+	def getMediaFilepath( self, meshRequired ):
 		if (self.datastoreId == None):
 			if (not self.buddy):
 				#just taken by you, so it is in the tempSessionDir
@@ -175,15 +175,25 @@ class Recorded:
 						print("we are in midst of downloading this file...")
 						return None
 					else:
-						if ( (self.ca.recTube != None) and meshReq):
-							self.ca.meshInitRoundRobin(self)
-						return None
+						if (meshRequired):
+							if (self.ca.recTube != None):
+								self.ca.meshInitRoundRobin(self)
+							else:
+								pass
+								#todo: might want to tell kid to get on the mesh?
+							return None
+						else:
+							if self.mediaFilename == None:
+								ext = self.ca.m.mediaTypes[self.type][self.ca.keyExt]
+								recdPath = os.path.join(self.ca.tempPath, "recdFile_"+self.mediaMd5+"."+ext)
+								recdPath = self.getUniqueFilepath( recdPath, 0 )
+								self.mediaFilename = os.path.basename(recdPath)
+								return self.mediaFilename
 
-		else:
-			#pulling from the datastore, regardless of who took it, cause we got it
-
+		else: #pulling from the datastore, regardless of who took it, cause we got it
 			#first, get the datastoreObject and hold the reference in this Recorded instance
 			if (self.datastoreOb == None):
+				#todo: return t or f
 				self.ca.m.loadMediaFromDatastore( self )
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getMediaFilepath")

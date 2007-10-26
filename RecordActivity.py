@@ -134,7 +134,8 @@ class RecordActivity(activity.Activity):
 		self.I_AM_CLOSING = False
 		self.I_AM_SAVED = False
 
-		#get the Presence Service
+		#totally tubular
+		self.meshTimeoutTime = 10000
 		self.recTube = None  # Shared session
 		self.connect( "shared", self._sharedCb )
 		self.pservice = presenceservice.get_instance()
@@ -589,6 +590,7 @@ class RecordActivity(activity.Activity):
 
 
 	def meshNextRoundRobinBuddy( self, recd ):
+		print("next round robin buddy...")
 		pass
 
 
@@ -599,31 +601,34 @@ class RecordActivity(activity.Activity):
 
 	def meshReqRecFromBuddy( self, recd, fromWho ):
 		self.recd.meshDownloadingFrom = who
-		self.meshDownloadProgress = False
+		self.meshDownloadingProgress = False
 
 		#self.ca.ui.updateDownloadFrom( who ) #todo...
 
-		recd.meshReqCallbackId = gobject.timeout_add(10000, self._checkOnRecdRequest, recd)
+		recd.meshReqCallbackId = gobject.timeout_add(meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 		self.ca.recTube.requestRecdBits( self.hashedKey, fromWho, self.recd.mediaMd5 )
 
 
-	def _checkOnRecdRequest( self, recdRequesting ):
+	def _meshCheckOnRecdRequest( self, recdRequesting ):
 		if (recdRequesting.downloadedFromBuddy):
-			recdRequesting.meshReqCallbackId = 0
-			#todo: update the ui if need be
+			if (recdRequesting.meshReqCallbackId != 0):
+				gobject.source_remove(recdRequesting.meshReqCallbackId)
+				recdRequesting.meshReqCallbackId = 0
 			return False
-
 		if (recdRequesting.deleted):
-			recdRequesting.meshReqCallbackId = 0
+			if (recdRequesting.meshReqCallbackId != 0):
+				gobject.source_remove(recdRequesting.meshReqCallbackId)
+				recdRequesting.meshReqCallbackId = 0
 			return False
-
-		if (recdRequesting.meshDownloadProgress):
+		if (recdRequesting.meshDownloadingProgress):
 			#we've received some bits since last we checked, so keep waiting...  they'll all get here eventually!
 			recdRequesting.meshDownloadProgress = False
 			return True
 		else:
 			#that buddy we asked info from isn't responding; next buddy!
-			recdRequesting.meshReqCallbackId = 0
+			if (recdRequesting.meshReqCallbackId != 0):
+				gobject.source_remove(recdRequesting.meshReqCallbackId)
+				recdRequesting.meshReqCallbackId = 0
 			self.meshNextRoundRobinBuddy( recdRequesting )
 			return False
 
@@ -635,14 +640,39 @@ class RecordActivity(activity.Activity):
 		if (recd == None):
 			self._logger.debug('_recdRequestCb: we dont have the recd they asked for')
 			#todo: send announcements over the mesh
-		elif (recd.deleted):
+			return
+		if (recd.deleted):
 			self._logger.debug('_recdRequestCb: we have the recd, but it has been deleted, so we wont share')
 			#todo: send announcements over the mesh
-		else:
-			recd.meshUploading = True
-			sent = self.recTube.broadcastRecd( whoWantsIt, recd )
-			recd.meshUploading = False
+			return
+
+		recd.meshUploading = True
+		sent = self.recTube.broadcastRecd( whoWantsIt, recd )
+		recd.meshUploading = False
 
 
-	def _recdBitsArrivedCb( self, md5, part, numparts, bytes, fromWho ):
-		print("new bits arrived!")
+	def _recdBitsArrivedCb( self, md5sumOfIt, part, numparts, bytes, fromWho ):
+		self._logger.debug('_recdBitsArrivedCb: new bits!')
+		recd = self.m.getRecdByMd5( md5sumOfIt )
+		if (recd == None):
+			self._logger.debug('_recdBitsArrivedCb: thx 4 yr bits, but we dont even have that photo')
+			return
+		if (recd.deleted):
+			self._logger.debug('_recdBitsArrivedCb: thx 4 yr bits, but we deleted that photo')
+			return
+
+		#update that we've heard back about this, reset the timeout
+		gobject.source_remove(recd.meshReqCallbackId)
+		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._haveWeDownloadedYetCb)
+
+		#update the progress bar
+		recd.meshDownlodingPercent = (part+0.0)/(numparts+0.0)
+		f = open(recd.getMediaFilepath(False), 'a+').write(bytes)
+
+		if part == numparts:
+			self._logger.debug('Finished receiving %s' % recd.title)
+			gobject.source_remove( recd.meshReqCallbackId )
+			recdRequesting.meshReqCallbackId = 0
+			self.meshDownloading = False
+			self.meshDownlodingPercent = 1.0
+			#todo: tell the ui to update this recd since it is now here!
