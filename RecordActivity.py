@@ -607,7 +607,7 @@ class RecordActivity(activity.Activity):
 
 		#self.ca.ui.updateDownloadFrom( fromWho ) #todo...
 
-		recd.meshReqCallbackId = gobject.timeout_add(meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
+		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 		self.ca.recTube.requestRecdBits( self.hashedKey, fromWho, recd.mediaMd5 )
 
 
