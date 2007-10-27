@@ -672,6 +672,7 @@ class RecordActivity(activity.Activity):
 
 		#update the progress bar
 		recd.meshDownlodingPercent = (part+0.0)/(numparts+0.0)
+		self._logger.debug( str(recd.getMediaFilepath(False)) + "," + str(recd.meshDownlodingPercent) )
 		f = open(recd.getMediaFilepath(False), 'a+').write(bytes)
 
 		if part == numparts:

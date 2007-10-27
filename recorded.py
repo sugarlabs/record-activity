@@ -170,24 +170,22 @@ class Recorded:
 					mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
-					if (self.meshDownloading):
-						print("we are in midst of downloading this file...")
+					if (meshRequired):
+						if (self.ca.recTube != None):
+							self.ca.meshInitRoundRobin(self)
+						else:
+							pass
+							#todo: might want to tell kid to get on the mesh?
 						return None
 					else:
-						if (meshRequired):
-							if (self.ca.recTube != None):
-								self.ca.meshInitRoundRobin(self)
-							else:
-								pass
-								#todo: might want to tell kid to get on the mesh?
-							return None
+						if self.mediaFilename == None:
+							ext = self.ca.m.mediaTypes[self.type][self.ca.keyExt]
+							recdPath = os.path.join(self.ca.tempPath, "recdFile_"+self.mediaMd5+"."+ext)
+							recdPath = self.getUniqueFilepath( recdPath, 0 )
+							self.mediaFilename = os.path.basename(recdPath)
+							return self.mediaFilename
 						else:
-							if self.mediaFilename == None:
-								ext = self.ca.m.mediaTypes[self.type][self.ca.keyExt]
-								recdPath = os.path.join(self.ca.tempPath, "recdFile_"+self.mediaMd5+"."+ext)
-								recdPath = self.getUniqueFilepath( recdPath, 0 )
-								self.mediaFilename = os.path.basename(recdPath)
-								return self.mediaFilename
+							return self.mediaFilename
 
 		else: #pulling from the datastore, regardless of who took it, cause we got it
 			#first, get the datastoreObject and hold the reference in this Recorded instance
