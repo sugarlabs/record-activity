@@ -71,7 +71,7 @@ class RecordTube(ExportedGObject):
 
 	def broadcastRecd(self, md5, filepath, sendThisTo ):
 		size = os.path.getsize(filepath)
-		f = open(filename)
+		f = open(filepath)
 		chunk_size = 1000
 		chunks = size / chunk_size
 		if (size%chunk_size != 0):
