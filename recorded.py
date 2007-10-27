@@ -171,11 +171,16 @@ class Recorded:
 					return os.path.abspath(mediaFilepath)
 				else:
 					if (meshRequired):
-						if (self.ca.recTube != None):
-							self.ca.meshInitRoundRobin(self)
+						if (self.meshDownloading):
+							pass #todo: tell kid to stop clicking so fast & that we're working on it!
+							return None
 						else:
-							pass
-							#todo: might want to tell kid to get on the mesh?
+							if (self.ca.recTube != None):
+								self.ca.meshInitRoundRobin(self)
+							else:
+								pass
+								#todo: might want to tell kid to get on the mesh?
+								return None
 						return None
 					else:
 						if self.mediaFilename == None:

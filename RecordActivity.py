@@ -678,7 +678,8 @@ class RecordActivity(activity.Activity):
 		if part == numparts:
 			self._logger.debug('Finished receiving %s' % recd.title)
 			gobject.source_remove( recd.meshReqCallbackId )
-			recdRequesting.meshReqCallbackId = 0
-			self.meshDownloading = False
-			self.meshDownlodingPercent = 1.0
+			recd.meshReqCallbackId = 0
+			recd.meshDownloading = False
+			recd.meshDownlodingPercent = 1.0
+			recd.downloadedFromBuddy = True
 			#todo: tell the ui to update this recd since it is now here!
