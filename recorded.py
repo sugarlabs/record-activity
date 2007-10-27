@@ -34,7 +34,6 @@ class Recorded:
 		self.title = None
 		self.colorStroke = None
 		self.colorFill = None
-		self.hashKey = None
 		self.mediaMd5 = None
 		self.thumbMd5 = None
 		self.mediaBytes = None

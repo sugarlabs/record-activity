@@ -93,7 +93,6 @@ class Model:
 		recd.colorFill = colorFill
 
 		recd.buddy = (el.getAttribute(self.ca.recdBuddy) == "True")
-		recd.hashKey = el.getAttribute(self.ca.recdHashKey)
 		recd.mediaMd5 = el.getAttribute(self.ca.recdMediaMd5)
 		recd.thumbMd5 = el.getAttribute(self.ca.recdThumbMd5)
 		recd.mediaBytes = int( el.getAttribute(self.ca.recdMediaBytes) )
@@ -461,14 +460,16 @@ class Model:
 
 	def createNewRecorded( self, type ):
 		recd = Recorded( self.ca )
-		recd.hashKey = self.ca.hashedKey
+
+		recd.recorderName = self.ca.nickName
+		recd.recorderHash = self.ca.hashedKey
 
 		#to create a file, use the hardware_id+time *and* check if available or not
 		nowtime = int(time.time())
 		recd.time = nowtime
 		recd.type = type
 
-		mediaThumbFilename = str(recd.hashKey) + "_" + str(recd.time)
+		mediaThumbFilename = str(recd.recorderHash) + "_" + str(recd.time)
 		mediaFilename = mediaThumbFilename
 		mediaFilename = mediaFilename + "." + self.mediaTypes[type][self.ca.keyExt]
 		mediaFilepath = os.path.join( self.ca.tempPath, mediaFilename )
@@ -480,8 +481,6 @@ class Model:
 		thumbFilepath = self.getUniqueFilepath( thumbFilepath, 0 )
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
-		recd.recorderName = self.ca.nickName
-		self.recorderHash = self.ca.hashedKey
 		stringType = self.mediaTypes[type][self.ca.keyIstr]
 		recd.title = self.ca.istrBy % {"1":stringType, "2":str(recd.recorderName)}
 

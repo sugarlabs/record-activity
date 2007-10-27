@@ -216,23 +216,27 @@ class RecordActivity(activity.Activity):
 
 
 	def getRecdXmlString( self, recd ):
+		self._logger.error("a")
 		impl = getDOMImplementation()
 		recdXml = impl.createDocument(None, self.recdRecd, None)
 		root = recdXml.documentElement
 		self.addRecdXmlAttrs( root, recd )
 
-		#make sure we pop this off if its there, as it is only a local ref
+		#make sure we pop these off if its there, as it is only a local ref
 		dId = root.getAttributeNode(self.recdDatastoreId)
-		if (not dId == None):
-			root.removeAttribute(self.recdDatastoreId)
+		if (dId != None):
+			root.removeAttributeNode(dId)
 
+		self._logger.error("b")
 		#append this for sending out to everone else
 		pixbuf = recd.getThumbPixbuf( )
 		thumb = str( self._get_base64_pixbuf_data(pixbuf) )
 		root.setAttribute(self.recdBuddyThumb, thumb )
 
+		self._logger.error("c")
 		writer = cStringIO.StringIO()
 		recdXml.writexml(writer)
+		self._logger.error("d")
 		return writer.getvalue()
 
 
@@ -247,10 +251,9 @@ class RecordActivity(activity.Activity):
 		el.setAttribute(self.recdTitle, recd.title)
 		el.setAttribute(self.recdTime, str(recd.time))
 		el.setAttribute(self.recdRecorderName, recd.recorderName)
-		el.setAttribute(self.recdRecorderHash, recd.recorderHash)
+		el.setAttribute(self.recdRecorderHash, str(recd.recorderHash) )
 		el.setAttribute(self.recdColorStroke, str(recd.colorStroke.hex) )
 		el.setAttribute(self.recdColorFill, str(recd.colorFill.hex) )
-		el.setAttribute(self.recdHashKey, str(recd.hashKey))
 		el.setAttribute(self.recdBuddy, str(recd.buddy))
 		el.setAttribute(self.recdMediaMd5, str(recd.mediaMd5))
 		el.setAttribute(self.recdThumbMd5, str(recd.thumbMd5))
@@ -258,7 +261,6 @@ class RecordActivity(activity.Activity):
 		el.setAttribute(self.recdThumbBytes, str(recd.thumbBytes))
 		if (recd.datastoreId != None):
 			el.setAttribute(self.recdDatastoreId, str(recd.datastoreId))
-
 
 	def saveIt( self, xmlFile, el, recd ):
 		#presume we don't need to serialize...
