@@ -580,7 +580,7 @@ class RecordActivity(activity.Activity):
 
 
 	def meshInitRoundRobin( self, recd ):
-		if (self.recd.meshDownloading):
+		if (recd.meshDownloading):
 			self._logger.debug("meshInitRoundRobin: we are in midst of downloading this file...")
 			return
 
@@ -597,18 +597,18 @@ class RecordActivity(activity.Activity):
 
 
 	def nextRequestRecdBuddyBits( self, recd, buddy ):
-		self.recd.triedMeshBuddies.append( buddy )
+		recd.triedMeshBuddies.append( buddy )
 		self.getRecdBitsFromBuddy( recd, buddy )
 
 
 	def meshReqRecFromBuddy( self, recd, fromWho ):
-		self.recd.meshDownloadingFrom = who
+		recd.meshDownloadingFrom = who
 		self.meshDownloadingProgress = False
 
 		#self.ca.ui.updateDownloadFrom( who ) #todo...
 
 		recd.meshReqCallbackId = gobject.timeout_add(meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
-		self.ca.recTube.requestRecdBits( self.hashedKey, fromWho, self.recd.mediaMd5 )
+		self.ca.recTube.requestRecdBits( self.hashedKey, fromWho, recd.mediaMd5 )
 
 
 	def _meshCheckOnRecdRequest( self, recdRequesting ):
