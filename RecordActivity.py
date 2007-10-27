@@ -651,7 +651,8 @@ class RecordActivity(activity.Activity):
 			return
 
 		recd.meshUploading = True
-		sent = self.recTube.broadcastRecd( whoWantsIt, recd )
+		filepath = recd.getMediaFilepath(False)
+		sent = self.recTube.broadcastRecd( recd.mediaMd5, filepath, whoWantsIt )
 		recd.meshUploading = False
 
 

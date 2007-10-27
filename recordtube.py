@@ -7,6 +7,7 @@ import gobject
 from dbus import Interface
 from dbus.service import method, signal
 from dbus.gobject_service import ExportedGObject
+import os
 
 class RecordTube(ExportedGObject):
 
