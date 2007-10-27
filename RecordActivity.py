@@ -216,7 +216,6 @@ class RecordActivity(activity.Activity):
 
 
 	def getRecdXmlString( self, recd ):
-		self._logger.error("a")
 		impl = getDOMImplementation()
 		recdXml = impl.createDocument(None, self.recdRecd, None)
 		root = recdXml.documentElement
@@ -227,16 +226,13 @@ class RecordActivity(activity.Activity):
 		if (dId != None):
 			root.removeAttributeNode(dId)
 
-		self._logger.error("b")
 		#append this for sending out to everone else
 		pixbuf = recd.getThumbPixbuf( )
 		thumb = str( self._get_base64_pixbuf_data(pixbuf) )
 		root.setAttribute(self.recdBuddyThumb, thumb )
 
-		self._logger.error("c")
 		writer = cStringIO.StringIO()
 		recdXml.writexml(writer)
-		self._logger.error("d")
 		return writer.getvalue()
 
 
@@ -536,30 +532,11 @@ class RecordActivity(activity.Activity):
 			if state == telepathy.TUBE_STATE_LOCAL_PENDING:
 				self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
 			tube_conn = TubeConnection(self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
-			self.recTube = RecordTube(tube_conn, self._get_buddy, self.hashedKey, self._logger)
+			self.recTube = RecordTube(tube_conn, self.hashedKey, self._logger)
 			self.recTube.connect("new-recd", self._newRecdCb)
 			self.recTube.connect("recd-request", self._recdRequestCb)
 			self.recTube.connect("recd-bits-arrived", self._recdBitsArrivedCb)
-
-
-	def _get_buddy(self, cs_handle):
-		"""Get a Buddy from a channel specific handle."""
-		self._logger.debug('Trying to find owner of handle %u...', cs_handle)
-		group = self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP]
-		my_csh = group.GetSelfHandle()
-		self._logger.debug('My handle in that group is %u', my_csh)
-		if my_csh == cs_handle:
-			handle = self.conn.GetSelfHandle()
-			self._logger.debug('CS handle %u belongs to me, %u', cs_handle, handle)
-		elif group.GetGroupFlags() & telepathy.CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES:
-			handle = group.GetHandleOwners([cs_handle])[0]
-			self._logger.debug('CS handle %u belongs to %u', cs_handle, handle)
-		else:
-			handle = cs_handle
-			logger.debug('non-CS handle %u belongs to itself', handle)
-			# XXX: deal with failure to get the handle owner
-			assert handle != 0
-		return self.pservice.get_buddy_by_telepathy_handle(self.tp_conn_name, self.tp_conn_path, handle)
+			self.recTube.connect("recd-unavailable", self._recdUnavailableCb)
 
 
 	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
@@ -592,8 +569,23 @@ class RecordActivity(activity.Activity):
 
 
 	def meshNextRoundRobinBuddy( self, recd ):
-		print("next round robin buddy...")
-		pass
+		if (recdRequesting.meshReqCallbackId != 0):
+			gobject.source_remove(recdRequesting.meshReqCallbackId)
+			recdRequesting.meshReqCallbackId = 0
+
+		#todo: delete any stub of a partially downloaded file
+
+		buds = self.get_joined_buddies();
+		for i in range (0, len(buds)):
+			if (recd.triedMeshBuddies.count(buds[i]) > 0):
+				self._logger.debug('weve already tried asking this buddy for this photo')
+			else:
+				self.nextRequestRecdBuddyBits( recd, nextBud )
+				break
+
+		self._logger.debug('weve tried all buddies here, and no one has this recd')
+		#todo: flag this recd, so that when new buddies show up, we can ask them if they've got it (if they are returning).
+		#todo: or clear triedMeshBuddies and let them try again.
 
 
 	def nextRequestRecdBuddyBits( self, recd, buddy ):
@@ -612,8 +604,6 @@ class RecordActivity(activity.Activity):
 
 
 	def _meshCheckOnRecdRequest( self, recdRequesting ):
-		print("_meshCheckOnRecdRequest")
-
 		if (recdRequesting.downloadedFromBuddy):
 			if (recdRequesting.meshReqCallbackId != 0):
 				gobject.source_remove(recdRequesting.meshReqCallbackId)
@@ -630,9 +620,6 @@ class RecordActivity(activity.Activity):
 			return True
 		else:
 			#that buddy we asked info from isn't responding; next buddy!
-			if (recdRequesting.meshReqCallbackId != 0):
-				gobject.source_remove(recdRequesting.meshReqCallbackId)
-				recdRequesting.meshReqCallbackId = 0
 			self.meshNextRoundRobinBuddy( recdRequesting )
 			return False
 
@@ -643,17 +630,19 @@ class RecordActivity(activity.Activity):
 		recd = self.m.getRecdByMd5( md5sumOfIt )
 		if (recd == None):
 			self._logger.debug('_recdRequestCb: we dont have the recd they asked for')
-			#todo: send announcements over the mesh
+			recTube.unavailableRecd(self, md5sumOfIt, self.hashedKey, whoWantsIt)
 			return
 		if (recd.deleted):
 			self._logger.debug('_recdRequestCb: we have the recd, but it has been deleted, so we wont share')
-			#todo: send announcements over the mesh
+			recTube.unavailableRecd(self, md5sumOfIt, self.hashedKey, whoWantsIt)
 			return
+		#todo: if it isn't ours, then make sure we have a complete copy
 
 		recd.meshUploading = True
 		filepath = recd.getMediaFilepath(False)
 		sent = self.recTube.broadcastRecd( recd.mediaMd5, filepath, whoWantsIt )
 		recd.meshUploading = False
+		#todo: if you were deleted while uploading, now throw away those bits now
 
 
 	def _recdBitsArrivedCb( self, objectThatSentTheSignal, md5sumOfIt, part, numparts, bytes, fromWho ):
@@ -664,6 +653,14 @@ class RecordActivity(activity.Activity):
 			return
 		if (recd.deleted):
 			self._logger.debug('_recdBitsArrivedCb: thx 4 yr bits, but we deleted that photo')
+			return
+		if (recd.downloadedFromBuddy):
+			self._logger.debug('_recdBitsArrivedCb: weve already downloadedFromBuddy')
+			return
+		if (not recd.buddy):
+			self._logger.debug('_recdBitsArrivedCb: uh, we took this photo, so dont need your bits')
+		if (recd.meshDownloadingFrom != fromWho):
+			self._logger.debug('_recdBitsArrivedCb: we dont want this guys bits, were getting bits from someoneelse')
 			return
 
 		#update that we've heard back about this, reset the timeout
@@ -683,3 +680,25 @@ class RecordActivity(activity.Activity):
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
 			#todo: tell the ui to update this recd since it is now here!
+
+
+	def _recdUnavailableCb( self, objectThatSentTheSignal, md5sumOfIt, whoDoesntHaveIt ):
+		self._logger.debug('_recdUnavailableCb: sux, we want to see that photo')
+		recd = self.m.getRecdByMd5( md5sumOfIt )
+		if (recd == None):
+			self._logger.debug('_recdUnavailableCb: actually, we dont even know about that one..')
+			return
+		if (recd.deleted):
+			self._logger.debug('_recdUnavailableCb: actually, since we asked, we deleted.')
+			return
+		if (not recd.buddy):
+			self._logger.debug('_recdUnavailableCb: uh, odd, we took that photo and have it already.')
+			return
+		if (recd.downloadedFromBuddy):
+			self._logger.debug('_recdUnavailableCb: we already downloaded it...  you might have been slow responding.')
+			return
+		if (recd.meshDownloadingFrom != whoDoesntHaveIt):
+			self._logger.debug('_recdUnavailableCb: we arent asking you for a copy now.  slow response, pbly.')
+			return
+
+		recd.meshNextRoundRobinBuddy( recd )

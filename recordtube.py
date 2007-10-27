@@ -17,20 +17,22 @@ class RecordTube(ExportedGObject):
 		'recd-request':
 			(gobject.SIGNAL_RUN_FIRST, None, [object,object]),
 		'new-recd':
+			(gobject.SIGNAL_RUN_FIRST, None, [object,object]),
+		'recd-unavailable':
 			(gobject.SIGNAL_RUN_FIRST, None, [object,object])
 	}
 
 
-	def __init__(self, tube, get_buddy, myHashKey, logger):
+	def __init__(self, tube, myHashKey, logger):
 		super(RecordTube, self).__init__(tube, PATH)
 		self.tube = tube
-		self._get_buddy = get_buddy  # Converts handle to Buddy object
 		self.myHashKey = myHashKey
 		self._logger = logger
 
 		self.idNotify = self.tube.add_signal_receiver(self._newRecdTubeCb, 'notifyBudsOfNewRecd', IFACE, path=PATH, sender_keyword='sender')
 		self.idRequest = self.tube.add_signal_receiver(self._reqRecdTubeCb, 'requestRecdBits', IFACE, path=PATH, sender_keyword='sender')
 		self.idBroadcast = self.tube.add_signal_receiver(self._getRecdTubeCb, 'broadcastRecdBits', IFACE, path=PATH, sender_keyword='sender', byte_arrays=True)
+		self.idUnavailable = self.tube.add_signal_receiver(self._unavailableRecdTubeCb, 'unavailableRecd', IFACE, path=PATH, sender_keyword='sender')
 
 
 	@signal(dbus_interface=IFACE, signature='ss') #dual s for 2x strings
@@ -97,8 +99,28 @@ class RecordTube(ExportedGObject):
 			return
 		if (fromWho == self.myHashKey):
 			self._logger.debug('_getRecdTubeCb: i dont want bits from meself, thx anyway.  schizophrenic?')
+			return
 		if (sentTo != self.myHashKey):
 			self._logger.debug('_getRecdTubeCb: ive overhead someone sending bits, but not to me!')
 			return
 
 		self.emit( "recd-bits-arrived", md5, part, numparts, bytes, fromWho )
+
+
+	@signal(dbus_interface=IFACE, signature='ss') #dual s for 2x strings
+	def unavailableRecd(self, md5sumOfIt, whoDoesntHaveIt, whoAskedForIt):
+		self._logger.debug('unavailableRecd: id love to share this photo, but i am without a copy meself chum')
+
+
+	def _unavailableRecdTubeCb( self, md5sumOfIt, whoDoesntHaveIt, whoAskedForIt):
+		if sender == self.tube.get_unique_name():
+			self._logger.debug("_unavailableRecdTubeCb: sender is my bus name, so ignore my own signal")
+			return
+		if (whoDoesntHaveIt == self.myHashKey):
+			self._logger.debug('_unavailableRecdTubeCb: yes, i know i dont have it, i just told you/me/us.')
+			return
+		if (whoAskedForIt != self.myHashKey):
+			self._logger.debug('_unavailableRecdTubeCb: ive overheard someone doesnt have a photo, but i didnt ask for that one anyways')
+			return
+
+		self.emit("recd-unavailable", md5sumOfIt, whoDoesntHaveIt)
