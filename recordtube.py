@@ -80,7 +80,7 @@ class RecordTube(ExportedGObject):
 		for chunk in range(chunks):
 			bytes = f.read(chunk_size)
 			self._logger.debug("sending " + str(chunk+1) + " of " + str(chunks) + " to " + lender )
-			self.broadcastRecdBits(md5, os.path.basename(filename), chunk+1, chunks, bytes, sendTo, self.myHashKey)
+			self.broadcastRecdBits(md5, chunk+1, chunks, bytes, sendTo, self.myHashKey)
 
 		f.close()
 		return True
