@@ -183,9 +183,11 @@ class Recorded:
 							recdPath = os.path.join(self.ca.tempPath, "recdFile_"+self.mediaMd5+"."+ext)
 							recdPath = self.ca.m.getUniqueFilepath(recdPath, 0)
 							self.mediaFilename = os.path.basename(recdPath)
-							return self.mediaFilename
+							mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
+							return os.path.abspath(mediaFilepath)
 						else:
-							return self.mediaFilename
+							mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
+							return os.path.abspath(mediaFilepath)
 
 		else: #pulling from the datastore, regardless of who took it, cause we got it
 			#first, get the datastoreObject and hold the reference in this Recorded instance
