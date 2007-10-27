@@ -65,7 +65,7 @@ class RecordTube(ExportedGObject):
 			self._logger.debug('_reqRecdTubeCb: ive overhead someone wants a photo, but not from me')
 			return
 
-		self.emit( "recd-requested", str(whoWantsIt), str(recdMd5sumOfIt) )
+		self.emit( "recd-request", str(whoWantsIt), str(recdMd5sumOfIt) )
 
 
 	def broadcastRecd(self, md5, filepath, sendThisTo ):
