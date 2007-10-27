@@ -602,10 +602,10 @@ class RecordActivity(activity.Activity):
 
 
 	def meshReqRecFromBuddy( self, recd, fromWho ):
-		recd.meshDownloadingFrom = who
+		recd.meshDownloadingFrom = fromWho
 		self.meshDownloadingProgress = False
 
-		#self.ca.ui.updateDownloadFrom( who ) #todo...
+		#self.ca.ui.updateDownloadFrom( fromWho ) #todo...
 
 		recd.meshReqCallbackId = gobject.timeout_add(meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 		self.ca.recTube.requestRecdBits( self.hashedKey, fromWho, recd.mediaMd5 )
