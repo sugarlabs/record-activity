@@ -656,7 +656,7 @@ class RecordActivity(activity.Activity):
 		recd.meshUploading = False
 
 
-	def _recdBitsArrivedCb( self, md5sumOfIt, part, numparts, bytes, fromWho ):
+	def _recdBitsArrivedCb( self, objectThatSentTheSignal, md5sumOfIt, part, numparts, bytes, fromWho ):
 		self._logger.debug('_recdBitsArrivedCb: new bits!')
 		recd = self.m.getRecdByMd5( md5sumOfIt )
 		if (recd == None):
