@@ -111,7 +111,7 @@ class Model:
 		else:
 			recd.recorderHash = el.getAttribute(self.ca.recdRecorderHash)
 
-		if (el.getAttibuteNode(self.ca.recdColorStroke) == None):
+		if (el.getAttributeNode(self.ca.recdColorStroke) == None):
 			return None
 		else:
 			try:
@@ -122,7 +122,7 @@ class Model:
 			except:
 				return None
 
-		if (el.getAttibuteNode(self.ca.recdColorFill) == None):
+		if (el.getAttributeNode(self.ca.recdColorFill) == None):
 			return None
 		else:
 			try:
