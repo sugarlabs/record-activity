@@ -576,12 +576,15 @@ class RecordActivity(activity.Activity):
 			if (os.path.exists(filepath)):
 				shutil.rmtree( filepath )
 
-		buds = self.get_joined_buddies();
+		buds = self._shared_activity.get_joined_buddies();
 		for i in range (0, len(buds)):
-			if (recd.triedMeshBuddies.count(buds[i]) > 0):
+			nextBudObj = buds[i]
+			nextBud = util._sha_data( self.bytes_to_string(nextBudObj.props.key) )
+			nextBud = util.printable_hash(nextBud)
+			if (recd.triedMeshBuddies.count(nextBud) > 0):
 				self._logger.debug('weve already tried asking this buddy for this photo')
 			else:
-				self.nextRequestRecdBuddyBits( recd, nextBud )
+				self.nextRequestRecdBuddyBits(recd, nextBud)
 				break
 
 		self._logger.debug('weve tried all buddies here, and no one has this recd')
