@@ -579,7 +579,7 @@ class RecordActivity(activity.Activity):
 		buds = self._shared_activity.get_joined_buddies();
 		for i in range (0, len(buds)):
 			nextBudObj = buds[i]
-			nextBud = util._sha_data( self.bytes_to_string(nextBudObj.props.key) )
+			nextBud = util._sha_data(nextBudObj.props.key)
 			nextBud = util.printable_hash(nextBud)
 			if (recd.triedMeshBuddies.count(nextBud) > 0):
 				self._logger.debug('weve already tried asking this buddy for this photo')
