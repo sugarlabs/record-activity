@@ -566,9 +566,9 @@ class RecordActivity(activity.Activity):
 
 
 	def meshNextRoundRobinBuddy( self, recd ):
-		if (recdRequesting.meshReqCallbackId != 0):
-			gobject.source_remove(recdRequesting.meshReqCallbackId)
-			recdRequesting.meshReqCallbackId = 0
+		if (recd.meshReqCallbackId != 0):
+			gobject.source_remove(recd.meshReqCallbackId)
+			recd.meshReqCallbackId = 0
 
 		#delete any stub of a partially downloaded file
 		filepath = recd.getMediaFilepath(False)
@@ -622,6 +622,7 @@ class RecordActivity(activity.Activity):
 			return True
 		else:
 			#that buddy we asked info from isn't responding; next buddy!
+			recdRequesting.meshDownloadProgress = False
 			self.meshNextRoundRobinBuddy( recdRequesting )
 			return False
 

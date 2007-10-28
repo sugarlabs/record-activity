@@ -1465,7 +1465,7 @@ class UI:
 	def showMeshRecd( self, recd ):
 		self.ca._logger.debug('showMeshRecd: heres the downloaded recd to display...')
 		if (recd == self.shownRecd):
-			self.ca._logger.debug('showMeshRecd: and since were still looking at it, here it is!')
+			self.ca._logger.debug('showMeshRecd: and since were still looking at same recd, here it is!')
 			self.showThumbSelection( recd )
 
 
