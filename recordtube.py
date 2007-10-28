@@ -107,7 +107,7 @@ class RecordTube(ExportedGObject):
 		self.emit( "recd-bits-arrived", md5, part, numparts, bytes, fromWho )
 
 
-	@signal(dbus_interface=IFACE, signature='ss') #dual s for 2x strings
+	@signal(dbus_interface=IFACE, signature='sss') #triple s for 3x strings
 	def unavailableRecd(self, md5sumOfIt, whoDoesntHaveIt, whoAskedForIt):
 		self._logger.debug('unavailableRecd: id love to share this photo, but i am without a copy meself chum')
 
