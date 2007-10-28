@@ -112,7 +112,7 @@ class RecordTube(ExportedGObject):
 		self._logger.debug('unavailableRecd: id love to share this photo, but i am without a copy meself chum')
 
 
-	def _unavailableRecdTubeCb( self, md5sumOfIt, whoDoesntHaveIt, whoAskedForIt):
+	def _unavailableRecdTubeCb( self, md5sumOfIt, whoDoesntHaveIt, whoAskedForIt, sender=None):
 		if sender == self.tube.get_unique_name():
 			self._logger.debug("_unavailableRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
