@@ -566,6 +566,7 @@ class RecordActivity(activity.Activity):
 
 
 	def meshNextRoundRobinBuddy( self, recd ):
+		self._logger.debug('meshNextRoundRobinBuddy')
 		if (recd.meshReqCallbackId != 0):
 			gobject.source_remove(recd.meshReqCallbackId)
 			recd.meshReqCallbackId = 0
@@ -582,8 +583,9 @@ class RecordActivity(activity.Activity):
 			nextBud = util._sha_data(nextBudObj.props.key)
 			nextBud = util.printable_hash(nextBud)
 			if (recd.triedMeshBuddies.count(nextBud) > 0):
-				self._logger.debug('weve already tried asking this buddy for this photo')
+				self._logger.debug('meshNextRoundRobinBuddy: weve already tried asking this buddy for this photo')
 			else:
+				self._logger.debug('meshNextRoundRobinBuddy: ask next buddy')
 				self.meshReqRecFromBuddy(recd, nextBud)
 				break
 
@@ -593,11 +595,11 @@ class RecordActivity(activity.Activity):
 
 
 	def meshReqRecFromBuddy( self, recd, fromWho ):
+		self._logger.debug('meshReqRecFromBuddy')
 		recd.triedMeshBuddies.append( fromWho )
 		recd.meshDownloadingFrom = fromWho
 		recd.meshDownloadingProgress = False
 		recd.meshDownloading = True
-
 
 		#self.ca.ui.updateDownloadFrom( fromWho ) #todo...
 
@@ -607,21 +609,27 @@ class RecordActivity(activity.Activity):
 
 
 	def _meshCheckOnRecdRequest( self, recdRequesting ):
+		self._logger.debug('_meshCheckOnRecdRequest')
+
 		if (recdRequesting.downloadedFromBuddy):
+			self._logger.debug('_meshCheckOnRecdRequest: recdRequesting.downloadedFromBuddy')
 			if (recdRequesting.meshReqCallbackId != 0):
 				gobject.source_remove(recdRequesting.meshReqCallbackId)
 				recdRequesting.meshReqCallbackId = 0
 			return False
 		if (recdRequesting.deleted):
+			self._logger.debug('_meshCheckOnRecdRequest: recdRequesting.deleted')
 			if (recdRequesting.meshReqCallbackId != 0):
 				gobject.source_remove(recdRequesting.meshReqCallbackId)
 				recdRequesting.meshReqCallbackId = 0
 			return False
 		if (recdRequesting.meshDownloadingProgress):
+			self._logger.debug('_meshCheckOnRecdRequest: recdRequesting.meshDownloadingProgress')
 			#we've received some bits since last we checked, so keep waiting...  they'll all get here eventually!
 			recdRequesting.meshDownloadingProgress = False
 			return True
 		else:
+			self._logger.debug('_meshCheckOnRecdRequest: ! recdRequesting.meshDownloadingProgress')
 			#that buddy we asked info from isn't responding; next buddy!
 			self.meshNextRoundRobinBuddy( recdRequesting )
 			return False
@@ -633,20 +641,20 @@ class RecordActivity(activity.Activity):
 		recd = self.m.getRecdByMd5( md5sumOfIt )
 		if (recd == None):
 			self._logger.debug('_recdRequestCb: we dont have the recd they asked for')
-			recTube.unavailableRecd(self, md5sumOfIt, self.hashedKey, whoWantsIt)
+			self.recTube.unavailableRecd(md5sumOfIt, self.hashedKey, whoWantsIt)
 			return
 		if (recd.deleted):
 			self._logger.debug('_recdRequestCb: we have the recd, but it has been deleted, so we wont share')
-			recTube.unavailableRecd(self, md5sumOfIt, self.hashedKey, whoWantsIt)
+			self.recTube.unavailableRecd(md5sumOfIt, self.hashedKey, whoWantsIt)
 			return
 		if (recd.buddy and not recd.downloadedFromBuddy):
 			self._logger.debug('_recdRequestCb: we have an incomplete recd, so we wont share')
-			recTube.unavailableRecd(self, md5sumOfIt, self.hashedKey, whoWantsIt)
+			self.recTube.unavailableRecd(md5sumOfIt, self.hashedKey, whoWantsIt)
 			return
 
 		recd.meshUploading = True
 		filepath = recd.getMediaFilepath(False)
-		sent = self.recTube.broadcastRecd( recd.mediaMd5, filepath, whoWantsIt )
+		sent = self.recTube.broadcastRecd(recd.mediaMd5, filepath, whoWantsIt)
 		recd.meshUploading = False
 		#if you were deleted while uploading, now throw away those bits now
 		if (recd.deleted):
