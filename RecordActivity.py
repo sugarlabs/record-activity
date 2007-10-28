@@ -369,15 +369,15 @@ class RecordActivity(activity.Activity):
 
 
 	def _activeCb( self, widget, pspec ):
+		self._logger.debug('_activeCb')
 		if (self.JUST_LAUNCHED):
 			self.JUST_LAUNCHED = False
 			return
 
-		self._logger.debug('_activeCb')
 		if (not self.props.active):
 			self._logger.debug('_activeCb:stopPipes')
 			self.stopPipes()
-		elif (self.props.active):
+		else:
 			self._logger.debug('_activeCb:restartPipes')
 			self.restartPipes()
 
@@ -561,10 +561,7 @@ class RecordActivity(activity.Activity):
 			self._logger.debug("meshInitRoundRobin: we are in midst of downloading this file...")
 			return
 
-		recd.meshDownloading = True
-
 		#start with who took the photo
-		recd.triedMeshBuddies.append( recd.recorderHash )
 		self.meshReqRecFromBuddy( recd, recd.recorderHash )
 
 
@@ -587,7 +584,7 @@ class RecordActivity(activity.Activity):
 			if (recd.triedMeshBuddies.count(nextBud) > 0):
 				self._logger.debug('weve already tried asking this buddy for this photo')
 			else:
-				self.nextRequestRecdBuddyBits(recd, nextBud)
+				self.meshReqRecFromBuddy(recd, nextBud)
 				break
 
 		self._logger.debug('weve tried all buddies here, and no one has this recd')
@@ -595,14 +592,12 @@ class RecordActivity(activity.Activity):
 		#todo: or clear triedMeshBuddies and let them try again.
 
 
-	def nextRequestRecdBuddyBits( self, recd, buddy ):
-		recd.triedMeshBuddies.append( buddy )
-		self.getRecdBitsFromBuddy( recd, buddy )
-
-
 	def meshReqRecFromBuddy( self, recd, fromWho ):
+		recd.triedMeshBuddies.append( fromWho )
 		recd.meshDownloadingFrom = fromWho
-		self.meshDownloadingProgress = False
+		recd.meshDownloadingProgress = False
+		recd.meshDownloading = True
+
 
 		#self.ca.ui.updateDownloadFrom( fromWho ) #todo...
 
@@ -624,11 +619,10 @@ class RecordActivity(activity.Activity):
 			return False
 		if (recdRequesting.meshDownloadingProgress):
 			#we've received some bits since last we checked, so keep waiting...  they'll all get here eventually!
-			recdRequesting.meshDownloadProgress = False
+			recdRequesting.meshDownloadingProgress = False
 			return True
 		else:
 			#that buddy we asked info from isn't responding; next buddy!
-			recdRequesting.meshDownloadProgress = False
 			self.meshNextRoundRobinBuddy( recdRequesting )
 			return False
 
