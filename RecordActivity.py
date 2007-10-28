@@ -51,8 +51,8 @@ class RecordActivity(activity.Activity):
 
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
-		self.JUST_LAUNCHED = True
 		self._logger = logging.getLogger('record-activity')
+		self.JUST_LAUNCHED = True
 		self.connect( "notify::active", self._activeCb )
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
@@ -373,9 +373,12 @@ class RecordActivity(activity.Activity):
 			self.JUST_LAUNCHED = False
 			return
 
+		self._logger.debug('_activeCb')
 		if (not self.props.active):
+			self._logger.debug('_activeCb:stopPipes')
 			self.stopPipes()
 		elif (self.props.active):
+			self._logger.debug('_activeCb:restartPipes')
 			self.restartPipes()
 
 
