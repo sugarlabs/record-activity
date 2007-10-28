@@ -1462,6 +1462,11 @@ class UI:
 		#self.livePhotoCanvas.setImage( img )
 
 
+	def showMeshRecd( self, recd ):
+		if (recd == self.shownRecd):
+			showThumbSelection( recd )
+
+
 	def showThumbSelection( self, recd ):
 		lastRecd = self.shownRecd
 

@@ -325,7 +325,6 @@ class RecordActivity(activity.Activity):
 
 			mediaObject.metadata['activity'] = self._activity_id
 
-			#todo: make sure the file is still available before you ever get to this point...
 			mediaFile = recd.getMediaFilepath(False)
 			mediaObject.file_path = mediaFile
 			mediaObject.transfer_ownership = True
@@ -398,11 +397,10 @@ class RecordActivity(activity.Activity):
 
 
 	def recreateTemp( self ):
-		#todo: rainbow
-
 		# #4422
 #		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
 		self.tempPath = os.path.join( self.get_activity_root(), "tmp" )
+		self.tempPath = os.path.join( self.tempPath, str(self.instanceId))
 		if (os.path.exists(self.tempPath)):
 			shutil.rmtree( self.tempPath )
 		os.makedirs(self.tempPath)
@@ -441,7 +439,6 @@ class RecordActivity(activity.Activity):
 			xmlFile.close()
 			self.I_AM_SAVED = True
 
-		#todo: reset all the saved flags or just let them take care of themselves on the next save?
 		if (self.I_AM_SAVED and self.I_AM_CLOSING):
 			self.destroy()
 
@@ -549,11 +546,11 @@ class RecordActivity(activity.Activity):
 			return
 
 		recd = Recorded(self)
-		#todo: catch exceptions for bad/incomplete xml
-		self.m.fillRecdFromNode( recd, dom.documentElement )
-		recd.buddy = True
-		recd.downloadedFromBuddy = False
-		self.m.addRecd( recd )
+		recd = self.m.fillRecdFromNode( recd, dom.documentElement )
+		if (recd != None):
+			recd.buddy = True
+			recd.downloadedFromBuddy = False
+			self.m.addRecd( recd )
 
 
 	def meshInitRoundRobin( self, recd ):
@@ -573,7 +570,11 @@ class RecordActivity(activity.Activity):
 			gobject.source_remove(recdRequesting.meshReqCallbackId)
 			recdRequesting.meshReqCallbackId = 0
 
-		#todo: delete any stub of a partially downloaded file
+		#delete any stub of a partially downloaded file
+		filepath = recd.getMediaFilepath(False)
+		if (filepath != None):
+			if (os.path.exists(filepath)):
+				shutil.rmtree( filepath )
 
 		buds = self.get_joined_buddies();
 		for i in range (0, len(buds)):
@@ -636,13 +637,18 @@ class RecordActivity(activity.Activity):
 			self._logger.debug('_recdRequestCb: we have the recd, but it has been deleted, so we wont share')
 			recTube.unavailableRecd(self, md5sumOfIt, self.hashedKey, whoWantsIt)
 			return
-		#todo: if it isn't ours, then make sure we have a complete copy
+		if (recd.buddy and not recd.downloadedFromBuddy):
+			self._logger.debug('_recdRequestCb: we have an incomplete recd, so we wont share')
+			recTube.unavailableRecd(self, md5sumOfIt, self.hashedKey, whoWantsIt)
+			return
 
 		recd.meshUploading = True
 		filepath = recd.getMediaFilepath(False)
 		sent = self.recTube.broadcastRecd( recd.mediaMd5, filepath, whoWantsIt )
 		recd.meshUploading = False
-		#todo: if you were deleted while uploading, now throw away those bits now
+		#if you were deleted while uploading, now throw away those bits now
+		if (recd.deleted):
+			recd.doDeleteRecorded(recd)
 
 
 	def _recdBitsArrivedCb( self, objectThatSentTheSignal, md5sumOfIt, part, numparts, bytes, fromWho ):
@@ -659,6 +665,7 @@ class RecordActivity(activity.Activity):
 			return
 		if (not recd.buddy):
 			self._logger.debug('_recdBitsArrivedCb: uh, we took this photo, so dont need your bits')
+			return
 		if (recd.meshDownloadingFrom != fromWho):
 			self._logger.debug('_recdBitsArrivedCb: we dont want this guys bits, were getting bits from someoneelse')
 			return
@@ -679,7 +686,7 @@ class RecordActivity(activity.Activity):
 			recd.meshDownloading = False
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
-			#todo: tell the ui to update this recd since it is now here!
+			self.ui.showMeshRecd( recd )
 
 
 	def _recdUnavailableCb( self, objectThatSentTheSignal, md5sumOfIt, whoDoesntHaveIt ):

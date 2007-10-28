@@ -78,42 +78,107 @@ class Model:
 
 
 	def fillRecdFromNode( self, recd, el ):
-		recd.type = int(el.getAttribute(self.ca.recdType))
-		recd.title = el.getAttribute(self.ca.recdTitle)
-		recd.time = int(el.getAttribute(self.ca.recdTime))
-		recd.recorderName = el.getAttribute(self.ca.recdRecorderName)
-		recd.recorderHash = el.getAttribute(self.ca.recdRecorderHash)
-		colorStrokeHex = el.getAttribute(self.ca.recdColorStroke)
-		colorStroke = Color()
-		colorStroke.init_hex( colorStrokeHex )
-		recd.colorStroke = colorStroke
-		colorFillHex = el.getAttribute(self.ca.recdColorFill)
-		colorFill = Color()
-		colorFill.init_hex( colorFillHex )
-		recd.colorFill = colorFill
+		if (el.getAttributeNode(self.ca.recdType) == None):
+			return None
+		else:
+			try:
+				typeInt = int(el.getAttribute(self.ca.recdType))
+				recd.type = int
+			except:
+				return None
 
-		recd.buddy = (el.getAttribute(self.ca.recdBuddy) == "True")
-		recd.mediaMd5 = el.getAttribute(self.ca.recdMediaMd5)
-		recd.thumbMd5 = el.getAttribute(self.ca.recdThumbMd5)
-		recd.mediaBytes = int( el.getAttribute(self.ca.recdMediaBytes) )
-		recd.thumbBytes = int( el.getAttribute(self.ca.recdThumbBytes) )
+		if (el.getAttributeNode(self.ca.recdTitle) == None):
+			return None
+		else:
+			recd.title = el.getAttribute(self.ca.recdTitle)
+
+		if (el.getAttributeNode(self.ca.recdTime) == None):
+			return None
+		else:
+			try:
+				timeInt = int(el.getAttribute(self.ca.recdTime))
+				recd.time = timeInt
+			except:
+				return None
+
+		if (el.getAttributeNode(self.ca.recdRecorderName) == None):
+			return None
+		else:
+			recd.recorderName = el.getAttribute(self.ca.recdRecorderName)
+
+		if (el.getAttributeNode(self.ca.recdRecorderHash) == None):
+			return None
+		else:
+			recd.recorderHash = el.getAttribute(self.ca.recdRecorderHash)
+
+		if (el.getAttibuteNode(self.ca.recdColorStroke) == None):
+			return None
+		else:
+			try:
+				colorStrokeHex = el.getAttribute(self.ca.recdColorStroke)
+				colorStroke = Color()
+				colorStroke.init_hex( colorStrokeHex )
+				recd.colorStroke = colorStroke
+			except:
+				return None
+
+		if (el.getAttibuteNode(self.ca.recdColorFill) == None):
+			return None
+		else:
+			try:
+				colorFillHex = el.getAttribute(self.ca.recdColorFill)
+				colorFill = Color()
+				colorFill.init_hex( colorFillHex )
+				recd.colorFill = colorFill
+			except:
+				return None
+
+		if (el.getAttributeNode(self.ca.recdBuddy) == None):
+			return None
+		else:
+			recd.buddy = (el.getAttribute(self.ca.recdBuddy) == "True")
+
+		if (el.getAttributeNode(self.ca.recdMediaMd5) == None):
+			return None
+		else:
+			recd.mediaMd5 = el.getAttribute(self.ca.recdMediaMd5)
+
+		if (el.getAttributeNode(self.ca.recdThumbMd5) == None):
+			return None
+		else:
+			recd.thumbMd5 = el.getAttribute(self.ca.recdThumbMd5)
+
+		if (el.getAttributeNode(self.ca.recdMediaBytes) == None):
+			return None
+		else:
+			recd.mediaBytes = el.getAttribute(self.ca.recdMediaBytes)
+
+		if (el.getAttributeNode(self.ca.recdThumbBytes) == None):
+			return None
+		else:
+			recd.thumbBytes = el.getAttribute(self.ca.recdThumbBytes)
 
 		bt = el.getAttributeNode(self.ca.recdBuddyThumb)
 		if (not bt == None):
-			thumbPath = os.path.join(self.ca.tempPath, "datastoreThumb.jpg")
-			thumbPath = self.getUniqueFilepath( thumbPath, 0 )
-			thumbImg = recd.pixbufFromString( bt.nodeValue )
-			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
-			recd.thumbFilename = os.path.basename(thumbPath)
-			print("recd bt", recd.thumbFilename)
+			try:
+				thumbPath = os.path.join(self.ca.tempPath, "datastoreThumb.jpg")
+				thumbPath = self.getUniqueFilepath( thumbPath, 0 )
+				thumbImg = recd.pixbufFromString( bt.nodeValue )
+				thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
+				recd.thumbFilename = os.path.basename(thumbPath)
+			except:
+				return None
 
 		ai = el.getAttributeNode(self.ca.recdAudioImage)
 		if (not ai == None):
-			audioImg = recd.pixbufFromString( ai.nodeValue )
-			audioImagePath = os.path.join(self.ca.tempPath, "audioImage.png")
-			audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
-			audioImg.save(audioImagePath, "png", {} )
-			recd.audioImageFilename = os.path.basename(audioImagePath)
+			try:
+				audioImg = recd.pixbufFromString( ai.nodeValue )
+				audioImagePath = os.path.join(self.ca.tempPath, "audioImage.png")
+				audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
+				audioImg.save(audioImagePath, "png", {} )
+				recd.audioImageFilename = os.path.basename(audioImagePath)
+			except:
+				return None
 
 		return recd
 
@@ -135,7 +200,6 @@ class Model:
 		addToHash = True
 
 		self.fillRecdFromNode( recd, el )
-
 		recd.datastoreNode = el.getAttributeNode(self.ca.recdDatastoreId)
 		if (recd.datastoreNode != None):
 			recd.datastoreId = recd.datastoreNode.nodeValue
@@ -146,7 +210,12 @@ class Model:
 				addToHash = False
 			else:
 				#name might have been changed in the journal, so reflect that here
-				recd.title = recd.datastoreOb.metadata['title']
+				if (recd.title != recd.datastoreOb.metadata['title']):
+					recd.setTitle(recd.datastoreOb.metadata['title'])
+				if (recd.buddy):
+					recd.downloadedFromBuddy = True
+
+
 			recd.datastoreOb == None
 
 		if (addToHash):
@@ -543,6 +612,16 @@ class Model:
 	def deleteRecorded( self, recd ):
 		recd.deleted = True
 
+		#clear the index
+		hash = self.mediaHashs[recd.type]
+		index = hash.index(recd)
+		hash.remove( recd )
+
+		if (not recd.meshUploading):
+			self.doDeleteRecorded( recd )
+
+
+	def doDeleteRecorded( self, recd ):
 		#remove files from the filesystem if not on the datastore
 		if (recd.datastoreId == None):
 			mediaFile = recd.getMediaFilepath( False )
@@ -555,11 +634,6 @@ class Model:
 		else:
 			#remove from the datastore here, since once gone, it is gone...
 			self.removeMediaFromDatastore( recd )
-
-		#clear the index
-		hash = self.mediaHashs[recd.type]
-		index = hash.index(recd)
-		hash.remove( recd )
 
 
 	def thumbAdded( self, type ):
