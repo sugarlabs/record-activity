@@ -577,6 +577,7 @@ class RecordActivity(activity.Activity):
 			if (os.path.exists(filepath)):
 				shutil.rmtree( filepath )
 
+		askingAnotherBud = False
 		buds = self._shared_activity.get_joined_buddies();
 		for i in range (0, len(buds)):
 			nextBudObj = buds[i]
@@ -587,11 +588,12 @@ class RecordActivity(activity.Activity):
 			else:
 				self._logger.debug('meshNextRoundRobinBuddy: ask next buddy')
 				self.meshReqRecFromBuddy(recd, nextBud)
-				break
+				askingAnotherBud = True
 
-		self._logger.debug('weve tried all buddies here, and no one has this recd')
-		#todo: flag this recd, so that when new buddies show up, we can ask them if they've got it (if they are returning).
-		#todo: or clear triedMeshBuddies and let them try again.
+		if (not askingAnotherBud):
+			self._logger.debug('weve tried all buddies here, and no one has this recd')
+			#todo: flag this recd, so that when new buddies show up, we can ask them if they've got it (if they are returning).
+			#todo: or clear triedMeshBuddies and let them try again.
 
 
 	def meshReqRecFromBuddy( self, recd, fromWho ):
