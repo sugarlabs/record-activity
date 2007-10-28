@@ -83,7 +83,7 @@ class Model:
 		else:
 			try:
 				typeInt = int(el.getAttribute(self.ca.recdType))
-				recd.type = int
+				recd.type = typeInt
 			except:
 				return None
 
