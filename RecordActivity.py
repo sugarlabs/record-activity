@@ -718,4 +718,4 @@ class RecordActivity(activity.Activity):
 			self._logger.debug('_recdUnavailableCb: we arent asking you for a copy now.  slow response, pbly.')
 			return
 
-		recd.meshNextRoundRobinBuddy( recd )
+		self.meshNextRoundRobinBuddy( recd )
