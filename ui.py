@@ -2139,6 +2139,8 @@ class PhotoToolbar(gtk.Toolbar):
 		self.ui = ui
 
 		img = ToolButton('media-photo')
+		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
+		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
 		self.insert(img, -1)
 		img.show()
 
@@ -2169,6 +2171,8 @@ class VideoToolbar(gtk.Toolbar):
 		self.ui = ui
 
 		img = ToolButton('media-video')
+		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
+		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
 		self.insert(img, -1)
 		img.show()
 
@@ -2216,6 +2220,8 @@ class AudioToolbar(gtk.Toolbar):
 		self.ui = ui
 
 		img = ToolButton('media-audio')
+		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
+		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
 		self.insert(img, -1)
 		img.show()
 
