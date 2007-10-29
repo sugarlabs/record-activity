@@ -1625,11 +1625,6 @@ class UI:
 		self.thumbVideoSvg = self.loadSvg(self.thumbVideoSvgData, self.colorStroke.hex, self.colorFill.hex)
 		thumbVideoSvgFile.close()
 
-		modWaitSvgFile = open(os.path.join(self.ca.gfxPath, 'wait.svg'), 'r')
-		modWaitSvgData = modWaitSvgFile.read()
-		self.modWaitSvg = self.loadSvg( modWaitSvgData, None, None )
-		modWaitSvgFile.close()
-
 		maxEnlargeSvgFile = open(os.path.join(self.ca.gfxPath, 'max-enlarge.svg'), 'r')
 		maxEnlargeSvgData = maxEnlargeSvgFile.read()
 		self.maxEnlargeSvg = self.loadSvg(maxEnlargeSvgData, None, None )
@@ -1714,8 +1709,9 @@ class BackgroundCanvas(P5):
 
 	def draw(self, ctx, w, h):
 		self.background( ctx, self.ui.colorBlack, w, h )
-		ctx.translate( (w/2)-(h/2), 0 )
-		self.ui.modWaitSvg.render_cairo( ctx )
+		#todo: b&w image for compression
+		#ctx.translate( (w/2)-(h/2), 0 )
+		#self.ui.modWaitSvg.render_cairo( ctx )
 
 
 class PhotoCanvasWindow(gtk.Window):

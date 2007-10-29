@@ -52,6 +52,9 @@ class RecordActivity(activity.Activity):
 	def __init__(self, handle):
 		activity.Activity.__init__(self, handle)
 		self._logger = logging.getLogger('record-activity')
+		#flags for controlling the writing to the datastore
+		self.I_AM_CLOSING = False
+		self.I_AM_SAVED = False
 		self.JUST_LAUNCHED = True
 		self.connect( "notify::active", self._activeCb )
 		#wait a moment so that our debug console capture mistakes
@@ -128,11 +131,18 @@ class RecordActivity(activity.Activity):
 		self.keyExt = "ext"
 		self.keyIstr = "istr"
 
-		self.set_title( self.istrActivityName )
+		#these are all created here in case we have a crash at boot (e.g., pservice not working)
+		self.m = Model( self )
+		self.ui = None
+		self.gplay = None
+		self.glive = None
 
-		#flags for controlling the writing to the datastore
-		self.I_AM_CLOSING = False
-		self.I_AM_SAVED = False
+		#whoami?
+		key = profile.get_pubkey()
+		keyHash = util._sha_data(key)
+		self.hashedKey = util.printable_hash(keyHash)
+		self.instanceId = self._activity_id
+		self.nickName = profile.get_nick_name()
 
 		#totally tubular
 		self.meshTimeoutTime = 10000
@@ -144,13 +154,6 @@ class RecordActivity(activity.Activity):
 		self.tp_conn_path = path
 		self.conn = telepathy.client.Connection(name, path)
 
-		#whoami?
-		key = profile.get_pubkey()
-		keyHash = util._sha_data(key)
-		self.hashedKey = util.printable_hash(keyHash)
-		self.instanceId = self._activity_id
-		self.nickName = profile.get_nick_name()
-
 		#paths
 		self.basePath = activity.get_bundle_path()
 		self.gfxPath = os.path.join(self.basePath, "gfx")
@@ -159,7 +162,6 @@ class RecordActivity(activity.Activity):
 		#the main classes
 		self.glive = Glive( self )
 		self.gplay = Gplay( self )
-		self.m = Model( self )
 		self.ui = UI( self )
 
 		#CSCL
@@ -415,13 +417,16 @@ class RecordActivity(activity.Activity):
 		self.hide()
 
 		self.m.UPDATING = False
-		self.ui.updateButtonSensitivities( )
-		self.ui.doMouseListener( False )
-		self.ui.hideLiveWindows( )
-		self.ui.hidePlayWindows( )
-		self.gplay.stop( )
-		self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
-		self.glive.stop( )
+		if (self.ui != None):
+			self.ui.updateButtonSensitivities( )
+			self.ui.doMouseListener( False )
+			self.ui.hideLiveWindows( )
+			self.ui.hidePlayWindows( )
+		if (self.gplay != None):
+			self.gplay.stop( )
+		if (self.glive != None):
+			self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
+			self.glive.stop( )
 
 		#this calls write_file
 		activity.Activity.close( self )
@@ -540,6 +545,7 @@ class RecordActivity(activity.Activity):
 
 
 	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
+		self._logger.debug('_newRecdCb')
 		dom = None
 		try:
 			dom = xml.dom.minidom.parseString(xmlString)
@@ -553,7 +559,10 @@ class RecordActivity(activity.Activity):
 		if (recd != None):
 			recd.buddy = True
 			recd.downloadedFromBuddy = False
+			self._logger.debug('_newRecdCb: adding new recd thumb')
 			self.m.addMeshRecd( recd )
+		else:
+			self._logger.debug('_newRecdCb: recd is None, unable to parse XML')
 
 
 	def meshInitRoundRobin( self, recd ):

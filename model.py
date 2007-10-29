@@ -429,12 +429,15 @@ class Model:
 	def meshShareRecd( self, recd ):
 		#hey, i just took a cool video.audio.photo!  let me show you!
 		if (self.ca.recTube != None):
+			self.ca._logger.debug('meshShareRecd')
 			recdXml = self.ca.getRecdXmlString(recd)
+			self.ca._logger.debug('meshShareRecd created XML')
 			self.ca.recTube.notifyBudsOfNewRecd( self.ca.hashedKey, recdXml )
+			self.ca._logger.debug('meshShareRecd notifyBuds')
 
 
 	def cannotSaveVideo( self ):
-		print("bad recorded video")
+		self.ca._logger.debug("bad recorded video")
 		self.doPostSaveVideo()
 
 
