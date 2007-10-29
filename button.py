@@ -89,6 +89,8 @@ class RecdButton(TrayButton, gobject.GObject):
 	def addCopyMenuItem( self ):
 		if (self.recd.buddy and not self.recd.downloadedFromBuddy):
 			return
+		if (self.ACTIVATE_COPY_ID != 0):
+			return
 
 		self.copy_menu_item = gtk.MenuItem( self.ui.ca.istrCopyToClipboard )
 		self.ACTIVATE_COPY_ID = self.copy_menu_item.connect('activate', self._itemCopyToClipboardCb)
