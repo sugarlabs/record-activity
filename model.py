@@ -230,7 +230,7 @@ class Model:
 		return self.MODE == self.MODE_PHOTO
 
 
-	def addThumb( self, type, forceUpdating ):
+	def displayThumb( self, type, forceUpdating ):
 		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback, always call with idle_add
 		#this happens b/c this might get called from a gstreamer callback
 
@@ -241,7 +241,7 @@ class Model:
 			self.setUpdating( True )
 		hash = self.mediaHashs[type]
 		if (len(hash) > 0):
-			self.ca.ui.addThumb( hash[len(hash)-1], True )
+			self.ca.ui.addThumb( hash[len(hash)-1] )
 		if (forceUpdating):
 			self.setUpdating( False )
 
@@ -254,7 +254,7 @@ class Model:
 		self.ca.ui.removeThumbs()
 		hash = self.mediaHashs[type]
 		for i in range (0, len(hash)):
-			self.ca.ui.addThumb( hash[i], True )
+			self.ca.ui.addThumb( hash[i] )
 		if (update):
 			self.ca.ui.updateModeChange()
 		self.setUpdating(False)
@@ -363,7 +363,7 @@ class Model:
 
 		audioHash = self.mediaHashs[self.TYPE_AUDIO]
 		audioHash.append( recd )
-		gobject.idle_add(self.addThumb, self.TYPE_AUDIO, True)
+		gobject.idle_add(self.displayThumb, self.TYPE_AUDIO, True)
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
 
@@ -420,7 +420,7 @@ class Model:
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		videoHash.append( recd )
-		gobject.idle_add(self.addThumb, self.TYPE_VIDEO, True)
+		gobject.idle_add(self.displayThumb, self.TYPE_VIDEO, True)
 
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
@@ -480,7 +480,7 @@ class Model:
 
 		photoHash = self.mediaHashs[self.TYPE_PHOTO]
 		photoHash.append( recd )
-		gobject.idle_add(self.addThumb, self.TYPE_PHOTO, True)
+		gobject.idle_add(self.displayThumb, self.TYPE_PHOTO, True)
 
 		self.meshShareRecd( recd )
 
@@ -529,7 +529,7 @@ class Model:
 		self.mediaHashs[recd.type].append( recd )
 
 		#updateUi, but don't lock up the buttons if they're recording or whatever
-		gobject.idle_add(self.addThumb, recd.type, False)
+		gobject.idle_add(self.displayThumb, recd.type, False)
 
 
 	def createNewRecorded( self, type ):

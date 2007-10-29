@@ -1469,8 +1469,6 @@ class UI:
 			self.showThumbSelection( recd )
 
 
-
-
 	def showThumbSelection( self, recd ):
 		lastRecd = self.shownRecd
 
