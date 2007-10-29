@@ -24,19 +24,14 @@ from gtk import keysyms
 import gobject
 import cairo
 import os
-
 import pygst
 pygst.require('0.10')
 import gst
 import gst.interfaces
-
 #parse svg
 import rsvg
 #parse svg xml with regex
 import re
-
-#we do some image conversion when loading gfx
-import _camera
 import time
 from time import strftime
 import math
@@ -44,15 +39,9 @@ import shutil
 import time
 
 from sugar.graphics.toolcombobox import ToolComboBox
-
-import pygst
-pygst.require('0.10')
-import gst
-import gst.interfaces
-
+from sugar.graphics.toolbutton import ToolButton
 from sugar import profile
 from sugar import util
-
 from sugar.activity import activity
 
 from color import Color
@@ -64,7 +53,6 @@ from glive import LiveVideoWindow
 from gplay import PlayVideoWindow
 from recorded import Recorded
 from button import RecdButton
-
 import _camera
 
 class UI:
@@ -140,6 +128,10 @@ class UI:
 		self.toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
 		self.TOOLBOX_SIZE_ALLOCATE_ID = self.toolbox.connect_after("size-allocate", self._toolboxSizeAllocateCb)
 		self.toolbox.show()
+
+
+	def hackDisplayOfThumbtray( self, tray ):
+		pass #todo: if marco doesn't get to it
 
 
 	def _toolboxSizeAllocateCb( self, widget, event ):
@@ -297,6 +289,7 @@ class UI:
 
 		from sugar.graphics.tray import HTray
 		self.thumbTray = HTray()
+		self.hackDisplayOfThumbtray(self.thumbTray)
 		self.thumbTray.set_size_request( -1, self.thumbTrayHt )
 		self.mainBox.pack_end( self.thumbTray, expand=False )
 		self.thumbTray.show()
@@ -1646,19 +1639,14 @@ class UI:
 		self.infoOnSvg = self.loadSvg(infoOnSvgData, None, None )
 		infoOnSvgFile.close()
 
-		infoOffSvgFile = open(os.path.join(self.ca.gfxPath, 'info-off.svg'), 'r')
-		infoOffSvgData = infoOffSvgFile.read()
-		self.infoOffSvg = self.loadSvg(infoOffSvgData, None, None )
-		infoOffSvgFile.close()
-
-		self.photoModeImgPath = os.path.join( self.ca.gfxPath, 'photo_mode.png' )
-		self.videoModeImgPath = os.path.join( self.ca.gfxPath, 'video_mode.png' )
-		self.audioModeImgPath = os.path.join( self.ca.gfxPath, 'audio_mode.png' )
-
 		#todo: load from sugar, query its size for my purposes
+		#handle = self._load_svg(icon_info.file_name)
+		#dimensions = handle.get_dimension_data()
+		#icon_width = int(dimensions[0])
+		#icon_height = int(dimensions[1])
 		xoGuySvgFile = open(os.path.join(self.ca.gfxPath, 'xo-guy.svg'), 'r')
 		self.xoGuySvgData = xoGuySvgFile.read()
-		infoOffSvgFile.close()
+		xoGuySvgFile.close()
 
 		camImgFile = os.path.join(self.ca.gfxPath, 'device-camera.png')
 		camImgPixbuf = gtk.gdk.pixbuf_new_from_file(camImgFile)
@@ -2150,11 +2138,9 @@ class PhotoToolbar(gtk.Toolbar):
 		gtk.Toolbar.__init__(self)
 		self.ui = ui
 
-		img = gtk.Image()
-		img.set_from_file( self.ui.photoModeImgPath )
-		imgItem = gtk.ToolItem()
-		imgItem.add( img )
-		self.insert(imgItem, -1)
+		img = ToolButton('media-photo')
+		self.insert(img, -1)
+		img.show()
 
 		separator = gtk.SeparatorToolItem()
 		separator.set_draw(False)
@@ -2182,11 +2168,9 @@ class VideoToolbar(gtk.Toolbar):
 		gtk.Toolbar.__init__(self)
 		self.ui = ui
 
-		img = gtk.Image()
-		img.set_from_file( self.ui.videoModeImgPath )
-		imgItem = gtk.ToolItem()
-		imgItem.add( img )
-		self.insert(imgItem, -1)
+		img = ToolButton('media-video')
+		self.insert(img, -1)
+		img.show()
 
 		separator = gtk.SeparatorToolItem()
 		separator.set_draw(False)
@@ -2231,11 +2215,9 @@ class AudioToolbar(gtk.Toolbar):
 		gtk.Toolbar.__init__(self)
 		self.ui = ui
 
-		img = gtk.Image()
-		img.set_from_file( self.ui.audioModeImgPath )
-		imgItem = gtk.ToolItem()
-		imgItem.add( img )
-		self.insert(imgItem, -1)
+		img = ToolButton('media-audio')
+		self.insert(img, -1)
+		img.show()
 
 		separator = gtk.SeparatorToolItem()
 		separator.set_draw(False)

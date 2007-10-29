@@ -1,0 +1,12 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#010101">
+	<!ENTITY fill_color "#FFFFFF">
+]><svg enable-background="new 0 0 55 55" height="55px" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="record-photo">
+	<g display="inline">
+		<polygon fill="&fill_color;" points="17.468,16.339 17.468,12.438     8.75,12.438 8.75,16.339 5,16.339 5,42.588 50,42.588 50,16.339   " stroke="&stroke_color;" stroke-linejoin="round" stroke-width="3.5"/>
+		<path d="M20.364,30.209    c0,3.94,3.197,7.137,7.138,7.137c3.937,0,7.135-3.197,7.135-7.137c0-3.937-3.198-7.141-7.135-7.141    C23.562,23.068,20.364,26.273,20.364,30.209z" fill="&fill_color;" stroke="&stroke_color;" stroke-linejoin="round" stroke-width="3.5"/>
+		<rect fill="&stroke_color;" height="4.502" width="6.748" x="39.147" y="20.522"/>
+		<rect fill="&stroke_color;" height="3.438" width="3.438" x="15.688" y="14.625"/>
+		<rect fill="&stroke_color;" height="3.438" width="3.438" x="7.062" y="14.625"/>
+	</g>
+</g></svg>
