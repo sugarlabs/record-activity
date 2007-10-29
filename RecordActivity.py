@@ -553,7 +553,7 @@ class RecordActivity(activity.Activity):
 		if (recd != None):
 			recd.buddy = True
 			recd.downloadedFromBuddy = False
-			self.m.addRecd( recd )
+			self.m.addMeshRecd( recd )
 
 
 	def meshInitRoundRobin( self, recd ):

@@ -230,15 +230,20 @@ class Model:
 		return self.MODE == self.MODE_PHOTO
 
 
-	def addThumb( self, type ):
+	def addThumb( self, type, forceUpdating ):
+		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback, always call with idle_add
+		#this happens b/c this might get called from a gstreamer callback
+
 		if (not type == self.MODE):
 			return
 
-		self.setUpdating( True )
+		if (forceUpdating):
+			self.setUpdating( True )
 		hash = self.mediaHashs[type]
 		if (len(hash) > 0):
-			self.ca.ui.addThumb( hash[len(hash)-1] )
-		self.setUpdating( False )
+			self.ca.ui.addThumb( hash[len(hash)-1], True )
+		if (forceUpdating):
+			self.setUpdating( False )
 
 
 	def setupMode( self, type, update ):
@@ -249,7 +254,7 @@ class Model:
 		self.ca.ui.removeThumbs()
 		hash = self.mediaHashs[type]
 		for i in range (0, len(hash)):
-			self.ca.ui.addThumb( hash[i] )
+			self.ca.ui.addThumb( hash[i], True )
 		if (update):
 			self.ca.ui.updateModeChange()
 		self.setUpdating(False)
@@ -358,7 +363,7 @@ class Model:
 
 		audioHash = self.mediaHashs[self.TYPE_AUDIO]
 		audioHash.append( recd )
-		self.thumbAdded( self.TYPE_AUDIO )
+		gobject.idle_add(self.addThumb, self.TYPE_AUDIO, True)
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
 
@@ -415,7 +420,7 @@ class Model:
 
 		videoHash = self.mediaHashs[self.TYPE_VIDEO]
 		videoHash.append( recd )
-		self.thumbAdded( self.TYPE_VIDEO )
+		gobject.idle_add(self.addThumb, self.TYPE_VIDEO, True)
 
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
@@ -469,12 +474,13 @@ class Model:
 		scale = float((self.ca.ui.tw+0.0)/(pixbuf.get_width()+0.0))
 		thumbImg = self.generateThumbnail(pixbuf, scale)
 		thumbImg.write_to_png(thumbpath)
-
 		gc.collect()
-
 		#now that we've saved both the image and its pixbuf, we get their md5s
 		self.createNewRecordedMd5Sums( recd )
-		self.addRecd( recd )
+
+		photoHash = self.mediaHashs[self.TYPE_PHOTO]
+		photoHash.append( recd )
+		gobject.idle_add(self.addThumb, self.TYPE_PHOTO, True)
 
 		self.meshShareRecd( recd )
 
@@ -518,13 +524,12 @@ class Model:
 		recd.datastoreOb = mediaObject
 
 
-	def addRecd( self, recd ):
-		#mainly used for media coming in over the mesh
+	def addMeshRecd( self, recd ):
 		#todo: sort on time-taken, not on their arrival time over the mesh (?)
 		self.mediaHashs[recd.type].append( recd )
 
-		#updateUi
-		gobject.idle_add( self.thumbAdded, recd.type )
+		#updateUi, but don't lock up the buttons if they're recording or whatever
+		gobject.idle_add(self.addThumb, recd.type, False)
 
 
 	def createNewRecorded( self, type ):
@@ -634,12 +639,6 @@ class Model:
 		else:
 			#remove from the datastore here, since once gone, it is gone...
 			self.removeMediaFromDatastore( recd )
-
-
-	def thumbAdded( self, type ):
-		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback
-		#this happens b/c this might get called from a gstreamer callback
-		gobject.idle_add(self.addThumb, type)
 
 
 	def doVideoMode( self ):
