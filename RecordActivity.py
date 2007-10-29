@@ -146,7 +146,7 @@ class RecordActivity(activity.Activity):
 
 		#totally tubular
 		self.meshTimeoutTime = 10000
-		self.recTube = None  # Shared session
+		self.recTube = None
 		self.connect( "shared", self._sharedCb )
 
 		#paths
@@ -223,6 +223,7 @@ class RecordActivity(activity.Activity):
 		if (dId != None):
 			root.removeAttributeNode(dId)
 
+		#todo: scrub xml here or there, but pick one
 		#append this for sending out to everone else
 		pixbuf = recd.getThumbPixbuf( )
 		thumb = str( self._get_base64_pixbuf_data(pixbuf) )
@@ -254,6 +255,7 @@ class RecordActivity(activity.Activity):
 		el.setAttribute(self.recdThumbBytes, str(recd.thumbBytes))
 		if (recd.datastoreId != None):
 			el.setAttribute(self.recdDatastoreId, str(recd.datastoreId))
+
 
 	def saveIt( self, xmlFile, el, recd ):
 		#presume we don't need to serialize...
@@ -456,21 +458,22 @@ class RecordActivity(activity.Activity):
 
 
 	def _sharedCb( self, activity ):
-		self._logger.debug('My activity was shared')
+		self._logger.debug('_sharedCb: My activity was shared')
 		self._setup()
 
-		self._logger.debug('This is my activity: making a tube...')
+		self._logger.debug('_sharedCb: This is my activity: making a tube...')
 		id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube( SERVICE, {})
 
 
 	def _meshJoinedCb( self, activity ):
+		self._logger.debug('_meshJoinedCb')
 		if not self._shared_activity:
 			return
 
-		self._logger.debug('Joined an existing shared activity')
+		self._logger.debug('_meshJoinedCb: Joined an existing shared activity')
 		self._setup()
 
-		self._logger.debug('This is not my activity: waiting for a tube...')
+		self._logger.debug('_meshJoinedCb: This is not my activity: waiting for a tube...')
 		self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes( reply_handler=self._list_tubes_reply_cb, error_handler=self._list_tubes_error_cb)
 
 
@@ -484,6 +487,8 @@ class RecordActivity(activity.Activity):
 
 
 	def _setup(self):
+		self._logger.debug("_setup")
+
 		#sets up the tubes...
 		if self._shared_activity is None:
 			self._logger.error('_setup: Failed to share or join activity')

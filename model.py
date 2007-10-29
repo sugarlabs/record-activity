@@ -431,7 +431,7 @@ class Model:
 		if (self.ca.recTube != None):
 			self.ca._logger.debug('meshShareRecd')
 			recdXml = self.ca.getRecdXmlString(recd)
-			self.ca._logger.debug('meshShareRecd created XML')
+			self.ca._logger.debug('meshShareRecd created XML ' + str(recdXml))
 			self.ca.recTube.notifyBudsOfNewRecd( self.ca.hashedKey, recdXml )
 			self.ca._logger.debug('meshShareRecd notifyBuds')
 
