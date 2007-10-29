@@ -2139,6 +2139,7 @@ class PhotoToolbar(gtk.Toolbar):
 		self.ui = ui
 
 		img = ToolButton('media-photo')
+		img.connect('clicked', self._shutterClickCb)
 		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
 		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
 		self.insert(img, -1)
@@ -2161,6 +2162,10 @@ class PhotoToolbar(gtk.Toolbar):
 		self.insert( self.timerCb, -1 )
 
 
+	def _shutterClickCb(self, button):
+		self.ui.doShutter()
+
+
 	def getTimer(self):
 		return self.ui.ca.m.TIMERS[self.timerCb.combo.get_active()]
 
@@ -2171,6 +2176,7 @@ class VideoToolbar(gtk.Toolbar):
 		self.ui = ui
 
 		img = ToolButton('media-video')
+		img.connect('clicked', self._shutterClickCb)
 		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
 		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
 		self.insert(img, -1)
@@ -2204,6 +2210,10 @@ class VideoToolbar(gtk.Toolbar):
 			self.durCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
 		self.durCb.combo.set_active(0)
 		self.insert(self.durCb, -1 )
+
+
+	def _shutterClickCb(self, button):
+		self.ui.doShutter()
 
 
 	def getTimer(self):
@@ -2220,6 +2230,7 @@ class AudioToolbar(gtk.Toolbar):
 		self.ui = ui
 
 		img = ToolButton('media-audio')
+		img.connect('clicked', self._shutterClickCb)
 		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
 		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
 		self.insert(img, -1)
@@ -2253,6 +2264,10 @@ class AudioToolbar(gtk.Toolbar):
 			self.durCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
 		self.durCb.combo.set_active(0)
 		self.insert(self.durCb, -1 )
+
+
+	def _shutterClickCb(self, button):
+		self.ui.doShutter()
 
 
 	def getTimer(self):
