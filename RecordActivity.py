@@ -148,11 +148,6 @@ class RecordActivity(activity.Activity):
 		self.meshTimeoutTime = 10000
 		self.recTube = None  # Shared session
 		self.connect( "shared", self._sharedCb )
-		self.pservice = presenceservice.get_instance()
-		name, path = self.pservice.get_preferred_connection()
-		self.tp_conn_name = name
-		self.tp_conn_path = path
-		self.conn = telepathy.client.Connection(name, path)
 
 		#paths
 		self.basePath = activity.get_bundle_path()
@@ -491,8 +486,15 @@ class RecordActivity(activity.Activity):
 	def _setup(self):
 		#sets up the tubes...
 		if self._shared_activity is None:
-			self._logger.error('Failed to share or join activity')
+			self._logger.error('_setup: Failed to share or join activity')
 			return
+
+		pservice = presenceservice.get_instance()
+		try:
+			name, path = pservice.get_preferred_connection()
+			self.conn = telepathy.client.Connection(name, path)
+		except:
+			self._logger.error('_setup: Failed to get_preferred_connection')
 
 		# Work out what our room is called and whether we have Tubes already
 		bus_name, conn_path, channel_paths = self._shared_activity.get_channels()
