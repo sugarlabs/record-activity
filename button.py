@@ -18,8 +18,9 @@ class RecdButton(TrayButton, gobject.GObject):
 		img = self.getImg( )
 		self.set_icon_widget( img )
 
+		self.ACTIVATE_COPY_ID = 0
+		self.ACTIVATE_REMOVE_ID = 0
 		self.setup_rollover_options( recd.title )
-		#todo: add copy to clipboard only when available from the mesh
 
 
 	def getImg( self ):
@@ -82,15 +83,23 @@ class RecdButton(TrayButton, gobject.GObject):
 		palette.menu.append(self.rem_menu_item)
 		self.rem_menu_item.show()
 
+		self.addCopyMenuItem()
+
+
+	def addCopyMenuItem( self ):
+		if (self.recd.buddy and not self.recd.downloadedFromBuddy):
+			return
+
 		self.copy_menu_item = gtk.MenuItem( self.ui.ca.istrCopyToClipboard )
 		self.ACTIVATE_COPY_ID = self.copy_menu_item.connect('activate', self._itemCopyToClipboardCb)
-		palette.menu.append(self.copy_menu_item)
+		self.get_palette().menu.append(self.copy_menu_item)
 		self.copy_menu_item.show()
 
 
 	def cleanUp( self ):
 		self.rem_menu_item.disconnect( self.ACTIVATE_REMOVE_ID )
-		self.copy_menu_item.disconnect( self.ACTIVATE_COPY_ID )
+		if (self.ACTIVATE_COPY_ID != 0):
+			self.copy_menu_item.disconnect( self.ACTIVATE_COPY_ID )
 
 
 	def _itemRemoveCb(self, widget):
