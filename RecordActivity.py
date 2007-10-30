@@ -44,6 +44,7 @@ from ui import UI
 from recordtube import RecordTube
 from glive import Glive
 from gplay import Gplay
+from greplay import Greplay
 from recorded import Recorded
 
 
@@ -136,6 +137,7 @@ class RecordActivity(activity.Activity):
 		self.ui = None
 		self.gplay = None
 		self.glive = None
+		self.greplay = None
 
 		#whoami?
 		key = profile.get_pubkey()
@@ -157,6 +159,7 @@ class RecordActivity(activity.Activity):
 		#the main classes
 		self.glive = Glive( self )
 		self.gplay = Gplay( self )
+		self.greplay = Greplay( self )
 		self.ui = UI( self )
 
 		#CSCL
@@ -212,19 +215,12 @@ class RecordActivity(activity.Activity):
 			self.checkDestroy( album, xmlFile )
 
 
-	def getRecdXmlString( self, recd ):
+	def getRecdXmlMeshString( self, recd ):
 		impl = getDOMImplementation()
 		recdXml = impl.createDocument(None, self.recdRecd, None)
 		root = recdXml.documentElement
-		self.addRecdXmlAttrs( root, recd )
+		self.addRecdXmlAttrs( root, recd, True )
 
-		#make sure we pop these off if its there, as it is only a local ref
-		dId = root.getAttributeNode(self.recdDatastoreId)
-		if (dId != None):
-			root.removeAttributeNode(dId)
-
-		#todo: scrub xml here or there, but pick one
-		#append this for sending out to everone else
 		pixbuf = recd.getThumbPixbuf( )
 		thumb = str( self._get_base64_pixbuf_data(pixbuf) )
 		root.setAttribute(self.recdBuddyThumb, thumb )
@@ -234,13 +230,16 @@ class RecordActivity(activity.Activity):
 		return writer.getvalue()
 
 
-	def addRecdXmlAttrs( self, el, recd ):
+	def addRecdXmlAttrs( self, el, recd, forMeshTransmit ):
 		el.setAttribute(self.recdType, str(recd.type))
 
-		if (recd.type == self.m.TYPE_AUDIO):
+		if ((recd.type == self.m.TYPE_AUDIO) and (not forMeshTransmit)):
 			aiPixbuf = recd.getAudioImagePixbuf( )
 			aiPixbufString = str( self._get_base64_pixbuf_data(aiPixbuf) )
 			el.setAttribute(self.recdAudioImage, aiPixbufString)
+
+		if ((recd.datastoreId != None) and (not forMeshTransmit)):
+			el.setAttribute(self.recdDatastoreId, str(recd.datastoreId))
 
 		el.setAttribute(self.recdTitle, recd.title)
 		el.setAttribute(self.recdTime, str(recd.time))
@@ -253,8 +252,6 @@ class RecordActivity(activity.Activity):
 		el.setAttribute(self.recdThumbMd5, str(recd.thumbMd5))
 		el.setAttribute(self.recdMediaBytes, str(recd.mediaBytes))
 		el.setAttribute(self.recdThumbBytes, str(recd.thumbBytes))
-		if (recd.datastoreId != None):
-			el.setAttribute(self.recdDatastoreId, str(recd.datastoreId))
 
 
 	def saveIt( self, xmlFile, el, recd ):
@@ -273,7 +270,7 @@ class RecordActivity(activity.Activity):
 
 
 	def saveXml( self, xmlFile, el, recd ):
-		self.addRecdXmlAttrs( el, recd )
+		self.addRecdXmlAttrs( el, recd, False )
 
 		recd.savedXml = True
 		self.checkDestroy( el.ownerDocument, xmlFile )
@@ -712,6 +709,14 @@ class RecordActivity(activity.Activity):
 			recd.meshDownloading = False
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
+			if (recd.type == self.ca.m.TYPE_AUDIO):
+				pixbuf = greplay.getAlbumArt(recd)
+				if (pixbuf == None):
+					return
+				imagePath = os.path.join(self.tempPath, "audioPicture.png")
+				imagePath = self.m.getUniqueFilepath( imagePath, 0 )
+				pixbuf.save( imagePath, "png", {} )
+				recd.audioImageFilename = os.path.basename(imagePath)
 			self.ui.showMeshRecd( recd )
 
 
