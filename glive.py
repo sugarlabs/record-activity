@@ -220,8 +220,8 @@ class Glive:
 			bus = pipeline.get_bus()
 			bus.enable_sync_message_emission()
 			bus.add_signal_watch()
-			self.SYNC_ID = bus.connect('sync-message::element', self._onSyncMessage)
-			self.MESSAGE_ID = bus.connect('message', self._onMessage)
+			self.SYNC_ID = bus.connect('sync-message::element', self._onSyncMessageCb)
+			self.MESSAGE_ID = bus.connect('message', self._onMessageCb)
 
 		self.pipes.append(pipeline)
 
@@ -230,14 +230,90 @@ class Glive:
 		self.stop()
 		gobject.idle_add( self.stoppedRecordingAudio )
 
-	def stoppedRecordingAudio( self ):
-		self.record = False
-		self.audio = False
-		if (self.audioPixbuf != None):
-			audioFile = self.el("audioFilesink").get_property("location")
-			self.ca.m.saveAudio(audioFile, self.audioPixbuf)
-		else:
+
+	def stoppedRecordingVideo(self):
+		if ( len(self.thumbPipes) > 0 ):
+			thumbline = self.thumbPipes[len(self.thumbPipes)-1]
+			n = str(len(self.thumbPipes)-1)
+			thumbline.get_by_name( "thumbFakesink_"+n ).disconnect( self.THUMB_HANDOFF )
+
+		n = str(len(self.thumbPipes))
+		f = str(len(self.pipes)-2)
+
+		oggFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
+		if (not os.path.exists(oggFilepath)):
+			self.record = False
 			self.ca.m.cannotSaveVideo()
+			self.ca.m.stoppedRecordingVideo()
+			return
+		oggSize = os.path.getsize(oggFilepath)
+		if (oggSize <= 0):
+			self.record = False
+			self.ca.m.cannotSaveVideo()
+			self.ca.m.stoppedRecordingVideo()
+			return
+
+		line = 'filesrc location=' + str(oggFilepath) + ' name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n
+		thumbline = gst.parse_launch(line)
+		thumbQueue = thumbline.get_by_name('thumbQueue_'+n)
+		thumbQueue.set_property("leaky", True)
+		thumbQueue.set_property("max-size-buffers", 1)
+		thumbTee = thumbline.get_by_name('thumbTee_'+n)
+		thumbFakesink = thumbline.get_by_name("thumbFakesink_"+n)
+		self.THUMB_HANDOFF = thumbFakesink.connect("handoff", self.copyThumbPic)
+		thumbFakesink.set_property("signal-handoffs", True)
+		self.thumbPipes.append(thumbline)
+		self.thumbExposureOpen = True
+		gobject.idle_add( thumbline.set_state, gst.STATE_PLAYING )
+
+
+	def stoppedRecordingAudio( self ):
+		if (self.audioPixbuf != None):
+			audioFilepath = self.el("audioFilesink").get_property("location")
+			if (not os.path.exists(audioFilepath)):
+				self.record = False
+				self.audio = False
+				self.ca.m.cannotSaveVideo()
+				return
+			wavSize = os.path.getsize(audioFilepath)
+			if (wavSize <= 0):
+				self.record = False
+				self.ca.m.cannotSaveVideo()
+				return
+
+			n = str(len(self.thumbPipes))
+			line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc_'+n+' ! wavparse name=audioWavparse_'+n+' ! audioconvert name=audioAudioconvert_'+n+' ! vorbisenc name=audioVorbisenc_'+n+' ! oggmux name=audioOggmux_'+n+' ! filesink name=audioFilesink_'+n
+			audioline = gst.parse_launch(line)
+			taglist = self.getTags()
+			base64AudioSnapshot = self.ca.get_base64_pixbuf_data(self.audioPixbuf)
+			taglist[gst.TAG_EXTENDED_COMMENT] = "albumart="+str(base64AudioSnapshot)
+
+			vorbisEnc = audioline.get_by_name('audioVorbisenc_'+n)
+			vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)
+
+			audioFilesink = audioline.get_by_name('audioFilesink_'+n)
+			audioOggFilepath = os.path.join(self.ca.tempPath, "output.ogg")
+			audioFilesink.set_property("location", audioOggFilepath )
+
+			audioBus = audioline.get_bus()
+			audioBus.add_signal_watch()
+			self.AUDIO_MUX_MESSAGE_ID = audioBus.connect('message', self._onAudioMuxedMessageCb)
+			self.audioPipes.append(audioline)
+			#add a listener here to monitor % of transcoding...
+			self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
+			gobject.idle_add( audioline.set_state, gst.STATE_PLAYING )
+		else:
+			self.record = False
+			self.audio = False
+			self.ca.m.cannotSaveVideo()
+
+
+	def getTags( self ):
+		tl = gst.TagList()
+		tl[gst.TAG_ARTIST] = self.ca.nickName
+		tl[gst.TAG_COMMENT] = "olpc"
+		#todo: more
+		return tl
 
 
 	def takePhoto(self):
@@ -294,48 +370,10 @@ class Glive:
 		self.pipe().set_state(gst.STATE_PLAYING)
 
 
+
 	def stopRecordingVideo(self):
-		#sometimes we hang here because we're trying to open an empty file or nonexistant file
 		self.stop()
-		gobject.idle_add( self._stoppedRecordingVideo )
-
-
-	def _stoppedRecordingVideo(self):
-		print("_stopped")
-		if ( len(self.thumbPipes) > 0 ):
-			thumbline = self.thumbPipes[len(self.thumbPipes)-1]
-			n = str(len(self.thumbPipes)-1)
-			thumbline.get_by_name( "thumbFakesink_"+n ).disconnect( self.THUMB_HANDOFF )
-
-		n = str(len(self.thumbPipes))
-		f = str(len(self.pipes)-2)
-
-		oggFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
-		if (not os.path.exists(oggFilepath)):
-			self.record = False
-			self.ca.m.cannotSaveVideo()
-			self.ca.m.stoppedRecordingVideo()
-			return
-		oggSize = os.path.getsize(oggFilepath)
-		if (oggSize <= 0):
-			self.record = False
-			self.ca.m.cannotSaveVideo()
-			self.ca.m.stoppedRecordingVideo()
-			return
-
-		line = 'filesrc location=' + str(oggFilepath) + ' name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n
-		thumbline = gst.parse_launch(line)
-		thumbQueue = thumbline.get_by_name('thumbQueue_'+n)
-		thumbQueue.set_property("leaky", True)
-		thumbQueue.set_property("max-size-buffers", 1)
-		thumbTee = thumbline.get_by_name('thumbTee_'+n)
-		thumbFakesink = thumbline.get_by_name("thumbFakesink_"+n)
-		self.THUMB_HANDOFF = thumbFakesink.connect("handoff", self.copyThumbPic)
-		thumbFakesink.set_property("signal-handoffs", True)
-		self.thumbPipes.append(thumbline)
-		self.thumbExposureOpen = True
-		gobject.idle_add( thumbline.set_state, gst.STATE_PLAYING )
-
+		gobject.idle_add( self.stoppedRecordingVideo )
 
 
 	def copyThumbPic(self, fsink, buffer, pad, user_data=None):
@@ -359,21 +397,18 @@ class Glive:
 
 				wavFilepath = os.path.join(self.ca.tempPath, "output.wav")
 				muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg") #ogv
-				#todo: ensure that decoding is required
+
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
+				taglist = self.getTags()
+				vorbisEnc = muxline.get_by_name('audioVorbisenc_'+n)
+				vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)
+
 				muxBus = muxline.get_bus()
-				muxBus.enable_sync_message_emission()
 				muxBus.add_signal_watch()
-				self.MUX_MESSAGE_ID = muxBus.connect('message', self.onMuxedMessage)
+				self.MUX_MESSAGE_ID = muxBus.connect('message', self._onMuxedVideoMessageCb)
 				self.muxPipes.append(muxline)
-
-				#todo: find python syntax for tags
-				#todo: add tags to any other media we generated (transcode the wav files)
-				#http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-good-plugins/html/gst-plugins-good-plugins-id3v2mux.html
-
 				#add a listener here to monitor % of transcoding...
 				self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
-
 				muxline.set_state(gst.STATE_PLAYING)
 			else:
 				self.record = False
@@ -405,13 +440,13 @@ class Glive:
 		return (position, duration)
 
 
-	def onMuxedMessage(self, bus, message):
+	def _onMuxedVideoMessageCb(self, bus, message):
 		t = message.type
 		if (t == gst.MESSAGE_EOS):
 			self.record = False
 			self.audio = False
-			gobject.source_remove( self.TRANSCODE_ID )
-			self.TRANSCODE_ID = 0
+			gobject.source_remove( self.VIDEO_TRANSCODE_ID )
+			self.VIDEO_TRANSCODE_ID = 0
 
 			self.muxPipe().set_state(gst.STATE_NULL)
 
@@ -427,7 +462,23 @@ class Glive:
 			self.ca.m.stoppedRecordingVideo()
 
 
-	def _onSyncMessage(self, bus, message):
+	def _onMuxedAudioMessageCb(self, bus, message):
+		t = message.type
+		if (t == gst.MESSAGE_EOS):
+			self.record = False
+			self.audio = False
+			gobject.source_remove( self.AUDIO_TRANSCODE_ID )
+			self.AUDIO_TRANSCODE_ID = 0
+			self.audioPipe().set_state(gst.STATE_NULL)
+
+			#todo: make output.ogg a variable
+			wavFilepath = os.path.join(self.ca.tempPath, "output.wav")
+			oggFilepath = os.path.join(self.ca.tempPath, "output.ogg")
+			os.remove( wavFilepath )
+			self.ca.m.saveAudio(oggFilepath, self.audioPixbuf)
+
+
+	def _onSyncMessageCb(self, bus, message):
 		if message.structure is None:
 			return
 		if message.structure.get_name() == 'prepare-xwindow-id':
@@ -435,7 +486,7 @@ class Glive:
 			message.src.set_property('force-aspect-ratio', True)
 
 
-	def _onMessage(self, bus, message):
+	def _onMessageCb(self, bus, message):
 		t = message.type
 		if t == gst.MESSAGE_EOS:
 			print("MESSAGE_EOS")
