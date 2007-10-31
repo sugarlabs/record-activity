@@ -12,7 +12,9 @@ import utils
 
 class Constants:
 
-	SERVICE = "org.laptop.RecordActivity"
+	SERVICE = "org.laptop.Record"
+	IFACE = SERVICE
+	PATH = "/org/laptop/Record"
 
 	recdTitle = "title"
 	recdTime = "time"

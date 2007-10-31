@@ -38,10 +38,6 @@ import gobject
 from hashlib import md5
 import operator
 
-import xml.dom.minidom
-from xml.dom.minidom import getDOMImplementation
-from xml.dom.minidom import parse
-
 from sugar import util
 from sugar.datastore import datastore
 import sugar.env
@@ -66,123 +62,7 @@ class Model:
 
 		self.mediaHashs = {}
 		for key,value in self.mediaTypes.items():
-			self.mediaHashs[ key ] = []
-
-
-	def fillMediaHash( self, index ):
-		if (os.path.exists(index)):
-			doc = parse( os.path.abspath(index) )
-
-		for key,value in self.mediaTypes.items():
-			recdEl = doc.documentElement.getElementsByTagName(value[self.ca.keyName])
-			for each in recdEl:
-				self.loadMedia( each, self.mediaHashs[key] )
-
-
-	def fillRecdFromNode( self, recd, el ):
-		if (el.getAttributeNode(self.ca.recdType) == None):
-			return None
-		else:
-			try:
-				typeInt = int(el.getAttribute(self.ca.recdType))
-				recd.type = typeInt
-			except:
-				return None
-
-		if (el.getAttributeNode(self.ca.recdTitle) == None):
-			return None
-		else:
-			recd.title = el.getAttribute(self.ca.recdTitle)
-
-		if (el.getAttributeNode(self.ca.recdTime) == None):
-			return None
-		else:
-			try:
-				timeInt = int(el.getAttribute(self.ca.recdTime))
-				recd.time = timeInt
-			except:
-				return None
-
-		if (el.getAttributeNode(self.ca.recdRecorderName) == None):
-			return None
-		else:
-			recd.recorderName = el.getAttribute(self.ca.recdRecorderName)
-
-		if (el.getAttributeNode(self.ca.recdRecorderHash) == None):
-			return None
-		else:
-			recd.recorderHash = el.getAttribute(self.ca.recdRecorderHash)
-
-		if (el.getAttributeNode(self.ca.recdColorStroke) == None):
-			return None
-		else:
-			try:
-				colorStrokeHex = el.getAttribute(self.ca.recdColorStroke)
-				colorStroke = Color()
-				colorStroke.init_hex( colorStrokeHex )
-				recd.colorStroke = colorStroke
-			except:
-				return None
-
-		if (el.getAttributeNode(self.ca.recdColorFill) == None):
-			return None
-		else:
-			try:
-				colorFillHex = el.getAttribute(self.ca.recdColorFill)
-				colorFill = Color()
-				colorFill.init_hex( colorFillHex )
-				recd.colorFill = colorFill
-			except:
-				return None
-
-		if (el.getAttributeNode(self.ca.recdBuddy) == None):
-			return None
-		else:
-			recd.buddy = (el.getAttribute(self.ca.recdBuddy) == "True")
-
-		if (el.getAttributeNode(self.ca.recdMediaMd5) == None):
-			return None
-		else:
-			recd.mediaMd5 = el.getAttribute(self.ca.recdMediaMd5)
-
-		if (el.getAttributeNode(self.ca.recdThumbMd5) == None):
-			return None
-		else:
-			recd.thumbMd5 = el.getAttribute(self.ca.recdThumbMd5)
-
-		if (el.getAttributeNode(self.ca.recdMediaBytes) == None):
-			return None
-		else:
-			recd.mediaBytes = el.getAttribute(self.ca.recdMediaBytes)
-
-		if (el.getAttributeNode(self.ca.recdThumbBytes) == None):
-			return None
-		else:
-			recd.thumbBytes = el.getAttribute(self.ca.recdThumbBytes)
-
-		bt = el.getAttributeNode(self.ca.recdBuddyThumb)
-		if (not bt == None):
-			try:
-				thumbPath = os.path.join(Instance.tmpPath, "datastoreThumb.jpg")
-				thumbPath = self.getUniqueFilepath( thumbPath, 0 )
-				thumbImg = recd.pixbufFromString( bt.nodeValue )
-				thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
-				recd.thumbFilename = os.path.basename(thumbPath)
-			except:
-				return None
-
-		ai = el.getAttributeNode(self.ca.recdAudioImage)
-		if (not ai == None):
-			try:
-				audioImg = recd.pixbufFromString( ai.nodeValue )
-				audioImagePath = os.path.join(Instance.tmpPath, "audioImage.png")
-				audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
-				audioImg.save(audioImagePath, "png", {} )
-				recd.audioImageFilename = os.path.basename(audioImagePath)
-			except:
-				return None
-
-		return recd
+			self.mediaHashs[key] = []
 
 
 	def getRecdByMd5( self, md5 ):
@@ -195,33 +75,6 @@ class Model:
 					return recd
 
 		return None
-
-
-	def loadMedia( self, el, hash ):
-		recd = Recorded( self.ca )
-		addToHash = True
-
-		self.fillRecdFromNode( recd, el )
-		recd.datastoreNode = el.getAttributeNode(self.ca.recdDatastoreId)
-		if (recd.datastoreNode != None):
-			recd.datastoreId = recd.datastoreNode.nodeValue
-			#quickly check, if you have a datastoreId, that the file hasn't been deleted, thus we need to flag your removal
-			#todo: find better method here (e.g., datastore.exists(id)) put trac here
-			self.loadMediaFromDatastore( recd )
-			if (recd.datastoreOb == None):
-				addToHash = False
-			else:
-				#name might have been changed in the journal, so reflect that here
-				if (recd.title != recd.datastoreOb.metadata['title']):
-					recd.setTitle(recd.datastoreOb.metadata['title'])
-				if (recd.buddy):
-					recd.downloadedFromBuddy = True
-
-
-			recd.datastoreOb == None
-
-		if (addToHash):
-			hash.append( recd )
 
 
 	def isVideoMode( self ):
@@ -260,7 +113,6 @@ class Model:
 		if (update):
 			self.ca.ui.updateModeChange()
 		self.setUpdating(False)
- 		#self.ca.ui.debugWindows()
 
 
 	def showNextThumb( self, shownRecd ):
@@ -297,21 +149,6 @@ class Model:
 			self.ca.ui.showThumbSelection( hash[len(hash)-1] )
 
 
-	def getHash( self ):
-		type = -1
-		if (self.MODE == Constants.MODE_PHOTO):
-			type = Constants.TYPE_PHOTO
-		if (self.MODE == Constants.MODE_VIDEO):
-			type = Constants.TYPE_VIDEO
-		if (self.MODE == Constants.MODE_AUDIO):
-			type = Constants.TYPE_AUDIO
-
-		if (type != -1):
-			return self.mediaHashs[type]
-		else:
-			return None
-
-
 	def doShutter( self ):
 		if (self.UPDATING):
 			return
@@ -329,6 +166,8 @@ class Model:
 			if (not self.RECORDING):
 				self.startRecordingAudio()
 			else:
+				#post-processing begins now, so queue up this gfx
+				self.ca.ui.showPostProcessGfx(True)
 				self.stopRecordingAudio()
 
 
@@ -351,8 +190,8 @@ class Model:
 		os.rename( tempPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
-		scale = float((self.ca.ui.tw+0.0)/(pixbuf.get_width()+0.0))
-		thumbImg = self.generateThumbnail(pixbuf, scale)
+		scale = float((UI.THUMBWIDTH+0.0)/(pixbuf.get_width()+0.0))
+		thumbImg = self.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 
 		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
@@ -414,8 +253,8 @@ class Model:
 		os.rename( tempPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
-		scale = float((self.ca.ui.tw+0.0)/(wid+0.0))
-		thumbImg = self.generateThumbnail(pixbuf, scale )
+		scale = float((UI.THUMB_WIDTH+0.0)/(wid+0.0))
+		thumbImg = self.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, ui.THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 
 		self.createNewRecordedMd5Sums( recd )
@@ -429,12 +268,13 @@ class Model:
 
 
 	def meshShareRecd( self, recd ):
+		record.log.debug('meshShareRecd')
 		#hey, i just took a cool video.audio.photo!  let me show you!
 		if (self.ca.recTube != None):
-			self.ca._logger.debug('meshShareRecd')
-			recdXml = self.ca.getRecdXmlMeshString(recd)
-			self.ca._logger.debug('meshShareRecd: created XML ' + str(recdXml))
-			self.ca.recTube.notifyBudsOfNewRecd( self.ca.hashedKey, recdXml )
+			self.ca._logger.debug('meshShareRecd: we have a recTube')
+			recdXml = self.ca.getRecdXmlString(recd)
+			self.ca._logger.debug('meshShareRecd: created XML')
+			self.ca.recTube.notifyBudsOfNewRecd( Instance.hashedKey, recdXml )
 			self.ca._logger.debug('meshShareRecd: notifyBuds')
 
 
@@ -476,8 +316,8 @@ class Model:
 		pixbuf.save( imgpath, "jpeg" )
 
 		thumbpath = os.path.join(Instance.tmpPath, recd.thumbFilename)
-		scale = float((self.ca.ui.tw+0.0)/(pixbuf.get_width()+0.0))
-		thumbImg = self.generateThumbnail(pixbuf, scale)
+		scale = float((UI.THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
+		thumbImg = self.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbpath)
 		gc.collect()
 		#now that we've saved both the image and its pixbuf, we get their md5s
@@ -488,45 +328,6 @@ class Model:
 		gobject.idle_add(self.displayThumb, Constants.TYPE_PHOTO, True)
 
 		self.meshShareRecd( recd )
-
-
-	def removeMediaFromDatastore( self, recd ):
-		#before this method is called, the media are removed from the file
-		if (recd.datastoreId == None):
-			return
-
-		try:
-			recd.datastoreOb.destroy()
-			datastore.delete( recd.datastoreId )
-
-			del recd.datastoreId
-			recd.datastoreId = None
-
-			del recd.datastoreOb
-			recd.datastoreOb = None
-
-		finally:
-			#todo: add error message here
-			pass
-
-
-	def loadMediaFromDatastore( self, recd ):
-		if (recd.datastoreId == None):
-			print("RecordActivity error -- request for recd from datastore with no datastoreId")
-			return
-
-		if (recd.datastoreOb != None):
-			return
-
-		mediaObject = None
-		try:
-			mediaObject = datastore.get( recd.datastoreId )
-		finally:
-			if (mediaObject == None):
-					print("RecordActivity error -- request for recd from datastore returning None")
-					return
-
-		recd.datastoreOb = mediaObject
 
 
 	def addMeshRecd( self, recd ):
@@ -572,41 +373,18 @@ class Model:
 	def createNewRecordedMd5Sums( self, recd ):
 		#load the thumbfile
 		thumbFile = os.path.join(Instance.tmpPath, recd.thumbFilename)
-		thumbMd5 = self.md5File( thumbFile )
+		thumbMd5 = utils.md5File( thumbFile )
 		recd.thumbMd5 = thumbMd5
 		tBytes = os.stat(thumbFile)[7]
 		recd.thumbBytes = tBytes
 
 		#load the mediafile
 		mediaFile = os.path.join(Instance.tmpPath, recd.mediaFilename)
-		mediaMd5 = self.md5File( mediaFile )
+		mediaMd5 = utils.md5File( mediaFile )
 		recd.mediaMd5 = mediaMd5
 		mBytes = os.stat(mediaFile)[7]
 		recd.mediaBytes = mBytes
 
-
-	def md5File( self, filepath ):
-		md = md5()
-		f = file( filepath, 'rb' )
-		md.update( f.read() )
-		digest = md.hexdigest()
-		hash = util.printable_hash(digest)
-		return hash
-
-
-	def generateThumbnail( self, pixbuf, scale ):
-		#outdated?
-		#need to generate thumbnail version here
-		thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.ca.ui.tw, self.ca.ui.th)
-		tctx = cairo.Context(thumbImg)
-		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-		tctx.scale(scale, scale)
-		tctx.set_source_surface(img, 0, 0)
-		tctx.paint()
-
-		gc.collect()
-
-		return thumbImg
 
 
 	def deleteRecorded( self, recd ):
@@ -633,7 +411,7 @@ class Model:
 				os.remove(thumbFile)
 		else:
 			#remove from the datastore here, since once gone, it is gone...
-			self.removeMediaFromDatastore( recd )
+			serialize.removeMediaFromDatastore( recd )
 
 
 	def doVideoMode( self ):

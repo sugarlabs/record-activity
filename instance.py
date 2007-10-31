@@ -9,7 +9,7 @@ from color import Color
 class Instance:
 	key = profile.get_pubkey()
 	keyHash = util._sha_data(key)
-	hashedKey = util.printable_hash(keyHash)
+	keyHashPrintable = util.printable_hash(keyHash)
 	nickName = profile.get_nick_name()
 
 	colorFill = Color()

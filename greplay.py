@@ -55,14 +55,5 @@ class Greplay:
 				if (str(tag) == "extended-comment"):
 					#todo, check for tagname
 					base64imgString = str(tags[tag])[len("coverart="):]
-					pixbuf = self.pixbufFromString(base64imgString)
+					pixbuf = utils.pixbufFromString(base64imgString)
 					#todo: emit here
-
-
-	def pixbufFromString( self, str ):
-		pbl = gtk.gdk.PixbufLoader()
-		import base64
-		data = base64.b64decode( str )
-		pbl.write(data)
-		pbl.close()
-		return pbl.get_pixbuf()

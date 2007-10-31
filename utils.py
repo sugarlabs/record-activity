@@ -43,3 +43,26 @@ def getUniqueFilepath( path, i ):
 		return getUniqueFilepath( str(newPath), i )
 	else:
 		return os.path.abspath( path )
+
+
+def md5File( filepath ):
+	md = md5()
+	f = file( filepath, 'rb' )
+	md.update( f.read() )
+	digest = md.hexdigest()
+	hash = util.printable_hash(digest)
+	return hash
+
+
+def generateThumbnail( pixbuf, scale, thumbw, thumbh ):
+	#need to generate thumbnail version here
+	thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, thumbw, thumbh)
+	tctx = cairo.Context(thumbImg)
+	img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+	tctx.scale(scale, scale)
+	tctx.set_source_surface(img, 0, 0)
+	tctx.paint()
+
+	gc.collect()
+
+	return thumbImg

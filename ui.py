@@ -56,14 +56,15 @@ import _camera
 
 class UI:
 
+	THUMB_WIDTH = 107
+	THUMB_HEIGHT = 80
+
 	def __init__( self, pca ):
 		self.ca = pca
 
 		#sizes
 		#thumb dimensions:
 		self.thumbTrayHt = 150 #todo: get sugar constant here
-		self.tw = 107
-		self.th = 80
 		self.thumbSvgW = 124
 		self.thumbSvgH = 124
 		#pip size:

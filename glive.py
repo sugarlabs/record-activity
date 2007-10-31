@@ -287,7 +287,7 @@ class Glive:
 			line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc_'+n+' ! wavparse name=audioWavparse_'+n+' ! audioconvert name=audioAudioconvert_'+n+' ! vorbisenc name=audioVorbisenc_'+n+' ! oggmux name=audioOggmux_'+n+' ! filesink name=audioFilesink_'+n
 			audioline = gst.parse_launch(line)
 			taglist = self.getTags()
-			base64AudioSnapshot = self.ca.get_base64_pixbuf_data(self.audioPixbuf)
+			base64AudioSnapshot = utils.getStringFromPixbuf(self.audioPixbuf)
 			taglist[gst.TAG_EXTENDED_COMMENT] = "coverart="+str(base64AudioSnapshot)
 
 			vorbisEnc = audioline.get_by_name('audioVorbisenc_'+n)
