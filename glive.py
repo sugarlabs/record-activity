@@ -286,7 +286,7 @@ class Glive:
 			audioline = gst.parse_launch(line)
 			taglist = self.getTags()
 			base64AudioSnapshot = self.ca.get_base64_pixbuf_data(self.audioPixbuf)
-			taglist[gst.TAG_EXTENDED_COMMENT] = "albumart="+str(base64AudioSnapshot)
+			taglist[gst.TAG_EXTENDED_COMMENT] = "coverart="+str(base64AudioSnapshot)
 
 			vorbisEnc = audioline.get_by_name('audioVorbisenc_'+n)
 			vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)

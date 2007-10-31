@@ -27,5 +27,42 @@ import gst
 import gst.interfaces
 
 class Greplay:
+
+
+
 	def __init__(self, pca):
 		self.ca = pca
+
+
+	def getAlbumArt( self, recd ):
+		#todo: handle None paths here
+		#todo: +n needed here?
+		pp = gst.parse_launch("filesrc location="+recd.getMediaFilelocation(False)+" ! oggdemux ! vorbisdec ! fakesink")
+		pp.get_bus().add_signal_watch()
+		pp.get_bus().connect("message", self._onMessageCb)
+		pp.set_state(gst.STATE_PLAYING)
+
+
+	def _onMessageCb(self, bus, message):
+		t = message.type
+		if t == gst.MESSAGE_EOS:
+			print("MESSAGE_EOS")
+		elif t == gst.MESSAGE_ERROR:
+			print("MESSAGE_ERROR")
+		elif t == gst.MESSAGE_TAG:
+			tags = message.parse_tag()
+			for tag in tags.keys():
+				if (str(tag) == "extended-comment"):
+					#todo, check for tagname
+					base64imgString = str(tags[tag])[len("coverart="):]
+					pixbuf = self.pixbufFromString(base64imgString)
+					#todo: emit here
+
+
+	def pixbufFromString( self, str ):
+		pbl = gtk.gdk.PixbufLoader()
+		import base64
+		data = base64.b64decode( str )
+		pbl.write(data)
+		pbl.close()
+		return pbl.get_pixbuf()

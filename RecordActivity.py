@@ -70,7 +70,7 @@ class RecordActivity(activity.Activity):
 		self.istrTimelapse = _('Time Lapse')
 		self.istrAnimation = _('Animation')
 		self.istrPanorama = _('Panorama')
-		#TRANS: photo by photographer, e.g., "Sunset by Mary"
+		#TRANS: photo by photographer, e.g., "Photo by Mary"
 		self.istrBy = _("%(1)s by %(2)s")
 		self.istrTitle = _('Title:')
 		self.istrRecorder = _('Recorder:')
@@ -710,14 +710,20 @@ class RecordActivity(activity.Activity):
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
 			if (recd.type == self.ca.m.TYPE_AUDIO):
-				pixbuf = greplay.getAlbumArt(recd)
-				if (pixbuf == None):
-					return
-				imagePath = os.path.join(self.tempPath, "audioPicture.png")
-				imagePath = self.m.getUniqueFilepath( imagePath, 0 )
-				pixbuf.save( imagePath, "png", {} )
-				recd.audioImageFilename = os.path.basename(imagePath)
-			self.ui.showMeshRecd( recd )
+				self.connect(greplay.getAlbumArt, recd, _getAlbumArtCb)
+			else:
+				self.ui.showMeshRecd( recd )
+		elif part > numparts:
+			self._logger.debug('More parts than required have arrived')
+
+
+	def _getAlbumArtCb( self, recd, pixbuf ):
+		if (pixbuf == None):
+			return False
+		imagePath = os.path.join(self.tempPath, "audioPicture.png")
+		imagePath = self.m.getUniqueFilepath( imagePath, 0 )
+		pixbuf.save( imagePath, "png", {} )
+		recd.audioImageFilename = os.path.basename(imagePath)
 
 
 	def _recdUnavailableCb( self, objectThatSentTheSignal, md5sumOfIt, whoDoesntHaveIt ):

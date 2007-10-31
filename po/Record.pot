@@ -44,7 +44,7 @@ msgstr ""
 msgid "Panorama"
 msgstr ""
 
-#. TRANS: photo by photographer, e.g., "Sunset by Mary"
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: RecordActivity.py:70
 #, python-format
 msgid "%(1)s by %(2)s"
