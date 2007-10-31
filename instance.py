@@ -20,7 +20,14 @@ class Instance:
 	instanceId = None
 	tmpPath = None
 
-	def __init__( self, ca ):
+	def __init__(self, ca):
 		self.__class__.instanceId = ca._activity_id
 		tmpPath = os.path.join( ca.get_activity_root(), "tmp" )
 		self.__class__.tmpPath = os.path.join( tmpPath, str(self.__class__.instanceId))
+		recreateTmp()
+
+
+def recreateTmp():
+	if (os.path.exists(Instance.tmpPath)):
+		shutil.rmtree(Instance.tmpPath)
+	os.makedirs(Instance.tmpPath)

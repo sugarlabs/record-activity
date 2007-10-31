@@ -25,7 +25,6 @@ import shutil
 import telepathy
 import telepathy.client
 import logging
-import cStringIO
 
 from sugar.activity import activity
 from sugar.datastore import datastore
@@ -41,6 +40,7 @@ from gplay import Gplay
 from greplay import Greplay
 from recorded import Recorded
 from constants import Constants
+import instance
 from instance import Instance
 import serialize
 
@@ -176,7 +176,7 @@ class Record(activity.Activity):
 			self.hide()
 
 		if self.I_AM_SAVED:
-			self.recreateTemp()
+			instance.recreateTmp(self)
 			activity.Activity.destroy( self )
 
 
@@ -472,9 +472,3 @@ class Record(activity.Activity):
 			return
 
 		self.meshNextRoundRobinBuddy( recd )
-
-
-	def recreateTmp(self):
-		if (os.path.exists(instance.tmpPath)):
-			shutil.rmtree(instance.tmpPath)
-		os.makedirs(instance.tmpPath)
