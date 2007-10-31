@@ -225,105 +225,105 @@ def addRecdXmlAttrs( self, el, recd, forMeshTransmit ):
 	el.setAttribute(self.recdThumbBytes, str(recd.thumbBytes))
 
 
-	def saveMediaHash( mediaTypes, mediaHash ):
-		impl = getDOMImplementation()
-		album = impl.createDocument(None, Constants.recdAlbum, None)
-		root = album.documentElement
+def saveMediaHash( mediaTypes, mediaHashs ):
+	impl = getDOMImplementation()
+	album = impl.createDocument(None, Constants.recdAlbum, None)
+	root = album.documentElement
 
-		#flag everything for saving...
-		atLeastOne = False
-		for type,value in mediaTypes.items():
+	#flag everything for saving...
+	atLeastOne = False
+	for type,value in mediaTypes.items():
+		typeName = value[Constants.keyName]
+		hash = mediaHashs[type]
+		for i in range (0, len(hash)):
+			recd = hash[i]
+			recd.savedXml = False
+			recd.savedMedia = False
+			atLeastOne = True
+
+	#and if there is anything to save, save it
+	if (atLeastOne):
+		for type,value in m.mediaTypes.items():
 			typeName = value[Constants.keyName]
-			hash = mediaHashs[type]
+			hash = m.mediaHashs[type]
+
 			for i in range (0, len(hash)):
 				recd = hash[i]
-				recd.savedXml = False
-				recd.savedMedia = False
-				atLeastOne = True
+				mediaEl = album.createElement( typeName )
+				root.appendChild( mediaEl )
+				self._saveMedia( mediaEl, recd )
 
-		#and if there is anything to save, save it
-		if (atLeastOne):
-			for type,value in m.mediaTypes.items():
-				typeName = value[Constants.keyName]
-				hash = m.mediaHashs[type]
-
-				for i in range (0, len(hash)):
-					recd = hash[i]
-					mediaEl = album.createElement( typeName )
-					root.appendChild( mediaEl )
-					self._saveMedia( mediaEl, recd )
-
-		return album
+	return album
 
 
-	def _saveMedia( el, recd ):
-		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
-			pixbuf = recd.getThumbPixbuf( )
-			buddyThumb = str( utils.getStringFromPixbuf(pixbuf) )
-			el.setAttribute(self.recdBuddyThumb, buddyThumb )
-			recd.savedMedia = True
-			self._saveXml( el, recd )
-		else:
-			recd.savedMedia = False
-			self._saveMediaToDatastore( el, recd )
+def _saveMedia( el, recd ):
+	if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
+		pixbuf = recd.getThumbPixbuf( )
+		buddyThumb = str( utils.getStringFromPixbuf(pixbuf) )
+		el.setAttribute(self.recdBuddyThumb, buddyThumb )
+		recd.savedMedia = True
+		self._saveXml( el, recd )
+	else:
+		recd.savedMedia = False
+		self._saveMediaToDatastore( el, recd )
 
 
-	def _saveXml( el, recd ):
-		addRecdXmlAttrs( el, recd, False )
-		recd.savedXml = True
+def _saveXml( el, recd ):
+	addRecdXmlAttrs( el, recd, False )
+	recd.savedXml = True
 
 
-	def _saveMediaToDatastore( el, recd ):
-		#note that we update the recds that go through here to how they would
-		#look on a fresh load from file since this won't just happen on close()
+def _saveMediaToDatastore( el, recd ):
+	#note that we update the recds that go through here to how they would
+	#look on a fresh load from file since this won't just happen on close()
 
-		if (recd.datastoreId != None):
-			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
-			#However, they might have changed the name of the file
-			if (recd.titleChange):
-				recd.datastoreOb = getMediaFromDatastore( recd )
-				if (recd.datastoreOb.metadata['title'] != recd.title):
-					recd.datastoreOb.metadata['title'] = recd.title
-					datastore.write(recd.datastoreOb)
+	if (recd.datastoreId != None):
+		#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
+		#However, they might have changed the name of the file
+		if (recd.titleChange):
+			recd.datastoreOb = getMediaFromDatastore( recd )
+			if (recd.datastoreOb.metadata['title'] != recd.title):
+				recd.datastoreOb.metadata['title'] = recd.title
+				datastore.write(recd.datastoreOb)
 
-				#reset for the next title change if not closing...
-				recd.titleChange = False
-				#save the title to the xml
-				recd.savedMedia = True
-
-				self._saveXml( xmlFile, el, recd )
-			else:
-				recd.savedMedia = True
-				self._saveXml( xmlFile, el, recd )
-
-		else:
-			#this will remove the media from being accessed on the local disk since it puts it away into cold storage
-			#therefore this is only called when write_file is called by the activity superclass
-			mediaObject = datastore.create()
-			mediaObject.metadata['title'] = recd.title
-
-			pixbuf = recd.getThumbPixbuf()
-			thumbData = utils.getStringFromPixbuf(pixbuf)
-			mediaObject.metadata['preview'] = thumbData
-
-			colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
-			mediaObject.metadata['icon-color'] = colors
-
-			mtype = self.m.mediaTypes[recd.type]
-			mmime = mtype[self.keyMime]
-			mediaObject.metadata['mime_type'] = mmime
-
-			mediaObject.metadata['activity'] = Constants.activityId
-
-			mediaFile = recd.getMediaFilepath(False)
-			mediaObject.file_path = mediaFile
-			mediaObject.transfer_ownership = True
-
-			datastore.write( mediaObject )
-
-			recd.datastoreId = mediaObject.object_id
-			recd.mediaFilename = None
-			recd.thumbFilename = None
+			#reset for the next title change if not closing...
+			recd.titleChange = False
+			#save the title to the xml
 			recd.savedMedia = True
 
 			self._saveXml( xmlFile, el, recd )
+		else:
+			recd.savedMedia = True
+			self._saveXml( xmlFile, el, recd )
+
+	else:
+		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
+		#therefore this is only called when write_file is called by the activity superclass
+		mediaObject = datastore.create()
+		mediaObject.metadata['title'] = recd.title
+
+		pixbuf = recd.getThumbPixbuf()
+		thumbData = utils.getStringFromPixbuf(pixbuf)
+		mediaObject.metadata['preview'] = thumbData
+
+		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
+		mediaObject.metadata['icon-color'] = colors
+
+		mtype = self.m.mediaTypes[recd.type]
+		mmime = mtype[self.keyMime]
+		mediaObject.metadata['mime_type'] = mmime
+
+		mediaObject.metadata['activity'] = Constants.activityId
+
+		mediaFile = recd.getMediaFilepath(False)
+		mediaObject.file_path = mediaFile
+		mediaObject.transfer_ownership = True
+
+		datastore.write( mediaObject )
+
+		recd.datastoreId = mediaObject.object_id
+		recd.mediaFilename = None
+		recd.thumbFilename = None
+		recd.savedMedia = True
+
+		self._saveXml( xmlFile, el, recd )

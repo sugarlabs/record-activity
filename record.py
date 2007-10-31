@@ -42,6 +42,7 @@ from greplay import Greplay
 from recorded import Recorded
 from constants import Constants
 from instance import Instance
+import serialize
 
 class Record(activity.Activity):
 
@@ -92,10 +93,9 @@ class Record(activity.Activity):
 	def write_file(self, file):
 		self.I_AM_SAVED = False
 
-		#this will emit callbacks to checkDestroy as it tears through
+		dom = serialize.saveMediaHash(self.m.mediaTypes, self.m.mediaHashs)
 		xmlFile = open( file, "w" )
-		dom = serialize.saveMediaHash(file, self.m.mediaTypes, self.m.mediaHash)
-		dom.writexml(file)
+		dom.writexml(xmlFile)
 		xmlFile.close()
 
 		allDone = True
