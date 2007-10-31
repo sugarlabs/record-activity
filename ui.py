@@ -1129,22 +1129,6 @@ class UI:
 			return self.getPrgLoc( full )
 
 
-	def setupThumbButton( self, thumbButton, iconStringSensitive ):
-		iconSet = gtk.IconSet()
-		iconSensitive = gtk.IconSource()
-		iconSensitive.set_icon_name(iconStringSensitive)
-		iconSet.add_source(iconSensitive)
-
-		iconImage = gtk.Image()
-		iconImage.set_from_icon_set(iconSet, gtk.ICON_SIZE_BUTTON)
-		thumbButton.set_image(iconImage)
-
-		thumbButton.set_sensitive(False)
-		thumbButton.set_relief(gtk.RELIEF_NONE)
-		thumbButton.set_focus_on_click(False)
-		thumbButton.set_size_request(80, -1)
-
-
 	def _shutterClickCb( self, arg ):
 		self.doShutter()
 
