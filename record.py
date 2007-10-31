@@ -91,138 +91,32 @@ class Record(activity.Activity):
 
 	def write_file(self, file):
 		self.I_AM_SAVED = False
-		SAVING_AT_LEAST_ONE = False
 
+		#this will emit callbacks to checkDestroy as it tears through
 		xmlFile = open( file, "w" )
-		impl = getDOMImplementation()
-		album = impl.createDocument(None, Constants.recdAlbum, None)
-		root = album.documentElement
+		dom = serialize.saveMediaHash(file, self.m.mediaTypes, self.m.mediaHash)
+		dom.writexml(file)
+		xmlFile.close()
 
-		atLeastOne = False
+		allDone = True
+		for h in range (0, len(self.m.mediaHashs)):
+			mhash = self.m.mediaHashs[h]
+			for i in range (0, len(mhash)):
+				recd = mhash[i]
 
-		#flag everything for saving...
-		for type,value in self.m.mediaTypes.items():
-			typeName = value[Constants.keyName]
-			hash = self.m.mediaHashs[type]
-			for i in range (0, len(hash)):
-				recd = hash[i]
-				recd.savedXml = False
-				recd.savedMedia = False
-				atLeastOne = True
+				if ( (not recd.savedMedia) or (not recd.savedXml) ):
+					allDone = False
+					self.__log__.error("somehow we didn't serialize a recd...")
 
-		#and if there is anything to save, save it
-		if (atLeastOne):
-			for type,value in self.m.mediaTypes.items():
-				typeName = value[Constants.keyName]
-				hash = self.m.mediaHashs[type]
+				if (self.I_AM_CLOSING):
+					mediaObject = recd.mediaOb
+					if (mediaObject != None):
+						mediaObject.destroy()
+						del mediaObject
 
-				for i in range (0, len(hash)):
-					recd = hash[i]
-					mediaEl = album.createElement( typeName )
-					root.appendChild( mediaEl )
-					self.saveIt( xmlFile, mediaEl, recd )
-
-		#otherwise, clear it out
-		if (not atLeastOne):
-			self.checkDestroy( album, xmlFile )
-
-
-	def saveIt( self, xmlFile, el, recd ):
-		#presume we don't need to serialize...
-		needToDatastoreMedia = False
-
-		if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
-			pixbuf = recd.getThumbPixbuf( )
-			buddyThumb = str( utils.getStringFromPixbuf(pixbuf) )
-			el.setAttribute(self.recdBuddyThumb, buddyThumb )
-			recd.savedMedia = True
-			self.saveXml( xmlFile, el, recd )
-		else:
-			recd.savedMedia = False
-			self.saveMedia( xmlFile, el, recd )
-
-
-	def saveXml( self, xmlFile, el, recd ):
-		self.addRecdXmlAttrs( el, recd, False )
-
-		recd.savedXml = True
-		self.checkDestroy( el.ownerDocument, xmlFile )
-
-
-	def saveMedia( self, xmlFile, el, recd ):
-		#note that we update the recds that go through here to how they would
-		#look on a fresh load from file since this won't just happen on close()
-
-		if (recd.datastoreId != None):
-			#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
-			#However, they might have changed the name of the file
-			if (recd.titleChange):
-				self.m.loadMediaFromDatastore( recd )
-				if (recd.datastoreOb.metadata['title'] != recd.title):
-					recd.datastoreOb.metadata['title'] = recd.title
-					datastore.write(recd.datastoreOb)
-
-				#reset for the next title change if not closing...
-				recd.titleChange = False
-				#save the title to the xml
-				recd.savedMedia = True
-
-				self.saveXml( xmlFile, el, recd )
-			else:
-				recd.savedMedia = True
-				self.saveXml( xmlFile, el, recd )
-
-		else:
-			#this will remove the media from being accessed on the local disk since it puts it away into cold storage
-			#therefore this is only called when write_file is called by the activity superclass
-			mediaObject = datastore.create()
-			#todo: what other metadata to set?
-			mediaObject.metadata['title'] = recd.title
-			#jobject.metadata['keep'] = '0'
-			#jobject.metadata['buddies'] = ''
-
-			pixbuf = recd.getThumbPixbuf()
-			thumbData = utils.getStringFromPixbuf(pixbuf)
-			mediaObject.metadata['preview'] = thumbData
-
-			colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
-			mediaObject.metadata['icon-color'] = colors
-
-			mtype = self.m.mediaTypes[recd.type]
-			mmime = mtype[self.keyMime]
-			mediaObject.metadata['mime_type'] = mmime
-
-			mediaObject.metadata['activity'] = self._activity_id
-
-			mediaFile = recd.getMediaFilepath(False)
-			mediaObject.file_path = mediaFile
-			mediaObject.transfer_ownership = True
-
-			datastore.write( mediaObject )
-			self.doPostMediaSave( xmlFile, el, recd, mediaObject )
-
-
-	def _mediaSaveCb( self, recd ):
-		self.doPostMediaSave( recd )
-
-
-	def _mediaSaveErrorCb( self, recd ):
-		self.doPostMediaSave( recd )
-
-
-	def doPostMediaSave( self, xmlFile, el, recd, mediaObject ):
-		recd.datastoreId = mediaObject.object_id
-		recd.mediaFilename = None
-		recd.thumbFilename = None
-
-		self.saveXml( xmlFile, el, recd )
-
-		if (self.I_AM_CLOSING):
-			mediaObject.destroy()
-			del mediaObject
-
-		recd.savedMedia = True
-		self.checkDestroy( el.ownerDocument, xmlFile )
+		self.I_AM_SAVED = True
+		if (self.I_AM_SAVED and self.I_AM_CLOSING):
+			self.destroy()
 
 
 	def _activeCb( self, widget, pspec ):
@@ -275,25 +169,6 @@ class Record(activity.Activity):
 
 		#this calls write_file
 		activity.Activity.close( self )
-
-
-	def checkDestroy( self, album, xmlFile ):
-		allDone = True
-
-		for h in range (0, len(self.m.mediaHashs)):
-			mhash = self.m.mediaHashs[h]
-			for i in range (0, len(mhash)):
-				recd = mhash[i]
-				if ( (not recd.savedMedia) or (not recd.savedXml) ):
-					allDone = False
-
-		if (allDone):
-			album.writexml(xmlFile)
-			xmlFile.close()
-			self.I_AM_SAVED = True
-
-		if (self.I_AM_SAVED and self.I_AM_CLOSING):
-			self.destroy()
 
 
 	def destroy( self ):

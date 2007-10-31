@@ -15,6 +15,7 @@ class Constants:
 	SERVICE = "org.laptop.Record"
 	IFACE = SERVICE
 	PATH = "/org/laptop/Record"
+	activityId = None
 
 	recdTitle = "title"
 	recdTime = "time"
@@ -135,6 +136,8 @@ class Constants:
 	micImg = None
 
 	def __init__( self, ca ):
+		self.__class__.activityId = ca._activity_id
+
 		thumbPhotoSvgPath = os.path.join(self.__class__.gfxPath, 'thumb_photo.svg')
 		thumbPhotoSvgFile = open(thumbPhotoSvgPath, 'r')
 		self.__class__.thumbPhotoSvgData = thumbPhotoSvgFile.read()

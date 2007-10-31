@@ -107,7 +107,7 @@ class Recorded:
 			return thumbPixbuf
 		else:
 			if (self.datastoreOb == None):
-				self.ca.m.loadMediaFromDatastore( self )
+				self.datastoreOb = serialize.getMediaFromDatastore( self )
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getThumbPixbuf")
 				return None
@@ -125,7 +125,7 @@ class Recorded:
 				return thumbFilepath
 		else:
 			if (self.datastoreOb == None):
-				self.ca.m.loadMediaFromDatastore( self )
+				self.datastoreOb = serialize.getMediaFromDatastore( self )
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getThumbPixbuf")
 				return None
@@ -200,7 +200,7 @@ class Recorded:
 			#first, get the datastoreObject and hold the reference in this Recorded instance
 			if (self.datastoreOb == None):
 				#todo: return t or f
-				self.ca.m.loadMediaFromDatastore( self )
+				self.datastoreOb = serialize.getMediaFromDatastore( self )
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getMediaFilepath")
 				return None
