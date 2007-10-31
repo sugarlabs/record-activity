@@ -87,7 +87,7 @@ class Constants:
 	istrTimelapse = _('Time Lapse')
 	istrAnimation = _('Animation')
 	istrPanorama = _('Panorama')
-		#TRANS: photo by photographer, e.g., "Photo by Mary"
+	#TRANS: photo by photographer, e.g., "Photo by Mary"
 	istrBy = _("%(1)s by %(2)s")
 	istrTitle = _('Title:')
 	istrRecorder = _('Recorder:')
@@ -120,9 +120,9 @@ class Constants:
 	istrRotate = _("Rotate")
 	istrClickToTakePicture = _("Click to take picture")
 	istrClickToAddPicture = _("Click to add picture")
-		#TRANS: Downloading Photo from Mary
+	#TRANS: Downloading Photo from Mary
 	istrDownloadingFrom = _("Downloading %(1)s from %(2)s")
-		#TRANS: Cannot download this Photo
+	#TRANS: Cannot download this Photo
 	istrCannotDownload = _("Cannot download this %(1)s")
 
 	thumbPhotoSvgData = None

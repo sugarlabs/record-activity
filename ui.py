@@ -1192,12 +1192,12 @@ class UI:
 
 	def clickShutter( self ):
 		if (not self.ca.m.RECORDING): #don't append a sound to the end of a video or audio.  maybe play a click afterwards?
-			os.system( "aplay -t wav " + str(self.clickWav) )
+			os.system( "aplay -t wav " + str(Constants.soundClick) )
 
 		wasRec = self.ca.m.RECORDING
 		self.ca.m.doShutter()
 		if (wasRec):
-			os.system( "aplay -t wav " + str(self.clickWav) )
+			os.system( "aplay -t wav " + str(Constants.soundClick) )
 
 		self.COUNTINGDOWN = False
 		self.updateCountdownComponents()
