@@ -1,0 +1,192 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-10-31 11:56-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: activity/activity.info:2 constants.py:80 constants.py:186
+msgid "Record"
+msgstr ""
+
+#: constants.py:81
+msgid "Photo"
+msgstr ""
+
+#: constants.py:82
+msgid "Video"
+msgstr ""
+
+#: constants.py:83
+msgid "Audio"
+msgstr ""
+
+#: constants.py:84
+msgid "Time Lapse"
+msgstr ""
+
+#: constants.py:85
+msgid "Animation"
+msgstr ""
+
+#: constants.py:86
+msgid "Panorama"
+msgstr ""
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:88
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr ""
+
+#: constants.py:89
+msgid "Title:"
+msgstr ""
+
+#: constants.py:90
+msgid "Recorder:"
+msgstr ""
+
+#: constants.py:91
+msgid "Date:"
+msgstr ""
+
+#: constants.py:92
+msgid "Tags:"
+msgstr ""
+
+#: constants.py:93
+msgid "Saving"
+msgstr ""
+
+#: constants.py:94
+msgid "Finished recording"
+msgstr ""
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:96
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:97
+msgid "Remove"
+msgstr ""
+
+#: constants.py:98
+msgid "Stopped recording"
+msgstr ""
+
+#: constants.py:99
+msgid "Copy to clipboard"
+msgstr ""
+
+#: constants.py:100
+msgid "Timer:"
+msgstr ""
+
+#: constants.py:101
+msgid "Duration:"
+msgstr ""
+
+#: constants.py:102
+msgid "Immediate"
+msgstr ""
+
+#: constants.py:103
+#, python-format
+msgid "%(1)s seconds"
+msgstr ""
+
+#: constants.py:104
+#, python-format
+msgid "%(1)s minutes"
+msgstr ""
+
+#: constants.py:105
+msgid "Play"
+msgstr ""
+
+#: constants.py:106
+msgid "Pause"
+msgstr ""
+
+#: constants.py:107
+msgid "Add frame"
+msgstr ""
+
+#: constants.py:108
+msgid "Remove frame"
+msgstr ""
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s frames per second"
+msgstr ""
+
+#: constants.py:110
+msgid "Quality:"
+msgstr ""
+
+#: constants.py:111
+msgid "Best quality"
+msgstr ""
+
+#: constants.py:112
+msgid "High quality"
+msgstr ""
+
+#: constants.py:113
+msgid "Low quality"
+msgstr ""
+
+#: constants.py:114
+msgid "Large file"
+msgstr ""
+
+#: constants.py:115
+msgid "Small file"
+msgstr ""
+
+#: constants.py:116
+msgid "Silent"
+msgstr ""
+
+#: constants.py:117
+msgid "Rotate"
+msgstr ""
+
+#: constants.py:118
+msgid "Click to take picture"
+msgstr ""
+
+#: constants.py:119
+msgid "Click to add picture"
+msgstr ""
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:121
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr ""
+
+#. TRANS: Cannot download this Photo
+#: constants.py:123
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr ""
