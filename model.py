@@ -38,7 +38,6 @@ import gobject
 from hashlib import md5
 import operator
 
-from sugar import util
 from sugar.datastore import datastore
 import sugar.env
 
@@ -46,7 +45,8 @@ from constants import Constants
 from instance import Instance
 from recorded import Recorded
 from color import Color
-import _camera
+from ui import UI
+import utils
 
 
 class Model:
@@ -192,7 +192,7 @@ class Model:
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.THUMBWIDTH+0.0)/(pixbuf.get_width()+0.0))
-		thumbImg = self.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
+		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 
 		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
@@ -255,7 +255,7 @@ class Model:
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.THUMB_WIDTH+0.0)/(wid+0.0))
-		thumbImg = self.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, ui.THUMB_HEIGHT)
+		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, ui.THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 
 		self.createNewRecordedMd5Sums( recd )
@@ -318,7 +318,7 @@ class Model:
 
 		thumbpath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
-		thumbImg = self.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
+		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbpath)
 		gc.collect()
 		#now that we've saved both the image and its pixbuf, we get their md5s

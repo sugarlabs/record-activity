@@ -1,7 +1,13 @@
 import base64
 import rsvg
 import re
+import os
+import cairo
+import gc
 
+
+from sugar import util
+import _camera
 
 def getStringFromPixbuf(pixbuf):
 	data = [""]
