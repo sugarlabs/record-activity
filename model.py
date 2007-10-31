@@ -32,8 +32,6 @@ import shutil
 import gc
 import math
 import gtk.gdk
-import sugar.env
-import random
 import time
 from time import strftime
 import gobject
@@ -48,6 +46,7 @@ from color import Color
 
 from sugar import util
 from sugar.datastore import datastore
+import sugar.env
 
 import _camera
 

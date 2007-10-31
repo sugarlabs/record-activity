@@ -204,12 +204,3 @@ class Recorded:
 				return None
 
 			return self.datastoreOb.file_path
-
-
-	def pixbufFromString( self, str ):
-		pbl = gtk.gdk.PixbufLoader()
-		import base64
-		data = base64.b64decode( str )
-		pbl.write(data)
-		pbl.close()
-		return pbl.get_pixbuf()

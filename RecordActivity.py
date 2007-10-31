@@ -329,18 +329,6 @@ class RecordActivity(activity.Activity):
 			self.doPostMediaSave( xmlFile, el, recd, mediaObject )
 
 
-	def _get_base64_pixbuf_data(self, pixbuf):
-		data = [""]
-		pixbuf.save_to_callback(self._save_data_to_buffer_cb, "png", {}, data)
-		import base64
-		return base64.b64encode(str(data[0]))
-
-
-	def _save_data_to_buffer_cb(self, buf, data):
-		data[0] += buf
-		return True
-
-
 	def _mediaSaveCb( self, recd ):
 		self.doPostMediaSave( recd )
 
