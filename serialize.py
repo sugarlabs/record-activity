@@ -4,7 +4,7 @@ from xml.dom.minidom import parse
 import cStringIO
 
 from constants import Constants
-
+import utils
 
 def fillMediaHash( index, mediaTypes, mediaHashs ):
 	doc = None
@@ -173,7 +173,7 @@ def fillRecdFromNode( recd, el ):
 	if (not bt == None):
 		try:
 			thumbPath = os.path.join(Instance.tmpPath, "datastoreThumb.jpg")
-			thumbPath = self.getUniqueFilepath( thumbPath, 0 )
+			thumbPath = utils.getUniqueFilepath( thumbPath, 0 )
 			thumbImg = recd.pixbufFromString( bt.nodeValue )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 			recd.thumbFilename = os.path.basename(thumbPath)
@@ -311,7 +311,7 @@ def _saveMediaToDatastore( el, recd ):
 		mediaObject.metadata['icon-color'] = colors
 
 		mtype = self.m.mediaTypes[recd.type]
-		mmime = mtype[self.keyMime]
+		mmime = mtype[Constants.keyMime]
 		mediaObject.metadata['mime_type'] = mmime
 
 		mediaObject.metadata['activity'] = Constants.activityId

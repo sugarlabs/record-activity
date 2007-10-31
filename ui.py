@@ -52,6 +52,7 @@ from glive import LiveVideoWindow
 from gplay import PlayVideoWindow
 from recorded import Recorded
 from button import RecdButton
+import utils
 import _camera
 
 class UI:
@@ -634,7 +635,7 @@ class UI:
 			return None
 
 		tempImgPath = os.path.join( self.ca.tempPath, recd.mediaFilename)
-		tempImgPath = self.ca.m.getUniqueFilepath(tempImgPath,0)
+		tempImgPath = utils.getUniqueFilepath(tempImgPath,0)
 		shutil.copyfile( imgPath_s, tempImgPath )
 		return tempImgPath
 

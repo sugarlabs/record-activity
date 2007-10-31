@@ -43,6 +43,7 @@ from sugar.datastore import datastore
 import sugar.env
 
 from constants import Constants
+from instance import Instance
 from recorded import Recorded
 from color import Color
 import _camera
@@ -195,7 +196,7 @@ class Model:
 		thumbImg.write_to_png(thumbPath)
 
 		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
-		imagePath = self.getUniqueFilepath( imagePath, 0 )
+		imagePath = utils.getUniqueFilepath( imagePath, 0 )
 		pixbuf.save( imagePath, "png", {} )
 		recd.audioImageFilename = os.path.basename(imagePath)
 
@@ -274,7 +275,7 @@ class Model:
 			self.ca._logger.debug('meshShareRecd: we have a recTube')
 			recdXml = self.ca.getRecdXmlString(recd)
 			self.ca._logger.debug('meshShareRecd: created XML')
-			self.ca.recTube.notifyBudsOfNewRecd( Instance.hashedKey, recdXml )
+			self.ca.recTube.notifyBudsOfNewRecd( Instance.keyHashPrintable, recdXml )
 			self.ca._logger.debug('meshShareRecd: notifyBuds')
 
 
@@ -341,8 +342,8 @@ class Model:
 	def createNewRecorded( self, type ):
 		recd = Recorded( self.ca )
 
-		recd.recorderName = self.ca.nickName
-		recd.recorderHash = self.ca.hashedKey
+		recd.recorderName = Instance.nickName
+		recd.recorderHash = Instance.keyHashPrintable
 
 		#to create a file, use the hardware_id+time *and* check if available or not
 		nowtime = int(time.time())
@@ -351,17 +352,17 @@ class Model:
 
 		mediaThumbFilename = str(recd.recorderHash) + "_" + str(recd.time)
 		mediaFilename = mediaThumbFilename
-		mediaFilename = mediaFilename + "." + self.mediaTypes[type][self.ca.keyExt]
+		mediaFilename = mediaFilename + "." + self.mediaTypes[type][Constants.keyExt]
 		mediaFilepath = os.path.join( Instance.tmpPath, mediaFilename )
-		mediaFilepath = self.getUniqueFilepath( mediaFilepath, 0 )
+		mediaFilepath = utils.getUniqueFilepath( mediaFilepath, 0 )
 		recd.mediaFilename = os.path.basename( mediaFilepath )
 
 		thumbFilename = mediaThumbFilename + "_thumb.jpg"
 		thumbFilepath = os.path.join( Instance.tmpPath, thumbFilename )
-		thumbFilepath = self.getUniqueFilepath( thumbFilepath, 0 )
+		thumbFilepath = utils.getUniqueFilepath( thumbFilepath, 0 )
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
-		stringType = self.mediaTypes[type][self.ca.keyIstr]
+		stringType = self.mediaTypes[type][Constants.keyIstr]
 		recd.title = Constants.istrBy % {"1":stringType, "2":str(recd.recorderName)}
 
 		recd.colorStroke = Instance.colorStroke

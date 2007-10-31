@@ -23,6 +23,7 @@ import gtk
 from gtk import gdk
 
 from instance import Instance
+import utils
 
 class Recorded:
 
@@ -132,7 +133,7 @@ class Recorded:
 
 			img = self.pixbufFromString( self.datastoreOb.metadata['preview'] )
 			thumbFilepath = os.path.join( Instance.tmpPath, "thumb.png")
-			thumbFilepath = self.ca.m.getUniqueFilepath(thumbFilepath, 0)
+			thumbFilepath = utils.getUniqueFilepath(thumbFilepath, 0)
 			img.save(thumbFilepath, "png", {} )
 			return thumbFilepath
 
@@ -186,9 +187,9 @@ class Recorded:
 						return None
 					else:
 						if self.mediaFilename == None:
-							ext = self.ca.m.mediaTypes[self.type][self.ca.keyExt]
+							ext = self.ca.m.mediaTypes[self.type][Constants.keyExt]
 							recdPath = os.path.join(Instance.tmpPath, "recdFile_"+self.mediaMd5+"."+ext)
-							recdPath = self.ca.m.getUniqueFilepath(recdPath, 0)
+							recdPath = utils.getUniqueFilepath(recdPath, 0)
 							self.mediaFilename = os.path.basename(recdPath)
 							mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
 							return os.path.abspath(mediaFilepath)

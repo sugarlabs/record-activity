@@ -43,6 +43,7 @@ from constants import Constants
 import instance
 from instance import Instance
 import serialize
+import utils
 
 class Record(activity.Activity):
 
@@ -267,7 +268,7 @@ class Record(activity.Activity):
 			if state == telepathy.TUBE_STATE_LOCAL_PENDING:
 				self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
 			tube_conn = TubeConnection(self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
-			self.recTube = RecordTube(tube_conn, self.hashedKey)
+			self.recTube = RecordTube(tube_conn)
 			self.recTube.connect("new-recd", self._newRecdCb)
 			self.recTube.connect("recd-request", self._recdRequestCb)
 			self.recTube.connect("recd-bits-arrived", self._recdBitsArrivedCb)
@@ -342,7 +343,7 @@ class Record(activity.Activity):
 		recd.meshDownloadingProgress = False
 		recd.meshDownloading = True
 		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
-		self.recTube.requestRecdBits( self.hashedKey, fromWho, recd.mediaMd5 )
+		self.recTube.requestRecdBits( Instance.keyHashPrintable, fromWho, recd.mediaMd5 )
 
 		#self.ca.ui.updateDownloadFrom( fromWho ) #todo...
 
@@ -380,15 +381,15 @@ class Record(activity.Activity):
 		recd = self.m.getRecdByMd5( md5sumOfIt )
 		if (recd == None):
 			self.__class__.log.debug('_recdRequestCb: we dont have the recd they asked for')
-			self.recTube.unavailableRecd(md5sumOfIt, self.hashedKey, whoWantsIt)
+			self.recTube.unavailableRecd(md5sumOfIt, Instance.keyHashPrintable, whoWantsIt)
 			return
 		if (recd.deleted):
 			self.__class__.log.debug('_recdRequestCb: we have the recd, but it has been deleted, so we wont share')
-			self.recTube.unavailableRecd(md5sumOfIt, self.hashedKey, whoWantsIt)
+			self.recTube.unavailableRecd(md5sumOfIt, Instance.keyHashPrintable, whoWantsIt)
 			return
 		if (recd.buddy and not recd.downloadedFromBuddy):
 			self.__class__.log.debug('_recdRequestCb: we have an incomplete recd, so we wont share')
-			self.recTube.unavailableRecd(md5sumOfIt, self.hashedKey, whoWantsIt)
+			self.recTube.unavailableRecd(md5sumOfIt, Instance.keyHashPrintable, whoWantsIt)
 			return
 
 		recd.meshUploading = True
@@ -447,7 +448,7 @@ class Record(activity.Activity):
 		if (pixbuf == None):
 			return False
 		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
-		imagePath = self.m.getUniqueFilepath( imagePath, 0 )
+		imagePath = utils.getUniqueFilepath( imagePath, 0 )
 		pixbuf.save( imagePath, "png", {} )
 		recd.audioImageFilename = os.path.basename(imagePath)
 

@@ -312,7 +312,7 @@ class Glive:
 
 	def getTags( self ):
 		tl = gst.TagList()
-		tl[gst.TAG_ARTIST] = self.ca.nickName
+		tl[gst.TAG_ARTIST] = Instance.nickName
 		tl[gst.TAG_COMMENT] = "olpc"
 		#todo: more
 		return tl
