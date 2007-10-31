@@ -182,5 +182,3 @@ class Constants:
 		micImgPixbuf = gtk.gdk.pixbuf_new_from_file(micImgFile)
 		self.__class__.micImg = gtk.Image()
 		self.__class__.micImg.set_from_pixbuf( micImgPixbuf )
-
-		self.__class__.istrActivityName = _('Record')
