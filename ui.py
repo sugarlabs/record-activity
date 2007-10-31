@@ -28,10 +28,6 @@ import pygst
 pygst.require('0.10')
 import gst
 import gst.interfaces
-#parse svg
-import rsvg
-#parse svg xml with regex
-import re
 import time
 from time import strftime
 import math
@@ -40,10 +36,13 @@ import time
 
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.tray import HTray
 from sugar import profile
 from sugar import util
 from sugar.activity import activity
 
+from instance import Instance
+from constants import Constants
 from color import Color
 from p5 import P5
 from p5_button import P5Button
@@ -59,8 +58,28 @@ class UI:
 
 	def __init__( self, pca ):
 		self.ca = pca
-		self.loadColors()
-		self.loadGfx()
+
+		#sizes
+		#thumb dimensions:
+		self.thumbTrayHt = 150 #todo: get sugar constant here
+		self.tw = 107
+		self.th = 80
+		self.thumbSvgW = 124
+		self.thumbSvgH = 124
+		#pip size:
+		self.pipw = 160
+		self.piph = 120
+		self.pipBorder = 4
+		self.pgdw = self.pipw + (self.pipBorder*2)
+		self.pgdh = self.piph + (self.pipBorder*2)
+		#maximize size:
+		self.maxw = 49
+		self.maxh = 49
+		#component spacing
+		self.inset = 10
+		#height of the record button, progress bar, etc.
+		self.controlBarHt = 49
+		self.recordButtWd = 75
 
 		#ui modes
 		self.FULLSCREEN = False
@@ -85,27 +104,6 @@ class UI:
 		self.centered = False
 		self.setup = False
 
-		#thumb dimensions:
-		self.thumbTrayHt = 150
-		self.tw = 107
-		self.th = 80
-		self.thumbSvgW = 124
-		self.thumbSvgH = 124
-		#pip size:
-		self.pipw = 160
-		self.piph = 120
-		self.pipBorder = 4
-		self.pgdw = self.pipw + (self.pipBorder*2)
-		self.pgdh = self.piph + (self.pipBorder*2)
-		#maximize size:
-		self.maxw = 49
-		self.maxh = 49
-		#component spacing
-		self.inset = 10
-		#height of the record button, progress bar, etc.
-		self.controlBarHt = 49
-		self.recordButtWd = 75
-
 		#prep for when to show
 		self.shownRecd = None
 
@@ -116,14 +114,14 @@ class UI:
 		self.ca.set_toolbox(self.toolbox)
 		self.photoToolbar = PhotoToolbar(self)
 		self.photoToolbar.set_sensitive( False )
-		self.toolbox.add_toolbar( self.ca.istrPhoto, self.photoToolbar )
+		self.toolbox.add_toolbar( Constants.istrPhoto, self.photoToolbar )
 		self.videoToolbar = VideoToolbar(self)
 		self.videoToolbar.set_sensitive( False )
-		self.toolbox.add_toolbar( self.ca.istrVideo, self.videoToolbar )
+		self.toolbox.add_toolbar( Constants.istrVideo, self.videoToolbar )
 		self.audioToolbar = AudioToolbar(self)
 		self.audioToolbar.set_sensitive( False )
-		self.toolbox.add_toolbar( self.ca.istrAudio, self.audioToolbar )
-		self.tbars = {self.ca.m.MODE_PHOTO:self.photoToolbar,self.ca.m.MODE_VIDEO:self.videoToolbar,self.ca.m.MODE_AUDIO:self.audioToolbar}
+		self.toolbox.add_toolbar( Constants.istrAudio, self.audioToolbar )
+		self.tbars = {Constants.MODE_PHOTO:self.photoToolbar,Constants.MODE_VIDEO:self.videoToolbar,Constants.MODE_AUDIO:self.audioToolbar}
 		self.toolbox.set_current_toolbar(self.ca.m.MODE+1)
 		self.toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
 		self.TOOLBOX_SIZE_ALLOCATE_ID = self.toolbox.connect_after("size-allocate", self._toolboxSizeAllocateCb)
@@ -158,30 +156,31 @@ class UI:
 		leftFill = gtk.VBox()
 		leftFill.set_size_request( self.letterBoxW, -1 )
 		self.leftFillBox = gtk.EventBox( )
-		self.leftFillBox.modify_bg( gtk.STATE_NORMAL, self.colorBlack.gColor )
+		self.leftFillBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		leftFill.add( self.leftFillBox )
+
 		topBox.pack_start( leftFill, expand=True )
 
 		centerVBox = gtk.VBox()
-		centerVBox.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
+		centerVBox.modify_bg(gtk.STATE_NORMAL, Constants.colorBlack.gColor)
 		topBox.pack_start( centerVBox, expand=True )
 		self.centerBox = gtk.EventBox()
 		self.centerBox.set_size_request(self.vw, -1)
-		self.centerBox.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
+		self.centerBox.modify_bg(gtk.STATE_NORMAL, Constants.colorBlack.gColor)
 		centerVBox.pack_start( self.centerBox, expand=True )
 		centerSizer = gtk.VBox()
 		centerSizer.set_size_request(self.vw, -1)
-		centerSizer.modify_bg(gtk.STATE_NORMAL, self.colorBlack.gColor)
+		centerSizer.modify_bg(gtk.STATE_NORMAL, Constants.colorBlack.gColor)
 		self.centerBox.add(centerSizer)
 
 		self.bottomCenter = gtk.EventBox()
-		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
+		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, Constants.colorWhite.gColor)
 		self.bottomCenter.set_size_request(self.vw, self.controlBarHt)
 		centerVBox.pack_start( self.bottomCenter, expand=False )
 
 		#into the center box we can put this guy...
 		self.backgdCanvasBox = gtk.VBox()
-		self.backgdCanvasBox.modify_bg(gtk.STATE_NORMAL, self.colorWhite.gColor)
+		self.backgdCanvasBox.modify_bg(gtk.STATE_NORMAL, Constants.colorWhite.gColor)
 		self.backgdCanvasBox.set_size_request(self.vw, -1)
 		self.backgdCanvas = BackgroundCanvas(self)
 		self.backgdCanvas.set_size_request(self.vw, self.vh)
@@ -189,7 +188,7 @@ class UI:
 
 		#or this guy...
 		self.infoBox = gtk.EventBox()
-		self.infoBox.modify_bg( gtk.STATE_NORMAL, self.colorHilite.gColor )
+		self.infoBox.modify_bg( gtk.STATE_NORMAL, Constants.colorHilite.gColor )
 		iinfoBox = gtk.VBox(spacing=self.inset)
 		self.infoBox.add( iinfoBox )
 		iinfoBox.set_size_request(self.vw, -1)
@@ -198,7 +197,7 @@ class UI:
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( self.letterBoxW, -1 )
 		rightFillBox = gtk.EventBox()
-		rightFillBox.modify_bg( gtk.STATE_NORMAL, self.colorBlack.gColor )
+		rightFillBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		rightFill.add( rightFillBox )
 		topBox.pack_start( rightFill, expand=True )
 
@@ -214,17 +213,17 @@ class UI:
 		self.namePanel = gtk.HBox()
 		leftInfBalance = gtk.VBox()
 		leftInfBalance.set_size_request( self.controlBarHt, -1 )
-		leftInfBalance.modify_bg( gtk.STATE_NORMAL, self.colorWhite.gColor )
+		leftInfBalance.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
 		self.namePanel.pack_start( leftInfBalance, expand=False )
 		leftNamePanel = gtk.VBox()
 		leftNamePanel.set_size_request( 10, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
-		self.nameLabel = gtk.Label("<b>"+self.ca.istrTitle+"</b>")
+		self.nameLabel = gtk.Label("<b>"+Constants.istrTitle+"</b>")
 		self.nameLabel.set_use_markup( True )
 		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.inset )
 		self.nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(80)
-		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, self.colorWhite.gColor )
+		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
 		self.nameTextfield.set_size_request( -1, self.controlBarHt-self.inset )
@@ -244,7 +243,7 @@ class UI:
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
-		photographerLabel = gtk.Label("<b>" + self.ca.istrRecorder + "</b>")
+		photographerLabel = gtk.Label("<b>" + Constants.istrRecorder + "</b>")
 		photographerLabel.set_use_markup( True )
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
@@ -261,7 +260,7 @@ class UI:
 
 		self.datePanel = gtk.HBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.datePanel, expand=False)
-		dateLabel = gtk.Label("<b>"+self.ca.istrDate+"</b>")
+		dateLabel = gtk.Label("<b>"+Constants.istrDate+"</b>")
 		dateLabel.set_use_markup(True)
 		self.datePanel.pack_start(dateLabel, expand=False)
 		self.dateDateLabel = gtk.Label("")
@@ -269,7 +268,7 @@ class UI:
 		self.datePanel.pack_start(self.dateDateLabel)
 
 		self.tagsPanel = gtk.VBox(spacing=self.inset)
-		tagsLabel = gtk.Label("<b>"+self.ca.istrTags+"</b>")
+		tagsLabel = gtk.Label("<b>"+Constants.istrTags+"</b>")
 		tagsLabel.set_use_markup(True)
 		tagsLabel.set_alignment(0, .5)
 		self.tagsPanel.pack_start(tagsLabel, expand=False)
@@ -287,7 +286,6 @@ class UI:
 		thumbnailsBox = gtk.HBox( )
 		thumbnailsEventBox.add( thumbnailsBox )
 
-		from sugar.graphics.tray import HTray
 		self.thumbTray = HTray()
 		self.hackDisplayOfThumbtray(self.thumbTray)
 		self.thumbTray.set_size_request( -1, self.thumbTrayHt )
@@ -365,14 +363,14 @@ class UI:
 		self.pipBgdWindow = PipWindow(self)
 		self.addToWindowStack( self.pipBgdWindow, self.windowStack[len(self.windowStack)-1] )
 
-		self.liveVideoWindow = LiveVideoWindow(self.colorBlack.gColor)
+		self.liveVideoWindow = LiveVideoWindow(Constants.colorBlack.gColor)
 		self.addToWindowStack( self.liveVideoWindow, self.windowStack[len(self.windowStack)-1] )
 		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self._liveButtonReleaseCb)
 
 		#video playback windows
-		self.playOggWindow = PlayVideoWindow(self.colorBlack.gColor)
+		self.playOggWindow = PlayVideoWindow(Constants.colorBlack.gColor)
 		self.addToWindowStack( self.playOggWindow, self.windowStack[len(self.windowStack)-1] )
 		self.playOggWindow.set_gplay(self.ca.gplay)
 		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
@@ -382,7 +380,7 @@ class UI:
 		self.pipBgdWindow2 = PipWindow(self)
 		self.addToWindowStack( self.pipBgdWindow2, self.windowStack[len(self.windowStack)-1] )
 
-		self.playLiveWindow = LiveVideoWindow(self.colorBlack.gColor)
+		self.playLiveWindow = LiveVideoWindow(Constants.colorBlack.gColor)
 		self.addToWindowStack( self.playLiveWindow, self.windowStack[len(self.windowStack)-1] )
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
@@ -432,11 +430,11 @@ class UI:
 			self.toolbox.set_current_toolbar( self.ca.m.MODE+1 )
 		else:
 			num = num - 1 #offset the default activity tab
-			if (num == self.ca.m.MODE_PHOTO) and (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
+			if (num == Constants.MODE_PHOTO) and (self.ca.m.MODE != Constants.MODE_PHOTO):
 				self.ca.m.doPhotoMode()
-			elif(num == self.ca.m.MODE_VIDEO) and (self.ca.m.MODE != self.ca.m.MODE_VIDEO):
+			elif(num == Constants.MODE_VIDEO) and (self.ca.m.MODE != Constants.MODE_VIDEO):
 				self.ca.m.doVideoMode()
-			elif(num == self.ca.m.MODE_AUDIO) and (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
+			elif(num == Constants.MODE_AUDIO) and (self.ca.m.MODE != Constants.MODE_AUDIO):
 				self.ca.m.doAudioMode()
 
 
@@ -485,13 +483,13 @@ class UI:
 			self.moveWinOffscreen( self.progressWindow )
 			self.moveWinOffscreen( self.scrubWindow )
 
-		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+		if (self.ca.m.MODE == Constants.MODE_PHOTO):
 			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.liveVideoWindow )
-		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.playLiveWindow )
-		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+		elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.liveVideoWindow )
 		self.LAST_MODE = -1
@@ -529,7 +527,7 @@ class UI:
 
 
 	def mouseInWidget( self, mx, my ):
-		if (self.ca.m.MODE != self.ca.m.MODE_AUDIO):
+		if (self.ca.m.MODE != Constants.MODE_AUDIO):
 			if (self.inWidget( mx, my, self.getLoc("max", self.FULLSCREEN), self.getDim("max", self.FULLSCREEN))):
 				return True
 
@@ -550,7 +548,7 @@ class UI:
 	def _mediaClickedForPlayback(self, widget, event):
 		if (not self.LIVEMODE):
 			if (self.shownRecd != None):
-				if (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
+				if (self.ca.m.MODE != Constants.MODE_PHOTO):
 					self.showThumbSelection( self.shownRecd )
 
 
@@ -583,7 +581,7 @@ class UI:
 				if (not self.ca.m.UPDATING):
 					self.doShutter()
 			else:
-				if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+				if (self.ca.m.MODE == Constants.MODE_PHOTO):
 					self.resumeLiveVideo()
 				else:
 					self.resumePlayLiveVideo()
@@ -731,7 +729,7 @@ class UI:
 				self.ca.ui.setDefaultCursor( self.windowStack[i].window )
 
 		if (self.ca.m.RECORDING):
-			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, self.colorRed.gColor )
+			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, Constants.colorRed.gColor )
 		else:
 			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 
@@ -829,21 +827,21 @@ class UI:
 		passedTime = time.time() - self.recTime
 
 		duration = 10.0
-		if (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+		if (self.ca.m.MODE == Constants.MODE_VIDEO):
 			duration = self.videoToolbar.getDuration()+0.0
-		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+		elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 			duration = self.audioToolbar.getDuration()+0.0
 
 		if (passedTime >= duration ):
 			gobject.source_remove( self.UPDATE_DURATION_ID )
-			self.progressWindow.updateProgress( 1, self.ca.istrFinishedRecording )
+			self.progressWindow.updateProgress( 1, Constants.istrFinishedRecording )
 			if (self.ca.m.RECORDING):
 				gobject.idle_add( self.doShutter )
 
 			return False
 		else:
 			secsRemaining = duration - passedTime
-			self.progressWindow.updateProgress( passedTime/duration, self.ca.istrDuration + " " + self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
+			self.progressWindow.updateProgress( passedTime/duration, Constants.istrDuration + " " + Constants.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
 			return True
 
 
@@ -855,11 +853,11 @@ class UI:
 
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
-		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+		if (self.ca.m.MODE == Constants.MODE_PHOTO):
 			self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, True )
-		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, True )
-		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+		elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD, True )
 
 		bottomKid = self.bottomCenter.get_child()
@@ -1019,7 +1017,7 @@ class UI:
 
 	def getEyeLoc( self, full ):
 		if (not full):
-			if (self.ca.m.MODE != self.ca.m.MODE_PHOTO):
+			if (self.ca.m.MODE != Constants.MODE_PHOTO):
 				return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 			else:
 				return [(self.centerBoxPos[0]+(self.vw/2))-self.recordButtWd/2, self.centerBoxPos[1]+self.vh]
@@ -1031,7 +1029,7 @@ class UI:
 		if (not full):
 			return [self.recordButtWd, self.controlBarHt]
 		else:
-			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			if (self.ca.m.MODE == Constants.MODE_PHOTO):
 				return [gtk.gdk.screen_width()-(self.inset*2), self.controlBarHt]
 			else:
 				return [self.recordButtWd, self.controlBarHt]
@@ -1146,7 +1144,7 @@ class UI:
 		thumbButton.set_size_request(80, -1)
 
 
-	def shutterClickCb( self, arg ):
+	def _shutterClickCb( self, arg ):
 		self.doShutter()
 
 
@@ -1155,11 +1153,11 @@ class UI:
 			if (not self.ca.m.RECORDING):
 				#there is no update timer running, so we need to find out if there is a timer needed
 				timerTime = 0
-				if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+				if (self.ca.m.MODE == Constants.MODE_PHOTO):
 					timerTime = self.photoToolbar.getTimer()
-				elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+				elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 					timerTime = self.videoToolbar.getTimer()
-				elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+				elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 					timerTime = self.audioToolbar.getTimer()
 
 				if (timerTime > 0):
@@ -1191,11 +1189,11 @@ class UI:
 		passedTime = nowTime - self.timerStartTime
 
 		timerTime = 0
-		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+		if (self.ca.m.MODE == Constants.MODE_PHOTO):
 			timerTime = self.photoToolbar.getTimer()
-		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 			timerTime = self.videoToolbar.getTimer()
-		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+		elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 			timerTime = self.audioToolbar.getTimer()
 
 		if (passedTime >= timerTime):
@@ -1203,7 +1201,7 @@ class UI:
 			return False
 		else:
 			secsRemaining = timerTime-passedTime
-			self.progressWindow.updateProgress( passedTime/timerTime, self.ca.istrTimer + " " + self.ca.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
+			self.progressWindow.updateProgress( passedTime/timerTime, Constants.istrTimer + " " + Constants.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
 			return True
 
 
@@ -1221,7 +1219,7 @@ class UI:
 
 
 	def updateCountdownComponents( self ):
-		if (not self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+		if (not self.ca.m.MODE == Constants.MODE_PHOTO):
 			return
 
 		if (self.LAST_COUNTINGDOWN != self.COUNTINGDOWN):
@@ -1251,20 +1249,20 @@ class UI:
 
 		pos = []
 		if (self.RECD_INFO_ON and not self.TRANSCODING):
-			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			if (self.ca.m.MODE == Constants.MODE_PHOTO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inb", "window":self.livePhotoWindow} )
-			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+			elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
 				pos.append({"position":"inb", "window":self.playOggWindow} )
-			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inb", "window":self.livePhotoWindow} )
 		elif (not self.RECD_INFO_ON and not self.TRANSCODING):
-			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			if (self.ca.m.MODE == Constants.MODE_PHOTO):
 				if (self.LIVEMODE):
 					if (not self.COUNTINGDOWN):
 						pos.append({"position":"img", "window":self.liveVideoWindow} )
@@ -1279,7 +1277,7 @@ class UI:
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
-			elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+			elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.playLiveWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
@@ -1291,7 +1289,7 @@ class UI:
 					pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 					pos.append({"position":"pip", "window":self.playLiveWindow} )
 					pos.append({"position":"scr", "window":self.scrubWindow} )
-			elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+			elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1327,7 +1325,7 @@ class UI:
 
 	def showWidgets( self ):
 		pos = []
-		if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+		if (self.ca.m.MODE == Constants.MODE_PHOTO):
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
@@ -1335,7 +1333,7 @@ class UI:
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
-		elif (self.ca.m.MODE == self.ca.m.MODE_VIDEO):
+		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 			if (not self.LIVEMODE):
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
@@ -1345,7 +1343,7 @@ class UI:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
 				pos.append({"position":"prg", "window":self.progressWindow} )
-		elif (self.ca.m.MODE == self.ca.m.MODE_AUDIO):
+		elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
@@ -1473,11 +1471,11 @@ class UI:
 		lastRecd = self.shownRecd
 
 		#do we need to know the type, since we're showing based on the mode of the app?
-		if (recd.type == self.ca.m.TYPE_PHOTO):
+		if (recd.type == Constants.TYPE_PHOTO):
 			self.showPhoto( recd )
-		elif (recd.type == self.ca.m.TYPE_VIDEO):
+		elif (recd.type == Constants.TYPE_VIDEO):
 			self.showVideo( recd )
-		elif (recd.type == self.ca.m.TYPE_AUDIO):
+		elif (recd.type == Constants.TYPE_AUDIO):
 			self.showAudio( recd )
 
 		if (recd != lastRecd):
@@ -1487,9 +1485,9 @@ class UI:
 		if (bottomKid != None):
 			self.bottomCenter.remove( bottomKid )
 
-		if (recd.type == self.ca.m.TYPE_PHOTO):
+		if (recd.type == Constants.TYPE_PHOTO):
 			self.bottomCenter.add( self.namePanel )
-		elif (recd.type == self.ca.m.TYPE_VIDEO or recd.type == self.ca.m.TYPE_AUDIO):
+		elif (recd.type == Constants.TYPE_VIDEO or recd.type == Constants.TYPE_AUDIO):
 			if (not self.RECD_INFO_ON):
 				self.bottomCenter.add( self.scrubberPanel )
 			else:
@@ -1560,12 +1558,12 @@ class UI:
 		if (recd == self.shownRecd):
 
 			#todo: should be using modes here to check which mode to switch to
-			if (recd.type == self.ca.m.TYPE_PHOTO):
+			if (recd.type == Constants.TYPE_PHOTO):
 				self.livePhotoCanvas.setImage( None )
-			elif (recd.type == self.ca.m.TYPE_VIDEO):
+			elif (recd.type == Constants.TYPE_VIDEO):
 				self.ca.gplay.stop()
 				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, False )
-			elif (recd.type == self.ca.m.TYPE_AUDIO):
+			elif (recd.type == Constants.TYPE_AUDIO):
 				self.livePhotoCanvas.setImage( None )
 				self.startLiveAudio()
 
@@ -1597,6 +1595,7 @@ class UI:
 		self.photographerNameLabel.set_label( recd.recorderName )
 		self.nameTextfield.set_text( recd.title )
 		self.nameTextfield.set_sensitive( True )
+		#todo: internationalize the date
 		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
 
 		self.photographerPanel.show()
@@ -1614,101 +1613,13 @@ class UI:
 		win.set_cursor( None )
 
 
-	def loadGfx( self ):
-		thumbPhotoSvgFile = open(os.path.join(self.ca.gfxPath, 'thumb_photo.svg'), 'r')
-		self.thumbPhotoSvgData = thumbPhotoSvgFile.read()
-		self.thumbPhotoSvg = self.loadSvg(self.thumbPhotoSvgData, self.colorStroke.hex, self.colorFill.hex)
-		thumbPhotoSvgFile.close()
-
-		thumbVideoSvgFile = open(os.path.join(self.ca.gfxPath, 'thumb_video.svg'), 'r')
-		self.thumbVideoSvgData = thumbVideoSvgFile.read()
-		self.thumbVideoSvg = self.loadSvg(self.thumbVideoSvgData, self.colorStroke.hex, self.colorFill.hex)
-		thumbVideoSvgFile.close()
-
-		maxEnlargeSvgFile = open(os.path.join(self.ca.gfxPath, 'max-enlarge.svg'), 'r')
-		maxEnlargeSvgData = maxEnlargeSvgFile.read()
-		self.maxEnlargeSvg = self.loadSvg(maxEnlargeSvgData, None, None )
-		maxEnlargeSvgFile.close()
-
-		maxReduceSvgPath = os.path.join(self.ca.gfxPath, 'max-reduce.svg')
-		maxReduceSvgFile = open(maxReduceSvgPath, 'r')
-		maxReduceSvgData = maxReduceSvgFile.read()
-		self.maxReduceSvg = self.loadSvg(maxReduceSvgData, None, None )
-		maxReduceSvgFile.close()
-
-		infoOnSvgFile = open(os.path.join(self.ca.gfxPath, 'info-on.svg'), 'r')
-		infoOnSvgData = infoOnSvgFile.read()
-		self.infoOnSvg = self.loadSvg(infoOnSvgData, None, None )
-		infoOnSvgFile.close()
-
-		#todo: load from sugar, query its size for my purposes
-		#handle = self._load_svg(icon_info.file_name)
-		#dimensions = handle.get_dimension_data()
-		#icon_width = int(dimensions[0])
-		#icon_height = int(dimensions[1])
-		xoGuySvgFile = open(os.path.join(self.ca.gfxPath, 'xo-guy.svg'), 'r')
-		self.xoGuySvgData = xoGuySvgFile.read()
-		xoGuySvgFile.close()
-
-		camImgFile = os.path.join(self.ca.gfxPath, 'device-camera.png')
-		camImgPixbuf = gtk.gdk.pixbuf_new_from_file(camImgFile)
-		self.camImg = gtk.Image()
-		self.camImg.set_from_pixbuf( camImgPixbuf )
-
-		micImgFile = os.path.join(self.ca.gfxPath, 'device-microphone.png')
-		micImgPixbuf = gtk.gdk.pixbuf_new_from_file(micImgFile)
-		self.micImg = gtk.Image()
-		self.micImg.set_from_pixbuf( micImgPixbuf )
-
-		self.clickWav = os.path.join(self.ca.gfxPath, 'photoShutter.wav')
-
-
-	def loadColors( self ):
-		profileColor = profile.get_color()
-		self.colorFill = Color()
-		self.colorFill.init_hex( profileColor.get_fill_color() )
-		self.colorStroke = Color()
-		self.colorStroke.init_hex( profileColor.get_stroke_color() )
-		self.colorBlack = Color()
-		self.colorBlack.init_rgba( 0, 0, 0, 255 )
-		self.colorWhite = Color()
-		self.colorWhite.init_rgba( 255, 255, 255, 255 )
-		self.colorTray = Color()
-		self.colorTray.init_rgba(  77, 77, 79, 255 )
-		self.colorRed = Color()
-		self.colorRed.init_rgba( 255, 0, 0, 255)
-		self.colorGreen = Color()
-		self.colorGreen.init_rgba( 0, 255, 0, 255)
-		self.colorBlue = Color()
-		self.colorBlue.init_rgba( 0, 0, 255, 255)
-
-		import sugar.graphics.style
-		self.colorBg = Color()
-		self.colorBg.init_gdk( sugar.graphics.style.COLOR_PANEL_GREY )
-		self.colorHilite = Color()
-		self.colorHilite.init_gdk( sugar.graphics.style.COLOR_BUTTON_GREY ) #"#808384" )
-
-
-	def loadSvg( self, data, stroke, fill ):
-		if ((stroke == None) or (fill == None)):
-			return rsvg.Handle( data=data )
-
-		entity = '<!ENTITY fill_color "%s">' % fill
-		data = re.sub('<!ENTITY fill_color .*>', entity, data)
-
-		entity = '<!ENTITY stroke_color "%s">' % stroke
-		data = re.sub('<!ENTITY stroke_color .*>', entity, data)
-
-		return rsvg.Handle( data=data )
-
-
 class BackgroundCanvas(P5):
 	def __init__(self, ui):
 		P5.__init__(self)
 		self.ui = ui
 
 	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorBlack, w, h )
+		self.background( ctx, Constants.colorBlack, w, h )
 		#todo: b&w image for compression
 		#ctx.translate( (w/2)-(h/2), 0 )
 		#self.ui.modWaitSvg.render_cairo( ctx )
@@ -1719,8 +1630,8 @@ class PhotoCanvasWindow(gtk.Window):
 		gtk.Window.__init__(self)
 		self.ui = ui
 		self.photoCanvas = None
-		self.modify_bg( gtk.STATE_NORMAL, self.ui.colorBlack.gColor )
-		self.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 
 
 	def setPhotoCanvas( self, photoCanvas ):
@@ -1736,12 +1647,12 @@ class PhotoCanvas(P5):
 		self.drawImg = None
 		self.SCALING_IMG_ID = 0
 		self.cacheWid = -1
-		self.modify_bg( gtk.STATE_NORMAL, self.ui.colorBlack.gColor )
-		self.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 
 
 	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorBlack, w, h )
+		self.background( ctx, Constants.colorBlack, w, h )
 
 		if (self.img != None):
 
@@ -1801,7 +1712,7 @@ class PipCanvas(P5):
 		self.ui = ui
 
 	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorWhite, w, h )
+		self.background( ctx, Constants.colorWhite, w, h )
 
 
 class xoPanel(P5):
@@ -1831,7 +1742,7 @@ class xoPanel(P5):
 
 	def draw(self, ctx, w, h):
 		#todo: 2x buffer
-		self.background( ctx, self.ui.colorHilite, w, h )
+		self.background( ctx, Constants.colorHilite, w, h )
 
 		if (self.xoGuy != None):
 			#todo: scale mr xo
@@ -1851,8 +1762,8 @@ class ScrubberWindow(gtk.Window):
 		self.p_duration = gst.CLOCK_TIME_NONE
 
 		self.hbox = gtk.HBox()
-		self.hbox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
-		self.hbox.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
+		self.hbox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		self.hbox.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
 		self.add( self.hbox )
 
 		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
@@ -1861,7 +1772,7 @@ class ScrubberWindow(gtk.Window):
 		self.button = gtk.Button()
 		buttBox = gtk.EventBox()
 		buttBox.add(self.button)
-		buttBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		buttBox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
 		self.button.set_image(self.play_image)
 		self.button.set_property('can-default', True)
 		self.button.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
@@ -1877,7 +1788,7 @@ class ScrubberWindow(gtk.Window):
 		self.hscale.set_draw_value(False)
 		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
 		hscaleBox = gtk.EventBox()
-		hscaleBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		hscaleBox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
 		hscaleBox.add( self.hscale )
 		self.hscale.connect('button-press-event', self._scaleButtonPressCb)
 		self.hscale.connect('button-release-event', self._scaleButtonReleaseCb)
@@ -2021,9 +1932,9 @@ class MaxButton(P5Button):
 
 	def draw(self, ctx, w, h):
 		if (self.ui.FULLSCREEN):
-			self.ui.maxEnlargeSvg.render_cairo( ctx )
+			Constants.maxEnlargeSvg.render_cairo( ctx )
 		else:
-			self.ui.maxReduceSvg.render_cairo( ctx )
+			Constants.maxReduceSvg.render_cairo( ctx )
 
 
 	def fireButton(self, actionCommand):
@@ -2057,7 +1968,7 @@ class InfButton(P5Button):
 
 
 	def draw(self, ctx, w, h):
-		self.background( ctx, self.ui.colorWhite, w, h )
+		self.background( ctx, Constants.colorWhite, w, h )
 		self.ui.infoOnSvg.render_cairo( ctx )
 
 
@@ -2073,19 +1984,19 @@ class RecordWindow(gtk.Window):
 
 		self.shutterButton = gtk.Button()
 		self.shutterButton.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
-		self.shutterButton.set_image( self.ui.camImg )
-		self.shutterButton.connect("clicked", self.ui.shutterClickCb)
+		self.shutterButton.set_image( Constants.camImg )
+		self.shutterButton.connect("clicked", self.ui._shutterClickCb)
 		self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
 		shutterBox.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
-		shutterBox.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		shutterBox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
 		self.shutterButton.set_border_width( self.ui.inset )
 
 		hbox = gtk.HBox()
 		self.add( hbox )
 		leftPanel = gtk.VBox()
 		leftEvent = gtk.EventBox()
-		leftEvent.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		leftEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
 		leftEvent.add( leftPanel )
 		hbox.pack_start( leftEvent, expand=True )
 		shutterBox.add( self.shutterButton )
@@ -2093,18 +2004,18 @@ class RecordWindow(gtk.Window):
 
 		rightPanel = gtk.VBox()
 		rightEvent = gtk.EventBox()
-		rightEvent.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
 		rightEvent.add( rightPanel )
 		hbox.pack_start( rightEvent, expand=True )
 
 
 	def updateGfx( self ):
-		if (self.ui.ca.m.MODE == self.ui.ca.m.MODE_AUDIO):
-			if (self.shutterButton.get_image() != self.ui.micImg):
-				self.shutterButton.set_image( self.ui.micImg )
+		if (self.ui.ca.m.MODE == Constants.MODE_AUDIO):
+			if (self.shutterButton.get_image() != Constants.micImg):
+				self.shutterButton.set_image( Constants.micImg )
 		else:
-			if (self.shutterButton.get_image() != self.ui.camImg):
-				self.shutterButton.set_image( self.ui.camImg )
+			if (self.shutterButton.get_image() != Constants.camImg):
+				self.shutterButton.set_image( Constants.camImg )
 
 
 class ProgressWindow(gtk.Window):
@@ -2114,8 +2025,8 @@ class ProgressWindow(gtk.Window):
 		self.str = None
 
 		eb = gtk.EventBox()
-		eb.modify_fg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
-		eb.modify_bg( gtk.STATE_NORMAL, self.ui.colorWhite.gColor )
+		eb.modify_fg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		eb.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
 		self.add( eb )
 
 		vb = gtk.VBox()
@@ -2123,7 +2034,7 @@ class ProgressWindow(gtk.Window):
 		eb.add(vb)
 
 		self.progBar = gtk.ProgressBar()
-		self.progBar.modify_bg( gtk.STATE_INSENSITIVE, self.ui.colorWhite.gColor )
+		self.progBar.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
 		vb.add( self.progBar )
 
 
@@ -2143,8 +2054,8 @@ class PhotoToolbar(gtk.Toolbar):
 
 		img = ToolButton('media-photo')
 		img.connect('clicked', self._shutterClickCb)
-		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
-		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
+		img.get_icon_widget().set_property( 'fill-color', Instance.colorFill.hex )
+		img.get_icon_widget().set_property( 'stroke-color', Instance.colorStroke.hex )
 		self.insert(img, -1)
 		img.show()
 
@@ -2155,12 +2066,12 @@ class PhotoToolbar(gtk.Toolbar):
 		separator.show()
 
 		timerCbb = gtk.combo_box_new_text()
-		self.timerCb = ToolComboBox(combo=timerCbb, label_text=self.ui.ca.istrTimer)
-		for i in range (0, len(self.ui.ca.m.TIMERS)):
+		self.timerCb = ToolComboBox(combo=timerCbb, label_text=Constants.istrTimer)
+		for i in range (0, len(Constants.TIMERS)):
 			if (i == 0):
-				self.timerCb.combo.append_text( self.ui.ca.istrNow )
+				self.timerCb.combo.append_text( Constants.istrNow )
 			else:
-				self.timerCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
+				self.timerCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.TIMERS[i]))} )
 		self.timerCb.combo.set_active(0)
 		self.insert( self.timerCb, -1 )
 
@@ -2170,7 +2081,7 @@ class PhotoToolbar(gtk.Toolbar):
 
 
 	def getTimer(self):
-		return self.ui.ca.m.TIMERS[self.timerCb.combo.get_active()]
+		return Constants.TIMERS[self.timerCb.combo.get_active()]
 
 
 class VideoToolbar(gtk.Toolbar):
@@ -2180,8 +2091,8 @@ class VideoToolbar(gtk.Toolbar):
 
 		img = ToolButton('media-video')
 		img.connect('clicked', self._shutterClickCb)
-		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
-		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
+		img.get_icon_widget().set_property( 'fill-color', Instance.colorFill.hex )
+		img.get_icon_widget().set_property( 'stroke-color', Instance.colorStroke.hex )
 		self.insert(img, -1)
 		img.show()
 
@@ -2192,12 +2103,12 @@ class VideoToolbar(gtk.Toolbar):
 		separator.show()
 
 		timerCbb = gtk.combo_box_new_text()
-		self.timerCb = ToolComboBox(combo=timerCbb, label_text=self.ui.ca.istrTimer)
-		for i in range (0, len(self.ui.ca.m.TIMERS)):
+		self.timerCb = ToolComboBox(combo=timerCbb, label_text=Constants.istrTimer)
+		for i in range (0, len(Constants.TIMERS)):
 			if (i == 0):
-				self.timerCb.combo.append_text( self.ui.ca.istrNow )
+				self.timerCb.combo.append_text( Constants.istrNow )
 			else:
-				self.timerCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
+				self.timerCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.TIMERS[i]))} )
 		self.timerCb.combo.set_active(0)
 		self.insert( self.timerCb, -1 )
 
@@ -2208,9 +2119,9 @@ class VideoToolbar(gtk.Toolbar):
 		self.insert( separator2, -1 )
 
 		durCbb = gtk.combo_box_new_text()
-		self.durCb = ToolComboBox(combo=durCbb, label_text=self.ui.ca.istrDuration)
-		for i in range (0, len(self.ui.ca.m.DURATIONS)):
-			self.durCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
+		self.durCb = ToolComboBox(combo=durCbb, label_text=Constants.istrDuration)
+		for i in range (0, len(Constants.DURATIONS)):
+			self.durCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.DURATIONS[i]))} )
 		self.durCb.combo.set_active(0)
 		self.insert(self.durCb, -1 )
 
@@ -2220,11 +2131,11 @@ class VideoToolbar(gtk.Toolbar):
 
 
 	def getTimer(self):
-		return self.ui.ca.m.TIMERS[self.timerCb.combo.get_active()]
+		return Constants.TIMERS[self.timerCb.combo.get_active()]
 
 
 	def getDuration(self):
-		return self.ui.ca.m.DURATIONS[self.durCb.combo.get_active()]
+		return Constants.DURATIONS[self.durCb.combo.get_active()]
 
 
 class AudioToolbar(gtk.Toolbar):
@@ -2234,8 +2145,8 @@ class AudioToolbar(gtk.Toolbar):
 
 		img = ToolButton('media-audio')
 		img.connect('clicked', self._shutterClickCb)
-		img.get_icon_widget().set_property( 'fill-color', self.ui.colorFill.hex )
-		img.get_icon_widget().set_property( 'stroke-color', self.ui.colorStroke.hex )
+		img.get_icon_widget().set_property( 'fill-color', Instance.colorFill.hex )
+		img.get_icon_widget().set_property( 'stroke-color', Instance.colorStroke.hex )
 		self.insert(img, -1)
 		img.show()
 
@@ -2246,12 +2157,12 @@ class AudioToolbar(gtk.Toolbar):
 		separator.show()
 
 		timerCbb = gtk.combo_box_new_text()
-		self.timerCb = ToolComboBox(combo=timerCbb, label_text=self.ui.ca.istrTimer)
-		for i in range (0, len(self.ui.ca.m.TIMERS)):
+		self.timerCb = ToolComboBox(combo=timerCbb, label_text=Constants.istrTimer)
+		for i in range (0, len(Constants.TIMERS)):
 			if (i == 0):
-				self.timerCb.combo.append_text( self.ui.ca.istrNow )
+				self.timerCb.combo.append_text( Constants.istrNow )
 			else:
-				self.timerCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.TIMERS[i]))} )
+				self.timerCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.TIMERS[i]))} )
 		self.timerCb.combo.set_active(0)
 		self.insert( self.timerCb, -1 )
 
@@ -2262,9 +2173,9 @@ class AudioToolbar(gtk.Toolbar):
 		self.insert( separator2, -1 )
 
 		durCbb = gtk.combo_box_new_text()
-		self.durCb = ToolComboBox(combo=durCbb, label_text=self.ui.ca.istrDuration)
-		for i in range (0, len(self.ui.ca.m.DURATIONS)):
-			self.durCb.combo.append_text( self.ui.ca.istrSeconds % {"1":(str(self.ui.ca.m.DURATIONS[i]))} )
+		self.durCb = ToolComboBox(combo=durCbb, label_text=Constants.istrDuration)
+		for i in range (0, len(Constants.DURATIONS)):
+			self.durCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.DURATIONS[i]))} )
 		self.durCb.combo.set_active(0)
 		self.insert(self.durCb, -1 )
 
@@ -2274,8 +2185,8 @@ class AudioToolbar(gtk.Toolbar):
 
 
 	def getTimer(self):
-		return self.ui.ca.m.TIMERS[self.timerCb.combo.get_active()]
+		return Constants.TIMERS[self.timerCb.combo.get_active()]
 
 
 	def getDuration(self):
-		return self.ui.ca.m.DURATIONS[self.durCb.combo.get_active()]
+		return Constants.DURATIONS[self.durCb.combo.get_active()]

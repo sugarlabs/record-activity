@@ -25,19 +25,17 @@ import shutil
 import telepathy
 import telepathy.client
 import logging
+import cStringIO
+
 import xml.dom.minidom
 from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
-from gettext import gettext as _
-import cStringIO
 
-from sugar import util
 from sugar.activity import activity
-from sugar import profile
 from sugar.datastore import datastore
 from sugar.presence import presenceservice
 from sugar.presence.tubeconn import TubeConnection
-SERVICE = "org.laptop.RecordActivity"
+from sugar import util
 
 from model import Model
 from ui import UI
@@ -46,7 +44,8 @@ from glive import Glive
 from gplay import Gplay
 from greplay import Greplay
 from recorded import Recorded
-
+from constants import Constants
+from instance import Instance
 
 class RecordActivity(activity.Activity):
 
@@ -63,100 +62,16 @@ class RecordActivity(activity.Activity):
 
 
 	def _initme( self, userdata=None ):
-		self.istrActivityName = _('Record')
-		self.istrPhoto = _('Photo')
-		self.istrVideo = _('Video')
-		self.istrAudio = _('Audio')
-		self.istrTimelapse = _('Time Lapse')
-		self.istrAnimation = _('Animation')
-		self.istrPanorama = _('Panorama')
-		#TRANS: photo by photographer, e.g., "Photo by Mary"
-		self.istrBy = _("%(1)s by %(2)s")
-		self.istrTitle = _('Title:')
-		self.istrRecorder = _('Recorder:')
-		self.istrDate = _('Date:')
-		self.istrTags = _('Tags:')
-		self.istrSaving = _('Saving')
-		self.istrFinishedRecording = _("Finished recording")
-		self.istrMinutesSecondsRemaining = _("%(1)s minutes, %(1)s seconds remaining")
-		self.istrSecondsRemaining = _("%(1)s seconds remaining")
-		self.istrRemove = _("Remove")
-		self.istrStoppedRecording = _("Stopped recording")
-		self.istrCopyToClipboard = _("Copy to clipboard")
-		self.istrTimer = _("Timer:")
-		self.istrDuration = _("Duration:")
-		self.istrNow = _("Immediate")
-		self.istrSeconds = _("%(1)s seconds")
-		self.istrMinutes = _("%(1)s minutes")
-		self.istrPlay = _("Play")
-		self.istrPause = _("Pause")
-		self.istrAddFrame = _("Add frame")
-		self.istrRemoveFrame = _("Remove frame")
-		self.istrFramesPerSecond = _("%(1)s frames per second")
-		self.istrQuality = _("Quality:")
-		self.istrBestQuality = _("Best quality")
-		self.istrHighQuality = _("High quality")
-		self.istrLowQuality = _("Low quality")
-		self.istrLargeFile = _("Large file")
-		self.istrSmallFile = _("Small file")
-		self.istrSilent = _("Silent")
-		self.istrRotate = _("Rotate")
-		self.istrClickToTakePicture = _("Click to take picture")
-		self.istrClickToAddPicture = _("Click to add picture")
-		#TRANS: Downloading Photo from Mary
-		self.istrDownloadingFrom = _("Downloading %(1)s from %(2)s")
-		#TRANS: Cannot download this Photo
-		self.istrCannotDownload = _("Cannot download this %(1)s")
-
-		self.recdTitle = "title"
-		self.recdTime = "time"
-		self.recdRecorderName = "photographer"
-		self.recdRecorderHash = "recorderHash"
-		self.recdColorStroke = "colorStroke"
-		self.recdColorFill = "colorFill"
-		self.recdHashKey = "hashKey"
-		self.recdBuddy = "buddy"
-		self.recdMediaMd5 = "mediaMd5"
-		self.recdThumbMd5 = "thumbMd5"
-		self.recdMediaBytes = "mediaBytes"
-		self.recdThumbBytes = "thumbBytes"
-		self.recdBuddyThumb = "buddyThumb"
-		self.recdDatastoreId = "datastoreId"
-		self.recdAudioImage = "audioImage"
-		self.recdAlbum = "album"
-		self.recdType = "type"
-		self.recdRecd = "recd"
-		#self.recdThumb = "thumb"
-		self.keyName = "name"
-		self.keyMime = "mime"
-		self.keyExt = "ext"
-		self.keyIstr = "istr"
-
-		#these are all created here in case we have a crash at boot (e.g., pservice not working)
-		self.m = Model( self )
-		self.ui = None
-		self.gplay = None
-		self.glive = None
-		self.greplay = None
-
-		#whoami?
-		key = profile.get_pubkey()
-		keyHash = util._sha_data(key)
-		self.hashedKey = util.printable_hash(keyHash)
-		self.instanceId = self._activity_id
-		self.nickName = profile.get_nick_name()
+		Instance(self)
+		Constants(self)
 
 		#totally tubular
 		self.meshTimeoutTime = 10000
 		self.recTube = None
 		self.connect( "shared", self._sharedCb )
 
-		#paths
-		self.basePath = activity.get_bundle_path()
-		self.gfxPath = os.path.join(self.basePath, "gfx")
-		self.recreateTemp()
-
 		#the main classes
+		self.m = Model( self )
 		self.glive = Glive( self )
 		self.gplay = Gplay( self )
 		self.greplay = Greplay( self )
@@ -183,14 +98,14 @@ class RecordActivity(activity.Activity):
 
 		xmlFile = open( file, "w" )
 		impl = getDOMImplementation()
-		album = impl.createDocument(None, self.recdAlbum, None)
+		album = impl.createDocument(None, Constants.recdAlbum, None)
 		root = album.documentElement
 
 		atLeastOne = False
 
 		#flag everything for saving...
 		for type,value in self.m.mediaTypes.items():
-			typeName = value[self.keyName]
+			typeName = value[Constants.keyName]
 			hash = self.m.mediaHashs[type]
 			for i in range (0, len(hash)):
 				recd = hash[i]
@@ -201,7 +116,7 @@ class RecordActivity(activity.Activity):
 		#and if there is anything to save, save it
 		if (atLeastOne):
 			for type,value in self.m.mediaTypes.items():
-				typeName = value[self.keyName]
+				typeName = value[Constants.keyName]
 				hash = self.m.mediaHashs[type]
 
 				for i in range (0, len(hash)):
@@ -217,7 +132,7 @@ class RecordActivity(activity.Activity):
 
 	def getRecdXmlMeshString( self, recd ):
 		impl = getDOMImplementation()
-		recdXml = impl.createDocument(None, self.recdRecd, None)
+		recdXml = impl.createDocument(None, Constants.recdRecd, None)
 		root = recdXml.documentElement
 		self.addRecdXmlAttrs( root, recd, True )
 
@@ -233,7 +148,7 @@ class RecordActivity(activity.Activity):
 	def addRecdXmlAttrs( self, el, recd, forMeshTransmit ):
 		el.setAttribute(self.recdType, str(recd.type))
 
-		if ((recd.type == self.m.TYPE_AUDIO) and (not forMeshTransmit)):
+		if ((recd.type == constants.TYPE_AUDIO) and (not forMeshTransmit)):
 			aiPixbuf = recd.getAudioImagePixbuf( )
 			aiPixbufString = str( self._get_base64_pixbuf_data(aiPixbuf) )
 			el.setAttribute(self.recdAudioImage, aiPixbufString)
@@ -381,16 +296,6 @@ class RecordActivity(activity.Activity):
 		if (not self.m.UPDATING):
 			self.ui.updateModeChange( )
 			self.ui.doMouseListener( True )
-
-
-	def recreateTemp( self ):
-		# #4422
-#		self.tempPath = os.path.join("tmp", "Record_"+str(self.instanceId))
-		self.tempPath = os.path.join( self.get_activity_root(), "tmp" )
-		self.tempPath = os.path.join( self.tempPath, str(self.instanceId))
-		if (os.path.exists(self.tempPath)):
-			shutil.rmtree( self.tempPath )
-		os.makedirs(self.tempPath)
 
 
 	def close( self ):
@@ -697,7 +602,7 @@ class RecordActivity(activity.Activity):
 			recd.meshDownloading = False
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
-			if (recd.type == self.ca.m.TYPE_AUDIO):
+			if (recd.type == constants.TYPE_AUDIO):
 				self.connect(greplay.getAlbumArt, recd, _getAlbumArtCb)
 			else:
 				self.ui.showMeshRecd( recd )
@@ -708,7 +613,7 @@ class RecordActivity(activity.Activity):
 	def _getAlbumArtCb( self, recd, pixbuf ):
 		if (pixbuf == None):
 			return False
-		imagePath = os.path.join(self.tempPath, "audioPicture.png")
+		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
 		imagePath = self.m.getUniqueFilepath( imagePath, 0 )
 		pixbuf.save( imagePath, "png", {} )
 		recd.audioImageFilename = os.path.basename(imagePath)
@@ -734,3 +639,9 @@ class RecordActivity(activity.Activity):
 			return
 
 		self.meshNextRoundRobinBuddy( recd )
+
+
+	def recreateTmp(self):
+		if (os.path.exists(instance.tmpPath)):
+			shutil.rmtree(instance.tmpPath)
+		os.makedirs(instance.tmpPath)

@@ -26,40 +26,43 @@ import os
 import random
 import cairo
 import gtk
+import gtk.gdk
 import pygtk
 pygtk.require('2.0')
 import shutil
 import gc
 import math
-import gtk.gdk
 import time
 from time import strftime
 import gobject
-import xml.dom.minidom
-from xml.dom.minidom import getDOMImplementation
-from xml.dom.minidom import parse
 from hashlib import md5
 import operator
 
-from recorded import Recorded
-from color import Color
+import xml.dom.minidom
+from xml.dom.minidom import getDOMImplementation
+from xml.dom.minidom import parse
 
 from sugar import util
 from sugar.datastore import datastore
 import sugar.env
 
+from constants import Constants
+from recorded import Recorded
+from color import Color
 import _camera
 
 
 class Model:
 	def __init__( self, pca ):
 		self.ca = pca
-		self.setConstants()
+		self.MODE = Constants.MODE_PHOTO
+		self.UPDATING = True
+		self.RECORDING = False
 
 		self.mediaTypes = {}
-		self.mediaTypes[self.TYPE_PHOTO] = {self.ca.keyName:"photo", self.ca.keyMime:"image/jpeg", self.ca.keyExt:"jpg", self.ca.keyIstr:self.ca.istrPhoto}
-		self.mediaTypes[self.TYPE_VIDEO] = {self.ca.keyName:"video", self.ca.keyMime:"video/ogg", self.ca.keyExt:"ogg", self.ca.keyIstr:self.ca.istrVideo}
-		self.mediaTypes[self.TYPE_AUDIO] = {self.ca.keyName:"audio", self.ca.keyMime:"audio/ogg", self.ca.keyExt:"ogg", self.ca.keyIstr:self.ca.istrAudio}
+		self.mediaTypes[Constants.TYPE_PHOTO] = {Constants.keyName:"photo", Constants.keyMime:"image/jpeg", Constants.keyExt:"jpg", Constants.keyIstr:Constants.istrPhoto}
+		self.mediaTypes[Constants.TYPE_VIDEO] = {Constants.keyName:"video", Constants.keyMime:"video/ogg", Constants.keyExt:"ogg", Constants.keyIstr:Constants.istrVideo}
+		self.mediaTypes[Constants.TYPE_AUDIO] = {Constants.keyName:"audio", Constants.keyMime:"audio/ogg", Constants.keyExt:"ogg", Constants.keyIstr:Constants.istrAudio}
 
 		self.mediaHashs = {}
 		for key,value in self.mediaTypes.items():
@@ -160,7 +163,7 @@ class Model:
 		bt = el.getAttributeNode(self.ca.recdBuddyThumb)
 		if (not bt == None):
 			try:
-				thumbPath = os.path.join(self.ca.tempPath, "datastoreThumb.jpg")
+				thumbPath = os.path.join(Instance.tmpPath, "datastoreThumb.jpg")
 				thumbPath = self.getUniqueFilepath( thumbPath, 0 )
 				thumbImg = recd.pixbufFromString( bt.nodeValue )
 				thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
@@ -172,7 +175,7 @@ class Model:
 		if (not ai == None):
 			try:
 				audioImg = recd.pixbufFromString( ai.nodeValue )
-				audioImagePath = os.path.join(self.ca.tempPath, "audioImage.png")
+				audioImagePath = os.path.join(Instance.tmpPath, "audioImage.png")
 				audioImagePath = self.getUniqueFilepath( audioImagePath, 0 )
 				audioImg.save(audioImagePath, "png", {} )
 				recd.audioImageFilename = os.path.basename(audioImagePath)
@@ -222,11 +225,11 @@ class Model:
 
 
 	def isVideoMode( self ):
-		return self.MODE == self.MODE_VIDEO
+		return self.MODE == Constants.MODE_VIDEO
 
 
 	def isPhotoMode( self ):
-		return self.MODE == self.MODE_PHOTO
+		return self.MODE == Constants.MODE_PHOTO
 
 
 	def displayThumb( self, type, forceUpdating ):
@@ -296,12 +299,12 @@ class Model:
 
 	def getHash( self ):
 		type = -1
-		if (self.MODE == self.MODE_PHOTO):
-			type = self.TYPE_PHOTO
-		if (self.MODE == self.MODE_VIDEO):
-			type = self.TYPE_VIDEO
-		if (self.MODE == self.MODE_AUDIO):
-			type = self.TYPE_AUDIO
+		if (self.MODE == Constants.MODE_PHOTO):
+			type = Constants.TYPE_PHOTO
+		if (self.MODE == Constants.MODE_VIDEO):
+			type = Constants.TYPE_VIDEO
+		if (self.MODE == Constants.MODE_AUDIO):
+			type = Constants.TYPE_AUDIO
 
 		if (type != -1):
 			return self.mediaHashs[type]
@@ -313,16 +316,16 @@ class Model:
 		if (self.UPDATING):
 			return
 
-		if (self.MODE == self.MODE_PHOTO):
+		if (self.MODE == Constants.MODE_PHOTO):
 			self.startTakingPhoto()
-		elif (self.MODE == self.MODE_VIDEO):
+		elif (self.MODE == Constants.MODE_VIDEO):
 			if (not self.RECORDING):
 				self.startRecordingVideo()
 			else:
 				#post-processing begins now, so queue up this gfx
 				self.ca.ui.showPostProcessGfx(True)
 				self.stopRecordingVideo()
-		elif (self.MODE == self.MODE_AUDIO):
+		elif (self.MODE == Constants.MODE_AUDIO):
 			if (not self.RECORDING):
 				self.startRecordingAudio()
 			else:
@@ -344,15 +347,15 @@ class Model:
 	def saveAudio( self, tempPath, pixbuf ):
 		self.setUpdating( True )
 
-		recd = self.createNewRecorded( self.TYPE_AUDIO )
-		os.rename( tempPath, os.path.join(self.ca.tempPath,recd.mediaFilename))
+		recd = self.createNewRecorded( Constants.TYPE_AUDIO )
+		os.rename( tempPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
-		thumbPath = os.path.join(self.ca.tempPath, recd.thumbFilename)
+		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((self.ca.ui.tw+0.0)/(pixbuf.get_width()+0.0))
 		thumbImg = self.generateThumbnail(pixbuf, scale)
 		thumbImg.write_to_png(thumbPath)
 
-		imagePath = os.path.join(self.ca.tempPath, "audioPicture.png")
+		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
 		imagePath = self.getUniqueFilepath( imagePath, 0 )
 		pixbuf.save( imagePath, "png", {} )
 		recd.audioImageFilename = os.path.basename(imagePath)
@@ -360,9 +363,9 @@ class Model:
 		#at this point, we have both audio and thumb sapath, so we can save the recd
 		self.createNewRecordedMd5Sums( recd )
 
-		audioHash = self.mediaHashs[self.TYPE_AUDIO]
+		audioHash = self.mediaHashs[Constants.TYPE_AUDIO]
 		audioHash.append( recd )
-		gobject.idle_add(self.displayThumb, self.TYPE_AUDIO, True)
+		gobject.idle_add(self.displayThumb, Constants.TYPE_AUDIO, True)
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
 
@@ -407,19 +410,19 @@ class Model:
 
 
 	def saveVideo( self, pixbuf, tempPath, wid, hit ):
-		recd = self.createNewRecorded( self.TYPE_VIDEO )
-		os.rename( tempPath, os.path.join(self.ca.tempPath,recd.mediaFilename))
+		recd = self.createNewRecorded( Constants.TYPE_VIDEO )
+		os.rename( tempPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
-		thumbPath = os.path.join(self.ca.tempPath, recd.thumbFilename)
+		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((self.ca.ui.tw+0.0)/(wid+0.0))
 		thumbImg = self.generateThumbnail(pixbuf, scale )
 		thumbImg.write_to_png(thumbPath)
 
 		self.createNewRecordedMd5Sums( recd )
 
-		videoHash = self.mediaHashs[self.TYPE_VIDEO]
+		videoHash = self.mediaHashs[Constants.TYPE_VIDEO]
 		videoHash.append( recd )
-		gobject.idle_add(self.displayThumb, self.TYPE_VIDEO, True)
+		gobject.idle_add(self.displayThumb, Constants.TYPE_VIDEO, True)
 
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
@@ -467,12 +470,12 @@ class Model:
 
 
 	def savePhoto( self, pixbuf ):
-		recd = self.createNewRecorded( self.TYPE_PHOTO )
+		recd = self.createNewRecorded( Constants.TYPE_PHOTO )
 
-		imgpath = os.path.join(self.ca.tempPath, recd.mediaFilename)
+		imgpath = os.path.join(Instance.tmpPath, recd.mediaFilename)
 		pixbuf.save( imgpath, "jpeg" )
 
-		thumbpath = os.path.join(self.ca.tempPath, recd.thumbFilename)
+		thumbpath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((self.ca.ui.tw+0.0)/(pixbuf.get_width()+0.0))
 		thumbImg = self.generateThumbnail(pixbuf, scale)
 		thumbImg.write_to_png(thumbpath)
@@ -480,9 +483,9 @@ class Model:
 		#now that we've saved both the image and its pixbuf, we get their md5s
 		self.createNewRecordedMd5Sums( recd )
 
-		photoHash = self.mediaHashs[self.TYPE_PHOTO]
+		photoHash = self.mediaHashs[Constants.TYPE_PHOTO]
 		photoHash.append( recd )
-		gobject.idle_add(self.displayThumb, self.TYPE_PHOTO, True)
+		gobject.idle_add(self.displayThumb, Constants.TYPE_PHOTO, True)
 
 		self.meshShareRecd( recd )
 
@@ -548,44 +551,34 @@ class Model:
 		mediaThumbFilename = str(recd.recorderHash) + "_" + str(recd.time)
 		mediaFilename = mediaThumbFilename
 		mediaFilename = mediaFilename + "." + self.mediaTypes[type][self.ca.keyExt]
-		mediaFilepath = os.path.join( self.ca.tempPath, mediaFilename )
+		mediaFilepath = os.path.join( Instance.tmpPath, mediaFilename )
 		mediaFilepath = self.getUniqueFilepath( mediaFilepath, 0 )
 		recd.mediaFilename = os.path.basename( mediaFilepath )
 
 		thumbFilename = mediaThumbFilename + "_thumb.jpg"
-		thumbFilepath = os.path.join( self.ca.tempPath, thumbFilename )
+		thumbFilepath = os.path.join( Instance.tmpPath, thumbFilename )
 		thumbFilepath = self.getUniqueFilepath( thumbFilepath, 0 )
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
 		stringType = self.mediaTypes[type][self.ca.keyIstr]
-		recd.title = self.ca.istrBy % {"1":stringType, "2":str(recd.recorderName)}
+		recd.title = Constants.istrBy % {"1":stringType, "2":str(recd.recorderName)}
 
-		recd.colorStroke = self.ca.ui.colorStroke
-		recd.colorFill = self.ca.ui.colorFill
+		recd.colorStroke = Instance.colorStroke
+		recd.colorFill = Instance.colorFill
 
 		return recd
 
 
-	def getUniqueFilepath( self, path, i ):
-		pathOb = os.path.abspath( path )
-		if (os.path.exists(pathOb)):
-			i = i+1
-			newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
-			return self.getUniqueFilepath( str(newPath), i )
-		else:
-			return os.path.abspath( path )
-
-
 	def createNewRecordedMd5Sums( self, recd ):
 		#load the thumbfile
-		thumbFile = os.path.join(self.ca.tempPath, recd.thumbFilename)
+		thumbFile = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		thumbMd5 = self.md5File( thumbFile )
 		recd.thumbMd5 = thumbMd5
 		tBytes = os.stat(thumbFile)[7]
 		recd.thumbBytes = tBytes
 
 		#load the mediafile
-		mediaFile = os.path.join(self.ca.tempPath, recd.mediaFilename)
+		mediaFile = os.path.join(Instance.tmpPath, recd.mediaFilename)
 		mediaMd5 = self.md5File( mediaFile )
 		recd.mediaMd5 = mediaMd5
 		mBytes = os.stat(mediaFile)[7]
@@ -644,60 +637,27 @@ class Model:
 
 
 	def doVideoMode( self ):
-		if (self.MODE == self.MODE_VIDEO):
+		if (self.MODE == Constants.MODE_VIDEO):
 			return
 
-		self.MODE = self.MODE_VIDEO
+		self.MODE = Constants.MODE_VIDEO
 		self.setUpdating(True)
 		gobject.idle_add( self.setupMode, self.MODE, True )
 
 
 	def doPhotoMode( self ):
-		if (self.MODE == self.MODE_PHOTO):
+		if (self.MODE == Constants.MODE_PHOTO):
 			return
 
-		self.MODE = self.MODE_PHOTO
+		self.MODE = Constants.MODE_PHOTO
 		self.setUpdating(True)
 		gobject.idle_add( self.setupMode, self.MODE, True )
 
 
 	def doAudioMode( self ):
-		if (self.MODE == self.MODE_AUDIO):
+		if (self.MODE == Constants.MODE_AUDIO):
 			return
 
-		self.MODE = self.MODE_AUDIO
+		self.MODE = Constants.MODE_AUDIO
 		self.setUpdating(True)
 		gobject.idle_add( self.setupMode, self.MODE, True )
-
-
-	def setConstants( self ):
-		#pics or vids?
-		self.MODE_PHOTO = 0
-		self.MODE_VIDEO = 1
-		self.MODE_AUDIO = 2
-		self.MODE = self.MODE_PHOTO
-
-		self.TYPE_PHOTO = 0
-		self.TYPE_VIDEO = 1
-		self.TYPE_AUDIO = 2
-
-		self.UPDATING = True
-		self.RECORDING = False
-
-		self.TIMER_0 = 0
-		self.TIMER_5 = 5
-		self.TIMER_10 = 10
-		self.TIMER = self.TIMER_0
-		self.TIMERS = []
-		self.TIMERS.append(self.TIMER_0)
-		self.TIMERS.append(self.TIMER_5)
-		self.TIMERS.append(self.TIMER_10)
-
-		self.DURATION_15 = 15
-		self.DURATION_30 = 30
-		self.DURATION_45 = 45
-		self.DURATION = self.DURATION_15
-		self.DURATIONS = []
-		self.DURATIONS.append(self.DURATION_15)
-		self.DURATIONS.append(self.DURATION_30)
-		self.DURATIONS.append(self.DURATION_45)

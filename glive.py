@@ -33,6 +33,8 @@ import threading
 import gobject
 gobject.threads_init()
 
+from instance import Instance
+
 class Glive:
 	def __init__(self, pca):
 		self.window = None
@@ -160,11 +162,11 @@ class Glive:
 
 			movieQueue = pipeline.get_by_name("movieQueue_"+n)
 			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
-			movieFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
+			movieFilepath = os.path.join(Instance.tmpPath, "output.ogg" ) #ogv
 			movieFilesink.set_property("location", movieFilepath )
 
 			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
-			audioFilepath = os.path.join(self.ca.tempPath, "output.wav")
+			audioFilepath = os.path.join(Instance.tmpPath, "output.wav")
 			audioFilesink.set_property("location", audioFilepath )
 			audioTee = pipeline.get_by_name('audioTee_'+n)
 			audioWavenc = pipeline.get_by_name('audioWavenc_'+n)
@@ -196,7 +198,7 @@ class Glive:
 			videoTee.unlink(picQueue)
 
 			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
-			audioFilepath = os.path.join(self.ca.tempPath, "output.wav")
+			audioFilepath = os.path.join(Instance.tmpPath, "output.wav")
 			audioFilesink.set_property("location", audioFilepath )
 
 		elif (self._PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
@@ -240,7 +242,7 @@ class Glive:
 		n = str(len(self.thumbPipes))
 		f = str(len(self.pipes)-2)
 
-		oggFilepath = os.path.join(self.ca.tempPath, "output.ogg" ) #ogv
+		oggFilepath = os.path.join(Instance.tmpPath, "output.ogg" ) #ogv
 		if (not os.path.exists(oggFilepath)):
 			self.record = False
 			self.ca.m.cannotSaveVideo()
@@ -292,7 +294,7 @@ class Glive:
 			vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)
 
 			audioFilesink = audioline.get_by_name('audioFilesink_'+n)
-			audioOggFilepath = os.path.join(self.ca.tempPath, "output.ogg")
+			audioOggFilepath = os.path.join(Instance.tmpPath, "output.ogg")
 			audioFilesink.set_property("location", audioOggFilepath )
 
 			audioBus = audioline.get_bus()
@@ -388,15 +390,15 @@ class Glive:
 
 			n = str(len(self.muxPipes))
 			f = str(len(self.pipes)-2)
-			oggFilepath = os.path.join(self.ca.tempPath, "output.ogg") #ogv
+			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg") #ogv
 			if (self.audio):
 				if ( len(self.muxPipes) > 0 ):
 					self.muxPipe().get_bus().disable_sync_message_emission()
 					self.muxPipe().get_bus().disconnect(self.MUX_MESSAGE_ID)
 					self.muxPipe().get_bus().remove_signal_watch()
 
-				wavFilepath = os.path.join(self.ca.tempPath, "output.wav")
-				muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg") #ogv
+				wavFilepath = os.path.join(Instnace.tmpPath, "output.wav")
+				muxFilepath = os.path.join(Instance.tmpPath, "mux.ogg") #ogv
 
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
 				taglist = self.getTags()
@@ -422,7 +424,7 @@ class Glive:
 		if position != gst.CLOCK_TIME_NONE:
 			value = position * 100.0 / duration
 			value = value/100.0
-			self.ca.ui.progressWindow.updateProgress( value, self.ca.istrSaving )
+			self.ca.ui.progressWindow.updateProgress(value, Constants.istrSaving)
 		return True
 
 
@@ -453,9 +455,9 @@ class Glive:
 			n = str(len(self.muxPipes)-1)
 			f = str(len(self.pipes)-2)
 
-			wavFilepath = os.path.join(self.ca.tempPath, "output.wav")
-			oggFilepath = os.path.join(self.ca.tempPath, "output.ogg") #ogv
-			muxFilepath = os.path.join(self.ca.tempPath, "mux.ogg") #ogv
+			wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
+			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg") #ogv
+			muxFilepath = os.path.join(Instance.tmpPath, "mux.ogg") #ogv
 			os.remove( wavFilepath )
 			os.remove( oggFilepath )
 			self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath), self.VIDEO_WIDTH_SMALL, self.VIDEO_HEIGHT_SMALL)
@@ -472,8 +474,8 @@ class Glive:
 			self.audioPipe().set_state(gst.STATE_NULL)
 
 			#todo: make output.ogg a variable
-			wavFilepath = os.path.join(self.ca.tempPath, "output.wav")
-			oggFilepath = os.path.join(self.ca.tempPath, "output.ogg")
+			wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
+			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg")
 			os.remove( wavFilepath )
 			self.ca.m.saveAudio(oggFilepath, self.audioPixbuf)
 

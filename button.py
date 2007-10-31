@@ -29,7 +29,7 @@ class RecdButton(TrayButton, gobject.GObject):
 		xoff = 0
 		yoff = 0
 		pb = None
-		if (self.recd.type == self.ui.ca.m.TYPE_PHOTO):
+		if (self.recd.type == constants.TYPE_PHOTO):
 			xoff = 8
 			yoff = 8
 			if (self.recd.buddy):
@@ -38,7 +38,7 @@ class RecdButton(TrayButton, gobject.GObject):
 			else:
 				pb = self.ui.thumbPhotoSvg.get_pixbuf()
 
-		elif (self.recd.type == self.ui.ca.m.TYPE_VIDEO):
+		elif (self.recd.type == constants.TYPE_VIDEO):
 			xoff = 8
 			yoff = 22
 			if (self.recd.buddy):
@@ -47,7 +47,7 @@ class RecdButton(TrayButton, gobject.GObject):
 			else:
 				pb = self.ui.thumbVideoSvg.get_pixbuf()
 
-		elif (self.recd.type == self.ui.ca.m.TYPE_AUDIO):
+		elif (self.recd.type == constants.TYPE_AUDIO):
 			xoff = 8
 			yoff = 22
 			if (self.recd.buddy):
@@ -78,7 +78,7 @@ class RecdButton(TrayButton, gobject.GObject):
 		palette = Palette(info)
 		self.set_palette(palette)
 
-		self.rem_menu_item = gtk.MenuItem( self.ui.ca.istrRemove )
+		self.rem_menu_item = gtk.MenuItem( Constants.istrRemove )
 		self.ACTIVATE_REMOVE_ID = self.rem_menu_item.connect('activate', self._itemRemoveCb)
 		palette.menu.append(self.rem_menu_item)
 		self.rem_menu_item.show()
@@ -92,7 +92,7 @@ class RecdButton(TrayButton, gobject.GObject):
 		if (self.ACTIVATE_COPY_ID != 0):
 			return
 
-		self.copy_menu_item = gtk.MenuItem( self.ui.ca.istrCopyToClipboard )
+		self.copy_menu_item = gtk.MenuItem( Constants.istrCopyToClipboard )
 		self.ACTIVATE_COPY_ID = self.copy_menu_item.connect('activate', self._itemCopyToClipboardCb)
 		self.get_palette().menu.append(self.copy_menu_item)
 		self.copy_menu_item.show()

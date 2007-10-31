@@ -22,6 +22,8 @@ import os
 import gtk
 from gtk import gdk
 
+from instance import Instance
+
 class Recorded:
 
 	def __init__( self, pca ):
@@ -99,7 +101,7 @@ class Recorded:
 			#just taken, so it is in the tempSessionDir
 			#so load file, convert to pixbuf, and return it here...
 			thumbPixbuf = None
-			thumbFilepath = os.path.join(self.ca.tempPath, self.thumbFilename)
+			thumbFilepath = os.path.join(Instance.tmpPath, self.thumbFilename)
 			if ( os.path.isfile(thumbFilepath) ):
 				thumbPixbuf = gtk.gdk.pixbuf_new_from_file(thumbFilepath)
 			return thumbPixbuf
@@ -118,7 +120,7 @@ class Recorded:
 			#just taken, so it is in the tempSessionDir
 			#so load file, convert to pixbuf, and return it here...
 			thumbPixbuf = None
-			thumbFilepath = os.path.join(self.ca.tempPath, self.thumbFilename)
+			thumbFilepath = os.path.join(Instance.tmpPath, self.thumbFilename)
 			if ( os.path.isfile(thumbFilepath) ):
 				return thumbFilepath
 		else:
@@ -129,7 +131,7 @@ class Recorded:
 				return None
 
 			img = self.pixbufFromString( self.datastoreOb.metadata['preview'] )
-			thumbFilepath = os.path.join( self.ca.tempPath, "thumb.png")
+			thumbFilepath = os.path.join( Instance.tmpPath, "thumb.png")
 			thumbFilepath = self.ca.m.getUniqueFilepath(thumbFilepath, 0)
 			img.save(thumbFilepath, "png", {} )
 			return thumbFilepath
@@ -152,7 +154,7 @@ class Recorded:
 
 	def getAudioImageFilepath( self ):
 		if (self.audioImageFilename != None):
-			audioFilepath = os.path.join(self.ca.tempPath, self.audioImageFilename)
+			audioFilepath = os.path.join(Instance.tmpPath, self.audioImageFilename)
 			return os.path.abspath(audioFilepath)
 		else:
 			return self.getThumbFilepath()
@@ -162,12 +164,12 @@ class Recorded:
 		if (self.datastoreId == None):
 			if (not self.buddy):
 				#just taken by you, so it is in the tempSessionDir
-				mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
+				mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
 				return os.path.abspath(mediaFilepath)
 			else:
 				if (self.downloadedFromBuddy):
 					#the user has requested the high-res version, and it has downloaded
-					mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
+					mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
 					if (meshRequired):
@@ -185,13 +187,13 @@ class Recorded:
 					else:
 						if self.mediaFilename == None:
 							ext = self.ca.m.mediaTypes[self.type][self.ca.keyExt]
-							recdPath = os.path.join(self.ca.tempPath, "recdFile_"+self.mediaMd5+"."+ext)
+							recdPath = os.path.join(Instance.tmpPath, "recdFile_"+self.mediaMd5+"."+ext)
 							recdPath = self.ca.m.getUniqueFilepath(recdPath, 0)
 							self.mediaFilename = os.path.basename(recdPath)
-							mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
+							mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
 							return os.path.abspath(mediaFilepath)
 						else:
-							mediaFilepath = os.path.join(self.ca.tempPath, self.mediaFilename)
+							mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
 							return os.path.abspath(mediaFilepath)
 
 		else: #pulling from the datastore, regardless of who took it, cause we got it

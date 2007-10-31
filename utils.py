@@ -1,4 +1,6 @@
 import base64
+import rsvg
+import re
 
 
 def getStringFromPixbuf(pixbuf):
@@ -18,3 +20,26 @@ def getPixbufFromString(str):
 	pbl.write(data)
 	pbl.close()
 	return pbl.get_pixbuf()
+
+
+def loadSvg( data, stroke, fill ):
+	if ((stroke == None) or (fill == None)):
+		return rsvg.Handle( data=data )
+
+	entity = '<!ENTITY fill_color "%s">' % fill
+	data = re.sub('<!ENTITY fill_color .*>', entity, data)
+
+	entity = '<!ENTITY stroke_color "%s">' % stroke
+	data = re.sub('<!ENTITY stroke_color .*>', entity, data)
+
+	return rsvg.Handle( data=data )
+
+
+def getUniqueFilepath( path, i ):
+	pathOb = os.path.abspath( path )
+	if (os.path.exists(pathOb)):
+		i = i+1
+		newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
+		return getUniqueFilepath( str(newPath), i )
+	else:
+		return os.path.abspath( path )
