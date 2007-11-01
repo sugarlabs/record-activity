@@ -60,6 +60,7 @@ class UI:
 
 	THUMB_WIDTH = 107
 	THUMB_HEIGHT = 80
+	dim_INSET = 10
 
 	def __init__( self, pca ):
 		self.ca = pca
@@ -78,8 +79,6 @@ class UI:
 		#maximize size:
 		self.maxw = 49
 		self.maxh = 49
-		#component spacing
-		self.inset = 10
 		#height of the record button, progress bar, etc.
 		self.controlBarHt = 75
 		self.recordButtWd = 75
@@ -113,13 +112,13 @@ class UI:
 		#this includes the default sharing tab
 		self.toolbox = activity.ActivityToolbox(self.ca)
 		self.ca.set_toolbox(self.toolbox)
-		self.photoToolbar = PhotoToolbar(self)
+		self.photoToolbar = PhotoToolbar()
 		self.photoToolbar.set_sensitive( False )
 		self.toolbox.add_toolbar( Constants.istrPhoto, self.photoToolbar )
-		self.videoToolbar = VideoToolbar(self)
+		self.videoToolbar = VideoToolbar()
 		self.videoToolbar.set_sensitive( False )
 		self.toolbox.add_toolbar( Constants.istrVideo, self.videoToolbar )
-		self.audioToolbar = AudioToolbar(self)
+		self.audioToolbar = AudioToolbar()
 		self.audioToolbar.set_sensitive( False )
 		self.toolbox.add_toolbar( Constants.istrAudio, self.audioToolbar )
 		self.tbars = {Constants.MODE_PHOTO:self.photoToolbar,Constants.MODE_VIDEO:self.videoToolbar,Constants.MODE_AUDIO:self.audioToolbar}
@@ -136,7 +135,7 @@ class UI:
 		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+toolboxHt+self.controlBarHt)
 		self.vw = int(self.vh/.75)
 		self.letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
-		self.letterBoxVW = (self.vw/2)-(self.inset*2)
+		self.letterBoxVW = (self.vw/2)-(self.__class__.dim_INSET*2)
 		self.letterBoxVH = int(self.letterBoxVW*.75)
 
 		#now that we know how big the toolbox is, we can layout more
@@ -179,17 +178,17 @@ class UI:
 		self.backgdCanvasBox = gtk.VBox()
 		self.backgdCanvasBox.modify_bg(gtk.STATE_NORMAL, Constants.colorWhite.gColor)
 		self.backgdCanvasBox.set_size_request(self.vw, -1)
-		self.backgdCanvas = BackgroundCanvas(self)
+		self.backgdCanvas = PhotoCanvas()
 		self.backgdCanvas.set_size_request(self.vw, self.vh)
 		self.backgdCanvasBox.pack_start( self.backgdCanvas, expand=False )
 
 		#or this guy...
 		self.infoBox = gtk.EventBox()
 		self.infoBox.modify_bg( gtk.STATE_NORMAL, Constants.colorHilite.gColor )
-		iinfoBox = gtk.VBox(spacing=self.inset)
+		iinfoBox = gtk.VBox(spacing=self.__class__.dim_INSET)
 		self.infoBox.add( iinfoBox )
 		iinfoBox.set_size_request(self.vw, -1)
-		iinfoBox.set_border_width(self.inset)
+		iinfoBox.set_border_width(self.__class__.dim_INSET)
 
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( self.letterBoxW, -1 )
@@ -201,7 +200,7 @@ class UI:
 		#info box innards:
 		self.infoBoxTop = gtk.HBox()
 		iinfoBox.pack_start( self.infoBoxTop, expand=True )
-		self.infoBoxTopLeft = gtk.VBox(spacing=self.inset)
+		self.infoBoxTopLeft = gtk.VBox(spacing=self.__class__.dim_INSET)
 		self.infoBoxTop.pack_start( self.infoBoxTopLeft )
 		self.infoBoxTopRight = gtk.VBox()
 		self.infoBoxTopRight.set_size_request(self.letterBoxVW, -1)
@@ -217,13 +216,13 @@ class UI:
 		self.namePanel.pack_start( leftNamePanel, expand=True )
 		self.nameLabel = gtk.Label("<b>"+Constants.istrTitle+"</b>")
 		self.nameLabel.set_use_markup( True )
-		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.inset )
+		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.__class__.dim_INSET )
 		self.nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(80)
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
-		self.nameTextfield.set_size_request( -1, self.controlBarHt-self.inset )
+		self.nameTextfield.set_size_request( -1, self.controlBarHt-self.__class__.dim_INSET )
 		self.namePanel.pack_start(self.nameTextfield)
 		rightNamePanel = gtk.VBox()
 		rightNamePanel.set_size_request( 10, -1 )
@@ -238,13 +237,13 @@ class UI:
 		self.scrubberPanel.pack_start( infButtonScrubber, expand=False )
 
 
-		self.photographerPanel = gtk.VBox(spacing=self.inset)
+		self.photographerPanel = gtk.VBox(spacing=self.__class__.dim_INSET)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
 		photographerLabel = gtk.Label("<b>" + Constants.istrRecorder + "</b>")
 		photographerLabel.set_use_markup( True )
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
-		photoNamePanel = gtk.HBox(spacing=self.inset)
+		photoNamePanel = gtk.HBox(spacing=self.__class__.dim_INSET)
 		self.photographerPanel.pack_start(photoNamePanel)
 
 		self.photoXoPanel = xoPanel()
@@ -255,7 +254,7 @@ class UI:
 		self.photographerNameLabel.set_alignment(0, .5)
 		photoNamePanel.pack_start(self.photographerNameLabel)
 
-		self.datePanel = gtk.HBox(spacing=self.inset)
+		self.datePanel = gtk.HBox(spacing=self.__class__.dim_INSET)
 		self.infoBoxTopLeft.pack_start(self.datePanel, expand=False)
 		dateLabel = gtk.Label("<b>"+Constants.istrDate+"</b>")
 		dateLabel.set_use_markup(True)
@@ -264,7 +263,7 @@ class UI:
 		self.dateDateLabel.set_alignment(0, .5)
 		self.datePanel.pack_start(self.dateDateLabel)
 
-		self.tagsPanel = gtk.VBox(spacing=self.inset)
+		self.tagsPanel = gtk.VBox(spacing=self.__class__.dim_INSET)
 		tagsLabel = gtk.Label("<b>"+Constants.istrTags+"</b>")
 		tagsLabel.set_use_markup(True)
 		tagsLabel.set_alignment(0, .5)
@@ -275,7 +274,7 @@ class UI:
 		self.infoBoxTopLeft.pack_start(self.tagsPanel, expand=True)
 
 		infoBotBox = gtk.HBox()
-		infoBotBox.set_size_request( -1, self.pgdh+self.inset )
+		infoBotBox.set_size_request( -1, self.pgdh+self.__class__.dim_INSET )
 		iinfoBox.pack_start(infoBotBox, expand=False)
 
 		thumbnailsEventBox = gtk.EventBox()
@@ -349,14 +348,18 @@ class UI:
 		self.windowStack = []
 
 		#live video windows
-		self.livePhotoWindow = PhotoCanvasWindow(self)
+		self.livePhotoWindow = gtk.Window()
+		self.livePhotoWindow.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.livePhotoWindow.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.addToWindowStack( self.livePhotoWindow, self.ca )
-		self.livePhotoCanvas = PhotoCanvas(self)
-		self.livePhotoWindow.setPhotoCanvas(self.livePhotoCanvas)
+		self.livePhotoCanvas = PhotoCanvas()
+		self.livePhotoWindow.add(self.livePhotoCanvas)
 		self.livePhotoWindow.connect("button_release_event", self._mediaClickedForPlayback)
 
 		#border behind
-		self.pipBgdWindow = PipWindow(self)
+		self.pipBgdWindow = gtk.Window()
+		self.livePhotoWindow.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		self.livePhotoWindow.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
 		self.addToWindowStack( self.pipBgdWindow, self.windowStack[len(self.windowStack)-1] )
 
 		self.liveVideoWindow = LiveVideoWindow(Constants.colorBlack.gColor)
@@ -373,7 +376,9 @@ class UI:
 		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
 
 		#border behind
-		self.pipBgdWindow2 = PipWindow(self)
+		self.pipBgdWindow2 = gtk.Window()
+		self.pipBgdWindow2.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.pipBgdWindow2.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.addToWindowStack( self.pipBgdWindow2, self.windowStack[len(self.windowStack)-1] )
 
 		self.playLiveWindow = LiveVideoWindow(Constants.colorBlack.gColor)
@@ -625,7 +630,7 @@ class UI:
 	def doClipboardCopyStart( self, recd ):
 		imgPath_s = recd.getMediaFilepath()
 		if (imgPath_s == None):
-			#todo: make sure this is handled correctly
+			record.Record.log.error("doClipboardCopyStart: imgPath_s==None")
 			return None
 
 		tmpImgPath = os.path.join( Instance.tmpPath, recd.mediaFilename)
@@ -926,14 +931,14 @@ class UI:
 
 	def getScrDim( self, full ):
 		if (full):
-			return [gtk.gdk.screen_width()-(self.inset+self.pgdw+self.inset+self.inset), self.controlBarHt]
+			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.pgdw+self.__class__.dim_INSET+self.__class__.dim_INSET), self.controlBarHt]
 		else:
 			return [self.vw-self.controlBarHt, self.controlBarHt]
 
 
 	def getScrLoc( self, full ):
 		if (full):
-			return [(self.inset+self.pgdw+self.inset), gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
+			return [(self.__class__.dim_INSET+self.pgdw+self.__class__.dim_INSET), gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
 		else:
 			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 
@@ -956,14 +961,14 @@ class UI:
 		if (not full):
 			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 		else:
-			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
+			return [self.__class__.dim_INSET, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
 
 
 	def getTmrDim( self, full ):
 		if (not full):
 			return [self.vw, self.controlBarHt]
 		else:
-			return [gtk.gdk.screen_width()-(self.inset+self.inset), self.controlBarHt]
+			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.__class__.dim_INSET), self.controlBarHt]
 
 
 	def setPipLocDim( self, win ):
@@ -975,9 +980,9 @@ class UI:
 
 	def getPipLoc( self, full ):
 		if (full):
-			return [self.inset+self.pipBorder, gtk.gdk.screen_height()-(self.inset+self.piph+self.pipBorder)]
+			return [self.__class__.dim_INSET+self.pipBorder, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.piph+self.pipBorder)]
 		else:
-			return [self.centerBoxPos[0]+self.inset+self.pipBorder, (self.centerBoxPos[1]+self.vh)-(self.inset+self.piph+self.pipBorder)]
+			return [self.centerBoxPos[0]+self.__class__.dim_INSET+self.pipBorder, (self.centerBoxPos[1]+self.vh)-(self.__class__.dim_INSET+self.piph+self.pipBorder)]
 
 
 	def setPipBgdLocDim( self, win ):
@@ -987,9 +992,9 @@ class UI:
 
 	def getPgdLoc( self, full ):
 		if (full):
-			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.pgdh)]
+			return [self.__class__.dim_INSET, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.pgdh)]
 		else:
-			return [self.centerBoxPos[0]+self.inset, (self.centerBoxPos[1]+self.vh)-(self.inset+self.pgdh)]
+			return [self.centerBoxPos[0]+self.__class__.dim_INSET, (self.centerBoxPos[1]+self.vh)-(self.__class__.dim_INSET+self.pgdh)]
 
 
 	def setMaxLocDim( self, win ):
@@ -999,9 +1004,9 @@ class UI:
 
 	def getMaxLoc( self, full ):
 		if (full):
-			return [gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset]
+			return [gtk.gdk.screen_width()-(self.maxw+self.__class__.dim_INSET), self.__class__.dim_INSET]
 		else:
-			return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.maxw), self.centerBoxPos[1]+self.inset]
+			return [(self.centerBoxPos[0]+self.vw)-(self.__class__.dim_INSET+self.maxw), self.centerBoxPos[1]+self.__class__.dim_INSET]
 
 
 	def setEyeLocDim( self, win ):
@@ -1018,7 +1023,7 @@ class UI:
 			else:
 				return [(self.centerBoxPos[0]+(self.vw/2))-self.recordButtWd/2, self.centerBoxPos[1]+self.vh]
 		else:
-			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
+			return [self.__class__.dim_INSET, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
 
 
 	def getEyeDim( self, full ):
@@ -1026,13 +1031,13 @@ class UI:
 			return [self.recordButtWd, self.controlBarHt]
 		else:
 			if (self.ca.m.MODE == Constants.MODE_PHOTO):
-				return [gtk.gdk.screen_width()-(self.inset*2), self.controlBarHt]
+				return [gtk.gdk.screen_width()-(self.__class__.dim_INSET*2), self.controlBarHt]
 			else:
 				return [self.recordButtWd, self.controlBarHt]
 
 
 	def getInbLoc( self, full ):
-		return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.letterBoxVW), self.centerBoxPos[1]+self.inset]
+		return [(self.centerBoxPos[0]+self.vw)-(self.__class__.dim_INSET+self.letterBoxVW), self.centerBoxPos[1]+self.__class__.dim_INSET]
 
 
 	def setInbLocDim( self, win ):
@@ -1097,14 +1102,14 @@ class UI:
 		if (not full):
 			return [self.vw-self.recordButtWd, self.controlBarHt]
 		else:
-			return [gtk.gdk.screen_width()-(self.inset+self.inset+self.recordButtWd), self.controlBarHt]
+			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.__class__.dim_INSET+self.recordButtWd), self.controlBarHt]
 
 
 	def getPrgLoc( self, full ):
 		if (not full):
 			return [self.centerBoxPos[0]+self.recordButtWd, self.centerBoxPos[1]+self.vh]
 		else:
-			return [self.inset+self.recordButtWd, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
+			return [self.__class__.dim_INSET+self.recordButtWd, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
 
 
 	def getLoc( self, pos, full ):
@@ -1416,22 +1421,6 @@ class UI:
 		self.updateVideoComponents( )
 
 
-	def showPostProcessGfx( self, show ):
-		#not self.FULLSCREEN
-		centerKid = self.centerBox.get_child()
-		if (centerKid != None):
-			self.centerBox.remove( centerKid )
-
-		if ( show ):
-			self.centerBox.add( self.backgdCanvasBox )
-			self.centerBox.show_all()
-
-		#else
-		#camImgFile = os.path.join(self.ca.gfxPath, 'device-camera.png')
-		#pixbuf = gtk.gdk.pixbuf_new_from_file(camImgFile)
-		#img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-		#self.livePhotoCanvas.setImage( img )
-
 
 	def showMeshRecd( self, recd ):
 		record.Record.log.debug('showMeshRecd: heres the downloaded recd to display...')
@@ -1567,9 +1556,23 @@ class UI:
 		self.ca.m.setUpdating(False)
 
 
-	def updateShownMedia( self, recd ):
-		if (self.shownRecd == recd):
-			self.showThumbSelection( recd )
+	def showPostProcessGfx( self, show ):
+		#not self.FULLSCREEN
+		centerKid = self.centerBox.get_child()
+		if (centerKid != None):
+			self.centerBox.remove( centerKid )
+
+		if ( show ):
+			self.centerBox.add( self.backgdCanvasBox )
+			self.centerBox.show_all()
+		else:
+			self.backgdCanvas.setImage( None )
+
+
+	def setPostProcessPixBuf( self, pixbuf ):
+		#todo: grayscale here!
+		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+		self.backgdCanvas.setImage(img)
 
 
 	def showRecdMeta( self, recd ):
@@ -1594,36 +1597,9 @@ class UI:
 		win.set_cursor( None )
 
 
-class BackgroundCanvas(P5):
-	def __init__(self, ui):
-		P5.__init__(self)
-		self.ui = ui
-
-	def draw(self, ctx, w, h):
-		self.background( ctx, Constants.colorBlack, w, h )
-		#todo: b&w image for compression
-		#ctx.translate( (w/2)-(h/2), 0 )
-		#self.ui.modWaitSvg.render_cairo( ctx )
-
-
-class PhotoCanvasWindow(gtk.Window):
-	def __init__(self, ui):
-		gtk.Window.__init__(self)
-		self.ui = ui
-		self.photoCanvas = None
-		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
-		self.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
-
-
-	def setPhotoCanvas( self, photoCanvas ):
-		self.photoCanvas = photoCanvas
-		self.add(self.photoCanvas)
-
-
 class PhotoCanvas(P5):
-	def __init__(self, ui):
+	def __init__(self):
 		P5.__init__(self)
-		self.ui = ui
 		self.img = None
 		self.drawImg = None
 		self.SCALING_IMG_ID = 0
@@ -1677,23 +1653,6 @@ class PhotoCanvas(P5):
 		self.drawImg = scaleImg
 		self.cacheWid = w
 		self.queue_draw()
-
-
-class PipWindow(gtk.Window):
-	def __init__(self, ui):
-		gtk.Window.__init__(self)
-		self.ui = ui
-		self.pipCanvas = PipCanvas(self.ui)
-		self.add( self.pipCanvas )
-
-
-class PipCanvas(P5):
-	def __init__(self, ui):
-		P5.__init__(self)
-		self.ui = ui
-
-	def draw(self, ctx, w, h):
-		self.background( ctx, Constants.colorWhite, w, h )
 
 
 class xoPanel(P5):
@@ -1752,7 +1711,7 @@ class ScrubberWindow(gtk.Window):
 		self.button.set_property('can-default', True)
 		self.button.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
 		buttBox.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
-		self.button.set_border_width( self.ui.inset/2 )
+		self.button.set_border_width( UI.dim_INSET/2 )
 		self.button.show()
 
 		self.button.connect('clicked', self._buttonClickedCb)
@@ -1965,7 +1924,7 @@ class RecordWindow(gtk.Window):
 		shutterBox = gtk.EventBox()
 		shutterBox.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
 		shutterBox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
-		self.shutterButton.set_border_width( self.ui.inset )
+		self.shutterButton.set_border_width(UI.dim_INSET)
 
 		hbox = gtk.HBox()
 		self.add( hbox )
@@ -2023,9 +1982,8 @@ class ProgressWindow(gtk.Window):
 
 
 class PhotoToolbar(gtk.Toolbar):
-	def __init__(self, ui):
+	def __init__(self):
 		gtk.Toolbar.__init__(self)
-		self.ui = ui
 
 		img = ToolButton('media-photo')
 		img.connect('clicked', self._shutterClickCb)
@@ -2053,7 +2011,8 @@ class PhotoToolbar(gtk.Toolbar):
 
 
 	def _shutterClickCb(self, button):
-		self.ui.doShutter()
+		pass
+		#self.ui.doShutter()
 
 
 	def getTimer(self):
@@ -2061,9 +2020,8 @@ class PhotoToolbar(gtk.Toolbar):
 
 
 class VideoToolbar(gtk.Toolbar):
-	def __init__(self, ui):
+	def __init__(self):
 		gtk.Toolbar.__init__(self)
-		self.ui = ui
 
 		img = ToolButton('media-video')
 		img.connect('clicked', self._shutterClickCb)
@@ -2092,7 +2050,7 @@ class VideoToolbar(gtk.Toolbar):
 		separator2 = gtk.SeparatorToolItem()
 		separator2.set_draw(False)
 		separator2.set_expand(False)
-		separator2.set_size_request( self.ui.inset, -1 )
+		separator2.set_size_request(UI.dim_INSET, -1)
 		self.insert( separator2, -1 )
 
 		durCbb = gtk.combo_box_new_text()
@@ -2104,7 +2062,8 @@ class VideoToolbar(gtk.Toolbar):
 
 
 	def _shutterClickCb(self, button):
-		self.ui.doShutter()
+		pass
+		#self.ui.doShutter()
 
 
 	def getTimer(self):
@@ -2116,9 +2075,9 @@ class VideoToolbar(gtk.Toolbar):
 
 
 class AudioToolbar(gtk.Toolbar):
-	def __init__(self, ui):
+	def __init__(self):
 		gtk.Toolbar.__init__(self)
-		self.ui = ui
+		#self.ui = ui
 
 		img = ToolButton('media-audio')
 		img.connect('clicked', self._shutterClickCb)
@@ -2147,7 +2106,7 @@ class AudioToolbar(gtk.Toolbar):
 		separator2 = gtk.SeparatorToolItem()
 		separator2.set_draw(False)
 		separator2.set_expand(False)
-		separator2.set_size_request( self.ui.inset, -1 )
+		separator2.set_size_request(UI.dim_INSET, -1)
 		self.insert( separator2, -1 )
 
 		durCbb = gtk.combo_box_new_text()
@@ -2159,7 +2118,8 @@ class AudioToolbar(gtk.Toolbar):
 
 
 	def _shutterClickCb(self, button):
-		self.ui.doShutter()
+		pass
+		#self.ui.doShutter()
 
 
 	def getTimer(self):

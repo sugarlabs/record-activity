@@ -284,6 +284,8 @@ class Glive:
 				self.ca.m.cannotSaveVideo()
 				return
 
+			self.ca.ui.setPostProcessPixBuf(self.audioPixbuf)
+
 			n = "0"
 			line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc_'+n+' ! wavparse name=audioWavparse_'+n+' ! audioconvert name=audioAudioconvert_'+n+' ! vorbisenc name=audioVorbisenc_'+n+' ! oggmux name=audioOggmux_'+n+' ! filesink name=audioFilesink_'+n
 			audioline = gst.parse_launch(line)
@@ -372,7 +374,6 @@ class Glive:
 		self.pipe().set_state(gst.STATE_PLAYING)
 
 
-
 	def stopRecordingVideo(self):
 		self.stop()
 		gobject.idle_add( self.stoppedRecordingVideo )
@@ -390,6 +391,10 @@ class Glive:
 
 			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg") #ogv
 			if (self.audio):
+
+				self.ca.ui.setPostProcessPixBuf(self.thumbBuf)
+
+				#todo: just remove these on EOS
 				if ( len(self.muxPipes) > 0 ):
 					self.muxPipe().get_bus().disable_sync_message_emission()
 					self.muxPipe().get_bus().disconnect(self.MUX_MESSAGE_ID)
