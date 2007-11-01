@@ -58,8 +58,8 @@ import _camera
 
 class UI:
 
-	THUMB_WIDTH = 107
-	THUMB_HEIGHT = 80
+	dim_THUMB_WIDTH = 107
+	dim_THUMB_HEIGHT = 80
 	dim_INSET = 10
 
 	def __init__( self, pca ):

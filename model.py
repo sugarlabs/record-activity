@@ -185,8 +185,8 @@ class Model:
 		os.rename( tmpPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
-		scale = float((UI.THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
-		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
+		scale = float((UI.dim_THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
+		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 
 		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
@@ -248,8 +248,8 @@ class Model:
 		os.rename( tmpPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
-		scale = float((UI.THUMB_WIDTH+0.0)/(wid+0.0))
-		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
+		scale = float((UI.dim_THUMB_WIDTH+0.0)/(wid+0.0))
+		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 
 		self.createNewRecordedMd5Sums( recd )
@@ -311,8 +311,8 @@ class Model:
 		pixbuf.save( imgpath, "jpeg" )
 
 		thumbpath = os.path.join(Instance.tmpPath, recd.thumbFilename)
-		scale = float((UI.THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
-		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
+		scale = float((UI.dim_THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
+		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbpath)
 		gc.collect()
 		#now that we've saved both the image and its pixbuf, we get their md5s
