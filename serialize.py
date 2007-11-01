@@ -166,6 +166,7 @@ def fillRecdFromNode( recd, el ):
 			audioImage = utils.getPixbufFromString( ai.nodeValue )
 			audioImage.save(audioImagePath, "png", {} )
 			recd.audioImageFilename = os.path.basename(audioImagePath)
+			record.Record.log.debug("loaded audio image and set audioImageFilename")
 		except:
 			record.Record.log.error("unable to load audio image")
 

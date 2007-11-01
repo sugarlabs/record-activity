@@ -25,6 +25,7 @@ from gtk import gdk
 from instance import Instance
 import utils
 import serialize
+import record
 
 class Recorded:
 
@@ -147,14 +148,14 @@ class Recorded:
 		if (self.audioImageFilename == None):
 			audioPixbuf = self.getThumbPixbuf()
 		else:
-			audioFilepath = self.getAudioImageFilepath()
+			audioFilepath = self._getAudioImageFilepath()
 			if (audioFilepath != None):
 				audioPixbuf = gtk.gdk.pixbuf_new_from_file(audioFilepath)
 
 		return audioPixbuf
 
 
-	def getAudioImageFilepath( self ):
+	def _getAudioImageFilepath( self ):
 		if (self.audioImageFilename != None):
 			audioFilepath = os.path.join(Instance.tmpPath, self.audioImageFilename)
 			return os.path.abspath(audioFilepath)
