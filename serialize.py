@@ -7,6 +7,7 @@ import os
 from sugar.datastore import datastore
 
 from constants import Constants
+from instance import Instance
 from color import Color
 import record
 import utils
@@ -197,6 +198,7 @@ def addRecdXmlAttrs( el, recd, forMeshTransmit ):
 		aiPixbuf = recd.getAudioImagePixbuf( )
 		aiPixbufString = str( utils.getStringFromPixbuf(aiPixbuf) )
 		el.setAttribute(Constants.recdAudioImage, aiPixbufString)
+		record.Record.log.debug("addRecdXmlAttrs: audioImage")
 
 	if ((recd.datastoreId != None) and (not forMeshTransmit)):
 		el.setAttribute(Constants.recdDatastoreId, str(recd.datastoreId))
