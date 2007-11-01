@@ -267,7 +267,7 @@ class Model:
 		#hey, i just took a cool video.audio.photo!  let me show you!
 		if (self.ca.recTube != None):
 			record.Record.log.debug('meshShareRecd: we have a recTube')
-			recdXml = self.ca.getRecdXmlString(recd)
+			recdXml = serialize.getRecdXmlMeshString(recd)
 			record.Record.log.debug('meshShareRecd: created XML')
 			self.ca.recTube.notifyBudsOfNewRecd( Instance.keyHashPrintable, recdXml )
 			record.Record.log.debug('meshShareRecd: notifyBuds')

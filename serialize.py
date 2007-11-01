@@ -177,11 +177,11 @@ def fillRecdFromNode( recd, el ):
 	return recd
 
 
-def getRecdXmlString( recd ):
+def getRecdXmlMeshString( recd ):
 	impl = getDOMImplementation()
 	recdXml = impl.createDocument(None, Constants.recdRecd, None)
 	root = recdXml.documentElement
-	addRecdXmlAttrs( root, recd, True )
+	_addRecdXmlAttrs( root, recd, True )
 
 	pixbuf = recd.getThumbPixbuf( )
 	thumb = str( utils.getStringFromPixbuf(pixbuf) )
@@ -192,14 +192,13 @@ def getRecdXmlString( recd ):
 	return writer.getvalue()
 
 
-def addRecdXmlAttrs( el, recd, forMeshTransmit ):
+def _addRecdXmlAttrs( el, recd, forMeshTransmit ):
 	el.setAttribute(Constants.recdType, str(recd.type))
 
 	if ((recd.type == Constants.TYPE_AUDIO) and (not forMeshTransmit)):
 		aiPixbuf = recd.getAudioImagePixbuf( )
 		aiPixbufString = str( utils.getStringFromPixbuf(aiPixbuf) )
 		el.setAttribute(Constants.recdAudioImage, aiPixbufString)
-		record.Record.log.debug("addRecdXmlAttrs: audioImage")
 
 	if ((recd.datastoreId != None) and (not forMeshTransmit)):
 		el.setAttribute(Constants.recdDatastoreId, str(recd.datastoreId))
@@ -261,7 +260,7 @@ def _saveMedia( el, recd ):
 
 
 def _saveXml( el, recd ):
-	addRecdXmlAttrs( el, recd, False )
+	_addRecdXmlAttrs( el, recd, False )
 	recd.savedXml = True
 
 

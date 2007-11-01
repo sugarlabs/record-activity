@@ -81,7 +81,7 @@ class UI:
 		#component spacing
 		self.inset = 10
 		#height of the record button, progress bar, etc.
-		self.controlBarHt = 49
+		self.controlBarHt = 75
 		self.recordButtWd = 75
 
 		#ui modes
