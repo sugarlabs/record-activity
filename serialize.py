@@ -36,7 +36,7 @@ def _loadMediaIntoHash( el, hash ):
 			#quickly check: if you have a datastoreId that the file hasn't been deleted,
 			#cause if you do, we need to flag your removal
 			#2904 trac
-			recd.datastoreOb = serialize.getMediaFromDatastore( recd )
+			recd.datastoreOb = _getMediaFromDatastore( recd )
 			if (recd.datastoreOb == None):
 				addToHash = False
 			else:
@@ -52,7 +52,7 @@ def _loadMediaIntoHash( el, hash ):
 		hash.append( recd )
 
 
-def getMediaFromDatastore( recd ):
+def _getMediaFromDatastore( recd ):
 	if (recd.datastoreId == None):
 		print("RecordActivity error -- request for recd from datastore with no datastoreId")
 		return None
