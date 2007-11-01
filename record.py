@@ -288,9 +288,9 @@ class Record(activity.Activity):
 		recd = Recorded()
 		recd = self.m.fillRecdFromNode( recd, dom.documentElement )
 		if (recd != None):
+			self.__class__.log.debug('_newRecdCb: adding new recd thumb')
 			recd.buddy = True
 			recd.downloadedFromBuddy = False
-			self.__class__.log.debug('_newRecdCb: adding new recd thumb')
 			self.m.addMeshRecd( recd )
 		else:
 			self.__class__.log.debug('_newRecdCb: recd is None, unable to parse XML')

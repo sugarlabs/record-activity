@@ -30,7 +30,7 @@ def fillMediaHash( index, mediaHashs ):
 def _loadMediaIntoHash( el, hash ):
 	addToHash = True
 	recd = Recorded()
-	recd = serialize.fillRecdFromNode( recd, el )
+	recd = fillRecdFromNode( recd, el )
 	if (recd.datastoreId != None):
 		#quickly check: if you have a datastoreId that the file hasn't been deleted,
 		#cause if you do, we need to flag your removal
