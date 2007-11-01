@@ -7,11 +7,10 @@ import os
 from sugar.datastore import datastore
 
 from constants import Constants
-from recorded import Recorded
 from color import Color
 import record
 import utils
-
+import recorded
 
 def fillMediaHash( index, mediaHashs ):
 	doc = None
@@ -31,7 +30,7 @@ def fillMediaHash( index, mediaHashs ):
 
 def _loadMediaIntoHash( el, hash ):
 	addToHash = True
-	recd = Recorded()
+	recd = record.Recorded()
 	recd = fillRecdFromNode(recd, el)
 	if (recd != None):
 		if (recd.datastoreId != None):
