@@ -5,6 +5,7 @@ from dbus.gobject_service import ExportedGObject
 import os
 
 from constants import Constants
+import record
 
 class RecordTube(ExportedGObject):
 
@@ -32,16 +33,16 @@ class RecordTube(ExportedGObject):
 
 	@signal(dbus_interface=Constants.IFACE, signature='ss') #dual s for 2x strings
 	def notifyBudsOfNewRecd(self, recorder, recdXml):
-		record.log.debug('Ive taken a new pho-ideo-audio!  I hereby send you an xml thumb of said media via this interface.')
+		record.Record.log.debug('Ive taken a new pho-ideo-audio!  I hereby send you an xml thumb of said media via this interface.')
 
 
 	def _newRecdTubeCb(self, recorder, recdXml, sender=None):
-		record.log.debug("_newRecdTubeCb from " + recorder )
+		record.Record.log.debug("_newRecdTubeCb from " + recorder )
 		if sender == self.tube.get_unique_name():
-			record.log.debug("_newRecdTubeCb: sender is my bus name, so ignore my own signal")
+			record.Record.log.debug("_newRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
 		elif (recorder == self.myHashKey):
-			record.log.debug('_newRecdTubeCb: excuse me?  you are asking me to share a photo with myself?')
+			record.Record.log.debug('_newRecdTubeCb: excuse me?  you are asking me to share a photo with myself?')
 			return
 
 		self.emit( "new-recd", str(recorder), str(recdXml) )
@@ -49,18 +50,18 @@ class RecordTube(ExportedGObject):
 
 	@signal(dbus_interface=Constants.IFACE, signature='sss') #triple s for 3x strings
 	def requestRecdBits(self, whoWantsIt, whoTheyWantItFrom, recdMd5sumOfIt ):
-		record.log.debug('I am requesting a high-res version of someones media.')
+		record.Record.log.debug('I am requesting a high-res version of someones media.')
 
 
 	def _reqRecdTubeCb(self, whoWantsIt, whoTheyWantItFrom, recdMd5sumOfIt, sender=None):
 		if sender == self.tube.get_unique_name():
-			record.log.debug("_reqRecdTubeCb: sender is my bus name, so ignore my own signal")
+			record.Record.log.debug("_reqRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
 		elif (whoWantsIt == self.myHashKey):
-			record.log.debug('_reqRecdTubeCb: excuse me?  you are asking me to share a photo with myself?')
+			record.Record.log.debug('_reqRecdTubeCb: excuse me?  you are asking me to share a photo with myself?')
 			return
 		elif (whoTheyWantItFrom != self.myHashKey):
-			record.log.debug('_reqRecdTubeCb: ive overhead someone wants a photo, but not from me')
+			record.Record.log.debug('_reqRecdTubeCb: ive overhead someone wants a photo, but not from me')
 			return
 
 		self.emit( "recd-request", str(whoWantsIt), str(recdMd5sumOfIt) )
@@ -90,13 +91,13 @@ class RecordTube(ExportedGObject):
 
 	def _getRecdTubeCb(self, md5, part, numparts, bytes, sentTo, fromWho, sender=None):
 		if sender == self.tube.get_unique_name():
-			record.log.debug("_reqRecdTubeCb: sender is my bus name, so ignore my own signal")
+			record.Record.log.debug("_reqRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
 		if (fromWho == self.myHashKey):
-			record.log.debug('_getRecdTubeCb: i dont want bits from meself, thx anyway.  schizophrenic?')
+			record.Record.log.debug('_getRecdTubeCb: i dont want bits from meself, thx anyway.  schizophrenic?')
 			return
 		if (sentTo != self.myHashKey):
-			record.log.debug('_getRecdTubeCb: ive overhead someone sending bits, but not to me!')
+			record.Record.log.debug('_getRecdTubeCb: ive overhead someone sending bits, but not to me!')
 			return
 
 		self.emit( "recd-bits-arrived", md5, part, numparts, bytes, fromWho )
@@ -104,18 +105,18 @@ class RecordTube(ExportedGObject):
 
 	@signal(dbus_interface=Constants.IFACE, signature='sss') #triple s for 3x strings
 	def unavailableRecd(self, md5sumOfIt, whoDoesntHaveIt, whoAskedForIt):
-		record.log.debug('unavailableRecd: id love to share this photo, but i am without a copy meself chum')
+		record.Record.log.debug('unavailableRecd: id love to share this photo, but i am without a copy meself chum')
 
 
 	def _unavailableRecdTubeCb( self, md5sumOfIt, whoDoesntHaveIt, whoAskedForIt, sender=None):
 		if sender == self.tube.get_unique_name():
-			record.log.debug("_unavailableRecdTubeCb: sender is my bus name, so ignore my own signal")
+			record.Record.log.debug("_unavailableRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
 		if (whoDoesntHaveIt == self.myHashKey):
-			record.log.debug('_unavailableRecdTubeCb: yes, i know i dont have it, i just told you/me/us.')
+			record.Record.log.debug('_unavailableRecdTubeCb: yes, i know i dont have it, i just told you/me/us.')
 			return
 		if (whoAskedForIt != self.myHashKey):
-			record.log.debug('_unavailableRecdTubeCb: ive overheard someone doesnt have a photo, but i didnt ask for that one anyways')
+			record.Record.log.debug('_unavailableRecdTubeCb: ive overheard someone doesnt have a photo, but i didnt ask for that one anyways')
 			return
 
 		self.emit("recd-unavailable", md5sumOfIt, whoDoesntHaveIt)

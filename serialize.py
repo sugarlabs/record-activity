@@ -185,7 +185,7 @@ def getRecdXmlMeshString( recd ):
 
 	pixbuf = recd.getThumbPixbuf( )
 	thumb = str( utils.getStringFromPixbuf(pixbuf) )
-	root.setAttribute(self.recdBuddyThumb, thumb )
+	root.setAttribute(Constants.recdBuddyThumb, thumb )
 
 	writer = cStringIO.StringIO()
 	recdXml.writexml(writer)

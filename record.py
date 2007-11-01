@@ -203,7 +203,7 @@ class Record(activity.Activity):
 
 	def _list_tubes_reply_cb(self, tubes):
 		for tube_info in tubes:
-			self._new_tube_cb(*tube_info)
+			self._newTubeCb(*tube_info)
 
 
 	def _list_tubes_error_cb(self, e):
