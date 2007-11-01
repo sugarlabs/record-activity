@@ -302,9 +302,9 @@ class Record(activity.Activity):
 			if (not recd.meshDownloading):
 				if (self.recTube != None):
 					self.meshInitRoundRobin(recd)
-				return False
+				return True
 		else:
-			return True
+			return False
 
 
 	def meshInitRoundRobin( self, recd ):
