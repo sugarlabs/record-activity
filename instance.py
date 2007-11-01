@@ -6,6 +6,7 @@ from sugar.activity import activity
 import shutil
 
 from color import Color
+import record
 
 class Instance:
 	key = profile.get_pubkey()
@@ -29,6 +30,9 @@ class Instance:
 
 
 def recreateTmp():
-	if (os.path.exists(Instance.tmpPath)):
-		shutil.rmtree(Instance.tmpPath)
+	#todo: figure out how to have multiple spaces for my media
+	#if (os.path.exists(Instance.tmpPath)):
+	#	shutil.rmtree(Instance.tmpPath)
+
 	os.makedirs(Instance.tmpPath)
+	record.Record.log.debug("Instance.tmpPath:" + str(Instance.tmpPath))

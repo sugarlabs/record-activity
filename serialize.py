@@ -155,8 +155,9 @@ def fillRecdFromNode( recd, el ):
 			thumbImg = utils.getPixbufFromString( bt.nodeValue )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 			recd.thumbFilename = os.path.basename(thumbPath)
+			record.Record.log.debug("saved thumbFilename")
 		except:
-			record.Record.log.error("unable to load recd colorFill")
+			record.Record.log.error("unable to getRecdBuddyThumb")
 
 	ai = el.getAttributeNode(Constants.recdAudioImage)
 	if (not ai == None):
@@ -293,6 +294,7 @@ def _saveMediaToDatastore( el, recd ):
 		mediaObject.metadata['title'] = recd.title
 
 		pixbuf = recd.getThumbPixbuf()
+		record.Record.debug("serialize: pizbuf->" + str(pixbuf))
 		thumbData = utils.getStringFromPixbuf(pixbuf)
 		mediaObject.metadata['preview'] = thumbData
 

@@ -287,7 +287,7 @@ class Record(activity.Activity):
 			return
 
 		recd = Recorded()
-		recd = serialize.fillRecdFromNode( recd, dom.documentElement )
+		recd = serialize.fillRecdFromNode(recd, dom.documentElement)
 		if (recd != None):
 			self.__class__.log.debug('_newRecdCb: adding new recd thumb')
 			recd.buddy = True
