@@ -244,9 +244,9 @@ def saveMediaHash( mediaTypes, mediaHashs ):
 
 	#and if there is anything to save, save it
 	if (atLeastOne):
-		for type,value in m.mediaTypes.items():
+		for type,value in mediaTypes.items():
 			typeName = value[Constants.keyName]
-			hash = m.mediaHashs[type]
+			hash = mediaHashs[type]
 
 			for i in range (0, len(hash)):
 				recd = hash[i]

@@ -39,13 +39,13 @@ import operator
 from sugar.datastore import datastore
 import sugar.env
 
-from record import Record
 from constants import Constants
 from instance import Instance
 from recorded import Recorded
 from color import Color
 from ui import UI
 import utils
+import record
 
 
 class Model:
@@ -54,6 +54,7 @@ class Model:
 		self.MODE = Constants.MODE_PHOTO
 		self.UPDATING = True
 		self.RECORDING = False
+		record.Record.log.debug("ok")
 
 		self.mediaTypes = {}
 		self.mediaTypes[Constants.TYPE_PHOTO] = {Constants.keyName:"photo", Constants.keyMime:"image/jpeg", Constants.keyExt:"jpg", Constants.keyIstr:Constants.istrPhoto}
@@ -268,14 +269,14 @@ class Model:
 
 
 	def meshShareRecd( self, recd ):
-		Record.log.debug('meshShareRecd')
+		record.Record.log.debug('meshShareRecd')
 		#hey, i just took a cool video.audio.photo!  let me show you!
 		if (self.ca.recTube != None):
-			Record.log.debug('meshShareRecd: we have a recTube')
+			record.Record.log.debug('meshShareRecd: we have a recTube')
 			recdXml = self.ca.getRecdXmlString(recd)
-			Record.log.debug('meshShareRecd: created XML')
+			record.Record.log.debug('meshShareRecd: created XML')
 			self.ca.recTube.notifyBudsOfNewRecd( Instance.keyHashPrintable, recdXml )
-			Record.log.debug('meshShareRecd: notifyBuds')
+			record.Record.log.debug('meshShareRecd: notifyBuds')
 
 
 	def cannotSaveVideo( self ):

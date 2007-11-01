@@ -52,7 +52,6 @@ from glive import LiveVideoWindow
 from gplay import PlayVideoWindow
 from recorded import Recorded
 from button import RecdButton
-from record import Record
 import utils
 import _camera
 
@@ -1408,7 +1407,7 @@ class UI:
 			self.bottomCenter.remove( bottomKid )
 
 		if (not self.RECD_INFO_ON):
-			if (self.ca.m.MODE == self.ca.m.MODE_PHOTO):
+			if (self.ca.m.MODE == Constants.MODE_PHOTO):
 				self.bottomCenter.add( self.namePanel )
 				self.bottomCenter.show_all( )
 			else:
@@ -1720,7 +1719,7 @@ class xoPanel(P5):
 		lastFill = self.ui.shownRecd.colorFill.hex
 
 		if (self.ui.shownRecd != None):
-			self.xoGuy = self.ui.loadSvg(self.ui.xoGuySvgData, self.ui.shownRecd.colorStroke.hex, self.ui.shownRecd.colorFill.hex)
+			self.xoGuy = utils.loadSvg(Constants.xoGuySvgData, self.ui.shownRecd.colorStroke.hex, self.ui.shownRecd.colorFill.hex)
 		else:
 			self.xoGuy = None
 
@@ -1956,7 +1955,7 @@ class InfButton(P5Button):
 
 	def draw(self, ctx, w, h):
 		self.background( ctx, Constants.colorWhite, w, h )
-		self.ui.infoOnSvg.render_cairo( ctx )
+		Constants.infoOnSvg.render_cairo( ctx )
 
 
 	def fireButton(self, actionCommand):
