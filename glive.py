@@ -397,7 +397,7 @@ class Glive:
 					self.muxPipe().get_bus().disconnect(self.MUX_MESSAGE_ID)
 					self.muxPipe().get_bus().remove_signal_watch()
 
-				wavFilepath = os.path.join(Instnace.tmpPath, "output.wav")
+				wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
 				muxFilepath = os.path.join(Instance.tmpPath, "mux.ogg") #ogv
 
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')

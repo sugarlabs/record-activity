@@ -1466,8 +1466,7 @@ class UI:
 			self.showAudio( recd )
 
 		if (self.shownRecd != lastRecd):
-			record.Record.log.debug("about to show xo colors: " + str(self.shownRecd.colorStroke))
-			self.photoXoPanel.updateXoColors(self.shownRecd.colorStroke, self.shownRecd.colorFill)
+			self.photoXoPanel.updateXoColors(self.shownRecd.colorStroke.hex, self.shownRecd.colorFill.hex)
 
 		bottomKid = self.bottomCenter.get_child()
 		if (bottomKid != None):

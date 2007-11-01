@@ -260,7 +260,7 @@ def _saveMediaToDatastore( el, recd ):
 		#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 		#However, they might have changed the name of the file
 		if (recd.titleChange):
-			recd.datastoreOb = getMediaFromDatastore( recd )
+			recd.datastoreOb = _getMediaFromDatastore( recd )
 			if (recd.datastoreOb.metadata['title'] != recd.title):
 				recd.datastoreOb.metadata['title'] = recd.title
 				datastore.write(recd.datastoreOb)
