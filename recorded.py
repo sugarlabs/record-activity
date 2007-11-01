@@ -24,6 +24,7 @@ from gtk import gdk
 
 from instance import Instance
 import utils
+import serialize
 
 class Recorded:
 

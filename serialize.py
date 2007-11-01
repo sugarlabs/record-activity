@@ -186,7 +186,7 @@ def addRecdXmlAttrs( el, recd, forMeshTransmit ):
 	if ((recd.type == Constants.TYPE_AUDIO) and (not forMeshTransmit)):
 		aiPixbuf = recd.getAudioImagePixbuf( )
 		aiPixbufString = str( utils.getStringFromPixbuf(aiPixbuf) )
-		el.setAttribute(self.recdAudioImage, aiPixbufString)
+		el.setAttribute(Constants.recdAudioImage, aiPixbufString)
 
 	if ((recd.datastoreId != None) and (not forMeshTransmit)):
 		el.setAttribute(Constants.recdDatastoreId, str(recd.datastoreId))
