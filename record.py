@@ -109,8 +109,9 @@ class Record(activity.Activity):
 					self.__log__.error("somehow we didn't serialize a recd...")
 
 				if (self.I_AM_CLOSING):
-					mediaObject = recd.mediaOb
+					mediaObject = recd.datastoreOb
 					if (mediaObject != None):
+						recd.datastoreOb = None
 						mediaObject.destroy()
 						del mediaObject
 

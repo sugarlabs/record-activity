@@ -48,6 +48,7 @@ class Recorded:
 		#when you are datastore-serialized, you get one of these ids...
 		self.datastoreId = None
 		self.datastoreOb = None
+		self.mime = None #just for sticking into the datastore
 
 		#if not from the datastore, then your media is here...
 		self.mediaFilename = None
@@ -58,7 +59,6 @@ class Recorded:
 		#and just because you have a datastore id, doesn't mean you're saved
 		self.savedMedia = False
 		self.savedXml = False
-		self.mime = None #just for sticking into the datastore, for convenience
 
 		#assume you took the picture
 		self.buddy = False
