@@ -1520,7 +1520,7 @@ class UI:
 		downloading = self.ca.requestMeshDownload(recd)
 		ableToShowVideo = False
 		if (not downloading):
-			mediaFilepath = recd.getMediaFilepath(True)
+			mediaFilepath = recd.getMediaFilepath()
 			if (mediaFilepath != None):
 				self.MESH_DOWNLOAD = False
 				videoUrl = "file://" + str( mediaFilepath )
