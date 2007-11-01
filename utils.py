@@ -4,6 +4,7 @@ import re
 import os
 import cairo
 import gc
+import gtk
 from hashlib import md5
 
 from sugar import util
