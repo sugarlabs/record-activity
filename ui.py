@@ -52,6 +52,7 @@ from glive import LiveVideoWindow
 from gplay import PlayVideoWindow
 from recorded import Recorded
 from button import RecdButton
+from record import Record
 import utils
 import _camera
 

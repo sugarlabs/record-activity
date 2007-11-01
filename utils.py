@@ -4,7 +4,7 @@ import re
 import os
 import cairo
 import gc
-
+from hashlib import md5
 
 from sugar import util
 import _camera

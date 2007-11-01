@@ -3,6 +3,7 @@ import os
 from sugar import profile
 from sugar import util
 from sugar.activity import activity
+import shutil
 
 from color import Color
 

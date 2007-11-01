@@ -8,6 +8,8 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.tray import TrayButton
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
+from constants import Constants
+import utils
 
 class RecdButton(TrayButton, gobject.GObject):
 	def __init__(self, ui, recd):
@@ -29,32 +31,32 @@ class RecdButton(TrayButton, gobject.GObject):
 		xoff = 0
 		yoff = 0
 		pb = None
-		if (self.recd.type == constants.TYPE_PHOTO):
+		if (self.recd.type == Constants.TYPE_PHOTO):
 			xoff = 8
 			yoff = 8
 			if (self.recd.buddy):
-				thumbPhotoSvg = self.ui.loadSvg(self.ui.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+				thumbPhotoSvg = utils.loadSvg(Constants.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbPhotoSvg.get_pixbuf()
 			else:
-				pb = self.ui.thumbPhotoSvg.get_pixbuf()
+				pb = Constants.thumbPhotoSvg.get_pixbuf()
 
-		elif (self.recd.type == constants.TYPE_VIDEO):
+		elif (self.recd.type == Constants.TYPE_VIDEO):
 			xoff = 8
 			yoff = 22
 			if (self.recd.buddy):
-				thumbVideoSvg = self.ui.loadSvg(self.ui.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+				thumbVideoSvg = utils.loadSvg(Constants.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbVideoSvg.get_pixbuf()
 			else:
-				pb = self.ui.thumbVideoSvg.get_pixbuf()
+				pb = Constants.thumbVideoSvg.get_pixbuf()
 
-		elif (self.recd.type == constants.TYPE_AUDIO):
+		elif (self.recd.type == Constants.TYPE_AUDIO):
 			xoff = 8
 			yoff = 22
 			if (self.recd.buddy):
-				thumbAudioSvg = self.ui.loadSvg(self.ui.thumbAudioSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
+				thumbAudioSvg = utils.loadSvg(Constants.thumbAudioSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbAudioSvg.get_pixbuf()
 			else:
-				pb = self.ui.thumbVideoSvg.get_pixbuf()
+				pb = Constants.thumbVideoSvg.get_pixbuf()
 
 		img.set_from_pixbuf( pb )
 		img.show()

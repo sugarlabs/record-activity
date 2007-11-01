@@ -29,18 +29,17 @@ import gtk
 import gtk.gdk
 import pygtk
 pygtk.require('2.0')
-import shutil
 import gc
 import math
 import time
 from time import strftime
 import gobject
-from hashlib import md5
 import operator
 
 from sugar.datastore import datastore
 import sugar.env
 
+from record import Record
 from constants import Constants
 from instance import Instance
 from recorded import Recorded
@@ -269,18 +268,18 @@ class Model:
 
 
 	def meshShareRecd( self, recd ):
-		record.log.debug('meshShareRecd')
+		Record.log.debug('meshShareRecd')
 		#hey, i just took a cool video.audio.photo!  let me show you!
 		if (self.ca.recTube != None):
-			self.ca._logger.debug('meshShareRecd: we have a recTube')
+			Record.log.debug('meshShareRecd: we have a recTube')
 			recdXml = self.ca.getRecdXmlString(recd)
-			self.ca._logger.debug('meshShareRecd: created XML')
+			Record.log.debug('meshShareRecd: created XML')
 			self.ca.recTube.notifyBudsOfNewRecd( Instance.keyHashPrintable, recdXml )
-			self.ca._logger.debug('meshShareRecd: notifyBuds')
+			Record.log.debug('meshShareRecd: notifyBuds')
 
 
 	def cannotSaveVideo( self ):
-		self.ca._logger.debug("bad recorded video")
+		Record.log.debug("bad recorded video")
 		self.doPostSaveVideo()
 
 

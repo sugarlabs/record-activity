@@ -436,7 +436,7 @@ class Record(activity.Activity):
 			recd.meshDownloading = False
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
-			if (recd.type == constants.TYPE_AUDIO):
+			if (recd.type == Constants.TYPE_AUDIO):
 				self.connect(greplay.getAlbumArt, recd, _getAlbumArtCb)
 			else:
 				self.ui.showMeshRecd( recd )

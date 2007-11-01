@@ -202,28 +202,28 @@ def getRecdXmlString( recd ):
 	return writer.getvalue()
 
 
-def addRecdXmlAttrs( self, el, recd, forMeshTransmit ):
+def addRecdXmlAttrs( el, recd, forMeshTransmit ):
 	el.setAttribute(self.recdType, str(recd.type))
 
-	if ((recd.type == constants.TYPE_AUDIO) and (not forMeshTransmit)):
+	if ((recd.type == Constants.TYPE_AUDIO) and (not forMeshTransmit)):
 		aiPixbuf = recd.getAudioImagePixbuf( )
 		aiPixbufString = str( utils.getStringFromPixbuf(aiPixbuf) )
 		el.setAttribute(self.recdAudioImage, aiPixbufString)
 
 	if ((recd.datastoreId != None) and (not forMeshTransmit)):
-		el.setAttribute(self.recdDatastoreId, str(recd.datastoreId))
+		el.setAttribute(Constants.recdDatastoreId, str(recd.datastoreId))
 
-	el.setAttribute(self.recdTitle, recd.title)
-	el.setAttribute(self.recdTime, str(recd.time))
-	el.setAttribute(self.recdRecorderName, recd.recorderName)
-	el.setAttribute(self.recdRecorderHash, str(recd.recorderHash) )
-	el.setAttribute(self.recdColorStroke, str(recd.colorStroke.hex) )
-	el.setAttribute(self.recdColorFill, str(recd.colorFill.hex) )
-	el.setAttribute(self.recdBuddy, str(recd.buddy))
-	el.setAttribute(self.recdMediaMd5, str(recd.mediaMd5))
-	el.setAttribute(self.recdThumbMd5, str(recd.thumbMd5))
-	el.setAttribute(self.recdMediaBytes, str(recd.mediaBytes))
-	el.setAttribute(self.recdThumbBytes, str(recd.thumbBytes))
+	el.setAttribute(Constants.recdTitle, recd.title)
+	el.setAttribute(Constants.recdTime, str(recd.time))
+	el.setAttribute(Constants.recdRecorderName, recd.recorderName)
+	el.setAttribute(Constants.recdRecorderHash, str(recd.recorderHash) )
+	el.setAttribute(Constants.recdColorStroke, str(recd.colorStroke.hex) )
+	el.setAttribute(Constants.recdColorFill, str(recd.colorFill.hex) )
+	el.setAttribute(Constants.recdBuddy, str(recd.buddy))
+	el.setAttribute(Constants.recdMediaMd5, str(recd.mediaMd5))
+	el.setAttribute(Constants.recdThumbMd5, str(recd.thumbMd5))
+	el.setAttribute(Constants.recdMediaBytes, str(recd.mediaBytes))
+	el.setAttribute(Constants.recdThumbBytes, str(recd.thumbBytes))
 
 
 def saveMediaHash( mediaTypes, mediaHashs ):
@@ -252,21 +252,24 @@ def saveMediaHash( mediaTypes, mediaHashs ):
 				recd = hash[i]
 				mediaEl = album.createElement( typeName )
 				root.appendChild( mediaEl )
-				self._saveMedia( mediaEl, recd )
+
+				mtype = mediaTypes[recd.type]
+				mmime = mtype[Constants.keyMime]
+				_saveMedia( mediaEl, recd, mmime )
 
 	return album
 
 
-def _saveMedia( el, recd ):
+def _saveMedia( el, recd, mime ):
 	if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
 		pixbuf = recd.getThumbPixbuf( )
 		buddyThumb = str( utils.getStringFromPixbuf(pixbuf) )
-		el.setAttribute(self.recdBuddyThumb, buddyThumb )
+		el.setAttribute(Constants.recdBuddyThumb, buddyThumb )
 		recd.savedMedia = True
-		self._saveXml( el, recd )
+		_saveXml( el, recd )
 	else:
 		recd.savedMedia = False
-		self._saveMediaToDatastore( el, recd )
+		_saveMediaToDatastore( el, recd )
 
 
 def _saveXml( el, recd ):
@@ -292,10 +295,10 @@ def _saveMediaToDatastore( el, recd ):
 			#save the title to the xml
 			recd.savedMedia = True
 
-			self._saveXml( xmlFile, el, recd )
+			_saveXml( xmlFile, el, recd )
 		else:
 			recd.savedMedia = True
-			self._saveXml( xmlFile, el, recd )
+			_saveXml( xmlFile, el, recd )
 
 	else:
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
@@ -310,8 +313,6 @@ def _saveMediaToDatastore( el, recd ):
 		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
 		mediaObject.metadata['icon-color'] = colors
 
-		mtype = self.m.mediaTypes[recd.type]
-		mmime = mtype[Constants.keyMime]
 		mediaObject.metadata['mime_type'] = mmime
 
 		mediaObject.metadata['activity'] = Constants.activityId
@@ -327,4 +328,4 @@ def _saveMediaToDatastore( el, recd ):
 		recd.thumbFilename = None
 		recd.savedMedia = True
 
-		self._saveXml( xmlFile, el, recd )
+		_saveXml( xmlFile, el, recd )
