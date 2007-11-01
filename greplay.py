@@ -19,41 +19,56 @@
 #THE SOFTWARE.
 
 
-import gtk
-import pygtk
 import pygst
 pygst.require('0.10')
 import gst
 import gst.interfaces
+import gobject
+
+import record
 
 class Greplay:
 
+	__gsignals__ = {
+		'coverart-found':
+			(gobject.SIGNAL_RUN_FIRST, None, [object,object,object,object,object])
+	}
+
+	def __init__(self):
+		pass
 
 
-	def __init__(self, pca):
-		self.ca = pca
-
-
-	def getAlbumArt( self, recd ):
+	def findAlbumArt( self, path ):
+		record.Record.log.debug("getAlbumArt")
 		#todo: handle None paths here
-		#todo: +n needed here?
-		pp = gst.parse_launch("filesrc location="+recd.getMediaFilelocation(False)+" ! oggdemux ! vorbisdec ! fakesink")
-		pp.get_bus().add_signal_watch()
-		pp.get_bus().connect("message", self._onMessageCb)
-		pp.set_state(gst.STATE_PLAYING)
+		self.pp = gst.parse_launch("filesrc location="+str(path)+" ! oggdemux ! vorbisdec ! fakesink")
+		self.pp.get_bus().add_signal_watch()
+		self.pp.get_bus().connect("message", self._onMessageCb)
+		self.pp.set_state(gst.STATE_PLAYING)
 
 
 	def _onMessageCb(self, bus, message):
 		t = message.type
 		if t == gst.MESSAGE_EOS:
-			print("MESSAGE_EOS")
+			record.Record.log.debug("Greplay:MESSAGE_EOS")
+			self.emit('coverart-found', None)
+			self.pp.set_state(gst.STATE_NULL)
+			return False
 		elif t == gst.MESSAGE_ERROR:
-			print("MESSAGE_ERROR")
+			record.Record.log.debug("Greplay:MESSAGE_ERROR")
+			self.emit('coverart-found', None)
+			self.pp.set_state(gst.STATE_NULL)
+			return False
 		elif t == gst.MESSAGE_TAG:
 			tags = message.parse_tag()
 			for tag in tags.keys():
 				if (str(tag) == "extended-comment"):
+					record.Record.log.debug("Found the tag!")
 					#todo, check for tagname
 					base64imgString = str(tags[tag])[len("coverart="):]
 					pixbuf = utils.getPixbufFromString(base64imgString)
-					#todo: emit here
+					self.emit('coverart-found', None)
+					self.pp.set_state(gst.STATE_NULL)
+					emit('coverart-found', pixbuf)
+					return False
+		return True

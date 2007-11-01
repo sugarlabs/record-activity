@@ -73,7 +73,6 @@ class Record(activity.Activity):
 		self.m = Model( self )
 		self.glive = Glive( self )
 		self.gplay = Gplay( self )
-		self.greplay = Greplay( self )
 		self.ui = UI( self )
 
 		#CSCL
@@ -449,20 +448,28 @@ class Record(activity.Activity):
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
 			if (recd.type == Constants.TYPE_AUDIO):
-				self.connect(greplay.getAlbumArt, recd, _getAlbumArtCb)
+				record.Record.debug("_recdBitsArrivedCb:TYPE_AUDIO")
+				greplay = Greplay()
+				greplay.connect("coverart-found", _getAlbumArtCb, recd )
+				filepath = recd.getMediaFilelocation(False)
+				greplay.findAlbumArt(filepath)
 			else:
 				self.ui.showMeshRecd( recd )
 		elif part > numparts:
-			self.__class__.log.debug('More parts than required have arrived')
+			self.__class__.log.error('More parts than required have arrived')
 
 
-	def _getAlbumArtCb( self, recd, pixbuf ):
-		if (pixbuf == None):
-			return False
-		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
-		imagePath = utils.getUniqueFilepath( imagePath, 0 )
-		pixbuf.save( imagePath, "png", {} )
-		recd.audioImageFilename = os.path.basename(imagePath)
+	def _getAlbumArtCb( self, pixbuf, recd ):
+		self.__class__.log.debug("_getAlbumArtCb:" + str(pixbuf) + "," + str(recd))
+
+		if (pixbuf != None):
+			imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
+			imagePath = utils.getUniqueFilepath( imagePath, 0 )
+			pixbuf.save( imagePath, "png", {} )
+			recd.audioImageFilename = os.path.basename(imagePath)
+
+		self.ui.showMeshRecd( recd )
+		return False
 
 
 	def _recdUnavailableCb( self, objectThatSentTheSignal, md5sumOfIt, whoDoesntHaveIt ):
