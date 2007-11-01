@@ -111,7 +111,7 @@ class Recorded:
 				print("RecordActivity error -- unable to get datastore object in getThumbPixbuf")
 				return None
 
-			return self.pixbufFromString( self.datastoreOb.metadata['preview'] )
+			return utils.getPixbufFromString( self.datastoreOb.metadata['preview'] )
 
 
 	def getThumbFilepath( self ):
@@ -129,7 +129,7 @@ class Recorded:
 				print("RecordActivity error -- unable to get datastore object in getThumbPixbuf")
 				return None
 
-			img = self.pixbufFromString( self.datastoreOb.metadata['preview'] )
+			img = utils.getPixbufFromString( self.datastoreOb.metadata['preview'] )
 			thumbFilepath = os.path.join( Instance.tmpPath, "thumb.png")
 			thumbFilepath = utils.getUniqueFilepath(thumbFilepath, 0)
 			img.save(thumbFilepath, "png", {} )

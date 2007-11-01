@@ -55,5 +55,5 @@ class Greplay:
 				if (str(tag) == "extended-comment"):
 					#todo, check for tagname
 					base64imgString = str(tags[tag])[len("coverart="):]
-					pixbuf = utils.pixbufFromString(base64imgString)
+					pixbuf = utils.getPixbufFromString(base64imgString)
 					#todo: emit here

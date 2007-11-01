@@ -150,7 +150,7 @@ def fillRecdFromNode( recd, el ):
 		try:
 			thumbPath = os.path.join(Instance.tmpPath, "datastoreThumb.jpg")
 			thumbPath = utils.getUniqueFilepath( thumbPath, 0 )
-			thumbImg = recd.pixbufFromString( bt.nodeValue )
+			thumbImg = utils.getPixbufFromString( bt.nodeValue )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 			recd.thumbFilename = os.path.basename(thumbPath)
 		except:
