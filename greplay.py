@@ -18,12 +18,12 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-
-import pygst
-pygst.require('0.10')
 import gst
 import gst.interfaces
+import pygst
+pygst.require('0.10')
 import gobject
+import os
 
 import record
 import utils
@@ -38,7 +38,15 @@ class Greplay(gobject.GObject):
 
 	def findAlbumArt( self, path ):
 		record.Record.log.debug("getAlbumArt")
-		#todo: handle None paths here
+		if (path == None):
+			record.Record.log.debug("getAlbumArt: path==None")
+			self.emit('coverart-found', None)
+			return
+		if (not os.path.exists(path)):
+			record.Record.log.debug("getAlbumArt: path doesn't exist")
+			self.emit('coverart-found', None)
+			return
+
 		self.pp = gst.parse_launch("filesrc location="+str(path)+" ! oggdemux ! vorbisdec ! fakesink")
 		self.pp.get_bus().add_signal_watch()
 		self.pp.get_bus().connect("message", self._onMessageCb)
@@ -64,8 +72,8 @@ class Greplay(gobject.GObject):
 					record.Record.log.debug("Found the tag!")
 					#todo, check for tagname
 					base64imgString = str(tags[tag])[len("coverart="):]
+
 					pixbuf = utils.getPixbufFromString(base64imgString)
-					self.emit('coverart-found', None)
 					self.pp.set_state(gst.STATE_NULL)
 					self.emit('coverart-found', pixbuf)
 					return False

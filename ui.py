@@ -94,11 +94,9 @@ class UI:
 		self.LAST_RECD_INFO = False
 		self.LAST_TRANSCODING = False
 		self.LAST_COUNTINGDOWN = False
-		self.LAST_MESH_DOWNLOAD = False
 		self.TRANSCODING = False
 		self.COUNTINGDOWN = False
 		self.RECD_INFO_ON = False
-		self.MESH_DOWNLOAD = False
 		self.UPDATE_DURATION_ID = 0
 		self.UPDATE_TIMER_ID = 0
 
@@ -129,10 +127,6 @@ class UI:
 		self.toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
 		self.TOOLBOX_SIZE_ALLOCATE_ID = self.toolbox.connect_after("size-allocate", self._toolboxSizeAllocateCb)
 		self.toolbox.show()
-
-
-	def hackDisplayOfThumbtray( self, tray ):
-		pass #todo: if marco doesn't get to it
 
 
 	def _toolboxSizeAllocateCb( self, widget, event ):
@@ -290,7 +284,6 @@ class UI:
 		thumbnailsEventBox.add( thumbnailsBox )
 
 		self.thumbTray = HTray()
-		self.hackDisplayOfThumbtray(self.thumbTray)
 		self.thumbTray.set_size_request( -1, self.thumbTrayHt )
 		self.mainBox.pack_end( self.thumbTray, expand=False )
 		self.thumbTray.show()
@@ -540,6 +533,13 @@ class UI:
 
 			if (self.inWidget( mx, my, self.getLoc("inb", self.FULLSCREEN), self.getDim("inb", self.FULLSCREEN))):
 				return True
+
+			if (self.inWidget( mx, my, self.getLoc("prg", self.FULLSCREEN), self.getDim("prg", self.FULLSCREEN))):
+				return True
+
+			#todo:
+#			if (self.inWidget( mx, my, self.getLoc("inf", self.FULLSCREEN), self.getDim("inf", self.FULLSCREEN))):
+#				return True
 
 		if (self.LIVEMODE):
 			if (self.inWidget( mx, my, self.getLoc("eye", self.FULLSCREEN), self.getDim("eye", self.FULLSCREEN))):
@@ -1480,19 +1480,19 @@ class UI:
 	def showAudio( self, recd ):
 		self.LIVEMODE = False
 
-		if (recd != self.shownRecd):
-			pixbuf = recd.getAudioImagePixbuf()
-			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
-			self.livePhotoCanvas.setImage( img )
-			self.shownRecd = recd
-			#todo: if i switch between multiple recds, when is their metadata saved?
-			self.showRecdMeta(recd)
+		#if (recd != self.shownRecd):
+		pixbuf = recd.getAudioImagePixbuf()
+		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+		self.livePhotoCanvas.setImage( img )
+		self.shownRecd = recd
+		self.showRecdMeta(recd)
 
 		downloading = self.ca.requestMeshDownload(recd)
+		record.Record.log.debug("showAudio: downloading->" + str(downloading))
 		if (not downloading):
 			mediaFilepath = recd.getMediaFilepath( )
+			record.Record.log.debug("showAudio: mediaFilepath->" + str(mediaFilepath))
 			if (mediaFilepath != None):
-				self.MESH_DOWNLOAD = False
 				videoUrl = "file://" + str( mediaFilepath )
 				self.ca.gplay.setLocation(videoUrl)
 				self.scrubWindow.doPlay()
@@ -1507,7 +1507,12 @@ class UI:
 				self.ca.glive.stop()
 				self.ca.glive.play()
 		self.LIVEMODE = False
+		self.shownRecd = recd
+		self.updateVideoComponents()
+		gobject.idle_add( self.showVideo2, recd )
 
+
+	def showVideo2( self, recd ):
 		self.showRecdMeta(recd)
 
 		downloading = self.ca.requestMeshDownload(recd)
@@ -1515,7 +1520,6 @@ class UI:
 		if (not downloading):
 			mediaFilepath = recd.getMediaFilepath()
 			if (mediaFilepath != None):
-				self.MESH_DOWNLOAD = False
 				videoUrl = "file://" + str( mediaFilepath )
 				self.ca.gplay.setLocation(videoUrl)
 				self.scrubWindow.doPlay()
@@ -1526,8 +1530,6 @@ class UI:
 			thumbUrl = "file://" + str( thumbFilepath )
 			self.ca.gplay.setLocation(thumbUrl)
 
-		self.shownRecd = recd
-		self.updateVideoComponents()
 
 	def deleteThumbSelection( self, recd ):
 		self.ca.m.deleteRecorded( recd )
