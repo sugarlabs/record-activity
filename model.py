@@ -177,11 +177,11 @@ class Model:
 		self.ca.glive.stopRecordingAudio( )
 
 
-	def saveAudio( self, tempPath, pixbuf ):
+	def saveAudio( self, tmpPath, pixbuf ):
 		self.setUpdating( True )
 
 		recd = self.createNewRecorded( Constants.TYPE_AUDIO )
-		os.rename( tempPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
+		os.rename( tmpPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.THUMBWIDTH+0.0)/(pixbuf.get_width()+0.0))
@@ -242,9 +242,9 @@ class Model:
 		self.ca.ui.updateVideoComponents()
 
 
-	def saveVideo( self, pixbuf, tempPath, wid, hit ):
+	def saveVideo( self, pixbuf, tmpPath, wid, hit ):
 		recd = self.createNewRecorded( Constants.TYPE_VIDEO )
-		os.rename( tempPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
+		os.rename( tmpPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.THUMB_WIDTH+0.0)/(wid+0.0))

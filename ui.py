@@ -623,8 +623,8 @@ class UI:
 
 	def copyToClipboard( self, recd ):
 		if (recd.isClipboardCopyable( )):
-			tempImgPath = self.doClipboardCopyStart( recd )
-			gtk.Clipboard().set_with_data( [('text/uri-list', 0, 0)], self._clipboardGetFuncCb, self._clipboardClearFuncCb, tempImgPath )
+			tmpImgPath = self.doClipboardCopyStart( recd )
+			gtk.Clipboard().set_with_data( [('text/uri-list', 0, 0)], self._clipboardGetFuncCb, self._clipboardClearFuncCb, tmpImgPath )
 			return True
 
 
@@ -634,22 +634,22 @@ class UI:
 			#todo: make sure this is handled correctly
 			return None
 
-		tempImgPath = os.path.join( self.ca.tempPath, recd.mediaFilename)
-		tempImgPath = utils.getUniqueFilepath(tempImgPath,0)
-		shutil.copyfile( imgPath_s, tempImgPath )
-		return tempImgPath
+		tmpImgPath = os.path.join( Instance.tmpPath, recd.mediaFilename)
+		tmpImgPath = utils.getUniqueFilepath(tmpImgPath,0)
+		shutil.copyfile( imgPath_s, tmpImgPath )
+		return tmpImgPath
 
 
-	def doClipboardCopyCopy( self, tempImgPath, selection_data ):
-		tempImgUri = "file://" + tempImgPath
-		selection_data.set( "text/uri-list", 8, tempImgUri )
+	def doClipboardCopyCopy( self, tmpImgPath, selection_data ):
+		tmpImgUri = "file://" + tmpImgPath
+		selection_data.set( "text/uri-list", 8, tmpImgUri )
 
 
-	def doClipboardCopyFinish( self, tempImgPath ):
-		if (tempImgPath != None):
-			if (os.path.exists(tempImgPath)):
-				os.remove( tempImgPath )
-		tempImgPath = None
+	def doClipboardCopyFinish( self, tmpImgPath ):
+		if (tmpImgPath != None):
+			if (os.path.exists(tmpImgPath)):
+				os.remove( tmpImgPath )
+		tmpImgPath = None
 
 
 	def _clipboardGetFuncCb( self, clipboard, selection_data, info, data):

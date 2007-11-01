@@ -126,9 +126,9 @@ class Constants:
 	istrCannotDownload = _("Cannot download this %(1)s")
 
 	mediaTypes = {}
-	mediaTypes[TYPE_PHOTO] = {keyName:"photo", keyMime:"image/jpeg", keyExt:"jpg", keyIstr:Constants.istrPhoto}
-	mediaTypes[TYPE_VIDEO] = {keyName:"video", keyMime:"video/ogg", keyExt:"ogg", keyIstr:Constants.istrVideo}
-	mediaTypes[TYPE_AUDIO] = {keyName:"audio", keyMime:"audio/ogg", keyExt:"ogg", keyIstr:Constants.istrAudio}
+	mediaTypes[TYPE_PHOTO] = {keyName:"photo", keyMime:"image/jpeg", keyExt:"jpg", keyIstr:istrPhoto}
+	mediaTypes[TYPE_VIDEO] = {keyName:"video", keyMime:"video/ogg", keyExt:"ogg", keyIstr:istrVideo}
+	mediaTypes[TYPE_AUDIO] = {keyName:"audio", keyMime:"audio/ogg", keyExt:"ogg", keyIstr:istrAudio}
 
 	thumbPhotoSvgData = None
 	thumbPhotoSvg = None
