@@ -249,7 +249,7 @@ class Model:
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.THUMB_WIDTH+0.0)/(wid+0.0))
-		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, ui.THUMB_HEIGHT)
+		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 
 		self.createNewRecordedMd5Sums( recd )
