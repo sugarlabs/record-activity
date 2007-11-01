@@ -30,22 +30,23 @@ def fillMediaHash( index, mediaHashs ):
 def _loadMediaIntoHash( el, hash ):
 	addToHash = True
 	recd = Recorded()
-	recd = fillRecdFromNode( recd, el )
-	if (recd.datastoreId != None):
-		#quickly check: if you have a datastoreId that the file hasn't been deleted,
-		#cause if you do, we need to flag your removal
-		#2904 trac
-		recd.datastoreOb = serialize.getMediaFromDatastore( recd )
-		if (recd.datastoreOb == None):
-			addToHash = False
-		else:
-			#name might have been changed in the journal, so reflect that here
-			if (recd.title != recd.datastoreOb.metadata['title']):
-				recd.setTitle(recd.datastoreOb.metadata['title'])
-			if (recd.buddy):
-				recd.downloadedFromBuddy = True
+	recd = fillRecdFromNode(recd, el)
+	if (recd != None):
+		if (recd.datastoreId != None):
+			#quickly check: if you have a datastoreId that the file hasn't been deleted,
+			#cause if you do, we need to flag your removal
+			#2904 trac
+			recd.datastoreOb = serialize.getMediaFromDatastore( recd )
+			if (recd.datastoreOb == None):
+				addToHash = False
+			else:
+				#name might have been changed in the journal, so reflect that here
+				if (recd.title != recd.datastoreOb.metadata['title']):
+					recd.setTitle(recd.datastoreOb.metadata['title'])
+				if (recd.buddy):
+					recd.downloadedFromBuddy = True
 
-		recd.datastoreOb == None
+			recd.datastoreOb == None
 
 	if (addToHash):
 		hash.append( recd )
@@ -94,88 +95,58 @@ def removeMediaFromDatastore( recd ):
 
 
 def fillRecdFromNode( recd, el ):
-	if (el.getAttributeNode(Constants.recdType) == None):
-		return None
-	else:
-		try:
-			typeInt = int(el.getAttribute(Constants.recdType))
-			recd.type = typeInt
-		except:
-			return None
+	if (el.getAttributeNode(Constants.recdType) != None):
+		typeInt = int(el.getAttribute(Constants.recdType))
+		recd.type = typeInt
 
-	if (el.getAttributeNode(Constants.recdTitle) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdTitle) != None):
 		recd.title = el.getAttribute(Constants.recdTitle)
 
-	if (el.getAttributeNode(Constants.recdTime) == None):
-		return None
-	else:
-		try:
-			timeInt = int(el.getAttribute(Constants.recdTime))
-			recd.time = timeInt
-		except:
-			return None
+	if (el.getAttributeNode(Constants.recdTime) != None):
+		timeInt = int(el.getAttribute(Constants.recdTime))
+		recd.time = timeInt
 
-	if (el.getAttributeNode(Constants.recdRecorderName) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdRecorderName) != None):
 		recd.recorderName = el.getAttribute(Constants.recdRecorderName)
 
-	if (el.getAttributeNode(Constants.recdRecorderHash) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdRecorderHash) != None):
 		recd.recorderHash = el.getAttribute(Constants.recdRecorderHash)
 
-	if (el.getAttributeNode(Constants.recdColorStroke) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdColorStroke) != None):
 		try:
 			colorStrokeHex = el.getAttribute(Constants.recdColorStroke)
 			colorStroke = Color()
-			colorStroke.init_hex( colorStrokeHex )
+			colorStroke.init_hex(colorStrokeHex)
 			recd.colorStroke = colorStroke
 		except:
-			return None
+			pass
 
-	if (el.getAttributeNode(Constants.recdColorFill) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdColorFill) != None):
 		try:
 			colorFillHex = el.getAttribute(Constants.recdColorFill)
 			colorFill = Color()
 			colorFill.init_hex( colorFillHex )
 			recd.colorFill = colorFill
 		except:
-			return None
+			pass
 
-	if (el.getAttributeNode(Constants.recdBuddy) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdBuddy) != None):
 		recd.buddy = (el.getAttribute(Constants.recdBuddy) == "True")
 
-	if (el.getAttributeNode(Constants.recdMediaMd5) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdMediaMd5) != None):
 		recd.mediaMd5 = el.getAttribute(Constants.recdMediaMd5)
 
-	if (el.getAttributeNode(Constants.recdThumbMd5) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdThumbMd5) != None):
 		recd.thumbMd5 = el.getAttribute(Constants.recdThumbMd5)
 
-	if (el.getAttributeNode(Constants.recdMediaBytes) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdMediaBytes) != None):
 		recd.mediaBytes = el.getAttribute(Constants.recdMediaBytes)
 
-	if (el.getAttributeNode(Constants.recdThumbBytes) == None):
-		return None
-	else:
+	if (el.getAttributeNode(Constants.recdThumbBytes) != None):
 		recd.thumbBytes = el.getAttribute(Constants.recdThumbBytes)
 
 	bt = el.getAttributeNode(Constants.recdBuddyThumb)
-	if (not bt == None):
+	if (bt != None):
 		try:
 			thumbPath = os.path.join(Instance.tmpPath, "datastoreThumb.jpg")
 			thumbPath = utils.getUniqueFilepath( thumbPath, 0 )
@@ -183,7 +154,7 @@ def fillRecdFromNode( recd, el ):
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 			recd.thumbFilename = os.path.basename(thumbPath)
 		except:
-			return None
+			pass
 
 	datastoreNode = el.getAttributeNode(Constants.recdDatastoreId)
 	if (datastoreNode != None):
