@@ -26,6 +26,7 @@ import gst.interfaces
 import gobject
 
 import record
+import utils
 
 class Greplay(gobject.GObject):
 
@@ -66,6 +67,6 @@ class Greplay(gobject.GObject):
 					pixbuf = utils.getPixbufFromString(base64imgString)
 					self.emit('coverart-found', None)
 					self.pp.set_state(gst.STATE_NULL)
-					emit('coverart-found', pixbuf)
+					self.emit('coverart-found', pixbuf)
 					return False
 		return True

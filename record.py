@@ -449,16 +449,22 @@ class Record(activity.Activity):
 			if (recd.type == Constants.TYPE_AUDIO):
 				self.__class__.log.debug("_recdBitsArrivedCb:TYPE_AUDIO")
 				greplay = Greplay()
-				greplay.connect("coverart-found", self._getAlbumArtCb, None )
-				filepath = recd.getMediaFilelocation(False)
-				greplay.findAlbumArt(filepath)
+				greplay.connect("coverart-found", self._getAlbumArtCb, recd )
+				filepath = recd.getMediaFilepath()
+				if (filepath != None):
+					if (os.path.exists(filepath)):
+						greplay.findAlbumArt(filepath)
+					else:
+						self.ui.showMeshRecd(recd)
+				else:
+					self.ui.showMeshRecd(recd)
 			else:
 				self.ui.showMeshRecd( recd )
 		elif part > numparts:
 			self.__class__.log.error('More parts than required have arrived')
 
 
-	def _getAlbumArtCb( self, pixbuf, recd ):
+	def _getAlbumArtCb( self, objectThatSentTheSignal, pixbuf, recd ):
 		self.__class__.log.debug("_getAlbumArtCb:" + str(pixbuf) + "," + str(recd))
 
 		if (pixbuf != None):
