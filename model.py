@@ -185,7 +185,7 @@ class Model:
 		os.rename( tmpPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
 		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
-		scale = float((UI.THUMBWIDTH+0.0)/(pixbuf.get_width()+0.0))
+		scale = float((UI.THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
 		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.THUMB_WIDTH, UI.THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 

@@ -36,6 +36,7 @@ gobject.threads_init()
 from instance import Instance
 from constants import Constants
 import record
+import utils
 
 class Glive:
 	def __init__(self, pca):
@@ -241,9 +242,6 @@ class Glive:
 			n = str(len(self.thumbPipes)-1)
 			thumbline.get_by_name( "thumbFakesink_"+n ).disconnect( self.THUMB_HANDOFF )
 
-		n = str(len(self.thumbPipes))
-		f = str(len(self.pipes)-2)
-
 		oggFilepath = os.path.join(Instance.tmpPath, "output.ogg" ) #ogv
 		if (not os.path.exists(oggFilepath)):
 			self.record = False
@@ -257,6 +255,7 @@ class Glive:
 			self.ca.m.stoppedRecordingVideo()
 			return
 
+		n = str(len(self.thumbPipes))
 		line = 'filesrc location=' + str(oggFilepath) + ' name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n
 		thumbline = gst.parse_launch(line)
 		thumbQueue = thumbline.get_by_name('thumbQueue_'+n)
@@ -285,7 +284,7 @@ class Glive:
 				self.ca.m.cannotSaveVideo()
 				return
 
-			n = str(len(self.thumbPipes))
+			n = "0"
 			line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc_'+n+' ! wavparse name=audioWavparse_'+n+' ! audioconvert name=audioAudioconvert_'+n+' ! vorbisenc name=audioVorbisenc_'+n+' ! oggmux name=audioOggmux_'+n+' ! filesink name=audioFilesink_'+n
 			audioline = gst.parse_launch(line)
 			taglist = self.getTags()
@@ -301,10 +300,9 @@ class Glive:
 
 			audioBus = audioline.get_bus()
 			audioBus.add_signal_watch()
-			self.AUDIO_MUX_MESSAGE_ID = audioBus.connect('message', self._onAudioMuxedMessageCb)
-			self.audioPipes.append(audioline)
+			self.AUDIO_MUX_MESSAGE_ID = audioBus.connect('message', self._onMuxedAudioMessageCb, audioline)
 			#add a listener here to monitor % of transcoding...
-			self.AUDIO_TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
+			self.AUDIO_TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, audioline)
 			gobject.idle_add( audioline.set_state, gst.STATE_PLAYING )
 		else:
 			self.record = False
@@ -390,8 +388,6 @@ class Glive:
 			del pic
 			self.thumbEl('thumbTee').unlink(self.thumbEl('thumbQueue'))
 
-			n = str(len(self.muxPipes))
-			f = str(len(self.pipes)-2)
 			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg") #ogv
 			if (self.audio):
 				if ( len(self.muxPipes) > 0 ):
@@ -402,6 +398,7 @@ class Glive:
 				wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
 				muxFilepath = os.path.join(Instance.tmpPath, "mux.ogg") #ogv
 
+				n = str(len(self.muxPipes))
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
 				taglist = self.getTags()
 				vorbisEnc = muxline.get_by_name('muxVorbisenc_'+n)
@@ -412,7 +409,7 @@ class Glive:
 				self.MUX_MESSAGE_ID = muxBus.connect('message', self._onMuxedVideoMessageCb)
 				self.muxPipes.append(muxline)
 				#add a listener here to monitor % of transcoding...
-				self.VIDEO_TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
+				self.VIDEO_TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, muxline)
 				muxline.set_state(gst.STATE_PLAYING)
 			else:
 				self.record = False
@@ -421,8 +418,8 @@ class Glive:
 				self.ca.m.stoppedRecordingVideo()
 
 
-	def _transcodeUpdateCb( self ):
-		position, duration = self.queryPosition( self.muxPipe() )
+	def _transcodeUpdateCb( self, pipe ):
+		position, duration = self.queryPosition( pipe )
 		if position != gst.CLOCK_TIME_NONE:
 			value = position * 100.0 / duration
 			value = value/100.0
@@ -454,9 +451,6 @@ class Glive:
 
 			self.muxPipe().set_state(gst.STATE_NULL)
 
-			n = str(len(self.muxPipes)-1)
-			f = str(len(self.pipes)-2)
-
 			wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
 			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg") #ogv
 			muxFilepath = os.path.join(Instance.tmpPath, "mux.ogg") #ogv
@@ -464,21 +458,27 @@ class Glive:
 			os.remove( oggFilepath )
 			self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath), self.VIDEO_WIDTH_SMALL, self.VIDEO_HEIGHT_SMALL)
 			self.ca.m.stoppedRecordingVideo()
+			return False
+		else:
+			return True
 
 
-	def _onMuxedAudioMessageCb(self, bus, message):
+	def _onMuxedAudioMessageCb(self, bus, message, pipe):
 		t = message.type
 		if (t == gst.MESSAGE_EOS):
 			self.record = False
 			self.audio = False
 			gobject.source_remove( self.AUDIO_TRANSCODE_ID )
 			self.AUDIO_TRANSCODE_ID = 0
-			self.audioPipe().set_state(gst.STATE_NULL)
+			pipe.set_state(gst.STATE_NULL)
 
 			wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
 			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg")
 			os.remove( wavFilepath )
 			self.ca.m.saveAudio(oggFilepath, self.audioPixbuf)
+			return False
+		else:
+			return True
 
 
 	def _onSyncMessageCb(self, bus, message):

@@ -105,6 +105,8 @@ class Recorded:
 				thumbPixbuf = gtk.gdk.pixbuf_new_from_file(thumbFilepath)
 			return thumbPixbuf
 		else:
+			#todo: handle possible corruption of the preview into some other format
+
 			if (self.datastoreOb == None):
 				self.datastoreOb = serialize.getMediaFromDatastore( self )
 			if (self.datastoreOb == None):
