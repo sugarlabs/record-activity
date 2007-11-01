@@ -7,6 +7,7 @@ import os
 from sugar.datastore import datastore
 
 from constants import Constants
+from recorded import Recorded
 import utils
 
 
@@ -23,7 +24,7 @@ def fillMediaHash( index, mediaHashs ):
 	for key,value in Constants.mediaTypes.items():
 		recdElements = doc.documentElement.getElementsByTagName(value[Constants.keyName])
 		for el in recdElements:
-			loadMediaIntoHash( el, mediaHashs[key] )
+			_loadMediaIntoHash( el, mediaHashs[key] )
 
 
 def _loadMediaIntoHash( el, hash ):
