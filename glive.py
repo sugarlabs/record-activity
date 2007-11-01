@@ -34,6 +34,8 @@ import gobject
 gobject.threads_init()
 
 from instance import Instance
+from constants import Constants
+import record
 
 class Glive:
 	def __init__(self, pca):
@@ -302,7 +304,7 @@ class Glive:
 			self.AUDIO_MUX_MESSAGE_ID = audioBus.connect('message', self._onAudioMuxedMessageCb)
 			self.audioPipes.append(audioline)
 			#add a listener here to monitor % of transcoding...
-			self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
+			self.AUDIO_TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
 			gobject.idle_add( audioline.set_state, gst.STATE_PLAYING )
 		else:
 			self.record = False
@@ -312,7 +314,7 @@ class Glive:
 
 	def getTags( self ):
 		tl = gst.TagList()
-		tl[gst.TAG_ARTIST] = Instance.nickName
+		tl[gst.TAG_ARTIST] = str(Instance.nickName)
 		tl[gst.TAG_COMMENT] = "olpc"
 		#todo: more
 		return tl
@@ -402,7 +404,7 @@ class Glive:
 
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
 				taglist = self.getTags()
-				vorbisEnc = muxline.get_by_name('audioVorbisenc_'+n)
+				vorbisEnc = muxline.get_by_name('muxVorbisenc_'+n)
 				vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)
 
 				muxBus = muxline.get_bus()
@@ -410,7 +412,7 @@ class Glive:
 				self.MUX_MESSAGE_ID = muxBus.connect('message', self._onMuxedVideoMessageCb)
 				self.muxPipes.append(muxline)
 				#add a listener here to monitor % of transcoding...
-				self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
+				self.VIDEO_TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb)
 				muxline.set_state(gst.STATE_PLAYING)
 			else:
 				self.record = False
@@ -473,7 +475,6 @@ class Glive:
 			self.AUDIO_TRANSCODE_ID = 0
 			self.audioPipe().set_state(gst.STATE_NULL)
 
-			#todo: make output.ogg a variable
 			wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
 			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg")
 			os.remove( wavFilepath )
