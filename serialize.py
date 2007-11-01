@@ -294,7 +294,7 @@ def _saveMediaToDatastore( el, recd ):
 		mediaObject.metadata['title'] = recd.title
 
 		pixbuf = recd.getThumbPixbuf()
-		record.Record.debug("serialize: pizbuf->" + str(pixbuf))
+		record.Record.log.debug("serialize: pixbuf->" + str(pixbuf))
 		thumbData = utils.getStringFromPixbuf(pixbuf)
 		mediaObject.metadata['preview'] = thumbData
 

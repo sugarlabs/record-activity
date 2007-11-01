@@ -32,6 +32,8 @@ import gobject
 import time
 gobject.threads_init()
 
+import record
+
 class Gplay:
 
 	def __init__(self, pca):
@@ -78,8 +80,9 @@ class Gplay:
 
 		self.getPlayer().set_state(gst.STATE_READY)
 		self.getPlayer().set_property('uri', location)
-		ext = location[len(location):]
-		if (ext == "jpg") or (ext == "png"):
+		ext = location[len(location)-3:]
+		record.Record.log.debug("setLocation:"+str(ext))
+		if (ext == "jpg"):
 			self.pause()
 
 

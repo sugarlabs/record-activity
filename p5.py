@@ -153,11 +153,6 @@ class P5(gtk.DrawingArea):
 		ctx.fill()
 
 
-	def loadImage(self, name):
-		image = cairo.ImageSurface.create_from_png( name )
-		return image
-
-
 	def background( self, ctx, col, w, h ):
 		self.setColor( ctx, col )
 
