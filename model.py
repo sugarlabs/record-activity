@@ -53,15 +53,9 @@ class Model:
 		self.MODE = Constants.MODE_PHOTO
 		self.UPDATING = True
 		self.RECORDING = False
-		record.Record.log.debug("ok")
-
-		self.mediaTypes = {}
-		self.mediaTypes[Constants.TYPE_PHOTO] = {Constants.keyName:"photo", Constants.keyMime:"image/jpeg", Constants.keyExt:"jpg", Constants.keyIstr:Constants.istrPhoto}
-		self.mediaTypes[Constants.TYPE_VIDEO] = {Constants.keyName:"video", Constants.keyMime:"video/ogg", Constants.keyExt:"ogg", Constants.keyIstr:Constants.istrVideo}
-		self.mediaTypes[Constants.TYPE_AUDIO] = {Constants.keyName:"audio", Constants.keyMime:"audio/ogg", Constants.keyExt:"ogg", Constants.keyIstr:Constants.istrAudio}
 
 		self.mediaHashs = {}
-		for key,value in self.mediaTypes.items():
+		for key,value in Constants.mediaTypes.items():
 			self.mediaHashs[key] = []
 
 
@@ -339,7 +333,7 @@ class Model:
 
 
 	def createNewRecorded( self, type ):
-		recd = Recorded( self.ca )
+		recd = Recorded( )
 
 		recd.recorderName = Instance.nickName
 		recd.recorderHash = Instance.keyHashPrintable
@@ -351,7 +345,7 @@ class Model:
 
 		mediaThumbFilename = str(recd.recorderHash) + "_" + str(recd.time)
 		mediaFilename = mediaThumbFilename
-		mediaFilename = mediaFilename + "." + self.mediaTypes[type][Constants.keyExt]
+		mediaFilename = mediaFilename + "." + Constants.mediaTypes[type][Constants.keyExt]
 		mediaFilepath = os.path.join( Instance.tmpPath, mediaFilename )
 		mediaFilepath = utils.getUniqueFilepath( mediaFilepath, 0 )
 		recd.mediaFilename = os.path.basename( mediaFilepath )
@@ -361,7 +355,7 @@ class Model:
 		thumbFilepath = utils.getUniqueFilepath( thumbFilepath, 0 )
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
-		stringType = self.mediaTypes[type][Constants.keyIstr]
+		stringType = Constants.mediaTypes[type][Constants.keyIstr]
 		recd.title = Constants.istrBy % {"1":stringType, "2":str(recd.recorderName)}
 
 		recd.colorStroke = Instance.colorStroke
@@ -402,7 +396,7 @@ class Model:
 	def doDeleteRecorded( self, recd ):
 		#remove files from the filesystem if not on the datastore
 		if (recd.datastoreId == None):
-			mediaFile = recd.getMediaFilepath( False )
+			mediaFile = recd.getMediaFilepath()
 			if (os.path.exists(mediaFile)):
 				os.remove(mediaFile)
 

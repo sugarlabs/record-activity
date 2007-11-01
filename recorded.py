@@ -27,9 +27,7 @@ import utils
 
 class Recorded:
 
-	def __init__( self, pca ):
-		self.ca = pca
-
+	def __init__( self ):
 		self.type = -1
 		self.time = None
 		self.recorderName = None
@@ -48,7 +46,6 @@ class Recorded:
 		#when you are datastore-serialized, you get one of these ids...
 		self.datastoreId = None
 		self.datastoreOb = None
-		self.mime = None #just for sticking into the datastore
 
 		#if not from the datastore, then your media is here...
 		self.mediaFilename = None
@@ -162,7 +159,7 @@ class Recorded:
 			return self.getThumbFilepath()
 
 
-	def getMediaFilepath( self, meshRequired ):
+	def getMediaFilepath(self):
 		if (self.datastoreId == None):
 			if (not self.buddy):
 				#just taken by you, so it is in the tempSessionDir
@@ -174,34 +171,21 @@ class Recorded:
 					mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
-					if (meshRequired):
-						if (self.meshDownloading):
-							pass #todo: tell kid to stop clicking so fast & that we're working on it!
-							return None
-						else:
-							if (self.ca.recTube != None):
-								self.ca.meshInitRoundRobin(self)
-							else:
-								pass
-								#todo: might want to tell kid to get on the mesh?
-								return None
-						return None
+					if self.mediaFilename == None:
+						#creating a new filepath, probably just got here from the mesh
+						ext = Constants.mediaTypes[self.type][Constants.keyExt]
+						recdPath = os.path.join(Instance.tmpPath, "recdFile_"+self.mediaMd5+"."+ext)
+						recdPath = utils.getUniqueFilepath(recdPath, 0)
+						self.mediaFilename = os.path.basename(recdPath)
+						mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
+						return os.path.abspath(mediaFilepath)
 					else:
-						if self.mediaFilename == None:
-							ext = self.ca.m.mediaTypes[self.type][Constants.keyExt]
-							recdPath = os.path.join(Instance.tmpPath, "recdFile_"+self.mediaMd5+"."+ext)
-							recdPath = utils.getUniqueFilepath(recdPath, 0)
-							self.mediaFilename = os.path.basename(recdPath)
-							mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
-							return os.path.abspath(mediaFilepath)
-						else:
-							mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
-							return os.path.abspath(mediaFilepath)
+						mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
+						return os.path.abspath(mediaFilepath)
 
 		else: #pulling from the datastore, regardless of who took it, cause we got it
 			#first, get the datastoreObject and hold the reference in this Recorded instance
 			if (self.datastoreOb == None):
-				#todo: return t or f
 				self.datastoreOb = serialize.getMediaFromDatastore( self )
 			if (self.datastoreOb == None):
 				print("RecordActivity error -- unable to get datastore object in getMediaFilepath")

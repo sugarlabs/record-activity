@@ -8,7 +8,7 @@ from sugar.datastore import datastore
 from constants import Constants
 import utils
 
-def fillMediaHash( index, mediaTypes, mediaHashs ):
+def fillMediaHash( index, mediaHashs ):
 	doc = None
 	if (os.path.exists(index)):
 		try:
@@ -18,7 +18,7 @@ def fillMediaHash( index, mediaTypes, mediaHashs ):
 	if (doc == None):
 		return
 
-	for key,value in mediaTypes.items():
+	for key,value in Constants.mediaTypes.items():
 		recdElements = doc.documentElement.getElementsByTagName(value[Constants.keyName])
 		for el in recdElements:
 			loadMediaIntoHash( el, mediaHashs[key] )
@@ -26,7 +26,7 @@ def fillMediaHash( index, mediaTypes, mediaHashs ):
 
 def _loadMediaIntoHash( el, hash ):
 	addToHash = True
-	recd = Recorded( self.ca )
+	recd = Recorded()
 	recd = serialize.fillRecdFromNode( recd, el )
 	if (recd.datastoreId != None):
 		#quickly check: if you have a datastoreId that the file hasn't been deleted,
@@ -228,14 +228,14 @@ def addRecdXmlAttrs( el, recd, forMeshTransmit ):
 	el.setAttribute(Constants.recdThumbBytes, str(recd.thumbBytes))
 
 
-def saveMediaHash( mediaTypes, mediaHashs ):
+def saveMediaHash( mediaHashs ):
 	impl = getDOMImplementation()
 	album = impl.createDocument(None, Constants.recdAlbum, None)
 	root = album.documentElement
 
 	#flag everything for saving...
 	atLeastOne = False
-	for type,value in mediaTypes.items():
+	for type,value in Constants.mediaTypes.items():
 		typeName = value[Constants.keyName]
 		hash = mediaHashs[type]
 		for i in range (0, len(hash)):
@@ -246,7 +246,7 @@ def saveMediaHash( mediaTypes, mediaHashs ):
 
 	#and if there is anything to save, save it
 	if (atLeastOne):
-		for type,value in mediaTypes.items():
+		for type,value in Constants.mediaTypes.items():
 			typeName = value[Constants.keyName]
 			hash = mediaHashs[type]
 
@@ -254,9 +254,6 @@ def saveMediaHash( mediaTypes, mediaHashs ):
 				recd = hash[i]
 				mediaEl = album.createElement( typeName )
 				root.appendChild( mediaEl )
-
-				mtype = mediaTypes[recd.type]
-				recd.mime = mtype[Constants.keyMime]
 				_saveMedia( mediaEl, recd )
 
 	return album
@@ -314,11 +311,13 @@ def _saveMediaToDatastore( el, recd ):
 		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
 		mediaObject.metadata['icon-color'] = colors
 
-		mediaObject.metadata['mime_type'] = recd.mime
+		mtype = Constants.mediaTypes[recd.type]
+		mime = mtype[Constants.keyMime]
+		mediaObject.metadata['mime_type'] = mime
 
 		mediaObject.metadata['activity'] = Constants.activityId
 
-		mediaFile = recd.getMediaFilepath(False)
+		mediaFile = recd.getMediaFilepath()
 		mediaObject.file_path = mediaFile
 		mediaObject.transfer_ownership = True
 

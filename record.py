@@ -87,13 +87,13 @@ class Record(activity.Activity):
 
 
 	def read_file(self, file):
-		serialize.fillMediaHash(file, m)
+		serialize.fillMediaHash(file, self.m.mediaHashs)
 
 
 	def write_file(self, file):
 		self.I_AM_SAVED = False
 
-		dom = serialize.saveMediaHash(self.m.mediaTypes, self.m.mediaHashs)
+		dom = serialize.saveMediaHash(self.m.mediaHashs)
 		xmlFile = open( file, "w" )
 		dom.writexml(xmlFile)
 		xmlFile.close()
@@ -285,7 +285,7 @@ class Record(activity.Activity):
 		if (dom == None):
 			return
 
-		recd = Recorded(self)
+		recd = Recorded()
 		recd = self.m.fillRecdFromNode( recd, dom.documentElement )
 		if (recd != None):
 			recd.buddy = True
@@ -294,6 +294,17 @@ class Record(activity.Activity):
 			self.m.addMeshRecd( recd )
 		else:
 			self.__class__.log.debug('_newRecdCb: recd is None, unable to parse XML')
+
+
+	def requestMeshDownload( self, recd ):
+		#this call will get the bits or request the bits if they're not available
+		if (recd.buddy and not recd.downloadedFromBuddy):
+			if (not recd.meshDownloading):
+				if (self.recTube != None):
+					self.meshInitRoundRobin(recd)
+				return False
+		else:
+			return True
 
 
 	def meshInitRoundRobin( self, recd ):
@@ -312,10 +323,10 @@ class Record(activity.Activity):
 			recd.meshReqCallbackId = 0
 
 		#delete any stub of a partially downloaded file
-		filepath = recd.getMediaFilepath(False)
+		filepath = recd.getMediaFilepath()
 		if (filepath != None):
 			if (os.path.exists(filepath)):
-				shutil.rmtree( filepath )
+				os.remove( filepath )
 
 		askingAnotherBud = False
 		buds = self._shared_activity.get_joined_buddies();
@@ -393,7 +404,7 @@ class Record(activity.Activity):
 			return
 
 		recd.meshUploading = True
-		filepath = recd.getMediaFilepath(False)
+		filepath = recd.getMediaFilepath()
 		sent = self.recTube.broadcastRecd(recd.mediaMd5, filepath, whoWantsIt)
 		recd.meshUploading = False
 		#if you were deleted while uploading, now throw away those bits now
@@ -426,8 +437,8 @@ class Record(activity.Activity):
 
 		#update the progress bar
 		recd.meshDownlodingPercent = (part+0.0)/(numparts+0.0)
-		self.__class__.log.debug( str(recd.getMediaFilepath(False)) + "," + str(recd.meshDownlodingPercent) )
-		f = open(recd.getMediaFilepath(False), 'a+').write(bytes)
+		self.__class__.log.debug( str(recd.getMediaFilepath()) + "," + str(recd.meshDownlodingPercent) )
+		f = open(recd.getMediaFilepath(), 'a+').write(bytes)
 
 		if part == numparts:
 			self.__class__.log.debug('Finished receiving %s' % recd.title)

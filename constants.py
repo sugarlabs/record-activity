@@ -125,6 +125,11 @@ class Constants:
 	#TRANS: Cannot download this Photo
 	istrCannotDownload = _("Cannot download this %(1)s")
 
+	mediaTypes = {}
+	mediaTypes[TYPE_PHOTO] = {keyName:"photo", keyMime:"image/jpeg", keyExt:"jpg", keyIstr:Constants.istrPhoto}
+	mediaTypes[TYPE_VIDEO] = {keyName:"video", keyMime:"video/ogg", keyExt:"ogg", keyIstr:Constants.istrVideo}
+	mediaTypes[TYPE_AUDIO] = {keyName:"audio", keyMime:"audio/ogg", keyExt:"ogg", keyIstr:Constants.istrAudio}
+
 	thumbPhotoSvgData = None
 	thumbPhotoSvg = None
 	thumbVideoSvg = None

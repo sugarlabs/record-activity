@@ -629,7 +629,7 @@ class UI:
 
 
 	def doClipboardCopyStart( self, recd ):
-		imgPath_s = recd.getMediaFilepath(False)
+		imgPath_s = recd.getMediaFilepath()
 		if (imgPath_s == None):
 			#todo: make sure this is handled correctly
 			return None
@@ -677,18 +677,18 @@ class UI:
 	def getPhotoPixbuf( self, recd ):
 		pixbuf = None
 
-		#this call will get the bits or request the bits if they're not available
-		imgPath = recd.getMediaFilepath( True )
-		if (not imgPath == None):
-			if ( os.path.isfile(imgPath) ):
-				pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
+		downloading = self.ca.requestMeshDownload(recd)
 
+		if (not downloading):
+			imgPath = recd.getMediaFilepath()
+			if (not imgPath == None):
+				if ( os.path.isfile(imgPath) ):
+					pixbuf = gtk.gdk.pixbuf_new_from_file(imgPath)
 
 		if (pixbuf == None):
 			#maybe it is not downloaded from the mesh yet...
 			#but we can show the low res thumb in the interim
 			pixbuf = recd.getThumbPixbuf()
-			#todo: get download status and update accordingly
 
 		return pixbuf
 
@@ -1494,16 +1494,14 @@ class UI:
 			#todo: if i switch between multiple recds, when is their metadata saved?
 			self.showRecdMeta(recd)
 
-		mediaFilepath = recd.getMediaFilepath( True )
-		if (mediaFilepath != None):
-			self.MESH_DOWNLOAD = False
-			videoUrl = "file://" + str( mediaFilepath )
-			self.ca.gplay.setLocation(videoUrl)
-			self.scrubWindow.doPlay()
-		else:
-			self.MESH_DOWNLOAD = True
-			pass
-			#todo: update the mesh download progress here... but with what component?
+		downloading = self.ca.requestMeshDownload(recd)
+		if (not downloading):
+			mediaFilepath = recd.getMediaFilepath( )
+			if (mediaFilepath != None):
+				self.MESH_DOWNLOAD = False
+				videoUrl = "file://" + str( mediaFilepath )
+				self.ca.gplay.setLocation(videoUrl)
+				self.scrubWindow.doPlay()
 
 		self.updateVideoComponents()
 
@@ -1518,17 +1516,21 @@ class UI:
 
 		self.showRecdMeta(recd)
 
-		mediaFilepath = recd.getMediaFilepath( True )
-		if (mediaFilepath != None):
-			self.MESH_DOWNLOAD = False
-			videoUrl = "file://" + str( mediaFilepath )
-			self.ca.gplay.setLocation(videoUrl)
-			self.scrubWindow.doPlay()
-		else:
+		downloading = self.ca.requestMeshDownload(recd)
+		ableToShowVideo = False
+		if (not downloading):
+			mediaFilepath = recd.getMediaFilepath(True)
+			if (mediaFilepath != None):
+				self.MESH_DOWNLOAD = False
+				videoUrl = "file://" + str( mediaFilepath )
+				self.ca.gplay.setLocation(videoUrl)
+				self.scrubWindow.doPlay()
+				ableToShowVideo = True
+
+		if (not ableToShowVideo):
 			thumbFilepath = recd.getThumbFilepath( )
 			thumbUrl = "file://" + str( thumbFilepath )
 			self.ca.gplay.setLocation(thumbUrl)
-			#todo: where do we show the thumb as the movie while it downloads?
 
 		self.shownRecd = recd
 		self.updateVideoComponents()
@@ -1540,10 +1542,7 @@ class UI:
 
 
 	def removeIfSelectedRecorded( self, recd ):
-		#todo: blank the livePhotoCanvas whenever it is removed
 		if (recd == self.shownRecd):
-
-			#todo: should be using modes here to check which mode to switch to
 			if (recd.type == Constants.TYPE_PHOTO):
 				self.livePhotoCanvas.setImage( None )
 			elif (recd.type == Constants.TYPE_VIDEO):
