@@ -2030,6 +2030,7 @@ class PhotoToolbar(gtk.Toolbar):
 		img.get_icon_widget().set_property( 'fill-color', Instance.colorFill.hex )
 		img.get_icon_widget().set_property( 'stroke-color', Instance.colorStroke.hex )
 		self.insert(img, -1)
+		img.set_sensitive(False)
 		img.show()
 
 		separator = gtk.SeparatorToolItem()
@@ -2067,6 +2068,7 @@ class VideoToolbar(gtk.Toolbar):
 		img.get_icon_widget().set_property( 'fill-color', Instance.colorFill.hex )
 		img.get_icon_widget().set_property( 'stroke-color', Instance.colorStroke.hex )
 		self.insert(img, -1)
+		img.set_sensitive(False)
 		img.show()
 
 		separator = gtk.SeparatorToolItem()
@@ -2121,6 +2123,7 @@ class AudioToolbar(gtk.Toolbar):
 		img.get_icon_widget().set_property( 'fill-color', Instance.colorFill.hex )
 		img.get_icon_widget().set_property( 'stroke-color', Instance.colorStroke.hex )
 		self.insert(img, -1)
+		img.set_sensitive(False)
 		img.show()
 
 		separator = gtk.SeparatorToolItem()

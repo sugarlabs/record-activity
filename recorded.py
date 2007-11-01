@@ -22,6 +22,7 @@ import os
 import gtk
 from gtk import gdk
 
+from constants import Constants
 from instance import Instance
 import utils
 import serialize

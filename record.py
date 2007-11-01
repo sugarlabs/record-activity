@@ -25,6 +25,7 @@ import shutil
 import telepathy
 import telepathy.client
 import logging
+import xml.dom.minidom
 
 from sugar.activity import activity
 from sugar.presence import presenceservice
@@ -276,24 +277,24 @@ class Record(activity.Activity):
 
 
 	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
-		self.__class__.log.debug('_newRecdCb')
+		self.__class__.log.debug('_newRecdCb: ' + str(xmlString))
 		dom = None
 		try:
 			dom = xml.dom.minidom.parseString(xmlString)
 		except:
-			self._logger.debug('Unable to parse xml from the mesh.  What kind of photo did %s take?!', recorder)
+			self.__class__.log.error('Unable to parse xml from the mesh.')
 		if (dom == None):
 			return
 
 		recd = Recorded()
-		recd = self.m.fillRecdFromNode( recd, dom.documentElement )
+		recd = serialize.fillRecdFromNode( recd, dom.documentElement )
 		if (recd != None):
 			self.__class__.log.debug('_newRecdCb: adding new recd thumb')
 			recd.buddy = True
 			recd.downloadedFromBuddy = False
 			self.m.addMeshRecd( recd )
 		else:
-			self.__class__.log.debug('_newRecdCb: recd is None, unable to parse XML')
+			self.__class__.log.debug('_newRecdCb: recd is None. Unable to parse XML')
 
 
 	def requestMeshDownload( self, recd ):
