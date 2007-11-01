@@ -157,7 +157,7 @@ class Constants:
 
 		thumbAudioSvgPath = os.path.join(self.__class__.gfxPath, 'thumb_video.svg')
 		thumbAudioSvgFile = open(thumbAudioSvgPath, 'r')
-		self.__class__.thumbAudioSvgData = thumbVideoSvgFile.read()
+		self.__class__.thumbAudioSvgData = thumbAudioSvgFile.read()
 		self.__class__.thumbAudioSvg = utils.loadSvg(self.__class__.thumbAudioSvgData, Instance.colorStroke.hex, Instance.colorFill.hex)
 		thumbAudioSvgFile.close()
 
