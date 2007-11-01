@@ -5,6 +5,7 @@ from dbus.gobject_service import ExportedGObject
 import os
 
 from constants import Constants
+from instance import Instance
 import record
 
 class RecordTube(ExportedGObject):
@@ -41,7 +42,7 @@ class RecordTube(ExportedGObject):
 		if sender == self.tube.get_unique_name():
 			record.Record.log.debug("_newRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
-		elif (recorder == self.myHashKey):
+		elif (recorder == Instance.keyHashPrintable):
 			record.Record.log.debug('_newRecdTubeCb: excuse me?  you are asking me to share a photo with myself?')
 			return
 
@@ -57,10 +58,10 @@ class RecordTube(ExportedGObject):
 		if sender == self.tube.get_unique_name():
 			record.Record.log.debug("_reqRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
-		elif (whoWantsIt == self.myHashKey):
+		elif (whoWantsIt == Instance.keyHashPrintable):
 			record.Record.log.debug('_reqRecdTubeCb: excuse me?  you are asking me to share a photo with myself?')
 			return
-		elif (whoTheyWantItFrom != self.myHashKey):
+		elif (whoTheyWantItFrom != Instance.keyHashPrintable):
 			record.Record.log.debug('_reqRecdTubeCb: ive overhead someone wants a photo, but not from me')
 			return
 
@@ -93,10 +94,10 @@ class RecordTube(ExportedGObject):
 		if sender == self.tube.get_unique_name():
 			record.Record.log.debug("_reqRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
-		if (fromWho == self.myHashKey):
+		if (fromWho == Instance.keyHashPrintable):
 			record.Record.log.debug('_getRecdTubeCb: i dont want bits from meself, thx anyway.  schizophrenic?')
 			return
-		if (sentTo != self.myHashKey):
+		if (sentTo != Instance.keyHashPrintable):
 			record.Record.log.debug('_getRecdTubeCb: ive overhead someone sending bits, but not to me!')
 			return
 
@@ -112,10 +113,10 @@ class RecordTube(ExportedGObject):
 		if sender == self.tube.get_unique_name():
 			record.Record.log.debug("_unavailableRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
-		if (whoDoesntHaveIt == self.myHashKey):
+		if (whoDoesntHaveIt == Instance.keyHashPrintable):
 			record.Record.log.debug('_unavailableRecdTubeCb: yes, i know i dont have it, i just told you/me/us.')
 			return
-		if (whoAskedForIt != self.myHashKey):
+		if (whoAskedForIt != Instance.keyHashPrintable):
 			record.Record.log.debug('_unavailableRecdTubeCb: ive overheard someone doesnt have a photo, but i didnt ask for that one anyways')
 			return
 
