@@ -155,7 +155,18 @@ def fillRecdFromNode( recd, el ):
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
 			recd.thumbFilename = os.path.basename(thumbPath)
 		except:
-			pass
+			record.Record.log.error("unable to load recd colorFill")
+
+	ai = el.getAttributeNode(Constants.recdAudioImage)
+	if (not ai == None):
+		try:
+			audioImagePath = os.path.join(Instance.tmpPath, "audioImage.png")
+			audioImagePath = utils.getUniqueFilepath( audioImagePath, 0 )
+			audioImage = utils.getPixbufFromString( ai.nodeValue )
+			audioImage.save(audioImagePath, "png", {} )
+			recd.audioImageFilename = os.path.basename(audioImagePath)
+		except:
+			record.Record.log.error("unable to load audio image")
 
 	datastoreNode = el.getAttributeNode(Constants.recdDatastoreId)
 	if (datastoreNode != None):
