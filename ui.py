@@ -568,13 +568,12 @@ class UI:
 
 
 	def _keyPressEventCb( self, widget, event):
-		#todo: add the bugs we're fighting here...
+		#todo: trac #4144
 
 		self.resetWidgetFadeTimer()
 
 		#we listen here for CTRL+C events and game keys, and pass on events to gtk.Entry fields
 		keyname = gtk.gdk.keyval_name(event.keyval)
-
 		if (keyname == 'KP_Page_Up'): #O, up
 			print("GAME UP")
 			if (self.LIVEMODE):
@@ -609,14 +608,8 @@ class UI:
 					self.infoButtonClicked()
 				else:
 					self.updateVideoComponents()
-		elif (keyname == "Spacebar"): #todo
-			if (self.LIVEMODE):
-				if (not self.ca.m.UPDATING):
-					self.doShutter()
-		elif (keyname == 'i'):
-			print("i")
+		elif (keyname == 'i' and event.state == gtk.gdk.CONTROL_MASK):
 			if (not self.LIVEMODE):
-				print("NOT LIVEMODE")
 				self.infoButtonClicked()
 
 		return False
