@@ -8,6 +8,8 @@ from sugar.datastore import datastore
 
 from constants import Constants
 from recorded import Recorded
+from color import Color
+import record
 import utils
 
 
@@ -119,7 +121,7 @@ def fillRecdFromNode( recd, el ):
 			colorStroke.init_hex(colorStrokeHex)
 			recd.colorStroke = colorStroke
 		except:
-			pass
+			record.Record.log.error("unable to load recd colorStroke")
 
 	if (el.getAttributeNode(Constants.recdColorFill) != None):
 		try:
@@ -128,7 +130,7 @@ def fillRecdFromNode( recd, el ):
 			colorFill.init_hex( colorFillHex )
 			recd.colorFill = colorFill
 		except:
-			pass
+			record.Record.log.error("unable to load recd colorFill")
 
 	if (el.getAttributeNode(Constants.recdBuddy) != None):
 		recd.buddy = (el.getAttribute(Constants.recdBuddy) == "True")

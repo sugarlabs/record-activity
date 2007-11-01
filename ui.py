@@ -53,6 +53,7 @@ from gplay import PlayVideoWindow
 from recorded import Recorded
 from button import RecdButton
 import utils
+import record
 import _camera
 
 class UI:
@@ -252,7 +253,7 @@ class UI:
 		photoNamePanel = gtk.HBox(spacing=self.inset)
 		self.photographerPanel.pack_start(photoNamePanel)
 
-		self.photoXoPanel = xoPanel(self)
+		self.photoXoPanel = xoPanel()
 		photoNamePanel.pack_start( self.photoXoPanel, expand=False )
 		self.photoXoPanel.set_size_request( 40, 40 )
 
@@ -1464,8 +1465,9 @@ class UI:
 		elif (recd.type == Constants.TYPE_AUDIO):
 			self.showAudio( recd )
 
-		if (recd != lastRecd):
-			self.photoXoPanel.updateXoColors()
+		if (self.shownRecd != lastRecd):
+			record.Record.log.debug("about to show xo colors: " + str(self.shownRecd.colorStroke))
+			self.photoXoPanel.updateXoColors(self.shownRecd.colorStroke, self.shownRecd.colorFill)
 
 		bottomKid = self.bottomCenter.get_child()
 		if (bottomKid != None):
@@ -1701,27 +1703,21 @@ class PipCanvas(P5):
 
 
 class xoPanel(P5):
-	def __init__(self, ui):
+	def __init__(self):
 		P5.__init__(self)
-		self.ui = ui
-
 		self.xoGuy = None
 		self.lastStroke = None
 		self.lastFill = None
 
 
-	def updateXoColors( self ):
-		if ((self.lastStroke == self.ui.shownRecd.colorStroke.hex) and (self.lastFill == self.ui.shownRecd.colorFill.hex)):
-			return
+	def updateXoColors( self, strokeHex, fillHex ):
+		if (self.lastStroke != None):
+			if ((self.lastStroke == strokeHex) and (self.lastFill == fillHex)):
+				return
 
-		lastStroke = self.ui.shownRecd.colorStroke.hex
-		lastFill = self.ui.shownRecd.colorFill.hex
-
-		if (self.ui.shownRecd != None):
-			self.xoGuy = utils.loadSvg(Constants.xoGuySvgData, self.ui.shownRecd.colorStroke.hex, self.ui.shownRecd.colorFill.hex)
-		else:
-			self.xoGuy = None
-
+		lastStroke = strokeHex
+		lastFill = fillHex
+		self.xoGuy = utils.loadSvg(Constants.xoGuySvgData, strokeHex, fillHex)
 		self.queue_draw()
 
 

@@ -45,6 +45,7 @@ from color import Color
 from ui import UI
 import utils
 import record
+import serialize
 
 
 class Model:
