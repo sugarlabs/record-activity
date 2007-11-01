@@ -155,6 +155,12 @@ class Constants:
 		self.__class__.thumbVideoSvg = utils.loadSvg(self.__class__.thumbVideoSvgData, Instance.colorStroke.hex, Instance.colorFill.hex)
 		thumbVideoSvgFile.close()
 
+		thumbAudioSvgPath = os.path.join(self.__class__.gfxPath, 'thumb_video.svg')
+		thumbAudioSvgFile = open(thumbAudioSvgPath, 'r')
+		self.__class__.thumbAudioSvgData = thumbVideoSvgFile.read()
+		self.__class__.thumbAudioSvg = utils.loadSvg(self.__class__.thumbAudioSvgData, Instance.colorStroke.hex, Instance.colorFill.hex)
+		thumbAudioSvgFile.close()
+
 		maxEnlargeSvgPath = os.path.join(self.__class__.gfxPath, 'max-enlarge.svg')
 		maxEnlargeSvgFile = open(maxEnlargeSvgPath, 'r')
 		maxEnlargeSvgData = maxEnlargeSvgFile.read()
