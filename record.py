@@ -186,11 +186,11 @@ class Record(activity.Activity):
 		self._setup()
 
 		self.__class__.log.debug('_sharedCb: This is my activity: making a tube...')
-		id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube( SERVICE, {})
+		id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube( Constants.SERVICE, {})
 
 
 	def _meshJoinedCb( self, activity ):
-		log.debug('_meshJoinedCb')
+		self.__class__.log.debug('_meshJoinedCb')
 		if not self._shared_activity:
 			return
 
@@ -264,7 +264,7 @@ class Record(activity.Activity):
 
 	def _newTubeCb(self, id, initiator, type, service, params, state):
 		self.__class__.log.debug('New tube: ID=%d initator=%d type=%d service=%s params=%r state=%d', id, initiator, type, service, params, state)
-		if (type == telepathy.TUBE_TYPE_DBUS and service == SERVICE):
+		if (type == telepathy.TUBE_TYPE_DBUS and service == Constants.SERVICE):
 			if state == telepathy.TUBE_STATE_LOCAL_PENDING:
 				self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].AcceptDBusTube(id)
 			tube_conn = TubeConnection(self.conn, self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES], id, group_iface=self.text_chan[telepathy.CHANNEL_INTERFACE_GROUP])
@@ -276,7 +276,7 @@ class Record(activity.Activity):
 
 
 	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
-		log.debug('_newRecdCb')
+		self.__class__.log.debug('_newRecdCb')
 		dom = None
 		try:
 			dom = xml.dom.minidom.parseString(xmlString)
