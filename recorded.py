@@ -58,6 +58,7 @@ class Recorded:
 		#and just because you have a datastore id, doesn't mean you're saved
 		self.savedMedia = False
 		self.savedXml = False
+		self.mime = None #just for sticking into the datastore, for convenience
 
 		#assume you took the picture
 		self.buddy = False

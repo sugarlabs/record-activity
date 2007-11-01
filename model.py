@@ -36,7 +36,6 @@ from time import strftime
 import gobject
 import operator
 
-from sugar.datastore import datastore
 import sugar.env
 
 from constants import Constants

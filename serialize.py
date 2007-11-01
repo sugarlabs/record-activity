@@ -3,6 +3,8 @@ from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
 import cStringIO
 
+from sugar.datastore import datastore
+
 from constants import Constants
 import utils
 
@@ -254,13 +256,13 @@ def saveMediaHash( mediaTypes, mediaHashs ):
 				root.appendChild( mediaEl )
 
 				mtype = mediaTypes[recd.type]
-				mmime = mtype[Constants.keyMime]
-				_saveMedia( mediaEl, recd, mmime )
+				recd.mime = mtype[Constants.keyMime]
+				_saveMedia( mediaEl, recd )
 
 	return album
 
 
-def _saveMedia( el, recd, mime ):
+def _saveMedia( el, recd ):
 	if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
 		pixbuf = recd.getThumbPixbuf( )
 		buddyThumb = str( utils.getStringFromPixbuf(pixbuf) )
@@ -294,11 +296,10 @@ def _saveMediaToDatastore( el, recd ):
 			recd.titleChange = False
 			#save the title to the xml
 			recd.savedMedia = True
-
-			_saveXml( xmlFile, el, recd )
+			_saveXml( el, recd )
 		else:
 			recd.savedMedia = True
-			_saveXml( xmlFile, el, recd )
+			_saveXml( el, recd )
 
 	else:
 		#this will remove the media from being accessed on the local disk since it puts it away into cold storage
@@ -313,7 +314,7 @@ def _saveMediaToDatastore( el, recd ):
 		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
 		mediaObject.metadata['icon-color'] = colors
 
-		mediaObject.metadata['mime_type'] = mmime
+		mediaObject.metadata['mime_type'] = recd.mime
 
 		mediaObject.metadata['activity'] = Constants.activityId
 
@@ -328,4 +329,4 @@ def _saveMediaToDatastore( el, recd ):
 		recd.thumbFilename = None
 		recd.savedMedia = True
 
-		_saveXml( xmlFile, el, recd )
+		_saveXml( el, recd )

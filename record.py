@@ -27,7 +27,6 @@ import telepathy.client
 import logging
 
 from sugar.activity import activity
-from sugar.datastore import datastore
 from sugar.presence import presenceservice
 from sugar.presence.tubeconn import TubeConnection
 from sugar import util
