@@ -2,11 +2,13 @@ import xml.dom.minidom
 from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
 import cStringIO
+import os
 
 from sugar.datastore import datastore
 
 from constants import Constants
 import utils
+
 
 def fillMediaHash( index, mediaHashs ):
 	doc = None
