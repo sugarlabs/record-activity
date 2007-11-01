@@ -1434,7 +1434,7 @@ class UI:
 
 
 	def showMeshRecd( self, recd ):
-		self.ca._logger.debug('showMeshRecd: heres the downloaded recd to display...')
+		record.Record.log.debug('showMeshRecd: heres the downloaded recd to display...')
 
 		#if this thumbnail is being shown, add the option to copy it now
 		kids = self.thumbTray.get_children()
@@ -1443,7 +1443,7 @@ class UI:
 				kids[i].addCopyMenuItem()
 
 		if (recd == self.shownRecd):
-			self.ca._logger.debug('showMeshRecd: and since were still looking at same recd, here it is!')
+			record.Record.log.debug('showMeshRecd: and since were still looking at same recd, here it is!')
 			self.showThumbSelection( recd )
 
 
