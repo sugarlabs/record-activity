@@ -81,7 +81,7 @@ class Gplay:
 		self.getPlayer().set_state(gst.STATE_READY)
 		self.getPlayer().set_property('uri', location)
 		ext = location[len(location)-3:]
-		record.Record.log.debug("setLocation:"+str(ext))
+		record.Record.log.debug("setLocation: ext->"+str(ext))
 		if (ext == "jpg"):
 			self.pause()
 

@@ -27,15 +27,12 @@ import gobject
 
 import record
 
-class Greplay:
+class Greplay(gobject.GObject):
 
 	__gsignals__ = {
 		'coverart-found':
-			(gobject.SIGNAL_RUN_FIRST, None, [object,object,object,object,object])
+			(gobject.SIGNAL_RUN_FIRST, None, [object])
 	}
-
-	def __init__(self):
-		pass
 
 
 	def findAlbumArt( self, path ):

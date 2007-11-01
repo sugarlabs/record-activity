@@ -413,7 +413,7 @@ class Record(activity.Activity):
 
 
 	def _recdBitsArrivedCb( self, objectThatSentTheSignal, md5sumOfIt, part, numparts, bytes, fromWho ):
-		self.__class__.log.debug('_recdBitsArrivedCb: new bits!')
+		#self.__class__.log.debug('_recdBitsArrivedCb: ' + str(part) + "/" + str(numparts))
 		recd = self.m.getRecdByMd5( md5sumOfIt )
 		if (recd == None):
 			self.__class__.log.debug('_recdBitsArrivedCb: thx 4 yr bits, but we dont even have that photo')
@@ -437,7 +437,6 @@ class Record(activity.Activity):
 
 		#update the progress bar
 		recd.meshDownlodingPercent = (part+0.0)/(numparts+0.0)
-		self.__class__.log.debug( str(recd.getMediaFilepath()) + "," + str(recd.meshDownlodingPercent) )
 		f = open(recd.getMediaFilepath(), 'a+').write(bytes)
 
 		if part == numparts:
@@ -448,9 +447,9 @@ class Record(activity.Activity):
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
 			if (recd.type == Constants.TYPE_AUDIO):
-				record.Record.debug("_recdBitsArrivedCb:TYPE_AUDIO")
+				self.__class__.log.debug("_recdBitsArrivedCb:TYPE_AUDIO")
 				greplay = Greplay()
-				greplay.connect("coverart-found", _getAlbumArtCb, recd )
+				greplay.connect("coverart-found", self._getAlbumArtCb, None )
 				filepath = recd.getMediaFilelocation(False)
 				greplay.findAlbumArt(filepath)
 			else:
