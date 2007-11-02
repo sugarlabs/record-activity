@@ -73,6 +73,17 @@ def generateThumbnail( pixbuf, scale, thumbw, thumbh ):
 	return thumbImg
 
 
+def scaleSvgToDim( handle, dim ):
+	#todo...
+	scale = 1.0
+
+	svgDim = handle.get_dimension_data()
+	if (svgDim[0] > dim[0]):
+		pass
+
+	return scale
+
+
 def grayScalePixBuf( pb, copy ):
 	arr = pb.get_pixels_array()
 	if (copy):
@@ -84,21 +95,3 @@ def grayScalePixBuf( pb, copy ):
 			pxl[1][0] = y
 			pxl[2][0] = y
 	return gtk.gdk.pixbuf_new_from_array(arr, pb.get_colorspace(), pb.get_bits_per_sample())
-
-
-def convertSvgtoImg( name ):
-	import instance
-	import constants
-
-	buttonPath = os.path.join(constants.Constants.gfxPath, name)
-	buttonDataFile = open(buttonPath, 'r')
-	buttonData = buttonDataFile.read()
-	buttonSvg = loadSvg(buttonData, None, None)
-	buttonDataFile.close()
-	pb = buttonSvg.get_pixbuf()
-	imgpath = os.path.join(instance.Instance.tmpPath, "ok.png")
-	imgpath = getUniqueFilepath( imgpath, 0 )
-	pb.save( imgpath, "png" )
-	img = gtk.Image()
-	img.set_from_pixbuf( pb )
-	return img

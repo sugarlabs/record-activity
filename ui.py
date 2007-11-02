@@ -206,22 +206,16 @@ class UI:
 
 		self.namePanel = gtk.HBox()
 		leftInfBalance = gtk.VBox()
-		#leftNamePanel = gtk.VBox()
-		#leftNamePanel.set_size_request( 10, -1 )
-		#self.namePanel.pack_start( leftNamePanel, expand=True )
 		self.nameLabel = gtk.Label("<b><span foreground='white'>"+Constants.istrTitle+"</span></b>")
 		self.nameLabel.set_use_markup( True )
 		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.__class__.dim_INSET )
-		self.nameLabel.set_alignment(0, 1)
+		self.nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(140)
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
-		self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.__class__.dim_INSET ) #todo: dynamic
+		#self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.__class__.dim_INSET ) #todo: dynamic
 		self.namePanel.pack_start(self.nameTextfield)
-		#rightNamePanel = gtk.VBox()
-		#rightNamePanel.set_size_request( 50, -1 )
-		#self.namePanel.pack_start( rightNamePanel, expand=True )
 
 		self.photographerPanel = gtk.VBox(spacing=self.__class__.dim_INSET)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)

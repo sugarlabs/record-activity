@@ -185,11 +185,6 @@ class Constants:
 		self.__class__.infoOnSvg = utils.loadSvg(infoOnSvgData, None, None )
 		infoOnSvgFile.close()
 
-		#todo: load from sugar, query its size for my purposes
-		#handle = self._load_svg(icon_info.file_name)
-		#dimensions = handle.get_dimension_data()
-		#icon_width = int(dimensions[0])
-		#icon_height = int(dimensions[1])
 		xoGuySvgPath = os.path.join(self.__class__.gfxPath, 'xo-guy.svg')
 		xoGuySvgFile = open(xoGuySvgPath, 'r')
 		self.__class__.xoGuySvgData = xoGuySvgFile.read()
