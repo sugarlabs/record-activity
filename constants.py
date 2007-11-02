@@ -143,6 +143,8 @@ class Constants:
 	recRedImg = None
 	recCircleCairo = None
 	recInsensitiveImg = None
+	recPlayImg = None
+	recPauseImg = None
 
 	def __init__( self, ca ):
 		self.__class__.activityId = ca._activity_id
@@ -211,3 +213,13 @@ class Constants:
 		recInsPixbuf = gtk.gdk.pixbuf_new_from_file(recInsFile)
 		self.__class__.recInsensitiveImg = gtk.Image()
 		self.__class__.recInsensitiveImg.set_from_pixbuf( recInsPixbuf )
+
+		recPlayFile = os.path.join(self.__class__.gfxPath, 'media-play.png')
+		recPlayPixbuf = gtk.gdk.pixbuf_new_from_file(recPlayFile)
+		self.__class__.recPlayImg = gtk.Image()
+		self.__class__.recPlayImg.set_from_pixbuf( recPlayPixbuf )
+
+		recPauseFile = os.path.join(self.__class__.gfxPath, 'media-pause.png')
+		recPausePixbuf = gtk.gdk.pixbuf_new_from_file(recPauseFile)
+		self.__class__.recPauseImg = gtk.Image()
+		self.__class__.recPauseImg.set_from_pixbuf( recPausePixbuf )

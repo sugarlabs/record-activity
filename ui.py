@@ -1695,19 +1695,20 @@ class ScrubberWindow(gtk.Window):
 		self.hbox.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.add( self.hbox )
 
-		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-		self.play_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
-
 		self.button = gtk.Button()
 		buttBox = gtk.EventBox()
 		buttBox.add(self.button)
 		buttBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
-		self.button.set_image(self.play_image)
+		self.button.set_image( Constants.recPlayImg )
 		self.button.set_property('can-default', True)
-		self.button.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
-		buttBox.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
-		self.button.set_border_width( UI.dim_INSET/2 )
+		self.button.set_relief(gtk.RELIEF_NONE)
+		self.button.set_size_request( self.ui.recordButtWd, self.ui.recordButtWd )
+		buttBox.set_size_request( self.ui.recordButtWd, self.ui.recordButtWd )
+		#self.button.set_border_width( UI.dim_INSET/2 )
 		self.button.show()
+
+		buttBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.button.modify_bg( gtk.STATE_ACTIVE, Constants.colorBlack.gColor )
 
 		self.button.connect('clicked', self._buttonClickedCb)
 		self.hbox.pack_start(buttBox, expand=False)
@@ -1742,11 +1743,11 @@ class ScrubberWindow(gtk.Window):
 
 
 	def set_button_play(self):
-		self.button.set_image(self.play_image)
+		self.button.set_image(Constants.recPlayImg)
 
 
 	def set_button_pause(self):
-		self.button.set_image(self.pause_image)
+		self.button.set_image(Constants.recPauseImg)
 
 
 	def play_toggled(self):
