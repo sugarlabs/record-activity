@@ -1902,6 +1902,8 @@ class RecordButton(gtk.Button):
 	def __init__(self):
 		gtk.Button.__init__(self)
 		self.sens = True
+		self.img = None
+		#todo: check on record state, compare button imgs
 
 
 	def set_sensitive(self, sen):
@@ -1918,14 +1920,12 @@ class RecordButton(gtk.Button):
 
 
 	def doRecordButton(self):
-		print("setting record: ", self.sens)
 		if (not self.sens):
 			return
 		self.set_image( Constants.recRedImg )
 
 
 	def doNormalButton(self):
-		print("setting normal: ", self.sens)
 		if (not self.sens):
 			return
 		self.set_image( Constants.recImg )
@@ -1992,10 +1992,16 @@ class RecordWindow(gtk.Window):
 		ctx.set_source_rgb(0, 0, 0)
 		ctx.fill()
 
+		z = 9
+		ctx.translate(z,z)
+		ctx.set_source_surface (Constants.recCircleCairo, 0, 0)
+		ctx.paint()
+		ctx.translate(-z,-z)
+
 		ctx.set_source_rgb( 255, 255, 255)
 		pangocontext = gtk.Window().get_pango_context()
 		layout = pango.Layout(pangocontext)
-		font = pango.FontDescription("sans 40")
+		font = pango.FontDescription("sans 30")
 		layout.set_font_description(font)
 		layout.set_text( ""+str(num) )
 		dim = layout.get_pixel_extents()
@@ -2003,6 +2009,9 @@ class RecordWindow(gtk.Window):
 		xoff = (w-dim[0][2])/2
 		yoff = (h-dim[0][3])/2
 		ctx.translate( xoff, yoff )
+
+		ctx.translate( 1, 1 )
+
 		ctx.show_layout(layout)
 
 		#pb = gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8, w, h)
