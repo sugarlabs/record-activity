@@ -160,8 +160,7 @@ class Record(activity.Activity):
 		if (self.ui != None):
 			self.ui.updateButtonSensitivities( )
 			self.ui.doMouseListener( False )
-			self.ui.hideLiveWindows( )
-			self.ui.hidePlayWindows( )
+			self.ui.hideAllWindows()
 		if (self.gplay != None):
 			self.gplay.stop( )
 		if (self.glive != None):

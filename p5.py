@@ -24,6 +24,8 @@ import gobject
 import cairo
 import math
 
+#Sometimes a gtk.Image is a useful alternative to a drawing area. You can put a gtk.gdk.Pixmap in the gtk.Image and draw to the gtk.gdk.Pixmap, calling the gtk.Widget.queue_draw() method on the gtk.Image when you want to refresh to the screen.
+
 class P5(gtk.DrawingArea):
 	def __init__(self):
 		super(P5, self).__init__()
@@ -36,8 +38,6 @@ class P5(gtk.DrawingArea):
 
 		# ok, we have to listen to mouse events here too
 		self.add_events(gdk.BUTTON_PRESS_MASK | gdk.BUTTON_RELEASE_MASK | gdk.POINTER_MOTION_MASK)
-		#jedi says, this is useful, our very own d&d model
-		#how one talks to the sugar taskframe, no one knows.
 		self._dragging = False
 		self._mouseX = 0
 		self._mouseY = 0

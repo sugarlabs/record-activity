@@ -33,6 +33,7 @@ from time import strftime
 import math
 import shutil
 import time
+import pango
 
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
@@ -92,9 +93,7 @@ class UI:
 		self.LAST_LIVE = True
 		self.LAST_RECD_INFO = False
 		self.LAST_TRANSCODING = False
-		self.LAST_COUNTINGDOWN = False
 		self.TRANSCODING = False
-		self.COUNTINGDOWN = False
 		self.RECD_INFO_ON = False
 		self.UPDATE_DURATION_ID = 0
 		self.UPDATE_TIMER_ID = 0
@@ -208,9 +207,6 @@ class UI:
 
 		self.namePanel = gtk.HBox()
 		leftInfBalance = gtk.VBox()
-		leftInfBalance.set_size_request( self.controlBarHt, -1 )
-		leftInfBalance.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
-		self.namePanel.pack_start( leftInfBalance, expand=False )
 		leftNamePanel = gtk.VBox()
 		leftNamePanel.set_size_request( 10, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
@@ -218,24 +214,15 @@ class UI:
 		self.nameLabel.set_use_markup( True )
 		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.__class__.dim_INSET )
 		self.nameLabel.set_alignment(0, .5)
-		self.nameTextfield = gtk.Entry(80)
+		self.nameTextfield = gtk.Entry(140)
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
-		self.nameTextfield.set_size_request( -1, self.controlBarHt-self.__class__.dim_INSET )
+		self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.__class__.dim_INSET ) #todo: dynamic
 		self.namePanel.pack_start(self.nameTextfield)
 		rightNamePanel = gtk.VBox()
 		rightNamePanel.set_size_request( 10, -1 )
 		self.namePanel.pack_start( rightNamePanel, expand=True )
-		infButton = InfButton( self )
-		self.namePanel.pack_start( infButton, expand=False )
-
-		self.scrubberPanel = gtk.HBox()
-		infButtonScrubber = InfButton( self )
-		leftFill = gtk.HBox()
-		self.scrubberPanel.pack_start( leftFill, expand=True )
-		self.scrubberPanel.pack_start( infButtonScrubber, expand=False )
-
 
 		self.photographerPanel = gtk.VBox(spacing=self.__class__.dim_INSET)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
@@ -399,9 +386,12 @@ class UI:
 		self.scrubWindow = ScrubberWindow(self)
 		self.addToWindowStack( self.scrubWindow, self.windowStack[len(self.windowStack)-1] )
 
-		self.hideLiveWindows()
-		self.hidePlayWindows()
-		self.hideAudioWindows()
+		self.infWindow = gtk.Window()
+		infButton= InfButton(self)
+		self.infWindow.add(infButton)
+		self.addToWindowStack( self.infWindow, self.windowStack[len(self.windowStack)-1] )
+
+		self.hideAllWindows()
 
 		self.MAP_EVENT_ID = self.liveVideoWindow.connect_after("map-event", self._mapEventCb)
 
@@ -416,6 +406,7 @@ class UI:
 		pgdDim = self.getPgdDim( False )
 		maxDim = self.getMaxDim( False )
 		prgDim = self.getPrgDim( False )
+		infDim = self.getInfDim( False )
 		self.livePhotoWindow.resize( imgDim[0], imgDim[1] )
 		self.pipBgdWindow.resize( pgdDim[0], pgdDim[1] )
 		self.liveVideoWindow.resize( imgDim[0], imgDim[1] )
@@ -425,6 +416,7 @@ class UI:
 		self.recordWindow.resize( eyeDim[0], eyeDim[1] )
 		self.maxWindow.resize( maxDim[0], maxDim[1] )
 		self.progressWindow.resize( prgDim[0], prgDim[1] )
+		self.infWindow.resize( infDim[0], infDim[1] )
 
 
 	def _toolbarChangeCb( self, tbox, num ):
@@ -479,6 +471,7 @@ class UI:
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
+		self.moveWinOffscreen( self.infWindow )
 
 		if (self.FULLSCREEN):
 			self.moveWinOffscreen( self.recordWindow )
@@ -543,9 +536,8 @@ class UI:
 			if (self.inWidget( mx, my, self.getLoc("prg", self.FULLSCREEN), self.getDim("prg", self.FULLSCREEN))):
 				return True
 
-			#todo:
-#			if (self.inWidget( mx, my, self.getLoc("inf", self.FULLSCREEN), self.getDim("inf", self.FULLSCREEN))):
-#				return True
+			if (self.inWidget( mx, my, self.getLoc("inf", self.FULLSCREEN), self.getDim("inf", self.FULLSCREEN))):
+				return True
 
 		if (self.LIVEMODE):
 			if (self.inWidget( mx, my, self.getLoc("eye", self.FULLSCREEN), self.getDim("eye", self.FULLSCREEN))):
@@ -702,14 +694,6 @@ class UI:
 		self.scrubWindow.removeCallbacks()
 		self.scrubWindow.reset()
 
-#		kids = self.bottomCenter.get_children()
-#		haveInfButton = False
-#		for i in range(0, len(kids)):
-#			if (self.infButton == kids[i]):
-#				haveInfButton = True
-#		if (haveInfButton):
-#			self.bottomCenter.remove( self.infButton )
-
 		self.resetWidgetFadeTimer( )
 
 
@@ -739,35 +723,6 @@ class UI:
 	def hideAllWindows( self ):
 		for i in range (0, len(self.windowStack)):
 			self.moveWinOffscreen( self.windowStack[i] )
-
-
-	def hideLiveWindows( self ):
-		self.moveWinOffscreen( self.livePhotoWindow )
-		self.moveWinOffscreen( self.pipBgdWindow )
-		self.moveWinOffscreen( self.liveVideoWindow )
-		self.moveWinOffscreen( self.maxWindow )
-		self.moveWinOffscreen( self.recordWindow )
-		self.moveWinOffscreen( self.progressWindow )
-		self.moveWinOffscreen( self.scrubWindow )
-
-
-	def hidePlayWindows( self ):
-		self.moveWinOffscreen( self.playOggWindow )
-		self.moveWinOffscreen( self.pipBgdWindow2 )
-		self.moveWinOffscreen( self.playLiveWindow )
-		self.moveWinOffscreen( self.maxWindow )
-		self.moveWinOffscreen( self.recordWindow )
-		self.moveWinOffscreen( self.progressWindow )
-		self.moveWinOffscreen( self.scrubWindow )
-
-
-	def hideAudioWindows( self ):
-		self.moveWinOffscreen( self.livePhotoWindow )
-		self.moveWinOffscreen( self.liveVideoWindow )
-		self.moveWinOffscreen( self.recordWindow )
-		self.moveWinOffscreen( self.pipBgdWindow )
-		self.moveWinOffscreen( self.progressWindow )
-		self.moveWinOffscreen( self.scrubWindow )
 
 
 	def _liveButtonReleaseCb(self, widget, event):
@@ -930,6 +885,13 @@ class UI:
 		self.smartMove( win, scrLoc[0], scrLoc[1] )
 
 
+	def setInfLocDim( self, win ):
+		infDim = self.getInfDim( self.FULLSCREEN )
+		self.smartResize( win, infDim[0], infDim[1] )
+		infLoc = self.getInfLoc( self.FULLSCREEN )
+		self.smartMove( win, infLoc[0], infLoc[1] )
+
+
 	def getScrDim( self, full ):
 		if (full):
 			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.pgdw+self.__class__.dim_INSET+self.__class__.dim_INSET), self.controlBarHt]
@@ -1010,6 +972,14 @@ class UI:
 			return [(self.centerBoxPos[0]+self.vw)-(self.__class__.dim_INSET+self.maxw), self.centerBoxPos[1]+self.__class__.dim_INSET]
 
 
+	def getInfLoc( self, full ):
+		if (full):
+			return [gtk.gdk.screen_width()+100,gtk.gdk.screen_height()+100 ]
+		else:
+			dim = self.getInfDim(self.FULLSCREEN)
+			return [(self.centerBoxPos[0]+self.vw)-dim[0], (self.centerBoxPos[1]+self.vh)-dim[1]]
+
+
 	def setEyeLocDim( self, win ):
 		dim = self.getEyeDim( self.FULLSCREEN )
 		self.smartResize( win, dim[0], dim[1] )
@@ -1081,9 +1051,15 @@ class UI:
 			return self.getInbDim( full )
 		elif(pos == "prg"):
 			return self.getPrgDim( full )
+		elif(pos == "inf"):
+			return self.getInfDim( full )
 
 
 	def getMaxDim( self, full ):
+		return [self.maxw, self.maxh]
+
+
+	def getInfDim( self, full ):
 		return [self.maxw, self.maxh]
 
 
@@ -1128,6 +1104,8 @@ class UI:
 			return self.getInbLoc( full )
 		elif(pos == "prg"):
 			return self.getPrgLoc( full )
+		elif(pos == "inf"):
+			return self.getInfLoc( full )
 
 
 	def _shutterClickCb( self, arg ):
@@ -1147,8 +1125,6 @@ class UI:
 					timerTime = self.audioToolbar.getTimer()
 
 				if (timerTime > 0):
-					self.COUNTINGDOWN = True
-					self.updateCountdownComponents()
 					self.timerStartTime = time.time()
 					self.UPDATE_TIMER_ID = gobject.timeout_add( 500, self._updateTimerCb )
 				else:
@@ -1165,6 +1141,7 @@ class UI:
 
 
 	def _completeTimer( self ):
+		self.recordWindow.updateCountdown(-1)
 		self.progressWindow.updateProgress( 1, "" )
 		gobject.source_remove( self.UPDATE_TIMER_ID )
 		self.UPDATE_TIMER_ID = 0
@@ -1188,37 +1165,18 @@ class UI:
 		else:
 			secsRemaining = timerTime-passedTime
 			self.progressWindow.updateProgress( passedTime/timerTime, Constants.istrTimer + " " + Constants.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
+			self.recordWindow.updateCountdown( int(secsRemaining) )
 			return True
 
 
 	def clickShutter( self ):
-		if (not self.ca.m.RECORDING): #don't append a sound to the end of a video or audio.  maybe play a click afterwards?
+		if (not self.ca.m.RECORDING):
 			os.system( "aplay -t wav " + str(Constants.soundClick) )
 
 		wasRec = self.ca.m.RECORDING
 		self.ca.m.doShutter()
 		if (wasRec):
 			os.system( "aplay -t wav " + str(Constants.soundClick) )
-
-		self.COUNTINGDOWN = False
-		self.updateCountdownComponents()
-
-
-	def updateCountdownComponents( self ):
-		if (not self.ca.m.MODE == Constants.MODE_PHOTO):
-			return
-
-		if (self.LAST_COUNTINGDOWN != self.COUNTINGDOWN):
-			pos = []
-			if (self.COUNTINGDOWN):
-				pos.append({"position":"tmr", "window":self.progressWindow} )
-				self.moveWinOffscreen(self.recordWindow)
-			else:
-				pos.append({"position":"eye", "window":self.recordWindow} )
-				self.moveWinOffscreen(self.progressWindow)
-
-			self.updatePos( pos )
-			self.LAST_COUNTINGDOWN = self.COUNTINGDOWN
 
 
 	def updateVideoComponents( self ):
@@ -1239,30 +1197,29 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inb", "window":self.livePhotoWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
 				pos.append({"position":"inb", "window":self.playOggWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"inb", "window":self.livePhotoWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 		elif (not self.RECD_INFO_ON and not self.TRANSCODING):
 			if (self.ca.m.MODE == Constants.MODE_PHOTO):
 				if (self.LIVEMODE):
-					if (not self.COUNTINGDOWN):
-						pos.append({"position":"img", "window":self.liveVideoWindow} )
-						pos.append({"position":"max", "window":self.maxWindow} )
-						pos.append({"position":"eye", "window":self.recordWindow} )
-					else:
-						pos.append({"position":"img", "window":self.liveVideoWindow} )
-						pos.append({"position":"max", "window":self.maxWindow} )
-						pos.append({"position":"tmr", "window":self.progressWindow} )
+					pos.append({"position":"img", "window":self.liveVideoWindow} )
+					pos.append({"position":"max", "window":self.maxWindow} )
+					pos.append({"position":"eye", "window":self.recordWindow} )
 				else:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.playLiveWindow} )
@@ -1275,6 +1232,7 @@ class UI:
 					pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 					pos.append({"position":"pip", "window":self.playLiveWindow} )
 					pos.append({"position":"scr", "window":self.scrubWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
@@ -1285,6 +1243,7 @@ class UI:
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
 					pos.append({"position":"scr", "window":self.scrubWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 		elif (self.TRANSCODING):
 			pos.append({"position":"tmr", "window":self.progressWindow} )
 
@@ -1316,6 +1275,7 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"max", "window":self.maxWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1325,6 +1285,7 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
 				pos.append({"position":"scr", "window":self.scrubWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1334,6 +1295,7 @@ class UI:
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
 				pos.append({"position":"scr", "window":self.scrubWindow} )
+				pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"eye", "window":self.recordWindow} )
 				pos.append({"position":"prg", "window":self.progressWindow} )
@@ -1364,6 +1326,8 @@ class UI:
 						self.setTmrLocDim( pos[j]["window"])
 					elif (pos[j]["position"] == "scr"):
 						self.setScrLocDim( pos[j]["window"])
+					elif (pos[j]["position"] == "inf"):
+						self.setInfLocDim( pos[j]["window"])
 
 
 	def removeThumb( self, recd ):
@@ -1571,7 +1535,7 @@ class UI:
 
 
 	def setPostProcessPixBuf( self, pixbuf ):
-		pixbuf = utils.grayScalePixBuf(pixbuf, False)
+		pixbuf = utils.grayScalePixBuf(pixbuf, True)
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.backgdCanvas.setImage(img)
 
@@ -1918,14 +1882,14 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 
 		self.shutterButton = gtk.Button()
-		self.shutterButton.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
+		self.shutterButton.set_size_request( self.ui.recordButtWd, self.ui.recordButtWd )
 		self.shutterButton.set_image( Constants.camImg )
 		self.shutterButton.connect("clicked", self.ui._shutterClickCb)
 		self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
-		shutterBox.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
+		shutterBox.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
 		shutterBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
-		self.shutterButton.set_border_width(UI.dim_INSET)
+		#self.shutterButton.set_border_width(UI.dim_INSET)
 
 		hbox = gtk.HBox()
 		self.add( hbox )
@@ -1942,6 +1906,46 @@ class RecordWindow(gtk.Window):
 		rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		rightEvent.add( rightPanel )
 		hbox.pack_start( rightEvent, expand=True )
+
+		self.num = -1
+
+
+	def updateCountdown(self, num):
+		#todo: fix
+		if(num>0):
+			if (num != self.num):
+				ok = self.getCairoCountdown(num)
+				self.shutterButton.set_image(ok)
+			self.num = num
+		else:
+			self.num = -1
+			self.updateGfx()
+
+
+	def getCairoCountdown(self, num):
+		w = self.ui.controlBarHt-10
+		h = self.ui.controlBarHt-10
+		pixmap = gtk.gdk.Pixmap(None, w, h, 24)
+		img = gtk.Image()
+		img.set_from_pixmap(pixmap, None)
+
+		ctx = pixmap.cairo_create()
+		ctx.rectangle(0,0,w,h)
+		ctx.set_source_rgba( 255, 255, 255, 0 )
+		ctx.fill()
+
+		ctx.set_source_rgba( 0, 0, 0, 100 )
+		pangocontext = self.get_pango_context()
+		layout = pango.Layout(pangocontext)
+		font = pango.FontDescription("sans "+str(w-4))
+		layout.set_font_description(font)
+		layout.set_text( ""+str(num) )
+		#layout.set_width(w*pango.SCALE)
+		ctx.show_layout(layout)
+
+
+		return img
+
 
 
 	def updateGfx( self ):
