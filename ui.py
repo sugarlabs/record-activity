@@ -81,8 +81,8 @@ class UI:
 		self.maxw = 49
 		self.maxh = 49
 		#height of the record button, progress bar, etc.
-		self.controlBarHt = 75
-		self.recordButtWd = 75
+		self.controlBarHt = 55
+		self.recordButtWd = 55
 
 		#ui modes
 		self.FULLSCREEN = False
@@ -209,22 +209,22 @@ class UI:
 
 		self.namePanel = gtk.HBox()
 		leftInfBalance = gtk.VBox()
-		leftNamePanel = gtk.VBox()
-		leftNamePanel.set_size_request( 10, -1 )
-		self.namePanel.pack_start( leftNamePanel, expand=True )
+		#leftNamePanel = gtk.VBox()
+		#leftNamePanel.set_size_request( 10, -1 )
+		#self.namePanel.pack_start( leftNamePanel, expand=True )
 		self.nameLabel = gtk.Label("<b><span foreground='white'>"+Constants.istrTitle+"</span></b>")
 		self.nameLabel.set_use_markup( True )
 		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.__class__.dim_INSET )
-		self.nameLabel.set_alignment(0, .5)
+		self.nameLabel.set_alignment(0, 1)
 		self.nameTextfield = gtk.Entry(140)
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
 		self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.__class__.dim_INSET ) #todo: dynamic
 		self.namePanel.pack_start(self.nameTextfield)
-		rightNamePanel = gtk.VBox()
-		rightNamePanel.set_size_request( 10, -1 )
-		self.namePanel.pack_start( rightNamePanel, expand=True )
+		#rightNamePanel = gtk.VBox()
+		#rightNamePanel.set_size_request( 50, -1 )
+		#self.namePanel.pack_start( rightNamePanel, expand=True )
 
 		self.photographerPanel = gtk.VBox(spacing=self.__class__.dim_INSET)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
@@ -1982,8 +1982,8 @@ class RecordWindow(gtk.Window):
 
 
 	def getCairoCountdown(self, num):
-		w = self.ui.controlBarHt-10
-		h = self.ui.controlBarHt-10
+		w = self.ui.controlBarHt
+		h = self.ui.controlBarHt
 		pixmap = gtk.gdk.Pixmap(None, w, h, 24)
 		#pixmap.draw_rectangle( self.get_style().bg_gc[gtk.STATE_NORMAL], True, 0, 0, w, h)
 
@@ -1992,11 +1992,12 @@ class RecordWindow(gtk.Window):
 		ctx.set_source_rgb(0, 0, 0)
 		ctx.fill()
 
-		z = 9
-		ctx.translate(z,z)
+		x = 3
+		y = 4
+		ctx.translate(x,y)
 		ctx.set_source_surface (Constants.recCircleCairo, 0, 0)
 		ctx.paint()
-		ctx.translate(-z,-z)
+		ctx.translate(-x,-y)
 
 		ctx.set_source_rgb( 255, 255, 255)
 		pangocontext = gtk.Window().get_pango_context()
@@ -2009,8 +2010,6 @@ class RecordWindow(gtk.Window):
 		xoff = (w-dim[0][2])/2
 		yoff = (h-dim[0][3])/2
 		ctx.translate( xoff, yoff )
-
-		ctx.translate( 1, 1 )
 
 		ctx.show_layout(layout)
 
