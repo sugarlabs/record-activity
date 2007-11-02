@@ -69,7 +69,18 @@ def generateThumbnail( pixbuf, scale, thumbw, thumbh ):
 	tctx.scale(scale, scale)
 	tctx.set_source_surface(img, 0, 0)
 	tctx.paint()
-
 	gc.collect()
-
 	return thumbImg
+
+
+def grayScalePixBuf( pb, copy ):
+	arr = pb.get_pixels_array()
+	if (copy):
+		arr = arr.copy()
+	for row in arr:
+		for pxl in row:
+			y = 0.3*pxl[0][0]+0.59*pxl[1][0]+0.11*pxl[2][0]
+			pxl[0][0] = y
+			pxl[1][0] = y
+			pxl[2][0] = y
+	return gtk.gdk.pixbuf_new_from_array(arr, pb.get_colorspace(), pb.get_bits_per_sample())

@@ -38,7 +38,7 @@ def _loadMediaIntoHash( el, hash ):
 			#quickly check: if you have a datastoreId that the file hasn't been deleted,
 			#cause if you do, we need to flag your removal
 			#2904 trac
-			recd.datastoreOb = _getMediaFromDatastore( recd )
+			recd.datastoreOb = getMediaFromDatastore( recd )
 			if (recd.datastoreOb == None):
 				addToHash = False
 			else:
@@ -54,7 +54,7 @@ def _loadMediaIntoHash( el, hash ):
 		hash.append( recd )
 
 
-def _getMediaFromDatastore( recd ):
+def getMediaFromDatastore( recd ):
 	if (recd.datastoreId == None):
 		print("RecordActivity error -- request for recd from datastore with no datastoreId")
 		return None
@@ -273,7 +273,7 @@ def _saveMediaToDatastore( el, recd ):
 		#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 		#However, they might have changed the name of the file
 		if (recd.titleChange):
-			recd.datastoreOb = _getMediaFromDatastore( recd )
+			recd.datastoreOb = getMediaFromDatastore( recd )
 			if (recd.datastoreOb.metadata['title'] != recd.title):
 				recd.datastoreOb.metadata['title'] = recd.title
 				datastore.write(recd.datastoreOb)

@@ -170,13 +170,13 @@ class UI:
 		self.centerBox.add(centerSizer)
 
 		self.bottomCenter = gtk.EventBox()
-		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, Constants.colorWhite.gColor)
+		self.bottomCenter.modify_bg(gtk.STATE_NORMAL, Constants.colorBlack.gColor)
 		self.bottomCenter.set_size_request(self.vw, self.controlBarHt)
 		centerVBox.pack_start( self.bottomCenter, expand=False )
 
 		#into the center box we can put this guy...
 		self.backgdCanvasBox = gtk.VBox()
-		self.backgdCanvasBox.modify_bg(gtk.STATE_NORMAL, Constants.colorWhite.gColor)
+		self.backgdCanvasBox.modify_bg(gtk.STATE_NORMAL, Constants.colorBlack.gColor)
 		self.backgdCanvasBox.set_size_request(self.vw, -1)
 		self.backgdCanvas = PhotoCanvas()
 		self.backgdCanvas.set_size_request(self.vw, self.vh)
@@ -209,17 +209,17 @@ class UI:
 		self.namePanel = gtk.HBox()
 		leftInfBalance = gtk.VBox()
 		leftInfBalance.set_size_request( self.controlBarHt, -1 )
-		leftInfBalance.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		leftInfBalance.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		self.namePanel.pack_start( leftInfBalance, expand=False )
 		leftNamePanel = gtk.VBox()
 		leftNamePanel.set_size_request( 10, -1 )
 		self.namePanel.pack_start( leftNamePanel, expand=True )
-		self.nameLabel = gtk.Label("<b>"+Constants.istrTitle+"</b>")
+		self.nameLabel = gtk.Label("<b><span foreground='white'>"+Constants.istrTitle+"</span></b>")
 		self.nameLabel.set_use_markup( True )
 		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.__class__.dim_INSET )
 		self.nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(80)
-		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
+		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
 		self.nameTextfield.set_size_request( -1, self.controlBarHt-self.__class__.dim_INSET )
@@ -358,8 +358,8 @@ class UI:
 
 		#border behind
 		self.pipBgdWindow = gtk.Window()
-		self.livePhotoWindow.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
-		self.livePhotoWindow.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
+		self.pipBgdWindow.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		self.pipBgdWindow.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
 		self.addToWindowStack( self.pipBgdWindow, self.windowStack[len(self.windowStack)-1] )
 
 		self.liveVideoWindow = LiveVideoWindow(Constants.colorBlack.gColor)
@@ -371,14 +371,15 @@ class UI:
 		#video playback windows
 		self.playOggWindow = PlayVideoWindow(Constants.colorBlack.gColor)
 		self.addToWindowStack( self.playOggWindow, self.windowStack[len(self.windowStack)-1] )
-		self.playOggWindow.set_gplay(self.ca.gplay)
+		#self.playOggWindow.set_gplay(self.ca.gplay)
+		self.ca.gplay.window = self.playOggWindow
 		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
 
 		#border behind
 		self.pipBgdWindow2 = gtk.Window()
-		self.pipBgdWindow2.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
-		self.pipBgdWindow2.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
+		self.pipBgdWindow2.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		self.pipBgdWindow2.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
 		self.addToWindowStack( self.pipBgdWindow2, self.windowStack[len(self.windowStack)-1] )
 
 		self.playLiveWindow = LiveVideoWindow(Constants.colorBlack.gColor)
@@ -1570,7 +1571,7 @@ class UI:
 
 
 	def setPostProcessPixBuf( self, pixbuf ):
-		#todo: grayscale here!
+		pixbuf = utils.grayScalePixBuf(pixbuf, False)
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.backgdCanvas.setImage(img)
 
@@ -1679,7 +1680,7 @@ class xoPanel(P5):
 		self.background( ctx, Constants.colorHilite, w, h )
 
 		if (self.xoGuy != None):
-			#todo: scale mr xo
+			#todo: scale mr xo to fit in his box
 			ctx.scale( .6, .6 )
 			self.xoGuy.render_cairo( ctx )
 
@@ -1696,8 +1697,8 @@ class ScrubberWindow(gtk.Window):
 		self.p_duration = gst.CLOCK_TIME_NONE
 
 		self.hbox = gtk.HBox()
-		self.hbox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
-		self.hbox.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
+		self.hbox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.hbox.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.add( self.hbox )
 
 		self.pause_image = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
@@ -1706,7 +1707,7 @@ class ScrubberWindow(gtk.Window):
 		self.button = gtk.Button()
 		buttBox = gtk.EventBox()
 		buttBox.add(self.button)
-		buttBox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		buttBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		self.button.set_image(self.play_image)
 		self.button.set_property('can-default', True)
 		self.button.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
@@ -1722,7 +1723,7 @@ class ScrubberWindow(gtk.Window):
 		self.hscale.set_draw_value(False)
 		self.hscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
 		hscaleBox = gtk.EventBox()
-		hscaleBox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		hscaleBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		hscaleBox.add( self.hscale )
 		self.hscale.connect('button-press-event', self._scaleButtonPressCb)
 		self.hscale.connect('button-release-event', self._scaleButtonReleaseCb)
@@ -1923,14 +1924,14 @@ class RecordWindow(gtk.Window):
 		self.shutterButton.set_sensitive(False)
 		shutterBox = gtk.EventBox()
 		shutterBox.set_size_request( self.ui.recordButtWd, self.ui.controlBarHt )
-		shutterBox.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		shutterBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		self.shutterButton.set_border_width(UI.dim_INSET)
 
 		hbox = gtk.HBox()
 		self.add( hbox )
 		leftPanel = gtk.VBox()
 		leftEvent = gtk.EventBox()
-		leftEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		leftEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		leftEvent.add( leftPanel )
 		hbox.pack_start( leftEvent, expand=True )
 		shutterBox.add( self.shutterButton )
@@ -1938,7 +1939,7 @@ class RecordWindow(gtk.Window):
 
 		rightPanel = gtk.VBox()
 		rightEvent = gtk.EventBox()
-		rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		rightEvent.add( rightPanel )
 		hbox.pack_start( rightEvent, expand=True )
 
@@ -1959,8 +1960,8 @@ class ProgressWindow(gtk.Window):
 		self.str = None
 
 		eb = gtk.EventBox()
-		eb.modify_fg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
-		eb.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
+		eb.modify_fg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		eb.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		self.add( eb )
 
 		vb = gtk.VBox()
@@ -1968,7 +1969,7 @@ class ProgressWindow(gtk.Window):
 		eb.add(vb)
 
 		self.progBar = gtk.ProgressBar()
-		self.progBar.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
+		self.progBar.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		vb.add( self.progBar )
 
 

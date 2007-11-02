@@ -70,10 +70,10 @@ class Record(activity.Activity):
 		self.connect( "shared", self._sharedCb )
 
 		#the main classes
-		self.m = Model( self )
-		self.glive = Glive( self )
-		self.gplay = Gplay( self )
-		self.ui = UI( self )
+		self.m = Model(self)
+		self.glive = Glive(self)
+		self.gplay = Gplay()
+		self.ui = UI(self)
 
 		#CSCL
 		if self._shared_activity:

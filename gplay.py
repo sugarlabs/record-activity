@@ -36,8 +36,7 @@ import record
 
 class Gplay:
 
-	def __init__(self, pca):
-		self.ca = pca
+	def __init__(self):
 		self.window = None
 		self.players = []
 		self.playing = False
@@ -67,10 +66,11 @@ class Gplay:
 
 	def onSyncMessage(self, bus, message):
 		if message.structure is None:
-			return
+			return True
 		if message.structure.get_name() == 'prepare-xwindow-id':
 			self.window.set_sink(message.src)
 			message.src.set_property('force-aspect-ratio', True)
+			return True
 
 
 	def setLocation(self, location):
@@ -137,17 +137,11 @@ class PlayVideoWindow(gtk.Window):
 		gtk.Window.__init__(self)
 
 		self.imagesink = None
-		self.glive = None
 
 		self.modify_bg( gtk.STATE_NORMAL, bgd )
 		self.modify_bg( gtk.STATE_INSENSITIVE, bgd )
 		self.unset_flags(gtk.DOUBLE_BUFFERED)
 		self.set_flags(gtk.APP_PAINTABLE)
-
-
-	def set_gplay(self, pgplay):
-		self.gplay = pgplay
-		self.gplay.window = self
 
 
 	def set_sink(self, sink):
