@@ -62,27 +62,24 @@ class UI:
 	dim_THUMB_WIDTH = 107
 	dim_THUMB_HEIGHT = 80
 	dim_INSET = 10
+	dim_PIPW = 160
+	dim_PIPH = 120 #pipBorder
+	dim_PIP_BORDER = 4
+	dim_PGDW = dim_PIPW + (dim_PIP_BORDER*2)
+	dim_PGDH = dim_PIPH + (dim_PIP_BORDER*2)
 
 	def __init__( self, pca ):
 		self.ca = pca
 
-		#sizes
-		#thumb dimensions:
 		self.thumbTrayHt = 150 #todo: get sugar constant here
 		self.thumbSvgW = 124
 		self.thumbSvgH = 124
-		#pip size:
-		self.pipw = 160
-		self.piph = 120
-		self.pipBorder = 4
-		self.pgdw = self.pipw + (self.pipBorder*2)
-		self.pgdh = self.piph + (self.pipBorder*2)
-		#maximize size:
 		self.maxw = 49
 		self.maxh = 49
-		#height of the record button, progress bar, etc.
 		self.controlBarHt = 55
 		self.recordButtWd = 55
+		self.pipw = self.__class__.dim_PIPW #todo: use local internatally for legibility
+		self.piph = self.__class__.dim_PIPH
 
 		#ui modes
 		self.FULLSCREEN = False
@@ -263,7 +260,7 @@ class UI:
 		self.infoBoxTopLeft.pack_start(self.tagsPanel, expand=True)
 
 		infoBotBox = gtk.HBox()
-		infoBotBox.set_size_request( -1, self.pgdh+self.__class__.dim_INSET )
+		infoBotBox.set_size_request( -1, self.__class__.dim_PGDH+self.__class__.dim_INSET )
 		iinfoBox.pack_start(infoBotBox, expand=False)
 
 		thumbnailsEventBox = gtk.EventBox()
@@ -901,14 +898,14 @@ class UI:
 
 	def getScrDim( self, full ):
 		if (full):
-			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.pgdw+self.__class__.dim_INSET+self.__class__.dim_INSET), self.controlBarHt]
+			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.__class__.dim_PGDW+self.__class__.dim_INSET+self.__class__.dim_INSET), self.controlBarHt]
 		else:
 			return [self.vw-self.controlBarHt, self.controlBarHt]
 
 
 	def getScrLoc( self, full ):
 		if (full):
-			return [(self.__class__.dim_INSET+self.pgdw+self.__class__.dim_INSET), gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
+			return [(self.__class__.dim_INSET+self.__class__.dim_PGDW+self.__class__.dim_INSET), gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
 		else:
 			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 
@@ -950,9 +947,9 @@ class UI:
 
 	def getPipLoc( self, full ):
 		if (full):
-			return [self.__class__.dim_INSET+self.pipBorder, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.piph+self.pipBorder)]
+			return [self.__class__.dim_INSET+self.__class__.dim_PIP_BORDER, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.piph+self.__class__.dim_PIP_BORDER)]
 		else:
-			return [self.centerBoxPos[0]+self.__class__.dim_INSET+self.pipBorder, (self.centerBoxPos[1]+self.vh)-(self.__class__.dim_INSET+self.piph+self.pipBorder)]
+			return [self.centerBoxPos[0]+self.__class__.dim_INSET+self.__class__.dim_PIP_BORDER, (self.centerBoxPos[1]+self.vh)-(self.__class__.dim_INSET+self.piph+self.__class__.dim_PIP_BORDER)]
 
 
 	def setPipBgdLocDim( self, win ):
@@ -962,9 +959,9 @@ class UI:
 
 	def getPgdLoc( self, full ):
 		if (full):
-			return [self.__class__.dim_INSET, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.pgdh)]
+			return [self.__class__.dim_INSET, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.__class__.dim_PGDH)]
 		else:
-			return [self.centerBoxPos[0]+self.__class__.dim_INSET, (self.centerBoxPos[1]+self.vh)-(self.__class__.dim_INSET+self.pgdh)]
+			return [self.centerBoxPos[0]+self.__class__.dim_INSET, (self.centerBoxPos[1]+self.vh)-(self.__class__.dim_INSET+self.__class__.dim_PGDH)]
 
 
 	def setMaxLocDim( self, win ):
@@ -1075,7 +1072,7 @@ class UI:
 
 
 	def getPgdDim( self, full ):
-		return [self.pgdw, self.pgdh]
+		return [self.__class__.dim_PGDW, self.__class__.dim_PGDH]
 
 
 	def getInbDim( self, full ):

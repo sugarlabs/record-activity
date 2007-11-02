@@ -37,6 +37,7 @@ from instance import Instance
 from constants import Constants
 import record
 import utils
+import ui
 
 class Glive:
 	def __init__(self, pca):
@@ -45,6 +46,7 @@ class Glive:
 		self.pipes = []
 
 		self.playing = False
+		print("ok:", ui.UI.dim_PIPW)
 
 		self.PIPETYPE_SUGAR_JHBUILD = 0
 		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 1
@@ -185,7 +187,7 @@ class Glive:
 			videoTee.unlink(picQueue)
 
 		elif (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width="+str(self.ca.ui.pipw)+",height="+str(self.ca.ui.piph)+" ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width="+str(ui.UI.dim_PIPW)+",height="+str(ui.UI.dim_PIPH)+" ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
