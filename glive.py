@@ -183,7 +183,7 @@ class Glive:
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=48000,channels=1,depth=16 ! queue name=audioQueue_"+n+ " ! audioconvert name=audioAudioconvert_"+n +" ! wavenc name=audioVorbisenc_"+n+" ! filesink name=audioFilesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! queue name=audioQueue_"+n+ " ! audioconvert name=audioAudioconvert_"+n +" ! wavenc name=audioVorbisenc_"+n+" ! filesink name=audioFilesink_"+n )
 			v4l2 = True
 
 			audioQueue = pipeline.get_by_name('audioQueue_'+n)
