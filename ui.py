@@ -720,9 +720,11 @@ class UI:
 				self.ca.ui.setDefaultCursor( self.windowStack[i].window )
 
 		if (self.ca.m.RECORDING):
-			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, Constants.colorRed.gColor )
+			#self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, Constants.colorRed.gColor )
+			self.recordWindow.shutterButton.doRecordButton()
 		else:
-			self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
+			#self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
+			self.recordWindow.shutterButton.doNormalButton()
 
 
 	def hideAllWindows( self ):
@@ -1899,15 +1901,34 @@ class InfButton(P5Button):
 class RecordButton(gtk.Button):
 	def __init__(self):
 		gtk.Button.__init__(self)
+		self.sens = True
 
 
 	def set_sensitive(self, sen):
-		if (sen):
+		if (sen == self.sens):
+			return
+		self.sens = sen
+
+		if (self.sens):
 			self.set_image( Constants.recImg )
 		else:
 			self.set_image( Constants.recInsensitiveImg )
 
-		super(RecordButton, self).set_sensitive(sen)
+		super(RecordButton, self).set_sensitive(self.sens)
+
+
+	def doRecordButton(self):
+		print("setting record: ", self.sens)
+		if (not self.sens):
+			return
+		self.set_image( Constants.recRedImg )
+
+
+	def doNormalButton(self):
+		print("setting normal: ", self.sens)
+		if (not self.sens):
+			return
+		self.set_image( Constants.recImg )
 
 
 
@@ -1922,9 +1943,6 @@ class RecordWindow(gtk.Window):
 		self.shutterButton.set_relief(gtk.RELIEF_NONE)
 		self.shutterButton.set_image( Constants.recImg )
 		self.shutterButton.connect("clicked", self.ui._shutterClickCb)
-		self.shutterButton.connect("pressed", self._pressedCb)
-		self.shutterButton.connect("released", self._releasedCb)
-		self.shutterButton.connect("leave", self._leaveCb)
 		self.shutterButton.set_sensitive(False)
 
 		shutterBox = gtk.EventBox()
@@ -1949,20 +1967,6 @@ class RecordWindow(gtk.Window):
 		rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		rightEvent.add( rightPanel )
 		hbox.pack_start( rightEvent, expand=True )
-
-		#gobject.idle_add( self.updateCountdown, 3 )
-
-
-	def _pressedCb( self, arg ):
-		self.shutterButton.set_image( Constants.recRedImg )
-
-
-	def _releasedCb( self, arg ):
-		self.shutterButton.set_image( Constants.recImg )
-
-
-	def _leaveCb( self, arg ):
-		self.shutterButton.set_image( Constants.recImg )
 
 
 	def updateCountdown(self, num):

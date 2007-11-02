@@ -274,7 +274,7 @@ class Model:
 
 
 	def cannotSaveVideo( self ):
-		Record.log.debug("bad recorded video")
+		record.Record.log.debug("bad recorded video")
 		self.doPostSaveVideo()
 
 
