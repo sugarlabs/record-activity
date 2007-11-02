@@ -58,9 +58,9 @@ class RecdButton(TrayButton, gobject.GObject):
 			else:
 				pb = Constants.thumbVideoSvg.get_pixbuf()
 
-		img.set_from_pixbuf( pb )
+		img.set_from_pixbuf(pb)
 		img.show()
-		ipb.composite(pb, xoff, yoff, ipb.get_width(), ipb.get_height(), xoff, yoff, 1, 1, gtk.gdk.INTERP_BILINEAR, 255 )
+		ipb.composite(pb, xoff, yoff, ipb.get_width(), ipb.get_height(), xoff, yoff, 1, 1, gtk.gdk.INTERP_BILINEAR, 255)
 		img.set_from_pixbuf(pb)
 
 		gc.collect()

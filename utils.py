@@ -84,3 +84,21 @@ def grayScalePixBuf( pb, copy ):
 			pxl[1][0] = y
 			pxl[2][0] = y
 	return gtk.gdk.pixbuf_new_from_array(arr, pb.get_colorspace(), pb.get_bits_per_sample())
+
+
+def convertSvgtoImg( name ):
+	import instance
+	import constants
+
+	buttonPath = os.path.join(constants.Constants.gfxPath, name)
+	buttonDataFile = open(buttonPath, 'r')
+	buttonData = buttonDataFile.read()
+	buttonSvg = loadSvg(buttonData, None, None)
+	buttonDataFile.close()
+	pb = buttonSvg.get_pixbuf()
+	imgpath = os.path.join(instance.Instance.tmpPath, "ok.png")
+	imgpath = getUniqueFilepath( imgpath, 0 )
+	pb.save( imgpath, "png" )
+	img = gtk.Image()
+	img.set_from_pixbuf( pb )
+	return img

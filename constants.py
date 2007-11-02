@@ -74,8 +74,8 @@ class Constants:
 	colorGreen.init_rgba( 0, 255, 0, 255)
 	colorBlue = Color()
 	colorBlue.init_rgba( 0, 0, 255, 255)
-	colorHilite = Color()
-	colorHilite.init_gdk( sugar.graphics.style.COLOR_BUTTON_GREY )
+	colorButton = Color()
+	colorButton.init_gdk( sugar.graphics.style.COLOR_BUTTON_GREY )
 
 	gfxPath = os.path.join(activity.get_bundle_path(), "gfx")
 	soundClick = os.path.join(gfxPath, 'photoShutter.wav')
@@ -137,8 +137,11 @@ class Constants:
 	maxReduceSvg = None
 	infoOnSvg = None
 	xoGuySvgData = None
-	camImg = None
-	micImg = None
+
+	recImg = None
+	recRedImg = None
+	recCircleImg = None
+	recInsensitiveImg = None
 
 	def __init__( self, ca ):
 		self.__class__.activityId = ca._activity_id
@@ -189,12 +192,22 @@ class Constants:
 		self.__class__.xoGuySvgData = xoGuySvgFile.read()
 		xoGuySvgFile.close()
 
-		camImgFile = os.path.join(self.__class__.gfxPath, 'device-camera.png')
-		camImgPixbuf = gtk.gdk.pixbuf_new_from_file(camImgFile)
-		self.__class__.camImg = gtk.Image()
-		self.__class__.camImg.set_from_pixbuf( camImgPixbuf )
+		recFile = os.path.join(self.__class__.gfxPath, 'media-record.png')
+		recPixbuf = gtk.gdk.pixbuf_new_from_file(recFile)
+		self.__class__.recImg = gtk.Image()
+		self.__class__.recImg.set_from_pixbuf( recPixbuf )
 
-		micImgFile = os.path.join(self.__class__.gfxPath, 'device-microphone.png')
-		micImgPixbuf = gtk.gdk.pixbuf_new_from_file(micImgFile)
-		self.__class__.micImg = gtk.Image()
-		self.__class__.micImg.set_from_pixbuf( micImgPixbuf )
+		recRedFile = os.path.join(self.__class__.gfxPath, 'media-record-red.png')
+		recRedPixbuf = gtk.gdk.pixbuf_new_from_file(recRedFile)
+		self.__class__.recRedImg = gtk.Image()
+		self.__class__.recRedImg.set_from_pixbuf( recRedPixbuf )
+
+		recCircleFile = os.path.join(self.__class__.gfxPath, 'media-circle.png')
+		recCirclePixbuf = gtk.gdk.pixbuf_new_from_file(recCircleFile)
+		self.__class__.recCircleImg = gtk.Image()
+		self.__class__.recCircleImg.set_from_pixbuf( recCirclePixbuf )
+
+		recInsFile = os.path.join(self.__class__.gfxPath, 'media-insensitive.png')
+		recInsPixbuf = gtk.gdk.pixbuf_new_from_file(recInsFile)
+		self.__class__.recInsensitiveImg = gtk.Image()
+		self.__class__.recInsensitiveImg.set_from_pixbuf( recInsPixbuf )

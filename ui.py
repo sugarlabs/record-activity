@@ -91,9 +91,11 @@ class UI:
 		self.LAST_MODE = -1
 		self.LAST_FULLSCREEN = False
 		self.LAST_LIVE = True
+		self.LAST_MESHING = False
 		self.LAST_RECD_INFO = False
 		self.LAST_TRANSCODING = False
 		self.TRANSCODING = False
+		self.MESHING = False
 		self.RECD_INFO_ON = False
 		self.UPDATE_DURATION_ID = 0
 		self.UPDATE_TIMER_ID = 0
@@ -183,7 +185,7 @@ class UI:
 
 		#or this guy...
 		self.infoBox = gtk.EventBox()
-		self.infoBox.modify_bg( gtk.STATE_NORMAL, Constants.colorHilite.gColor )
+		self.infoBox.modify_bg( gtk.STATE_NORMAL, Constants.colorButton.gColor )
 		iinfoBox = gtk.VBox(spacing=self.__class__.dim_INSET)
 		self.infoBox.add( iinfoBox )
 		iinfoBox.set_size_request(self.vw, -1)
@@ -380,7 +382,9 @@ class UI:
 		self.progressWindow = ProgressWindow(self)
 		self.addToWindowStack( self.progressWindow, self.windowStack[len(self.windowStack)-1] )
 
-		self.maxWindow = MaxWindow(self)
+		self.maxWindow = gtk.Window()
+		maxButton = MaxButton(self)
+		self.maxWindow.add( maxButton )
 		self.addToWindowStack( self.maxWindow, self.windowStack[len(self.windowStack)-1] )
 
 		self.scrubWindow = ScrubberWindow(self)
@@ -670,6 +674,7 @@ class UI:
 		pixbuf = None
 
 		downloading = self.ca.requestMeshDownload(recd)
+		self.MESHING = downloading
 
 		if (not downloading):
 			imgPath = recd.getMediaFilepath()
@@ -1185,6 +1190,7 @@ class UI:
 				and (self.LAST_LIVE == self.LIVEMODE)
 				and (self.LAST_RECD_INFO == self.RECD_INFO_ON)
 				and (self.LAST_TRANSCODING == self.TRANSCODING)
+				and (self.LAST_MESHING == self.MESHING)
 			):
 			return
 
@@ -1218,8 +1224,11 @@ class UI:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
-					pos.append({"position":"max", "window":self.maxWindow} )
-					pos.append({"position":"inf", "window":self.infWindow} )
+					if (not self.MESHING):
+						pos.append({"position":"max", "window":self.maxWindow} )
+						pos.append({"position":"inf", "window":self.infWindow} )
+					else:
+						pos.append({"position":"tmr", "window":self.progressWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.playLiveWindow} )
@@ -1228,11 +1237,14 @@ class UI:
 					pos.append({"position":"prg", "window":self.progressWindow} )
 				else:
 					pos.append({"position":"img", "window":self.playOggWindow} )
-					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 					pos.append({"position":"pip", "window":self.playLiveWindow} )
-					pos.append({"position":"scr", "window":self.scrubWindow} )
-					pos.append({"position":"inf", "window":self.infWindow} )
+					if (not self.MESHING):
+						pos.append({"position":"max", "window":self.maxWindow} )
+						pos.append({"position":"scr", "window":self.scrubWindow} )
+						pos.append({"position":"inf", "window":self.infWindow} )
+					else:
+						pos.append({"position":"tmr", "window":self.progressWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 				if (self.LIVEMODE):
 					pos.append({"position":"img", "window":self.liveVideoWindow} )
@@ -1242,8 +1254,11 @@ class UI:
 					pos.append({"position":"img", "window":self.livePhotoWindow} )
 					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 					pos.append({"position":"pip", "window":self.liveVideoWindow} )
-					pos.append({"position":"scr", "window":self.scrubWindow} )
-					pos.append({"position":"inf", "window":self.infWindow} )
+					if (not self.MESHING):
+						pos.append({"position":"scr", "window":self.scrubWindow} )
+						pos.append({"position":"inf", "window":self.infWindow} )
+					else:
+						pos.append({"position":"prg", "window":self.progressWindow} )
 		elif (self.TRANSCODING):
 			pos.append({"position":"tmr", "window":self.progressWindow} )
 
@@ -1261,6 +1276,7 @@ class UI:
 		self.LAST_LIVE = self.LIVEMODE
 		self.LAST_RECD_INFO = self.RECD_INFO_ON
 		self.LAST_TRANSCODING = self.TRANSCODING
+		self.LAST_MESHING = self.MESHING
 
 
 	def debugWindows( self ):
@@ -1401,6 +1417,16 @@ class UI:
 			self.showThumbSelection( recd )
 
 
+	def updateMeshProgress( self, progressMade, recd ):
+		if (shownRecd != recd):
+			return
+		else:
+			if (progressMade):
+				self.progressWindow.updateProgress(recd.meshDownlodingPercent, recd.meshDownloadingFrom)
+			else:
+				self.progressWindow.updateProgress(0.0, "sux to be you!")
+
+
 	def showThumbSelection( self, recd ):
 		lastRecd = self.shownRecd
 
@@ -1442,6 +1468,7 @@ class UI:
 		self.showRecdMeta(recd)
 
 		downloading = self.ca.requestMeshDownload(recd)
+		self.MESHING = downloading
 		record.Record.log.debug("showAudio: downloading->" + str(downloading))
 		if (not downloading):
 			mediaFilepath = recd.getMediaFilepath( )
@@ -1460,16 +1487,17 @@ class UI:
 				self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
 				self.ca.glive.stop()
 				self.ca.glive.play()
+		downloading = self.ca.requestMeshDownload(recd)
+		self.MESHING = downloading
 		self.LIVEMODE = False
 		self.shownRecd = recd
 		self.updateVideoComponents()
-		gobject.idle_add( self.showVideo2, recd )
+		gobject.idle_add( self.showVideo2, recd, downloading )
 
 
-	def showVideo2( self, recd ):
+	def showVideo2( self, recd, downloading ):
 		self.showRecdMeta(recd)
 
-		downloading = self.ca.requestMeshDownload(recd)
 		ableToShowVideo = False
 		if (not downloading):
 			mediaFilepath = recd.getMediaFilepath()
@@ -1641,7 +1669,7 @@ class xoPanel(P5):
 
 	def draw(self, ctx, w, h):
 		#todo: 2x buffer
-		self.background( ctx, Constants.colorHilite, w, h )
+		self.background( ctx, Constants.colorButton, w, h )
 
 		if (self.xoGuy != None):
 			#todo: scale mr xo to fit in his box
@@ -1799,14 +1827,6 @@ class ScrubberWindow(gtk.Window):
 		return True
 
 
-class MaxWindow(gtk.Window):
-	def __init__(self, ui):
-		gtk.Window.__init__(self)
-		self.ui = ui
-		self.maxButton = MaxButton(self.ui)
-		self.add( self.maxButton )
-
-
 class MaxButton(P5Button):
 	def __init__(self, ui):
 		P5Button.__init__(self)
@@ -1876,20 +1896,43 @@ class InfButton(P5Button):
 			self.ui.infoButtonClicked()
 
 
+class RecordButton(gtk.Button):
+	def __init__(self):
+		gtk.Button.__init__(self)
+
+
+	def set_sensitive(self, sen):
+		if (sen):
+			self.set_image( Constants.recImg )
+		else:
+			self.set_image( Constants.recInsensitiveImg )
+
+		super(RecordButton, self).set_sensitive(sen)
+
+
+
 class RecordWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
+		self.num = -1
 
-		self.shutterButton = gtk.Button()
-		self.shutterButton.set_size_request( self.ui.recordButtWd, self.ui.recordButtWd )
-		self.shutterButton.set_image( Constants.camImg )
+		self.shutterButton = RecordButton()
+		self.shutterButton.set_size_request(self.ui.recordButtWd, self.ui.recordButtWd)
+		self.shutterButton.set_relief(gtk.RELIEF_NONE)
+		self.shutterButton.set_image( Constants.recImg )
 		self.shutterButton.connect("clicked", self.ui._shutterClickCb)
+		self.shutterButton.connect("pressed", self._pressedCb)
+		self.shutterButton.connect("released", self._releasedCb)
+		self.shutterButton.connect("leave", self._leaveCb)
 		self.shutterButton.set_sensitive(False)
+
 		shutterBox = gtk.EventBox()
+		shutterBox.add( self.shutterButton )
 		shutterBox.set_size_request( self.ui.controlBarHt, self.ui.controlBarHt )
+
 		shutterBox.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
-		#self.shutterButton.set_border_width(UI.dim_INSET)
+		self.shutterButton.modify_bg( gtk.STATE_ACTIVE, Constants.colorBlack.gColor )
 
 		hbox = gtk.HBox()
 		self.add( hbox )
@@ -1898,7 +1941,7 @@ class RecordWindow(gtk.Window):
 		leftEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		leftEvent.add( leftPanel )
 		hbox.pack_start( leftEvent, expand=True )
-		shutterBox.add( self.shutterButton )
+
 		hbox.pack_start( shutterBox, expand=False )
 
 		rightPanel = gtk.VBox()
@@ -1907,7 +1950,19 @@ class RecordWindow(gtk.Window):
 		rightEvent.add( rightPanel )
 		hbox.pack_start( rightEvent, expand=True )
 
-		self.num = -1
+		#gobject.idle_add( self.updateCountdown, 3 )
+
+
+	def _pressedCb( self, arg ):
+		self.shutterButton.set_image( Constants.recRedImg )
+
+
+	def _releasedCb( self, arg ):
+		self.shutterButton.set_image( Constants.recImg )
+
+
+	def _leaveCb( self, arg ):
+		self.shutterButton.set_image( Constants.recImg )
 
 
 	def updateCountdown(self, num):
@@ -1926,35 +1981,45 @@ class RecordWindow(gtk.Window):
 		w = self.ui.controlBarHt-10
 		h = self.ui.controlBarHt-10
 		pixmap = gtk.gdk.Pixmap(None, w, h, 24)
-		img = gtk.Image()
-		img.set_from_pixmap(pixmap, None)
+		#pixmap.draw_rectangle( self.get_style().bg_gc[gtk.STATE_NORMAL], True, 0, 0, w, h)
 
 		ctx = pixmap.cairo_create()
-		ctx.rectangle(0,0,w,h)
-		ctx.set_source_rgba( 255, 255, 255, 0 )
+		ctx.rectangle(0, 0, w, h)
+		ctx.set_source_rgb(0, 0, 0)
 		ctx.fill()
 
-		ctx.set_source_rgba( 0, 0, 0, 100 )
-		pangocontext = self.get_pango_context()
+		ctx.set_source_rgb( 255, 255, 255)
+		pangocontext = gtk.Window().get_pango_context()
 		layout = pango.Layout(pangocontext)
-		font = pango.FontDescription("sans "+str(w-4))
+		font = pango.FontDescription("sans 40")
 		layout.set_font_description(font)
 		layout.set_text( ""+str(num) )
-		#layout.set_width(w*pango.SCALE)
+		dim = layout.get_pixel_extents()
+		ctx.translate( -dim[0][0], -dim[0][1] )
+		xoff = (w-dim[0][2])/2
+		yoff = (h-dim[0][3])/2
+		ctx.translate( xoff, yoff )
 		ctx.show_layout(layout)
 
+		#pb = gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8, w, h)
+		#pb.get_from_drawable(pixmap, pixmap.get_colormap(), 0, 0, 0, 0, w, h)
+		#pb = pb.add_alpha(True, '%c' % r, '%c' % g, '%c' % b)
+
+		img = gtk.Image()
+		img.set_from_pixmap(pixmap, None)
+		#img.set_from_pixbuf(pb)
 
 		return img
 
 
-
 	def updateGfx( self ):
-		if (self.ui.ca.m.MODE == Constants.MODE_AUDIO):
-			if (self.shutterButton.get_image() != Constants.micImg):
-				self.shutterButton.set_image( Constants.micImg )
-		else:
-			if (self.shutterButton.get_image() != Constants.camImg):
-				self.shutterButton.set_image( Constants.camImg )
+#		if (self.ui.ca.m.MODE == Constants.MODE_AUDIO):
+#			if (self.shutterButton.get_image() != Constants.micImg):
+#				self.shutterButton.set_image( Constants.micImg )
+#		else:
+#			if (self.shutterButton.get_image() != Constants.camImg):
+#				self.shutterButton.set_image( Constants.camImg )
+		pass
 
 
 class ProgressWindow(gtk.Window):
@@ -1964,26 +2029,33 @@ class ProgressWindow(gtk.Window):
 		self.str = None
 
 		eb = gtk.EventBox()
-		eb.modify_fg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		eb.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		self.add( eb )
 
 		vb = gtk.VBox()
-		vb.set_border_width(5)
+		vb.set_border_width(5) #todo: use variable
 		eb.add(vb)
 
 		self.progBar = gtk.ProgressBar()
 		self.progBar.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		vb.add( self.progBar )
 
+		hbox = gtk.HBox()
+		vb.add( hbox )
+		self.infoLabel = gtk.Label()
+		self.infoLabel.set_alignment( 1, .5 )
+		hbox.pack_start(self.infoLabel)
+
 
 	def updateProgress( self, amt, str ):
 		self.progBar.set_fraction( amt )
 		if (str != None and str != self.str):
 			self.str = str
-			self.progBar.set_text( self.str )
+			self.infoLabel.set_text( "<b><span foreground='white'>"+self.str+"</span></b>")
+			self.infoLabel.set_use_markup( True )
 		if (amt >= 1):
 			self.progBar.set_fraction( 0 )
+
 
 
 class PhotoToolbar(gtk.Toolbar):

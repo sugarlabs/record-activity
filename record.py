@@ -342,8 +342,9 @@ class Record(activity.Activity):
 
 		if (not askingAnotherBud):
 			self.__class__.log.debug('weve tried all buddies here, and no one has this recd')
-			#todo: flag this recd, so that when new buddies show up, we can ask them if they've got it (if they are returning).
-			#todo: or clear triedMeshBuddies and let them try again.
+
+			recd.triedMeshBuddies = []
+			self.ui.updateMeshProgress(False, None)
 
 
 	def meshReqRecFromBuddy( self, recd, fromWho ):
@@ -355,7 +356,7 @@ class Record(activity.Activity):
 		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 		self.recTube.requestRecdBits( Instance.keyHashPrintable, fromWho, recd.mediaMd5 )
 
-		#self.ca.ui.updateDownloadFrom( fromWho ) #todo...
+		self.ui.updateMeshProgress(True, nick)
 
 
 	def _meshCheckOnRecdRequest( self, recdRequesting ):
@@ -436,6 +437,7 @@ class Record(activity.Activity):
 
 		#update the progress bar
 		recd.meshDownlodingPercent = (part+0.0)/(numparts+0.0)
+		self.ui.updateMeshProgress(True, recd)
 		f = open(recd.getMediaFilepath(), 'a+').write(bytes)
 
 		if part == numparts:
