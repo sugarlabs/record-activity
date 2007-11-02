@@ -71,6 +71,9 @@ class UI:
 	def __init__( self, pca ):
 		self.ca = pca
 
+		self.inset = self.__class__.dim_INSET
+		self.pgdh = self.__class__.dim_PGDH
+		self.pgdw = self.__class__.dim_PGDW
 		self.thumbTrayHt = 150 #todo: get sugar constant here
 		self.thumbSvgW = 124
 		self.thumbSvgH = 124
@@ -78,7 +81,7 @@ class UI:
 		self.maxh = 49
 		self.controlBarHt = 55
 		self.recordButtWd = 55
-		self.pipw = self.__class__.dim_PIPW #todo: use local internatally for legibility
+		self.pipw = self.__class__.dim_PIPW
 		self.piph = self.__class__.dim_PIPH
 
 		#ui modes
@@ -133,7 +136,7 @@ class UI:
 		self.vh = gtk.gdk.screen_height()-(self.thumbTrayHt+toolboxHt+self.controlBarHt)
 		self.vw = int(self.vh/.75)
 		self.letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
-		self.letterBoxVW = (self.vw/2)-(self.__class__.dim_INSET*2)
+		self.letterBoxVW = (self.vw/2)-(self.inset*2)
 		self.letterBoxVH = int(self.letterBoxVW*.75)
 
 		#now that we know how big the toolbox is, we can layout more
@@ -183,10 +186,10 @@ class UI:
 		#or this guy...
 		self.infoBox = gtk.EventBox()
 		self.infoBox.modify_bg( gtk.STATE_NORMAL, Constants.colorButton.gColor )
-		iinfoBox = gtk.VBox(spacing=self.__class__.dim_INSET)
+		iinfoBox = gtk.VBox(spacing=self.inset)
 		self.infoBox.add( iinfoBox )
 		iinfoBox.set_size_request(self.vw, -1)
-		iinfoBox.set_border_width(self.__class__.dim_INSET)
+		iinfoBox.set_border_width(self.inset)
 
 		rightFill = gtk.VBox()
 		rightFill.set_size_request( self.letterBoxW, -1 )
@@ -198,7 +201,7 @@ class UI:
 		#info box innards:
 		self.infoBoxTop = gtk.HBox()
 		iinfoBox.pack_start( self.infoBoxTop, expand=True )
-		self.infoBoxTopLeft = gtk.VBox(spacing=self.__class__.dim_INSET)
+		self.infoBoxTopLeft = gtk.VBox(spacing=self.inset)
 		self.infoBoxTop.pack_start( self.infoBoxTopLeft )
 		self.infoBoxTopRight = gtk.VBox()
 		self.infoBoxTopRight.set_size_request(self.letterBoxVW, -1)
@@ -208,22 +211,22 @@ class UI:
 		leftInfBalance = gtk.VBox()
 		self.nameLabel = gtk.Label("<b><span foreground='white'>"+Constants.istrTitle+"</span></b>")
 		self.nameLabel.set_use_markup( True )
-		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.__class__.dim_INSET )
+		self.namePanel.pack_start( self.nameLabel, expand=False, padding=self.inset )
 		self.nameLabel.set_alignment(0, .5)
 		self.nameTextfield = gtk.Entry(140)
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
-		#self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.__class__.dim_INSET ) #todo: dynamic
+		#self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.inset ) #todo: dynamic
 		self.namePanel.pack_start(self.nameTextfield)
 
-		self.photographerPanel = gtk.VBox(spacing=self.__class__.dim_INSET)
+		self.photographerPanel = gtk.VBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.photographerPanel, expand=False)
 		photographerLabel = gtk.Label("<b>" + Constants.istrRecorder + "</b>")
 		photographerLabel.set_use_markup( True )
 		self.photographerPanel.pack_start(photographerLabel, expand=False)
 		photographerLabel.set_alignment(0, .5)
-		photoNamePanel = gtk.HBox(spacing=self.__class__.dim_INSET)
+		photoNamePanel = gtk.HBox(spacing=self.inset)
 		self.photographerPanel.pack_start(photoNamePanel)
 
 		self.photoXoPanel = xoPanel()
@@ -234,7 +237,7 @@ class UI:
 		self.photographerNameLabel.set_alignment(0, .5)
 		photoNamePanel.pack_start(self.photographerNameLabel)
 
-		self.datePanel = gtk.HBox(spacing=self.__class__.dim_INSET)
+		self.datePanel = gtk.HBox(spacing=self.inset)
 		self.infoBoxTopLeft.pack_start(self.datePanel, expand=False)
 		dateLabel = gtk.Label("<b>"+Constants.istrDate+"</b>")
 		dateLabel.set_use_markup(True)
@@ -243,7 +246,7 @@ class UI:
 		self.dateDateLabel.set_alignment(0, .5)
 		self.datePanel.pack_start(self.dateDateLabel)
 
-		self.tagsPanel = gtk.VBox(spacing=self.__class__.dim_INSET)
+		self.tagsPanel = gtk.VBox(spacing=self.inset)
 		tagsLabel = gtk.Label("<b>"+Constants.istrTags+"</b>")
 		tagsLabel.set_use_markup(True)
 		tagsLabel.set_alignment(0, .5)
@@ -254,7 +257,7 @@ class UI:
 		self.infoBoxTopLeft.pack_start(self.tagsPanel, expand=True)
 
 		infoBotBox = gtk.HBox()
-		infoBotBox.set_size_request( -1, self.__class__.dim_PGDH+self.__class__.dim_INSET )
+		infoBotBox.set_size_request( -1, self.pgdh+self.inset )
 		iinfoBox.pack_start(infoBotBox, expand=False)
 
 		thumbnailsEventBox = gtk.EventBox()
@@ -892,14 +895,14 @@ class UI:
 
 	def getScrDim( self, full ):
 		if (full):
-			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.__class__.dim_PGDW+self.__class__.dim_INSET+self.__class__.dim_INSET), self.controlBarHt]
+			return [gtk.gdk.screen_width()-(self.inset+self.pgdw+self.inset+self.inset), self.controlBarHt]
 		else:
-			return [self.vw-self.controlBarHt, self.controlBarHt]
+			return [self.vw, self.controlBarHt]
 
 
 	def getScrLoc( self, full ):
 		if (full):
-			return [(self.__class__.dim_INSET+self.__class__.dim_PGDW+self.__class__.dim_INSET), gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
+			return [(self.inset+self.pgdw+self.inset), gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 		else:
 			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 
@@ -922,14 +925,14 @@ class UI:
 		if (not full):
 			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 		else:
-			return [self.__class__.dim_INSET, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
+			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
 	def getTmrDim( self, full ):
 		if (not full):
 			return [self.vw, self.controlBarHt]
 		else:
-			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.__class__.dim_INSET), self.controlBarHt]
+			return [gtk.gdk.screen_width()-(self.inset+self.inset), self.controlBarHt]
 
 
 	def setPipLocDim( self, win ):
@@ -941,9 +944,9 @@ class UI:
 
 	def getPipLoc( self, full ):
 		if (full):
-			return [self.__class__.dim_INSET+self.__class__.dim_PIP_BORDER, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.piph+self.__class__.dim_PIP_BORDER)]
+			return [self.inset+self.__class__.dim_PIP_BORDER, gtk.gdk.screen_height()-(self.inset+self.piph+self.__class__.dim_PIP_BORDER)]
 		else:
-			return [self.centerBoxPos[0]+self.__class__.dim_INSET+self.__class__.dim_PIP_BORDER, (self.centerBoxPos[1]+self.vh)-(self.__class__.dim_INSET+self.piph+self.__class__.dim_PIP_BORDER)]
+			return [self.centerBoxPos[0]+self.inset+self.__class__.dim_PIP_BORDER, (self.centerBoxPos[1]+self.vh)-(self.inset+self.piph+self.__class__.dim_PIP_BORDER)]
 
 
 	def setPipBgdLocDim( self, win ):
@@ -953,9 +956,9 @@ class UI:
 
 	def getPgdLoc( self, full ):
 		if (full):
-			return [self.__class__.dim_INSET, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.__class__.dim_PGDH)]
+			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.pgdh)]
 		else:
-			return [self.centerBoxPos[0]+self.__class__.dim_INSET, (self.centerBoxPos[1]+self.vh)-(self.__class__.dim_INSET+self.__class__.dim_PGDH)]
+			return [self.centerBoxPos[0]+self.inset, (self.centerBoxPos[1]+self.vh)-(self.inset+self.pgdh)]
 
 
 	def setMaxLocDim( self, win ):
@@ -965,9 +968,9 @@ class UI:
 
 	def getMaxLoc( self, full ):
 		if (full):
-			return [gtk.gdk.screen_width()-(self.maxw+self.__class__.dim_INSET), self.__class__.dim_INSET]
+			return [gtk.gdk.screen_width()-(self.maxw+self.inset), self.inset]
 		else:
-			return [(self.centerBoxPos[0]+self.vw)-(self.__class__.dim_INSET+self.maxw), self.centerBoxPos[1]+self.__class__.dim_INSET]
+			return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.maxw), self.centerBoxPos[1]+self.inset]
 
 
 	def getInfLoc( self, full ):
@@ -992,7 +995,7 @@ class UI:
 			else:
 				return [(self.centerBoxPos[0]+(self.vw/2))-self.recordButtWd/2, self.centerBoxPos[1]+self.vh]
 		else:
-			return [self.__class__.dim_INSET, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
+			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
 	def getEyeDim( self, full ):
@@ -1000,13 +1003,13 @@ class UI:
 			return [self.recordButtWd, self.controlBarHt]
 		else:
 			if (self.ca.m.MODE == Constants.MODE_PHOTO):
-				return [gtk.gdk.screen_width()-(self.__class__.dim_INSET*2), self.controlBarHt]
+				return [gtk.gdk.screen_width()-(self.inset*2), self.controlBarHt]
 			else:
 				return [self.recordButtWd, self.controlBarHt]
 
 
 	def getInbLoc( self, full ):
-		return [(self.centerBoxPos[0]+self.vw)-(self.__class__.dim_INSET+self.letterBoxVW), self.centerBoxPos[1]+self.__class__.dim_INSET]
+		return [(self.centerBoxPos[0]+self.vw)-(self.inset+self.letterBoxVW), self.centerBoxPos[1]+self.inset]
 
 
 	def setInbLocDim( self, win ):
@@ -1066,7 +1069,7 @@ class UI:
 
 
 	def getPgdDim( self, full ):
-		return [self.__class__.dim_PGDW, self.__class__.dim_PGDH]
+		return [self.pgdw, self.pgdh]
 
 
 	def getInbDim( self, full ):
@@ -1077,14 +1080,14 @@ class UI:
 		if (not full):
 			return [self.vw-self.recordButtWd, self.controlBarHt]
 		else:
-			return [gtk.gdk.screen_width()-(self.__class__.dim_INSET+self.__class__.dim_INSET+self.recordButtWd), self.controlBarHt]
+			return [gtk.gdk.screen_width()-(self.inset+self.inset+self.recordButtWd), self.controlBarHt]
 
 
 	def getPrgLoc( self, full ):
 		if (not full):
 			return [self.centerBoxPos[0]+self.recordButtWd, self.centerBoxPos[1]+self.vh]
 		else:
-			return [self.__class__.dim_INSET+self.recordButtWd, gtk.gdk.screen_height()-(self.__class__.dim_INSET+self.controlBarHt)]
+			return [self.inset+self.recordButtWd, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
 	def getLoc( self, pos, full ):
