@@ -314,7 +314,7 @@ class Record(activity.Activity):
 			return
 
 		if (self.recTube == None):
-			gobject.idle_add(self.ui.updateMeshProgress, False, None)
+			gobject.idle_add(self.ui.updateMeshProgress, False, recd)
 			return
 
 		#start with who took the photo
@@ -357,7 +357,7 @@ class Record(activity.Activity):
 			self.__class__.log.debug('weve tried all buddies here, and no one has this recd')
 			recd.triedMeshBuddies = []
 			recd.triedMeshBuddies.append(Instance.keyHashPrintable)
-			self.ui.updateMeshProgress(False, None)
+			self.ui.updateMeshProgress(False, recd)
 
 
 	def meshReqRecFromBuddy( self, recd, fromWho, fromWhosNick ):
@@ -369,10 +369,6 @@ class Record(activity.Activity):
 		recd.meshDownloading = True
 		recd.meshDownlodingPercent = 0.0
 		self.ui.updateMeshProgress(True, recd)
-		gobject.idle_add( self.meshReqRecFromBuddy2, recd, fromWho, fromWhosNick )
-
-
-	def meshReqRecFromBuddy2( self, recd, fromWho, fromWhosNick ):
 		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 		self.recTube.requestRecdBits( Instance.keyHashPrintable, fromWho, recd.mediaMd5 )
 
@@ -400,7 +396,8 @@ class Record(activity.Activity):
 		else:
 			self.__class__.log.debug('_meshCheckOnRecdRequest: ! recdRequesting.meshDownloadingProgress')
 			#that buddy we asked info from isn't responding; next buddy!
-			self.meshNextRoundRobinBuddy( recdRequesting )
+			#self.meshNextRoundRobinBuddy( recdRequesting )
+			gobject.idle_add(self.meshNextRoundRobinBuddy, recdRequesting)
 			return False
 
 

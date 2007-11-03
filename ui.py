@@ -1437,15 +1437,24 @@ class UI:
 
 	def updateMeshProgress( self, progressMade, recd ):
 		self.resetWidgetFadeTimer()
-		#record.Record.log.debug("updateMeshProgress:" + str(progressMade) + ", " + str(recd) )
+		record.Record.log.debug("updateMeshProgress:" + str(progressMade) )
+		record.Record.log.debug( "recd:" + str(recd) )
+		record.Record.log.debug( "recd:" + str(self.shownRecd) )
 		if (self.shownRecd != recd):
 			record.Record.log.debug("updateMeshProgress: self.shownRecd != recd")
-			pass
+
+			if (self.shownRecd == None):
+				type = Constants.mediaTypes[recd.type][Constants.keyIstr]
+				if (progressMade):
+					msg = Constants.istrDownloadingFrom% {"1":type, "2":recd.meshDownloadingFromNick}
+					self.progressWindow.updateProgress(recd.meshDownlodingPercent, msg)
+
 		else:
 			type = Constants.mediaTypes[recd.type][Constants.keyIstr]
 			if (progressMade):
 				msg = Constants.istrDownloadingFrom% {"1":type, "2":recd.meshDownloadingFromNick}
 				self.progressWindow.updateProgress(recd.meshDownlodingPercent, msg)
+
 			else:
 				type = Constants.mediaTypes[recd.type][Constants.keyIstr]
 				msg = Constants.istrCannotDownload % {"1":type}
@@ -2032,7 +2041,7 @@ class ProgressWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.str = ""
+		self.update = ""
 
 		eb = gtk.EventBox()
 		eb.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
@@ -2055,14 +2064,15 @@ class ProgressWindow(gtk.Window):
 		hbox.pack_start(self.infoLabel)
 
 
-	def updateProgress( self, amt, str ):
+	def updateProgress( self, amt, update ):
+		record.Record.log.debug( "::" + str(update) + "::" +str(amt))
 		self.progBar.set_fraction( amt )
-		if (str != None and str != self.str):
-			self.str = str
-			self.infoLabel.set_text( "<b><span foreground='white'>"+self.str+"</span></b>")
+		if (update != None and update != self.update):
+			self.update = update
+			self.infoLabel.set_text( "<b><span foreground='white'>"+self.update+"</span></b>")
 			self.infoLabel.set_use_markup( True )
 
-		if (self.str==""):
+		if (self.update==""):
 			self.infoLabel.set_text( "<b><span foreground='black'>SPACE</span></b>")
 			self.infoLabel.set_use_markup( True )
 
