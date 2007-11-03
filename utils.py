@@ -6,6 +6,8 @@ import cairo
 import gc
 import gtk
 from hashlib import md5
+import time
+from time import strftime
 
 from sugar import util
 import _camera
@@ -84,9 +86,9 @@ def scaleSvgToDim( handle, dim ):
 	return scale
 
 
-def getDateString( time ):
+def getDateString( when ):
 	#todo: internationalize the date
-	return strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(time) )
+	return strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(when) )
 
 
 def grayScalePixBuf( pb, copy ):

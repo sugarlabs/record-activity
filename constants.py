@@ -185,7 +185,7 @@ class Constants:
 		self.__class__.maxReduceSvg = utils.loadSvg(maxReduceSvgData, None, None )
 		maxReduceSvgFile.close()
 
-		infoOnSvgPath = os.path.join(self.__class__.gfxPath, 'info-on.svg')
+		infoOnSvgPath = os.path.join(self.__class__.gfxPath, 'corner-info.svg')
 		infoOnSvgFile = open(infoOnSvgPath, 'r')
 		infoOnSvgData = infoOnSvgFile.read()
 		self.__class__.infoOnSvg = utils.loadSvg(infoOnSvgData, None, None )

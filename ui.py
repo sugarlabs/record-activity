@@ -28,8 +28,6 @@ import pygst
 pygst.require('0.10')
 import gst
 import gst.interfaces
-import time
-from time import strftime
 import math
 import shutil
 import time
@@ -60,7 +58,7 @@ import _camera
 class UI:
 
 	dim_THUMB_WIDTH = 107
-	dim_THUMB_HEIGHT = 80
+	dim_THUMB_HEIGHT = 78
 	dim_INSET = 10
 	dim_PIPW = 160
 	dim_PIPH = 120 #pipBorder
@@ -386,6 +384,8 @@ class UI:
 		self.addToWindowStack( self.scrubWindow, self.windowStack[len(self.windowStack)-1] )
 
 		self.infWindow = gtk.Window()
+		self.infWindow.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.infWindow.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		infButton= InfButton(self)
 		self.infWindow.add(infButton)
 		self.addToWindowStack( self.infWindow, self.windowStack[len(self.windowStack)-1] )
@@ -1062,7 +1062,7 @@ class UI:
 
 
 	def getInfDim( self, full ):
-		return [self.maxw, self.maxh]
+		return [75, 75]
 
 
 	def getPipDim( self, full ):
@@ -1555,8 +1555,8 @@ class UI:
 
 
 	def setPostProcessPixBuf( self, pixbuf ):
-		if (pixbuf.width>160):
-			pixbuf = scale_simple(160, 120, gtk.gdk.INTERP_NEAREST)
+		if (pixbuf.get_width()>160):
+			pixbuf = pixbuf.scale_simple(160, 120, gtk.gdk.INTERP_NEAREST)
 
 		pixbuf = utils.grayScalePixBuf(pixbuf, True)
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
