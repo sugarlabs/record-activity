@@ -2032,7 +2032,7 @@ class ProgressWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
-		self.str = None
+		self.str = ""
 
 		eb = gtk.EventBox()
 		eb.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
@@ -2050,6 +2050,8 @@ class ProgressWindow(gtk.Window):
 		vb.add( hbox )
 		self.infoLabel = gtk.Label()
 		self.infoLabel.set_alignment( 1, .5 )
+		self.infoLabel.set_text( "<b><span foreground='black'>SPACE</span></b>")
+		self.infoLabel.set_use_markup( True )
 		hbox.pack_start(self.infoLabel)
 
 
