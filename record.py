@@ -356,7 +356,7 @@ class Record(activity.Activity):
 		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 		self.recTube.requestRecdBits( Instance.keyHashPrintable, fromWho, recd.mediaMd5 )
 
-		self.ui.updateMeshProgress(True, nick)
+		self.ui.updateMeshProgress(True, recd)
 
 
 	def _meshCheckOnRecdRequest( self, recdRequesting ):

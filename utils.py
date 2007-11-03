@@ -91,7 +91,7 @@ def getDateString( when ):
 	return strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(when) )
 
 
-def grayScalePixBuf( pb, copy ):
+def grayScalePixBuf2( pb, copy ):
 	arr = pb.get_pixels_array()
 	if (copy):
 		arr = arr.copy()
@@ -102,3 +102,9 @@ def grayScalePixBuf( pb, copy ):
 			pxl[1][0] = y
 			pxl[2][0] = y
 	return gtk.gdk.pixbuf_new_from_array(arr, pb.get_colorspace(), pb.get_bits_per_sample())
+
+
+def grayScalePixBuf( pb, copy ):
+	pb2 = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, pb.get_width(), pb.get_height())
+	pb.saturate_and_pixelate(pb2, 0, 0)
+	return pb2
