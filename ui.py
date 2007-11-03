@@ -1386,9 +1386,6 @@ class UI:
 			if (self.ca.m.MODE == Constants.MODE_PHOTO):
 				self.bottomCenter.add( self.namePanel )
 				self.bottomCenter.show_all( )
-			else:
-				self.bottomCenter.add( self.scrubberPanel )
-				self.bottomCenter.show_all( )
 		else:
 			self.centerBox.add( self.infoBox )
 			self.centerBox.show_all( )
@@ -1444,9 +1441,7 @@ class UI:
 		if (recd.type == Constants.TYPE_PHOTO):
 			self.bottomCenter.add( self.namePanel )
 		elif (recd.type == Constants.TYPE_VIDEO or recd.type == Constants.TYPE_AUDIO):
-			if (not self.RECD_INFO_ON):
-				self.bottomCenter.add( self.scrubberPanel )
-			else:
+			if (self.RECD_INFO_ON):
 				self.bottomCenter.add( self.namePanel )
 		self.bottomCenter.show_all()
 
@@ -1979,7 +1974,7 @@ class RecordWindow(gtk.Window):
 	def getCairoCountdown(self, num):
 		w = self.ui.controlBarHt
 		h = self.ui.controlBarHt
-		pixmap = gtk.gdk.Pixmap(None, w, h, 24)
+		pixmap = gtk.gdk.Pixmap( self.infWindow.window, w, h, 24)
 		#pixmap.draw_rectangle( self.get_style().bg_gc[gtk.STATE_NORMAL], True, 0, 0, w, h)
 
 		ctx = pixmap.cairo_create()
