@@ -1387,7 +1387,8 @@ class UI:
 		for i in range (0, len(kids)):
 			self.thumbTray.remove_item(kids[i])
 			kids[i].cleanUp()
-			kids[i].disconnect( kids[i].getButtClickedId() )
+			if (kids[i].getButtClickedId() != 0):
+				kids[i].disconnect( kids[i].getButtClickedId() )
 
 
 	def _thumbClicked( self, button, recd ):
@@ -1435,7 +1436,7 @@ class UI:
 
 	def updateMeshProgress( self, progressMade, recd ):
 		self.resetWidgetFadeTimer()
-		record.Record.log.debug("updateMeshProgress:" + str(progressMade) + ", " + str(recd) )
+		#record.Record.log.debug("updateMeshProgress:" + str(progressMade) + ", " + str(recd) )
 		if (self.shownRecd != recd):
 			record.Record.log.debug("updateMeshProgress: self.shownRecd != recd")
 			pass

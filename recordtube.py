@@ -95,13 +95,13 @@ class RecordTube(ExportedGObject):
 
 	def _getRecdTubeCb(self, md5, part, numparts, bytes, sentTo, fromWho, sender=None):
 		if sender == self.tube.get_unique_name():
-			record.Record.log.debug("_reqRecdTubeCb: sender is my bus name, so ignore my own signal")
+			#record.Record.log.debug("_reqRecdTubeCb: sender is my bus name, so ignore my own signal")
 			return
 		if (fromWho == Instance.keyHashPrintable):
-			record.Record.log.debug('_getRecdTubeCb: i dont want bits from meself, thx anyway.  schizophrenic?')
+			#record.Record.log.debug('_getRecdTubeCb: i dont want bits from meself, thx anyway.  schizophrenic?')
 			return
 		if (sentTo != Instance.keyHashPrintable):
-			record.Record.log.debug('_getRecdTubeCb: ive overhead someone sending bits, but not to me!')
+			#record.Record.log.debug('_getRecdTubeCb: ive overhead someone sending bits, but not to me!')
 			return
 
 		self.emit( "recd-bits-arrived", md5, part, numparts, bytes, fromWho )

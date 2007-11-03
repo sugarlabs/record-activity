@@ -46,7 +46,6 @@ class Glive:
 		self.pipes = []
 
 		self.playing = False
-		print("ok:", ui.UI.dim_PIPW)
 
 		self.PIPETYPE_SUGAR_JHBUILD = 0
 		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 1

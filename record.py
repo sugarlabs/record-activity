@@ -275,12 +275,12 @@ class Record(activity.Activity):
 
 
 	def _newRecdCb( self, objectThatSentTheSignal, recorder, xmlString ):
-		self.__class__.log.debug('_newRecdCb: ' + str(xmlString))
+		self.__class__.log.debug('_newRecdCb')
 		dom = None
 		try:
 			dom = xml.dom.minidom.parseString(xmlString)
 		except:
-			self.__class__.log.error('Unable to parse xml from the mesh.')
+			self.__class__.log.error('Unable to parse mesh xml')
 		if (dom == None):
 			return
 
@@ -297,11 +297,10 @@ class Record(activity.Activity):
 
 	def requestMeshDownload( self, recd ):
 		#this call will get the bits or request the bits if they're not available
-		if (recd.buddy and not recd.downloadedFromBuddy):
+		if (recd.buddy and (not recd.downloadedFromBuddy)):
 
 			if (not recd.meshDownloading):
-				if (self.recTube != None):
-					self.meshInitRoundRobin(recd)
+				self.meshInitRoundRobin(recd)
 
 			return True
 		else:
@@ -313,7 +312,13 @@ class Record(activity.Activity):
 			self.__class__.log.debug("meshInitRoundRobin: we are in midst of downloading this file...")
 			return
 
+		if (self.recTube == None):
+			gobject.idle_add(self.ui.updateMeshProgress, False, None)
+			return
+
 		#start with who took the photo
+		recd.triedMeshBuddies = []
+		recd.triedMeshBuddies.append(Instance.keyHashPrintable)
 		self.meshReqRecFromBuddy( recd, recd.recorderHash, recd.recorderName )
 
 
@@ -336,9 +341,9 @@ class Record(activity.Activity):
 			nextBud = util._sha_data(nextBudObj.props.key)
 			nextBud = util.printable_hash(nextBud)
 			if (recd.triedMeshBuddies.count(nextBud) > 0):
-				self.__class__.log.debug('meshNextRoundRobinBuddy: weve already tried bud ' + str(nextBudObj.props.nick))
+				self.__class__.log.debug('mnrrb: weve already tried bud ' + str(nextBudObj.props.nick))
 			else:
-				self.__class__.log.debug('meshNextRoundRobinBuddy: ask next buddy: ' + str(nextBudObj.props.nick))
+				self.__class__.log.debug('mnrrb: ask next buddy: ' + str(nextBudObj.props.nick))
 				nextNick = nextBudObj.props.nick
 				self.meshReqRecFromBuddy(recd, nextBud, nextNick)
 				askingAnotherBud = True
@@ -346,6 +351,7 @@ class Record(activity.Activity):
 		if (not askingAnotherBud):
 			self.__class__.log.debug('weve tried all buddies here, and no one has this recd')
 			recd.triedMeshBuddies = []
+			recd.triedMeshBuddies.append(Instance.keyHashPrintable)
 			self.ui.updateMeshProgress(False, None)
 
 
@@ -439,6 +445,7 @@ class Record(activity.Activity):
 
 		#update the progress bar
 		recd.meshDownlodingPercent = (part+0.0)/(numparts+0.0)
+		recd.meshDownloadingProgress = True
 		self.ui.updateMeshProgress(True, recd)
 		f = open(recd.getMediaFilepath(), 'a+').write(bytes)
 
@@ -499,4 +506,4 @@ class Record(activity.Activity):
 			self.__class__.log.debug('_recdUnavailableCb: we arent asking you for a copy now.  slow response, pbly.')
 			return
 
-		self.meshNextRoundRobinBuddy( recd )
+		#self.meshNextRoundRobinBuddy( recd )
