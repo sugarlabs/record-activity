@@ -263,7 +263,7 @@ class Constants:
 		xoff = (w-dim[0][2])/2
 		yoff = (h-dim[0][3])/2
 		ctx.translate( xoff, yoff )
-		cts.translate( -3, 0 )
+		ctx.translate( -3, 0 )
 		pctx.show_layout(play)
 
 		img = gtk.Image()

@@ -369,7 +369,7 @@ class Record(activity.Activity):
 		recd.meshDownloading = True
 		recd.meshDownlodingPercent = 0.0
 		self.ui.updateMeshProgress(True, recd)
-		gobject.idle_add( meshReqRecFromBuddy2, recd, fromWho, fromWhosNick )
+		gobject.idle_add( self.meshReqRecFromBuddy2, recd, fromWho, fromWhosNick )
 
 
 	def meshReqRecFromBuddy2( self, recd, fromWho, fromWhosNick ):

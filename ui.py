@@ -2062,8 +2062,7 @@ class ProgressWindow(gtk.Window):
 			self.infoLabel.set_text( "<b><span foreground='white'>"+self.str+"</span></b>")
 			self.infoLabel.set_use_markup( True )
 
-		if (str=="" and str != self.str):
-			self.str = str
+		if (self.str==""):
 			self.infoLabel.set_text( "<b><span foreground='black'>SPACE</span></b>")
 			self.infoLabel.set_use_markup( True )
 
