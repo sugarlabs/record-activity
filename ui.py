@@ -724,6 +724,17 @@ class UI:
 			#self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
 			self.recordWindow.shutterButton.doNormalButton()
 
+		kids = self.thumbTray.get_children()
+		for i in range (0, len(kids)):
+			if (self.ca.m.UPDATING or self.ca.m.RECORDING):
+				if (kids[i].getButtClickedId() != 0):
+					kids[i].disconnect( kids[i].getButtClickedId() )
+					kids[i].setButtClickedId(0)
+			else:
+				if (kids[i].getButtClickedId() == 0):
+					BUTT_CLICKED_ID = kids[i].connect( "clicked", self._thumbClicked, kids[i].recd )
+					kids[i].setButtClickedId(BUTT_CLICKED_ID)
+
 
 	def hideAllWindows( self ):
 		for i in range (0, len(self.windowStack)):
@@ -1359,6 +1370,7 @@ class UI:
 				self.thumbTray.remove_item(kids[i])
 				kids[i].cleanUp()
 				kids[i].disconnect( kids[i].getButtClickedId() )
+				kids[i].setButtClickedId(0)
 
 
 	def addThumb( self, recd ):
@@ -1422,11 +1434,11 @@ class UI:
 
 	def updateMeshProgress( self, progressMade, recd ):
 		if (self.shownRecd != recd):
-			return
+			pass
 		else:
 			type = Constants.mediaTypes[recd.type][Constants.keyIstr]
 			if (progressMade):
-				msg = istrDownloadingFrom% {"1":type, "2":recd.meshDownloadingFromNick}
+				msg = Constants.istrDownloadingFrom% {"1":type, "2":recd.meshDownloadingFromNick}
 				self.progressWindow.updateProgress(recd.meshDownlodingPercent, msg)
 			else:
 				type = Constants.mediaTypes[recd.type][Constants.keyIstr]
@@ -1781,7 +1793,7 @@ class ScrubberWindow(gtk.Window):
 
 
 	def _scaleButtonPressCb(self, widget, event):
-		self.button.set_sensitive(False)
+		#self.button.set_sensitive(False)
 		self.was_playing = self.ui.ca.gplay.is_playing()
 		if self.was_playing:
 			self.ui.ca.gplay.pause()
@@ -1801,7 +1813,7 @@ class ScrubberWindow(gtk.Window):
 		widget.disconnect(self.CHANGED_ID)
 		self.CHANGED_ID = 0
 
-		self.button.set_sensitive(True)
+		#self.button.set_sensitive(True)
 		if self.was_playing:
 			self.ui.ca.gplay.play()
 
