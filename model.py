@@ -370,16 +370,15 @@ class Model:
 		thumbFile = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		thumbMd5 = utils.md5File( thumbFile )
 		recd.thumbMd5 = thumbMd5
-		tBytes = os.stat(thumbFile)[7]
+		tBytes = os.stat(thumbFile)[6]
 		recd.thumbBytes = tBytes
 
 		#load the mediafile
 		mediaFile = os.path.join(Instance.tmpPath, recd.mediaFilename)
 		mediaMd5 = utils.md5File( mediaFile )
 		recd.mediaMd5 = mediaMd5
-		mBytes = os.stat(mediaFile)[7]
+		mBytes = os.stat(mediaFile)[6]
 		recd.mediaBytes = mBytes
-
 
 
 	def deleteRecorded( self, recd ):
