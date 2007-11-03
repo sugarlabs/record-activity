@@ -28,12 +28,10 @@ class RecdButton(TrayButton, gobject.GObject):
 	def getImg( self ):
 		img = gtk.Image()
 		ipb = self.recd.getThumbPixbuf()
-		xoff = 0
-		yoff = 0
+		xoff = 8
+		yoff = 8
 		pb = None
 		if (self.recd.type == Constants.TYPE_PHOTO):
-			xoff = 8
-			yoff = 8
 			if (self.recd.buddy):
 				thumbPhotoSvg = utils.loadSvg(Constants.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbPhotoSvg.get_pixbuf()
@@ -41,8 +39,6 @@ class RecdButton(TrayButton, gobject.GObject):
 				pb = Constants.thumbPhotoSvg.get_pixbuf()
 
 		elif (self.recd.type == Constants.TYPE_VIDEO):
-			xoff = 8
-			yoff = 22
 			if (self.recd.buddy):
 				thumbVideoSvg = utils.loadSvg(Constants.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbVideoSvg.get_pixbuf()
@@ -50,13 +46,11 @@ class RecdButton(TrayButton, gobject.GObject):
 				pb = Constants.thumbVideoSvg.get_pixbuf()
 
 		elif (self.recd.type == Constants.TYPE_AUDIO):
-			xoff = 8
-			yoff = 22
 			if (self.recd.buddy):
 				thumbAudioSvg = utils.loadSvg(Constants.thumbAudioSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
 				pb = thumbAudioSvg.get_pixbuf()
 			else:
-				pb = Constants.thumbVideoSvg.get_pixbuf()
+				pb = Constants.thumbAudioSvg.get_pixbuf()
 
 		img.set_from_pixbuf(pb)
 		img.show()

@@ -1412,7 +1412,7 @@ class UI:
 
 
 	def updateMeshProgress( self, progressMade, recd ):
-		if (shownRecd != recd):
+		if (self.shownRecd != recd):
 			return
 		else:
 			if (progressMade):
@@ -1857,22 +1857,26 @@ class MaxButton(P5Button):
 
 
 class InfButton(P5Button):
+	#todo: just a gtk.Image here, no?
 	def __init__(self, ui):
 		P5Button.__init__(self)
 		self.ui = ui
 
-		self.set_size_request( self.ui.maxw, self.ui.maxh )
+		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
+
+		self.set_size_request( 75, 75 )
 
 		xs = []
 		ys = []
 		xs.append(0)
 		ys.append(0)
-		xs.append(self.ui.maxw)
+		xs.append(75)
 		ys.append(0)
-		xs.append(self.ui.maxw)
-		ys.append(self.ui.maxh)
+		xs.append(75)
+		ys.append(75)
 		xs.append(0)
-		ys.append(self.ui.maxh)
+		ys.append(75)
 		poly = Polygon( xs, ys )
 		butt = Button( poly, 0, 0)
 		butt.addActionListener( self )
@@ -1882,7 +1886,7 @@ class InfButton(P5Button):
 
 
 	def draw(self, ctx, w, h):
-		self.background( ctx, Constants.colorWhite, w, h )
+		self.background( ctx, Constants.colorBlack, w, h )
 		Constants.infoOnSvg.render_cairo( ctx )
 
 
