@@ -245,7 +245,7 @@ class Constants:
 		ctx.rectangle(0, 0, w, h)
 		ctx.set_source_rgb(0, 0, 0)
 		ctx.fill()
-		x = 3
+		x = 0
 		y = 4
 		ctx.translate(x,y)
 		ctx.set_source_surface (self.__class__.recCircleCairo, 0, 0)
