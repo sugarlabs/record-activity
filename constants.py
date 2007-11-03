@@ -232,10 +232,16 @@ class Constants:
 
 
 	def createCountdownPng( self, num ):
+		todisk = True
+
 		w = self.__class__.dim_CONTROLBAR_HT
 		h = w
-		img = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-		ctx = cairo.Context(img)
+		if (todisk):
+			cimg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+			ctx = cairo.Context(cimg)
+		else:
+			pixmap = gtk.gdk.Pixmap(None, w, h, 24)
+			ctx = pixmap.cairo_create()
 		ctx.rectangle(0, 0, w, h)
 		ctx.set_source_rgb(0, 0, 0)
 		ctx.fill()
@@ -259,11 +265,14 @@ class Constants:
 		ctx.translate( xoff, yoff )
 		pctx.show_layout(play)
 
-		path = os.path.join(Instance.tmpPath, str(num)+".png")
-		path = utils.getUniqueFilepath(path, 0)
-		img.write_to_png(path)
-
 		img = gtk.Image()
-		numPixbuf = gtk.gdk.pixbuf_new_from_file(path)
-		img.set_from_pixbuf( numPixbuf )
+		if (todisk):
+			path = os.path.join(Instance.tmpPath, str(num)+".png")
+			path = utils.getUniqueFilepath(path, 0)
+			cimg.write_to_png(path)
+			numPixbuf = gtk.gdk.pixbuf_new_from_file(path)
+			img.set_from_pixbuf( numPixbuf )
+		else:
+			img.set_from_pixmap(pixmap, None)
+
 		self.__class__.countdownImgs[int(num)] = img
