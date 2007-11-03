@@ -674,6 +674,7 @@ class UI:
 		self.MESHING = downloading
 
 		if (not downloading):
+			self.progressWindow.updateProgress(0.0, "")
 			imgPath = recd.getMediaFilepath()
 			if (not imgPath == None):
 				if ( os.path.isfile(imgPath) ):
@@ -1453,7 +1454,6 @@ class UI:
 
 	def showThumbSelection( self, recd ):
 		lastRecd = self.shownRecd
-		self.progressWindow.updateProgress(0.0, "")
 
 		#do we need to know the type, since we're showing based on the mode of the app?
 		if (recd.type == Constants.TYPE_PHOTO):
@@ -1494,6 +1494,7 @@ class UI:
 		self.MESHING = downloading
 		record.Record.log.debug("showAudio: downloading->" + str(downloading))
 		if (not downloading):
+			self.progressWindow.updateProgress(0.0, "")
 			mediaFilepath = recd.getMediaFilepath( )
 			record.Record.log.debug("showAudio: mediaFilepath->" + str(mediaFilepath))
 			if (mediaFilepath != None):
@@ -1511,6 +1512,10 @@ class UI:
 				self.ca.glive.stop()
 				self.ca.glive.play()
 		downloading = self.ca.requestMeshDownload(recd)
+
+		if (not downloading):
+			self.progressWindow.updateProgress(0.0, "")
+
 		self.MESHING = downloading
 		self.LIVEMODE = False
 		self.shownRecd = recd
@@ -2054,6 +2059,12 @@ class ProgressWindow(gtk.Window):
 			self.str = str
 			self.infoLabel.set_text( "<b><span foreground='white'>"+self.str+"</span></b>")
 			self.infoLabel.set_use_markup( True )
+
+		if (str=="" and str != self.str):
+			self.str = str
+			self.infoLabel.set_text( "<b><span foreground='black'>SPACE</span></b>")
+			self.infoLabel.set_use_markup( True )
+
 		if (amt >= 1):
 			self.progBar.set_fraction( 0 )
 

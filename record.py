@@ -335,8 +335,8 @@ class Record(activity.Activity):
 			if (os.path.exists(filepath)):
 				os.remove( filepath )
 
-		askingAnotherBud = False
-		buds = self._shared_activity.get_joined_buddies();
+		goodBudObj = None
+		buds = self._shared_activity.get_joined_buddies()
 		for i in range (0, len(buds)):
 			nextBudObj = buds[i]
 			nextBud = util._sha_data(nextBudObj.props.key)
@@ -345,11 +345,15 @@ class Record(activity.Activity):
 				self.__class__.log.debug('mnrrb: weve already tried bud ' + str(nextBudObj.props.nick))
 			else:
 				self.__class__.log.debug('mnrrb: ask next buddy: ' + str(nextBudObj.props.nick))
-				nextNick = nextBudObj.props.nick
-				self.meshReqRecFromBuddy(recd, nextBud, nextNick)
-				askingAnotherBud = True
+				goodBudObj = nextBudObj
+				break
 
-		if (not askingAnotherBud):
+		if (goodBudObj != None):
+			goodNick = goodBudObj.props.nick
+			goodBud = util._sha_data(goodBudObj.props.key)
+			goodBud = util.printable_hash(goodBud)
+			self.meshReqRecFromBuddy(recd, goodBud, goodNick)
+		else:
 			self.__class__.log.debug('weve tried all buddies here, and no one has this recd')
 			recd.triedMeshBuddies = []
 			recd.triedMeshBuddies.append(Instance.keyHashPrintable)
@@ -363,9 +367,13 @@ class Record(activity.Activity):
 		recd.meshDownloadingFromNick = fromWhosNick
 		recd.meshDownloadingProgress = False
 		recd.meshDownloading = True
+		recd.meshDownlodingPercent = 0.0
+		self.ui.updateMeshProgress(True, recd)
+		gobject.idle_add( meshReqRecFromBuddy2, recd, fromWho, fromWhosNick )
+
+	def meshReqRecFromBuddy( self, recd, fromWho, fromWhosNick ):
 		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 		self.recTube.requestRecdBits( Instance.keyHashPrintable, fromWho, recd.mediaMd5 )
-		self.ui.updateMeshProgress(True, recd)
 
 
 	def _meshCheckOnRecdRequest( self, recdRequesting ):
