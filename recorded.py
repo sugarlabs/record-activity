@@ -154,14 +154,14 @@ class Recorded:
 		if (self.audioImageFilename == None):
 			audioPixbuf = self.getThumbPixbuf()
 		else:
-			audioFilepath = self._getAudioImageFilepath()
+			audioFilepath = self.getAudioImageFilepath()
 			if (audioFilepath != None):
 				audioPixbuf = gtk.gdk.pixbuf_new_from_file(audioFilepath)
 
 		return audioPixbuf
 
 
-	def _getAudioImageFilepath( self ):
+	def getAudioImageFilepath( self ):
 		if (self.audioImageFilename != None):
 			audioFilepath = os.path.join(Instance.tmpPath, self.audioImageFilename)
 			return os.path.abspath(audioFilepath)

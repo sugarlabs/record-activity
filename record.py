@@ -421,6 +421,17 @@ class Record(activity.Activity):
 
 		recd.meshUploading = True
 		filepath = recd.getMediaFilepath()
+
+		if (recd.type == Constants.TYPE_AUDIO):
+			audioImgFilepath = recd.getAudioImageFilepath()
+
+			destPath = os.path.join(Instance.tmpPath, "audioBundle")
+			destPath = utils.getUniqueFilepath(audioBundle, 0)
+			cmd = "cat " + str(filepath) + " " + str(audioImgFilepath) + " > " + str(destPath)
+			self.__class__.log.debug(cmd)
+			os.system(cmd)
+			filepath = destPath
+
 		sent = self.recTube.broadcastRecd(recd.mediaMd5, filepath, whoWantsIt)
 		recd.meshUploading = False
 		#if you were deleted while uploading, now throw away those bits now
@@ -465,17 +476,18 @@ class Record(activity.Activity):
 			recd.meshDownlodingPercent = 1.0
 			recd.downloadedFromBuddy = True
 			if (recd.type == Constants.TYPE_AUDIO):
-				self.__class__.log.debug("_recdBitsArrivedCb:TYPE_AUDIO")
-				greplay = Greplay()
-				greplay.connect("coverart-found", self._getAlbumArtCb, recd )
 				filepath = recd.getMediaFilepath()
-				if (filepath != None):
-					if (os.path.exists(filepath)):
-						greplay.findAlbumArt(filepath)
-					else:
-						self.ui.showMeshRecd(recd)
-				else:
-					self.ui.showMeshRecd(recd)
+				bundlePath = os.path.join(Instance.tmpPath, "audioBundle")
+				bundlePath = utils.getUniqueFilepath(bundlePath, 0)
+
+				cmd = "split -a 1 -b " + str(recd.mediaBytes) + " " + str(filepath) + " " + str(bundlePath)
+				self.__class__.log.debug( cmd )
+				os.system( cmd )
+				bundleName = os.path.basename(bundlePath)
+				recd.mediaFilename = str(bundleName) + "a"
+				recd.audioImageFilename = str(bundleName) + "b"
+
+
 			else:
 				self.ui.showMeshRecd( recd )
 		elif part > numparts:
