@@ -155,19 +155,19 @@ class Constants:
 	def __init__( self, ca ):
 		self.__class__.activityId = ca._activity_id
 
-		thumbPhotoSvgPath = os.path.join(self.__class__.gfxPath, 'thumb_photo.svg')
+		thumbPhotoSvgPath = os.path.join(self.__class__.gfxPath, 'object-photo.svg')
 		thumbPhotoSvgFile = open(thumbPhotoSvgPath, 'r')
 		self.__class__.thumbPhotoSvgData = thumbPhotoSvgFile.read()
 		self.__class__.thumbPhotoSvg = utils.loadSvg(self.__class__.thumbPhotoSvgData, Instance.colorStroke.hex, Instance.colorFill.hex)
 		thumbPhotoSvgFile.close()
 
-		thumbVideoSvgPath = os.path.join(self.__class__.gfxPath, 'thumb_video.svg')
+		thumbVideoSvgPath = os.path.join(self.__class__.gfxPath, 'object-video.svg')
 		thumbVideoSvgFile = open(thumbVideoSvgPath, 'r')
 		self.__class__.thumbVideoSvgData = thumbVideoSvgFile.read()
 		self.__class__.thumbVideoSvg = utils.loadSvg(self.__class__.thumbVideoSvgData, Instance.colorStroke.hex, Instance.colorFill.hex)
 		thumbVideoSvgFile.close()
 
-		thumbAudioSvgPath = os.path.join(self.__class__.gfxPath, 'thumb_video.svg')
+		thumbAudioSvgPath = os.path.join(self.__class__.gfxPath, 'object-audio.svg')
 		thumbAudioSvgFile = open(thumbAudioSvgPath, 'r')
 		self.__class__.thumbAudioSvgData = thumbAudioSvgFile.read()
 		self.__class__.thumbAudioSvg = utils.loadSvg(self.__class__.thumbAudioSvgData, Instance.colorStroke.hex, Instance.colorFill.hex)

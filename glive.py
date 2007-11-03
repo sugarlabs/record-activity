@@ -191,7 +191,7 @@ class Glive:
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! queue name=audioQueue_"+n+ " ! audioconvert name=audioAudioconvert_"+n +" ! wavenc name=audioVorbisenc_"+n+" ! filesink name=audioFilesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! queue name=audioQueue_"+n+ " ! audioconvert name=audioAudioconvert_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
 			v4l2 = True
 
 			audioQueue = pipeline.get_by_name('audioQueue_'+n)
@@ -215,10 +215,6 @@ class Glive:
 		elif (self._PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
 			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
 
-		if (pipeline == None):
-			#todo: handle this?
-			print("no pipeline error!")
-
 		if (v4l2):
 			v4l2src = pipeline.get_by_name('v4l2src_'+n)
 			try:
@@ -226,7 +222,6 @@ class Glive:
 			except:
 				pass
 
-		#todo: this should be checked with an attribute dictionary
 		if ((self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD)
 		or (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)
 		or (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD)):
@@ -279,8 +274,9 @@ class Glive:
 
 
 	def stoppedRecordingAudio( self ):
+		record.Record.log.debug("stoppedRecordingAudio")
 		if (self.audioPixbuf != None):
-			audioFilepath = self.el("audioFilesink").get_property("location")
+			audioFilepath = os.path.join(Instance.tmpPath, "output.wav")#self.el("audioFilesink").get_property("location")
 			if (not os.path.exists(audioFilepath)):
 				self.record = False
 				self.audio = False
@@ -292,14 +288,17 @@ class Glive:
 				self.ca.m.cannotSaveVideo()
 				return
 
+			record.Record.log.debug("pre self.ca.ui.setPostProcessPixBuf")
 			self.ca.ui.setPostProcessPixBuf(self.audioPixbuf)
+			record.Record.log.debug("post self.ca.ui.setPostProcessPixBuf")
 
 			n = "0"
 			line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc_'+n+' ! wavparse name=audioWavparse_'+n+' ! audioconvert name=audioAudioconvert_'+n+' ! vorbisenc name=audioVorbisenc_'+n+' ! oggmux name=audioOggmux_'+n+' ! filesink name=audioFilesink_'+n
 			audioline = gst.parse_launch(line)
-			taglist = self.getTags()
+			taglist = self.getTags(Constants.TYPE_AUDIO)
 			base64AudioSnapshot = utils.getStringFromPixbuf(self.audioPixbuf)
 			taglist[gst.TAG_EXTENDED_COMMENT] = "coverart="+str(base64AudioSnapshot)
+			record.Record.log.debug("post taglist[gst.TAG_EXTENDED_COMMENT]")
 
 			vorbisEnc = audioline.get_by_name('audioVorbisenc_'+n)
 			vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)
@@ -307,24 +306,30 @@ class Glive:
 			audioFilesink = audioline.get_by_name('audioFilesink_'+n)
 			audioOggFilepath = os.path.join(Instance.tmpPath, "output.ogg")
 			audioFilesink.set_property("location", audioOggFilepath )
+			record.Record.log.debug("post audioFilesink")
 
 			audioBus = audioline.get_bus()
 			audioBus.add_signal_watch()
 			self.AUDIO_MUX_MESSAGE_ID = audioBus.connect('message', self._onMuxedAudioMessageCb, audioline)
-			#add a listener here to monitor % of transcoding...
-			self.AUDIO_TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, audioline)
+			self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, audioline)
+			record.Record.log.debug("post AUDIO_TRANSCODE_ID")
 			gobject.idle_add( audioline.set_state, gst.STATE_PLAYING )
+			record.Record.log.debug("post idle_add")
 		else:
 			self.record = False
 			self.audio = False
 			self.ca.m.cannotSaveVideo()
 
 
-	def getTags( self ):
+	def getTags( self, type ):
 		tl = gst.TagList()
 		tl[gst.TAG_ARTIST] = str(Instance.nickName)
 		tl[gst.TAG_COMMENT] = "olpc"
-		#todo: more
+		record.Record.log.debug("self.ca.metadata['title']->" + str(self.ca.metadata['title']) )
+		tl[gst.TAG_ALBUM] = self.ca.metadata['title']
+		tl[gst.TAG_DATE] = utils.getDateString(int(time.time()))
+		stringType = Constants.mediaTypes[type][Constants.keyIstr]
+		tl[gst.TAG_TITLE] = Constants.istrBy % {"1":stringType, "2":str(Instance.nickName)}
 		return tl
 
 
@@ -402,27 +407,21 @@ class Glive:
 
 				self.ca.ui.setPostProcessPixBuf(self.thumbBuf)
 
-				#todo: just remove these on EOS
-				if ( len(self.muxPipes) > 0 ):
-					self.muxPipe().get_bus().disable_sync_message_emission()
-					self.muxPipe().get_bus().disconnect(self.MUX_MESSAGE_ID)
-					self.muxPipe().get_bus().remove_signal_watch()
-
 				wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
 				muxFilepath = os.path.join(Instance.tmpPath, "mux.ogg") #ogv
 
 				n = str(len(self.muxPipes))
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
-				taglist = self.getTags()
+				taglist = self.getTags(Constants.TYPE_VIDEO)
 				vorbisEnc = muxline.get_by_name('muxVorbisenc_'+n)
 				vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)
 
 				muxBus = muxline.get_bus()
 				muxBus.add_signal_watch()
-				self.MUX_MESSAGE_ID = muxBus.connect('message', self._onMuxedVideoMessageCb)
+				self.VIDEO_TRANSCODE_ID = muxBus.connect('message', self._onMuxedVideoMessageCb, muxline)
 				self.muxPipes.append(muxline)
 				#add a listener here to monitor % of transcoding...
-				self.VIDEO_TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, muxline)
+				self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, muxline)
 				muxline.set_state(gst.STATE_PLAYING)
 			else:
 				self.record = False
@@ -454,15 +453,18 @@ class Glive:
 		return (position, duration)
 
 
-	def _onMuxedVideoMessageCb(self, bus, message):
+	def _onMuxedVideoMessageCb(self, bus, message, pipe):
 		t = message.type
 		if (t == gst.MESSAGE_EOS):
 			self.record = False
 			self.audio = False
-			gobject.source_remove( self.VIDEO_TRANSCODE_ID )
+			gobject.source_remove(self.VIDEO_TRANSCODE_ID)
 			self.VIDEO_TRANSCODE_ID = 0
-
-			self.muxPipe().set_state(gst.STATE_NULL)
+			gobject.source_remove(self.TRANSCODE_ID)
+			self.TRANSCODE_ID = 0
+			pipe.set_state(gst.STATE_NULL)
+			pipe.get_bus().disable_sync_message_emission()
+			pipe.get_bus().remove_signal_watch()
 
 			wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
 			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg") #ogv
@@ -478,12 +480,18 @@ class Glive:
 
 	def _onMuxedAudioMessageCb(self, bus, message, pipe):
 		t = message.type
+		record.Record.log.debug("_onMuxedAudioMessageCb " + str(t) + ", " + str(pipe))
 		if (t == gst.MESSAGE_EOS):
+			record.Record.log.debug("gst.MESSAGE_EOS")
 			self.record = False
 			self.audio = False
-			gobject.source_remove( self.AUDIO_TRANSCODE_ID )
-			self.AUDIO_TRANSCODE_ID = 0
+			gobject.source_remove(self.AUDIO_MUX_MESSAGE_ID)
+			self.AUDIO_MUX_MESSAGE_ID = 0
+			gobject.source_remove(self.TRANSCODE_ID)
+			self.TRANSCODE_ID = 0
 			pipe.set_state(gst.STATE_NULL)
+			pipe.get_bus().disable_sync_message_emission()
+			pipe.get_bus().remove_signal_watch()
 
 			wavFilepath = os.path.join(Instance.tmpPath, "output.wav")
 			oggFilepath = os.path.join(Instance.tmpPath, "output.ogg")

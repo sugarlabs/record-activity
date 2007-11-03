@@ -1555,6 +1555,9 @@ class UI:
 
 
 	def setPostProcessPixBuf( self, pixbuf ):
+		if (pixbuf.width>160):
+			pixbuf = scale_simple(160, 120, gtk.gdk.INTERP_NEAREST)
+
 		pixbuf = utils.grayScalePixBuf(pixbuf, True)
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.backgdCanvas.setImage(img)
@@ -1564,8 +1567,7 @@ class UI:
 		self.photographerNameLabel.set_label( recd.recorderName )
 		self.nameTextfield.set_text( recd.title )
 		self.nameTextfield.set_sensitive( True )
-		#todo: internationalize the date
-		self.dateDateLabel.set_label( strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(recd.time) ) )
+		self.dateDateLabel.set_label( utils.getDateString(recd.time) )
 
 		self.photographerPanel.show()
 		self.namePanel.show()
