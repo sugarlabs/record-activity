@@ -298,10 +298,12 @@ class Record(activity.Activity):
 	def requestMeshDownload( self, recd ):
 		#this call will get the bits or request the bits if they're not available
 		if (recd.buddy and not recd.downloadedFromBuddy):
+
 			if (not recd.meshDownloading):
 				if (self.recTube != None):
 					self.meshInitRoundRobin(recd)
-				return True
+
+			return True
 		else:
 			return False
 
@@ -334,22 +336,21 @@ class Record(activity.Activity):
 			nextBud = util._sha_data(nextBudObj.props.key)
 			nextBud = util.printable_hash(nextBud)
 			if (recd.triedMeshBuddies.count(nextBud) > 0):
-				self.__class__.log.debug('meshNextRoundRobinBuddy: weve already tried asking this buddy for this photo')
+				self.__class__.log.debug('meshNextRoundRobinBuddy: weve already tried bud ' + str(nextBudObj.props.nick))
 			else:
-				self.__class__.log.debug('meshNextRoundRobinBuddy: ask next buddy')
+				self.__class__.log.debug('meshNextRoundRobinBuddy: ask next buddy: ' + str(nextBudObj.props.nick))
 				nextNick = nextBudObj.props.nick
 				self.meshReqRecFromBuddy(recd, nextBud, nextNick)
 				askingAnotherBud = True
 
 		if (not askingAnotherBud):
 			self.__class__.log.debug('weve tried all buddies here, and no one has this recd')
-
 			recd.triedMeshBuddies = []
 			self.ui.updateMeshProgress(False, None)
 
 
 	def meshReqRecFromBuddy( self, recd, fromWho, fromWhosNick ):
-		self.__class__.log.debug('meshReqRecFromBuddy')
+		self.__class__.log.debug('meshReqRecFromBuddy: ' + str(fromWho))
 		recd.triedMeshBuddies.append( fromWho )
 		recd.meshDownloadingFrom = fromWho
 		recd.meshDownloadingFromNick = fromWhosNick
@@ -429,7 +430,7 @@ class Record(activity.Activity):
 			self.__class__.log.debug('_recdBitsArrivedCb: uh, we took this photo, so dont need your bits')
 			return
 		if (recd.meshDownloadingFrom != fromWho):
-			self.__class__.log.debug('_recdBitsArrivedCb: we dont want this guys bits, were getting bits from someoneelse')
+			self.__class__.log.debug('_recdBitsArrivedCb: wrong bits ' + str(fromWho) + ", exp:" + str(recd.meshDownloadingFrom))
 			return
 
 		#update that we've heard back about this, reset the timeout

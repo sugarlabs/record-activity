@@ -696,6 +696,7 @@ class UI:
 		self.scrubWindow.removeCallbacks()
 		self.scrubWindow.reset()
 		self.MESHING = False
+		self.progressWindow.updateProgress( 0, "" )
 
 		self.resetWidgetFadeTimer( )
 
@@ -1272,7 +1273,7 @@ class UI:
 						pos.append({"position":"scr", "window":self.scrubWindow} )
 						pos.append({"position":"inf", "window":self.infWindow} )
 					else:
-						pos.append({"position":"prg", "window":self.progressWindow} )
+						pos.append({"position":"tmr", "window":self.progressWindow} )
 		elif (self.TRANSCODING):
 			pos.append({"position":"tmr", "window":self.progressWindow} )
 
@@ -1433,7 +1434,10 @@ class UI:
 
 
 	def updateMeshProgress( self, progressMade, recd ):
+		self.resetWidgetFadeTimer()
+		record.Record.log.debug("updateMeshProgress:" + str(progressMade) + ", " + str(recd) )
 		if (self.shownRecd != recd):
+			record.Record.log.debug("updateMeshProgress: self.shownRecd != recd")
 			pass
 		else:
 			type = Constants.mediaTypes[recd.type][Constants.keyIstr]
