@@ -312,7 +312,7 @@ class Record(activity.Activity):
 			return
 
 		#start with who took the photo
-		self.meshReqRecFromBuddy( recd, recd.recorderHash )
+		self.meshReqRecFromBuddy( recd, recd.recorderHash, recd.recorderName )
 
 
 	def meshNextRoundRobinBuddy( self, recd ):
@@ -337,7 +337,8 @@ class Record(activity.Activity):
 				self.__class__.log.debug('meshNextRoundRobinBuddy: weve already tried asking this buddy for this photo')
 			else:
 				self.__class__.log.debug('meshNextRoundRobinBuddy: ask next buddy')
-				self.meshReqRecFromBuddy(recd, nextBud)
+				nextNick = nextBudObj.props.nick
+				self.meshReqRecFromBuddy(recd, nextBud, nextNick)
 				askingAnotherBud = True
 
 		if (not askingAnotherBud):
@@ -347,15 +348,15 @@ class Record(activity.Activity):
 			self.ui.updateMeshProgress(False, None)
 
 
-	def meshReqRecFromBuddy( self, recd, fromWho ):
+	def meshReqRecFromBuddy( self, recd, fromWho, fromWhosNick ):
 		self.__class__.log.debug('meshReqRecFromBuddy')
 		recd.triedMeshBuddies.append( fromWho )
 		recd.meshDownloadingFrom = fromWho
+		recd.meshDownloadingFromNick = fromWhosNick
 		recd.meshDownloadingProgress = False
 		recd.meshDownloading = True
 		recd.meshReqCallbackId = gobject.timeout_add(self.meshTimeoutTime, self._meshCheckOnRecdRequest, recd)
 		self.recTube.requestRecdBits( Instance.keyHashPrintable, fromWho, recd.mediaMd5 )
-
 		self.ui.updateMeshProgress(True, recd)
 
 

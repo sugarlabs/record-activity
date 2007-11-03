@@ -505,11 +505,13 @@ class UI:
 			self.hideWidgetsTimer = time.time()
 			passedTime = 0
 
-		if (passedTime >= 2):
+		if (passedTime >= 3):
 			if (not self.hiddenWidgets):
 				if (self.mouseInWidget(x,y)):
 					self.hideWidgetsTimer = time.time()
 				elif (self.RECD_INFO_ON):
+					self.hideWidgetsTimer = time.time()
+				elif (self.UPDATE_TIMER_ID != 0):
 					self.hideWidgetsTimer = time.time()
 				else:
 					self.hideWidgets()
@@ -693,6 +695,7 @@ class UI:
 
 		self.scrubWindow.removeCallbacks()
 		self.scrubWindow.reset()
+		self.MESHING = False
 
 		self.resetWidgetFadeTimer( )
 
@@ -809,6 +812,9 @@ class UI:
 		self.LIVEMODE = True
 		self.FULLSCREEN = False
 		self.RECD_INFO_ON = False
+		self.MESHING = False
+
+		self.progressWindow.updateProgress(0.0, "")
 
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
@@ -1287,18 +1293,20 @@ class UI:
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
-				pos.append({"position":"max", "window":self.maxWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
+				if (not self.MESHING):
+					pos.append({"position":"max", "window":self.maxWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
 		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 			if (not self.LIVEMODE):
-				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
 				pos.append({"position":"pip", "window":self.playLiveWindow} )
-				pos.append({"position":"scr", "window":self.scrubWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
+				if (not self.MESHING):
+					pos.append({"position":"max", "window":self.maxWindow} )
+					pos.append({"position":"scr", "window":self.scrubWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"max", "window":self.maxWindow} )
 				pos.append({"position":"eye", "window":self.recordWindow} )
@@ -1307,8 +1315,9 @@ class UI:
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
 				pos.append({"position":"pip", "window":self.liveVideoWindow} )
-				pos.append({"position":"scr", "window":self.scrubWindow} )
-				pos.append({"position":"inf", "window":self.infWindow} )
+				if (not self.MESHING):
+					pos.append({"position":"scr", "window":self.scrubWindow} )
+					pos.append({"position":"inf", "window":self.infWindow} )
 			else:
 				pos.append({"position":"eye", "window":self.recordWindow} )
 				pos.append({"position":"prg", "window":self.progressWindow} )
@@ -1415,14 +1424,19 @@ class UI:
 		if (self.shownRecd != recd):
 			return
 		else:
+			type = Constants.mediaTypes[recd.type][Constants.keyIstr]
 			if (progressMade):
-				self.progressWindow.updateProgress(recd.meshDownlodingPercent, recd.meshDownloadingFrom)
+				msg = istrDownloadingFrom% {"1":type, "2":recd.meshDownloadingFromNick}
+				self.progressWindow.updateProgress(recd.meshDownlodingPercent, msg)
 			else:
-				self.progressWindow.updateProgress(0.0, "sux to be you!")
+				type = Constants.mediaTypes[recd.type][Constants.keyIstr]
+				msg = Constants.istrCannotDownload % {"1":type}
+				self.progressWindow.updateProgress(0.0, msg)
 
 
 	def showThumbSelection( self, recd ):
 		lastRecd = self.shownRecd
+		self.progressWindow.updateProgress(0.0, "")
 
 		#do we need to know the type, since we're showing based on the mode of the app?
 		if (recd.type == Constants.TYPE_PHOTO):

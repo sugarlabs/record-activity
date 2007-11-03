@@ -66,6 +66,7 @@ class Recorded:
 		self.triedMeshBuddies = []
 		self.meshDownloading = False
 		self.meshDownloadingFrom = ""
+		self.meshDownloadingFromNick = ""
 		self.meshDownlodingPercent = 0.0
 		self.meshDownloadingProgress = False
 		#if someone is downloading this, then hold onto it
