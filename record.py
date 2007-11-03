@@ -296,13 +296,14 @@ class Record(activity.Activity):
 
 
 	def requestMeshDownload( self, recd ):
+ 		if (recd.meshDownloading):
+			return True
+
 		#this call will get the bits or request the bits if they're not available
 		if (recd.buddy and (not recd.downloadedFromBuddy)):
-
-			if (not recd.meshDownloading):
-				self.meshInitRoundRobin(recd)
-
+			self.meshInitRoundRobin(recd)
 			return True
+
 		else:
 			return False
 
