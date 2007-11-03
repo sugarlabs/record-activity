@@ -656,7 +656,7 @@ class UI:
 	def showPhoto( self, recd ):
 		pixbuf = self.getPhotoPixbuf( recd )
 		if (pixbuf != None):
-			self.shownRecd = recd
+			#self.shownRecd = recd
 
 			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 			self.livePhotoCanvas.setImage( img )
@@ -1461,8 +1461,10 @@ class UI:
 				self.progressWindow.updateProgress(0.0, msg)
 
 
+
 	def showThumbSelection( self, recd ):
 		lastRecd = self.shownRecd
+		self.shownRecd = recd
 
 		#do we need to know the type, since we're showing based on the mode of the app?
 		if (recd.type == Constants.TYPE_PHOTO):
@@ -1496,7 +1498,7 @@ class UI:
 		pixbuf = recd.getAudioImagePixbuf()
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.livePhotoCanvas.setImage( img )
-		self.shownRecd = recd
+		#self.shownRecd = recd
 		self.showRecdMeta(recd)
 
 		downloading = self.ca.requestMeshDownload(recd)
@@ -1527,7 +1529,7 @@ class UI:
 
 		self.MESHING = downloading
 		self.LIVEMODE = False
-		self.shownRecd = recd
+		#self.shownRecd = recd
 		self.updateVideoComponents()
 		gobject.idle_add( self.showVideo2, recd, downloading )
 
