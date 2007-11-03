@@ -355,6 +355,7 @@ class Record(activity.Activity):
 			self.meshReqRecFromBuddy(recd, goodBud, goodNick)
 		else:
 			self.__class__.log.debug('weve tried all buddies here, and no one has this recd')
+			recd.meshDownloading = False
 			recd.triedMeshBuddies = []
 			recd.triedMeshBuddies.append(Instance.keyHashPrintable)
 			self.ui.updateMeshProgress(False, recd)
