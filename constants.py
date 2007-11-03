@@ -10,6 +10,9 @@ from sugar import profile
 from color import Color
 import utils
 import _camera
+import cairo
+import pango
+import pangocairo
 
 class Constants:
 
@@ -145,6 +148,9 @@ class Constants:
 	recInsensitiveImg = None
 	recPlayImg = None
 	recPauseImg = None
+	countdownImgs = {}
+
+	dim_CONTROLBAR_HT = 55
 
 	def __init__( self, ca ):
 		self.__class__.activityId = ca._activity_id
@@ -218,3 +224,46 @@ class Constants:
 		recPausePixbuf = gtk.gdk.pixbuf_new_from_file(recPauseFile)
 		self.__class__.recPauseImg = gtk.Image()
 		self.__class__.recPauseImg.set_from_pixbuf( recPausePixbuf )
+
+		self._ts = self.__class__.TIMERS
+		longestTime = self._ts[len(self._ts)-1]
+		for i in range (0, longestTime):
+			self.createCountdownPng( i )
+
+
+	def createCountdownPng( self, num ):
+		w = self.__class__.dim_CONTROLBAR_HT
+		h = w
+		img = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+		ctx = cairo.Context(img)
+		ctx.rectangle(0, 0, w, h)
+		ctx.set_source_rgb(0, 0, 0)
+		ctx.fill()
+		x = 3
+		y = 4
+		ctx.translate(x,y)
+		ctx.set_source_surface (self.__class__.recCircleCairo, 0, 0)
+		ctx.paint()
+		ctx.translate(-x,-y)
+
+		ctx.set_source_rgb(255, 255, 255)
+		pctx = pangocairo.CairoContext(ctx)
+		play = pctx.create_layout()
+		font = pango.FontDescription("sans 30")
+		play.set_font_description(font)
+		play.set_text( ""+str(num) )
+		dim = play.get_pixel_extents()
+		ctx.translate( -dim[0][0], -dim[0][1] )
+		xoff = (w-dim[0][2])/2
+		yoff = (h-dim[0][3])/2
+		ctx.translate( xoff, yoff )
+		pctx.show_layout(play)
+
+		path = os.path.join(Instance.tmpPath, str(num)+".png")
+		path = utils.getUniqueFilepath(path, 0)
+		img.write_to_png(path)
+
+		img = gtk.Image()
+		numPixbuf = gtk.gdk.pixbuf_new_from_file(path)
+		img.set_from_pixbuf( numPixbuf )
+		self.__class__.countdownImgs[int(num)] = img

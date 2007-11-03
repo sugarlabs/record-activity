@@ -62,7 +62,7 @@ class Record(activity.Activity):
 
 	def _initme( self, userdata=None ):
 		Instance(self)
-		Constants(self)
+		c = Constants(self)
 
 		#totally tubular
 		self.meshTimeoutTime = 10000

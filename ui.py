@@ -67,6 +67,7 @@ class UI:
 	dim_PIP_BORDER = 4
 	dim_PGDW = dim_PIPW + (dim_PIP_BORDER*2)
 	dim_PGDH = dim_PIPH + (dim_PIP_BORDER*2)
+	dim_CONTROLBAR_HT = 55
 
 	def __init__( self, pca ):
 		self.ca = pca
@@ -217,7 +218,7 @@ class UI:
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
-		#self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.inset ) #todo: dynamic
+		self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.inset ) #todo: dynamic
 		self.namePanel.pack_start(self.nameTextfield)
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)
@@ -1972,46 +1973,7 @@ class RecordWindow(gtk.Window):
 
 
 	def getCairoCountdown(self, num):
-		w = self.ui.controlBarHt
-		h = self.ui.controlBarHt
-		pixmap = gtk.gdk.Pixmap( self.infWindow.window, w, h, 24)
-		#pixmap.draw_rectangle( self.get_style().bg_gc[gtk.STATE_NORMAL], True, 0, 0, w, h)
-
-		ctx = pixmap.cairo_create()
-		ctx.rectangle(0, 0, w, h)
-		ctx.set_source_rgb(0, 0, 0)
-		ctx.fill()
-
-		x = 3
-		y = 4
-		ctx.translate(x,y)
-		ctx.set_source_surface (Constants.recCircleCairo, 0, 0)
-		ctx.paint()
-		ctx.translate(-x,-y)
-
-		ctx.set_source_rgb( 255, 255, 255)
-		pangocontext = gtk.Window().get_pango_context()
-		layout = pango.Layout(pangocontext)
-		font = pango.FontDescription("sans 30")
-		layout.set_font_description(font)
-		layout.set_text( ""+str(num) )
-		dim = layout.get_pixel_extents()
-		ctx.translate( -dim[0][0], -dim[0][1] )
-		xoff = (w-dim[0][2])/2
-		yoff = (h-dim[0][3])/2
-		ctx.translate( xoff, yoff )
-
-		ctx.show_layout(layout)
-
-		#pb = gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8, w, h)
-		#pb.get_from_drawable(pixmap, pixmap.get_colormap(), 0, 0, 0, 0, w, h)
-		#pb = pb.add_alpha(True, '%c' % r, '%c' % g, '%c' % b)
-
-		img = gtk.Image()
-		img.set_from_pixmap(pixmap, None)
-		#img.set_from_pixbuf(pb)
-
-		return img
+		return Constants.countdownImgs[int(num)]
 
 
 	def updateGfx( self ):
