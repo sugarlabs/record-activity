@@ -1,3 +1,8 @@
+37
+* prevent duplicate thumbnails when shared (jedierikb)
+* prevent changing modes when using timer (jedierikb, mikhak)
+* fix audio mesh share (jedierikb, mikhak)
+
 36
 * ui (jedierikb, mikhak, eben)
 * tubes

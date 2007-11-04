@@ -426,7 +426,7 @@ class Record(activity.Activity):
 			audioImgFilepath = recd.getAudioImageFilepath()
 
 			destPath = os.path.join(Instance.tmpPath, "audioBundle")
-			destPath = utils.getUniqueFilepath(audioBundle, 0)
+			destPath = utils.getUniqueFilepath(destPath, 0)
 			cmd = "cat " + str(filepath) + " " + str(audioImgFilepath) + " > " + str(destPath)
 			self.__class__.log.debug(cmd)
 			os.system(cmd)
@@ -483,13 +483,21 @@ class Record(activity.Activity):
 				cmd = "split -a 1 -b " + str(recd.mediaBytes) + " " + str(filepath) + " " + str(bundlePath)
 				self.__class__.log.debug( cmd )
 				os.system( cmd )
+
 				bundleName = os.path.basename(bundlePath)
-				recd.mediaFilename = str(bundleName) + "a"
-				recd.audioImageFilename = str(bundleName) + "b"
+				mediaFilename = str(bundleName) + "a"
+				mediaFilepath = os.path.join(Instance.tmpPath, mediaFilename)
+				mediaFilepathExt = os.path.join(Instance.tmpPath, mediaFilename+".ogg")
+				os.rename(mediaFilepath, mediaFilepathExt)
+				audioImageFilename = str(bundleName) + "b"
+				audioImageFilepath = os.path.join(Instance.tmpPath, audioImageFilename)
+				audioImageFilepathExt = os.path.join(Instance.tmpPath, audioImageFilename+".png")
+				os.rename(audioImageFilepath, audioImageFilepathExt)
 
+				recd.mediaFilename = os.path.basename(mediaFilepathExt)
+				recd.audioImageFilename = os.path.basename(audioImageFilepathExt)
 
-			else:
-				self.ui.showMeshRecd( recd )
+			self.ui.showMeshRecd( recd )
 		elif part > numparts:
 			self.__class__.log.error('More parts than required have arrived')
 

@@ -98,6 +98,7 @@ class UI:
 		self.RECD_INFO_ON = False
 		self.UPDATE_DURATION_ID = 0
 		self.UPDATE_TIMER_ID = 0
+		self.COUNTINGDOWN = False
 
 		#init
 		self.mapped = False
@@ -703,28 +704,27 @@ class UI:
 
 
 	def updateButtonSensitivities( self ):
-		self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING )
 
 		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
 		self.photoToolbar.set_sensitive( switchStuff )
 		self.videoToolbar.set_sensitive( switchStuff )
 		self.audioToolbar.set_sensitive( switchStuff )
 
-		if (self.ca.m.UPDATING):
-			self.ca.ui.setWaitCursor( self.ca.window )
-			for i in range (0, len(self.windowStack)):
-				self.ca.ui.setWaitCursor( self.windowStack[i].window )
-		else:
-			self.ca.ui.setDefaultCursor( self.ca.window )
-			for i in range (0, len(self.windowStack)):
-				self.ca.ui.setDefaultCursor( self.windowStack[i].window )
+		if (not self.COUNTINGDOWN):
+			if (self.ca.m.UPDATING):
+				self.ca.ui.setWaitCursor( self.ca.window )
+				for i in range (0, len(self.windowStack)):
+					self.ca.ui.setWaitCursor( self.windowStack[i].window )
+			else:
+				self.ca.ui.setDefaultCursor( self.ca.window )
+				for i in range (0, len(self.windowStack)):
+					self.ca.ui.setDefaultCursor( self.windowStack[i].window )
 
-		if (self.ca.m.RECORDING):
-			#self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, Constants.colorRed.gColor )
-			self.recordWindow.shutterButton.doRecordButton()
-		else:
-			#self.recordWindow.shutterButton.modify_bg( gtk.STATE_NORMAL, None )
-			self.recordWindow.shutterButton.doNormalButton()
+			self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING )
+			if (self.ca.m.RECORDING):
+				self.recordWindow.shutterButton.doRecordButton()
+			else:
+				self.recordWindow.shutterButton.doNormalButton()
 
 		kids = self.thumbTray.get_children()
 		for i in range (0, len(kids)):
@@ -1148,12 +1148,13 @@ class UI:
 				if (timerTime > 0):
 					self.timerStartTime = time.time()
 					self.UPDATE_TIMER_ID = gobject.timeout_add( 500, self._updateTimerCb )
+					self.COUNTINGDOWN = True
+					self.ca.m.setUpdating(True)
 				else:
 					self.clickShutter()
 			else:
 				#or, if there is no countdown, it might be because we are recording
 				self.clickShutter()
-
 
 		else:
 			#we're timing down something, but interrupted by user click or the timer completing
@@ -1162,6 +1163,8 @@ class UI:
 
 
 	def _completeTimer( self ):
+		self.COUNTINGDOWN = False
+		self.ca.m.setUpdating(False)
 		self.recordWindow.updateCountdown(-1)
 		self.progressWindow.updateProgress( 1, "" )
 		gobject.source_remove( self.UPDATE_TIMER_ID )
@@ -1181,6 +1184,8 @@ class UI:
 			timerTime = self.audioToolbar.getTimer()
 
 		if (passedTime >= timerTime):
+			self.COUNTINGDOWN = False
+			self.ca.m.setUpdating(False)
 			self.doShutter()
 			return False
 		else:

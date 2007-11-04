@@ -80,18 +80,17 @@ class Model:
 		return self.MODE == Constants.MODE_PHOTO
 
 
-	def displayThumb( self, type, forceUpdating ):
+	def displayThumb( self, recd, forceUpdating ):
 		#to avoid Xlib: unexpected async reply error when taking a picture on a gst callback, always call with idle_add
 		#this happens b/c this might get called from a gstreamer callback
-
-		if (not type == self.MODE):
+		if (not recd.type == self.MODE):
 			return
 
 		if (forceUpdating):
 			self.setUpdating( True )
-		hash = self.mediaHashs[type]
+		hash = self.mediaHashs[recd.type]
 		if (len(hash) > 0):
-			self.ca.ui.addThumb( hash[len(hash)-1] )
+			self.ca.ui.addThumb(recd)
 		if (forceUpdating):
 			self.setUpdating( False )
 
@@ -199,7 +198,7 @@ class Model:
 
 		audioHash = self.mediaHashs[Constants.TYPE_AUDIO]
 		audioHash.append( recd )
-		gobject.idle_add(self.displayThumb, Constants.TYPE_AUDIO, True)
+		gobject.idle_add(self.displayThumb, recd, True)
 		self.doPostSaveVideo()
 		self.meshShareRecd( recd )
 
@@ -256,9 +255,8 @@ class Model:
 
 		videoHash = self.mediaHashs[Constants.TYPE_VIDEO]
 		videoHash.append( recd )
-		gobject.idle_add(self.displayThumb, Constants.TYPE_VIDEO, True)
-
 		self.doPostSaveVideo()
+		gobject.idle_add(self.displayThumb, recd, True)
 		self.meshShareRecd( recd )
 
 
@@ -320,7 +318,7 @@ class Model:
 
 		photoHash = self.mediaHashs[Constants.TYPE_PHOTO]
 		photoHash.append( recd )
-		gobject.idle_add(self.displayThumb, Constants.TYPE_PHOTO, True)
+		gobject.idle_add(self.displayThumb, recd, True)
 
 		self.meshShareRecd( recd )
 
@@ -330,7 +328,7 @@ class Model:
 		self.mediaHashs[recd.type].append( recd )
 
 		#updateUi, but don't lock up the buttons if they're recording or whatever
-		gobject.idle_add(self.displayThumb, recd.type, False)
+		gobject.idle_add(self.displayThumb, recd, False)
 
 
 	def createNewRecorded( self, type ):
