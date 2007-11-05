@@ -78,7 +78,7 @@ class UI:
 		self.thumbSvgH = 124
 		self.maxw = 49
 		self.maxh = 49
-		self.controlBarHt = 55
+		self.controlBarHt = 60
 		self.recordButtWd = 55
 		self.pipw = self.__class__.dim_PIPW
 		self.piph = self.__class__.dim_PIPH
@@ -217,7 +217,7 @@ class UI:
 		self.nameTextfield.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.nameTextfield.connect('changed', self._nameTextfieldEditedCb )
 		self.nameTextfield.set_alignment(0)
-		self.nameTextfield.set_size_request( -1, 39 ) #self.controlBarHt-self.inset ) #todo: dynamic
+		self.nameTextfield.set_size_request( -1, self.controlBarHt-(self.inset*2) )
 		self.namePanel.pack_start(self.nameTextfield)
 
 		self.photographerPanel = gtk.VBox(spacing=self.inset)

@@ -55,15 +55,16 @@ class Record(activity.Activity):
 		self.I_AM_CLOSING = False
 		self.I_AM_SAVED = False
 		self.JUST_LAUNCHED = True
+
+		Instance(self)
+		c = Constants(self)
+
 		self.connect( "notify::active", self._activeCb )
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
 
 
 	def _initme( self, userdata=None ):
-		Instance(self)
-		c = Constants(self)
-
 		#totally tubular
 		self.meshTimeoutTime = 10000
 		self.recTube = None
