@@ -57,8 +57,8 @@ import _camera
 
 class UI:
 
-	dim_THUMB_WIDTH = 107
-	dim_THUMB_HEIGHT = 78
+	dim_THUMB_WIDTH = 108
+	dim_THUMB_HEIGHT = 81
 	dim_INSET = 10
 	dim_PIPW = 160
 	dim_PIPH = 120 #pipBorder

@@ -215,6 +215,7 @@ def _addRecdXmlAttrs( el, recd, forMeshTransmit ):
 	el.setAttribute(Constants.recdThumbMd5, str(recd.thumbMd5))
 	el.setAttribute(Constants.recdMediaBytes, str(recd.mediaBytes))
 	el.setAttribute(Constants.recdThumbBytes, str(recd.thumbBytes))
+	el.setAttribute(Constants.recdRecordVersion, str(Constants.VERSION))
 
 
 def saveMediaHash( mediaHashs ):

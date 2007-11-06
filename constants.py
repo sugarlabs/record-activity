@@ -16,6 +16,8 @@ import pangocairo
 
 class Constants:
 
+	VERSION = 39
+
 	SERVICE = "org.laptop.Record"
 	IFACE = SERVICE
 	PATH = "/org/laptop/Record"
@@ -39,6 +41,7 @@ class Constants:
 	recdAlbum = "album"
 	recdType = "type"
 	recdRecd = "recd"
+	recdRecordVersion = "version"
 
 	keyName = "name"
 	keyMime = "mime"
