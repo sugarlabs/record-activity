@@ -35,7 +35,7 @@ class Constants:
 	recdThumbMd5 = "thumbMd5"
 	recdMediaBytes = "mediaBytes"
 	recdThumbBytes = "thumbBytes"
-	recdBuddyThumb = "buddyThumb"
+	recdBase64Thumb = "base64Thumb"
 	recdDatastoreId = "datastoreId"
 	recdAudioImage = "audioImage"
 	recdAlbum = "album"

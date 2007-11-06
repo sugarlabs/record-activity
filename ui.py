@@ -1607,8 +1607,8 @@ class UI:
 
 
 	def setPostProcessPixBuf( self, pixbuf ):
-		if (pixbuf.get_width()>160):
-			pixbuf = pixbuf.scale_simple(160, 120, gtk.gdk.INTERP_NEAREST)
+		if (pixbuf.get_width()>dim_THUMB_WIDTH):
+			pixbuf = pixbuf.scale_simple(dim_THUMB_WIDTH, dim_THUMB_HEIGHT, gtk.gdk.INTERP_NEAREST)
 
 		pixbuf = utils.grayScalePixBuf(pixbuf, True)
 		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)

@@ -147,7 +147,7 @@ def fillRecdFromNode( recd, el ):
 	if (el.getAttributeNode(Constants.recdThumbBytes) != None):
 		recd.thumbBytes = el.getAttribute(Constants.recdThumbBytes)
 
-	bt = el.getAttributeNode(Constants.recdBuddyThumb)
+	bt = el.getAttributeNode(Constants.recdBase64Thumb)
 	if (bt != None):
 		try:
 			thumbPath = os.path.join(Instance.tmpPath, "datastoreThumb.jpg")
@@ -157,7 +157,7 @@ def fillRecdFromNode( recd, el ):
 			recd.thumbFilename = os.path.basename(thumbPath)
 			record.Record.log.debug("saved thumbFilename")
 		except:
-			record.Record.log.error("unable to getRecdBuddyThumb")
+			record.Record.log.error("unable to getRecdBase64Thumb")
 
 	ai = el.getAttributeNode(Constants.recdAudioImage)
 	if (not ai == None):
@@ -183,10 +183,6 @@ def getRecdXmlMeshString( recd ):
 	recdXml = impl.createDocument(None, Constants.recdRecd, None)
 	root = recdXml.documentElement
 	_addRecdXmlAttrs( root, recd, True )
-
-	pixbuf = recd.getThumbPixbuf( )
-	thumb = str( utils.getStringFromPixbuf(pixbuf) )
-	root.setAttribute(Constants.recdBuddyThumb, thumb )
 
 	writer = cStringIO.StringIO()
 	recdXml.writexml(writer)
@@ -216,6 +212,10 @@ def _addRecdXmlAttrs( el, recd, forMeshTransmit ):
 	el.setAttribute(Constants.recdMediaBytes, str(recd.mediaBytes))
 	el.setAttribute(Constants.recdThumbBytes, str(recd.thumbBytes))
 	el.setAttribute(Constants.recdRecordVersion, str(Constants.VERSION))
+
+	pixbuf = recd.getThumbPixbuf( )
+	thumb64 = str( utils.getStringFromPixbuf(pixbuf) )
+	el.setAttribute(Constants.recdBase64Thumb, thumb64)
 
 
 def saveMediaHash( mediaHashs ):
@@ -251,9 +251,6 @@ def saveMediaHash( mediaHashs ):
 
 def _saveMedia( el, recd ):
 	if ( (recd.buddy == True) and (recd.datastoreId == None) and (not recd.downloadedFromBuddy) ):
-		pixbuf = recd.getThumbPixbuf( )
-		buddyThumb = str( utils.getStringFromPixbuf(pixbuf) )
-		el.setAttribute(Constants.recdBuddyThumb, buddyThumb )
 		recd.savedMedia = True
 		_saveXml( el, recd )
 	else:
@@ -294,10 +291,20 @@ def _saveMediaToDatastore( el, recd ):
 		mediaObject = datastore.create()
 		mediaObject.metadata['title'] = recd.title
 
-		pixbuf = recd.getThumbPixbuf()
-		record.Record.log.debug("serialize: pixbuf->" + str(pixbuf))
-		thumbData = utils.getStringFromPixbuf(pixbuf)
-		mediaObject.metadata['preview'] = thumbData
+		datastorePreviewPixbuf = recd.getThumbPixbuf()
+		if (recd.type == Constants.TYPE_AUDIO):
+			datastorePreviewPixbuf = recd.getAudioImagePixbuf()
+		elif (recd.type == Constant.TYPE_PHOTO):
+			datastorePreviewFilepath = recd.getMediaFilepath()
+			datastorePreviewPixbuf = gtk.gdk.pixbuf_new_from_file(datastorePreviewFilepath)
+
+		datastorePreviewWidth = 300
+		datastorePreviewHeight = 225
+		if (datastorePreviewPixbuf.get_width() != datastorePreviewWidth):
+			datastorePreviewPixbuf = datastorePreviewPixbuf.scale_simple(datastorePreviewWidth, datastorePreviewHeight, gtk.gdk.INTERP_NEAREST)
+
+		datastorePreviewBase64 = utils.getStringFromPixbuf(datastorePreviewPixbuf)
+		mediaObject.metadata['preview'] = datastorePreviewBase64
 
 		colors = str(recd.colorStroke.hex) + "," + str(recd.colorFill.hex)
 		mediaObject.metadata['icon-color'] = colors

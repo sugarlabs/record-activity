@@ -100,52 +100,15 @@ class Recorded:
 	#relaunch, their old media -- datastoreObject->file (hold onto the datastore object, delete if deleted) | ([request->]) Journal/session/buddy
 
 	def getThumbPixbuf( self ):
-		record.Record.log.debug("getThumbPixbuf: self.datastoreId="+str(self.datastoreId))
-		if (self.datastoreId == None):
-			#just taken, so it is in the tempSessionDir
-			#so load file, convert to pixbuf, and return it here...
-			thumbPixbuf = None
-			record.Record.log.debug("getThumbPixbuf: thumbfilename:" + str(self.thumbFilename))
-			thumbFilepath = os.path.join(Instance.tmpPath, self.thumbFilename)
-			if ( os.path.isfile(thumbFilepath) ):
-				thumbPixbuf = gtk.gdk.pixbuf_new_from_file(thumbFilepath)
-			record.Record.log.debug("getThumbPixbuf: returning thumbPixbuf->"+str(thumbPixbuf))
-			return thumbPixbuf
-		else:
-			#todo: handle possible corruption of the preview into some other format
-			if (self.datastoreOb == None):
-				self.datastoreOb = serialize.getMediaFromDatastore( self )
-			if (self.datastoreOb == None):
-				record.Record.log.debug("getThumbPixbuf: datastoreOb==None")
-				return None
-
-			record.Record.log.debug("getThumbPixbuf: got datastore Ob!")
-			return utils.getPixbufFromString( self.datastoreOb.metadata['preview'] )
+		thumbPixbuf = None
+		thumbFilepath = self.getThumbFilepath()
+		if ( os.path.isfile(thumbFilepath) ):
+			thumbPixbuf = gtk.gdk.pixbuf_new_from_file(thumbFilepath)
+		return thumbPixbuf
 
 
 	def getThumbFilepath( self ):
-		if (self.datastoreId == None):
-			#just taken, so it is in the tempSessionDir
-			#so load file, convert to pixbuf, and return it here...
-			thumbPixbuf = None
-			record.Record.log.debug("getThumbFilepath: thumbfilename:" + str(self.thumbFilename))
-			thumbFilepath = os.path.join(Instance.tmpPath, self.thumbFilename)
-			if ( os.path.isfile(thumbFilepath) ):
-				return thumbFilepath
-		else:
-			if (self.datastoreOb == None):
-				self.datastoreOb = serialize.getMediaFromDatastore( self )
-			if (self.datastoreOb == None):
-				print("RecordActivity error -- unable to get datastore object in getThumbPixbuf")
-				return None
-
-			img = utils.getPixbufFromString( self.datastoreOb.metadata['preview'] )
-			thumbFilepath = os.path.join( Instance.tmpPath, "thumb.png")
-			thumbFilepath = utils.getUniqueFilepath(thumbFilepath, 0)
-			img.save(thumbFilepath, "png", {} )
-			return thumbFilepath
-
-		return None
+		return os.path.join(Instance.tmpPath, self.thumbFilename)
 
 
 	def getAudioImagePixbuf( self ):
