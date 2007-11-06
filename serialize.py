@@ -3,6 +3,7 @@ from xml.dom.minidom import getDOMImplementation
 from xml.dom.minidom import parse
 import cStringIO
 import os
+import gtk
 
 from sugar.datastore import datastore
 
@@ -294,7 +295,7 @@ def _saveMediaToDatastore( el, recd ):
 		datastorePreviewPixbuf = recd.getThumbPixbuf()
 		if (recd.type == Constants.TYPE_AUDIO):
 			datastorePreviewPixbuf = recd.getAudioImagePixbuf()
-		elif (recd.type == Constant.TYPE_PHOTO):
+		elif (recd.type == Constants.TYPE_PHOTO):
 			datastorePreviewFilepath = recd.getMediaFilepath()
 			datastorePreviewPixbuf = gtk.gdk.pixbuf_new_from_file(datastorePreviewFilepath)
 
@@ -322,8 +323,9 @@ def _saveMediaToDatastore( el, recd ):
 		datastore.write( mediaObject )
 
 		recd.datastoreId = mediaObject.object_id
-		recd.mediaFilename = None
-		recd.thumbFilename = None
 		recd.savedMedia = True
 
 		_saveXml( el, recd )
+
+		recd.mediaFilename = None
+		recd.thumbFilename = None
