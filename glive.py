@@ -324,8 +324,9 @@ class Glive:
 		tl = gst.TagList()
 		tl[gst.TAG_ARTIST] = str(Instance.nickName)
 		tl[gst.TAG_COMMENT] = "olpc"
-		record.Record.log.debug("self.ca.metadata['title']->" + str(self.ca.metadata['title']) )
-		tl[gst.TAG_ALBUM] = self.ca.metadata['title']
+		#this is unfortunately, unreliable
+		#record.Record.log.debug("self.ca.metadata['title']->" + str(self.ca.metadata['title']) )
+		tl[gst.TAG_ALBUM] = "olpc" #self.ca.metadata['title']
 		tl[gst.TAG_DATE] = utils.getDateString(int(time.time()))
 		stringType = Constants.mediaTypes[type][Constants.keyIstr]
 		tl[gst.TAG_TITLE] = Constants.istrBy % {"1":stringType, "2":str(Instance.nickName)}

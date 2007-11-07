@@ -676,7 +676,7 @@ class UI:
 		self.MESHING = downloading
 
 		if (not downloading):
-			self.progressWindow.updateProgress(0.0, "")
+			self.progressWindow.updateProgress(0, "")
 			imgPath = recd.getMediaFilepath()
 			if (not imgPath == None):
 				if ( os.path.isfile(imgPath) ):
@@ -828,7 +828,7 @@ class UI:
 		self.RECD_INFO_ON = False
 		self.MESHING = False
 
-		self.progressWindow.updateProgress(0.0, "")
+		self.progressWindow.updateProgress(0, "")
 
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
@@ -1466,7 +1466,7 @@ class UI:
 			else:
 				type = Constants.mediaTypes[recd.type][Constants.keyIstr]
 				msg = Constants.istrCannotDownload % {"1":type}
-				self.progressWindow.updateProgress(0.0, msg)
+				self.progressWindow.updateProgress(0, msg)
 
 
 
@@ -1513,7 +1513,7 @@ class UI:
 		self.MESHING = downloading
 		record.Record.log.debug("showAudio: downloading->" + str(downloading))
 		if (not downloading):
-			self.progressWindow.updateProgress(0.0, "")
+			self.progressWindow.updateProgress(0, "")
 			mediaFilepath = recd.getMediaFilepath( )
 			record.Record.log.debug("showAudio: mediaFilepath->" + str(mediaFilepath))
 			if (mediaFilepath != None):
@@ -1533,7 +1533,7 @@ class UI:
 		downloading = self.ca.requestMeshDownload(recd)
 
 		if (not downloading):
-			self.progressWindow.updateProgress(0.0, "")
+			self.progressWindow.updateProgress(0, "")
 
 		self.MESHING = downloading
 		self.LIVEMODE = False

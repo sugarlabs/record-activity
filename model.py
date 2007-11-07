@@ -103,7 +103,7 @@ class Model:
 		self.ca.ui.removeThumbs()
 		hash = self.mediaHashs[type]
 		for i in range (0, len(hash)):
-			self.ca.ui.addThumb( hash[i] )
+			self.ca.ui.addThumb( hash[i], True )
 		if (update):
 			self.ca.ui.updateModeChange()
 		self.setUpdating(False)

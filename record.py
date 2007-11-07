@@ -58,9 +58,9 @@ class Record(activity.Activity):
 		self.JUST_LAUNCHED = True
 
 		Instance(self)
-		c = Constants(self)
+		Constants(self)
+		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 
-		print("init")
 		self.connect( "notify::active", self._activeCb )
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
@@ -134,7 +134,7 @@ class Record(activity.Activity):
 			self.stopPipes()
 		else:
 			print('_activeCb:restartPipes')
-			gobject.idle_add( self.restartPipes )
+			self.restartPipes()
 
 
 	def stopPipes(self):
@@ -149,21 +149,8 @@ class Record(activity.Activity):
 
 
 	def restartPipes(self):
-		print("restartingPipes")
-
-		if (not self.props.active):
-			print("restartPipes & we're not active")
-			return
-
-		if (not self.m.UPDATING):
-			#try:
-			print("attempting to restartPipes")
-			self.ui.updateModeChange( )
-			self.ui.doMouseListener( True )
-			#except:
-			#	print("restartPipes exception")
-			#	time.sleep(0.25)
-			#	gobject.idle_add( self.restartPipes )
+		self.ui.updateModeChange( )
+		self.ui.doMouseListener( True )
 
 
 	def close( self ):
