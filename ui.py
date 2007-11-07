@@ -1388,7 +1388,7 @@ class UI:
 		self.thumbTray.add_item( butt, len(self.thumbTray.get_children()) )
 		butt.show()
 		if (forceScroll):
-			self.thumbTray.force_to_end()
+			self.thumbTray.scroll_to_end()
 
 
 	def removeThumbs( self ):

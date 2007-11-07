@@ -18,6 +18,7 @@
 import gobject
 import gtk
 
+import sugar
 from sugar.graphics import style
 from sugar.graphics.palette import Palette, ToolInvoker
 from sugar.graphics.toolbutton import ToolButton
@@ -67,7 +68,7 @@ class _TrayViewport(gtk.Viewport):
     def _scroll_to_end(self):
         if self.orientation == gtk.ORIENTATION_HORIZONTAL:
             adj = self.get_hadjustment()
-            adj.value = adj.upper - self.allocation.width
+            adj.value = adj.upper# - self.allocation.width
         else:
             adj = self.get_vadjustment()
             adj.value = adj.upper - self.allocation.height
@@ -106,7 +107,7 @@ class _TrayViewport(gtk.Viewport):
             self._can_scroll = can_scroll
             self.notify('can-scroll')
 
-class _TrayScrollButton(gtk.ToolButton):
+class _TrayScrollButton(gtk.Button):
     def __init__(self, icon_name, scroll_direction):
         gobject.GObject.__init__(self)
 
@@ -114,14 +115,15 @@ class _TrayScrollButton(gtk.ToolButton):
 
         self._scroll_direction = scroll_direction
 
+        self.set_relief(gtk.RELIEF_NONE)
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 
         icon = Icon(icon_name = icon_name,
                     icon_size=gtk.ICON_SIZE_SMALL_TOOLBAR)
-        self.set_icon_widget(icon)
+        self.set_image(icon)
         icon.show()
 
-        self.child.connect('clicked', self._clicked_cb)
+        self.connect('clicked', self._clicked_cb)
 
     def set_viewport(self, viewport):
         self._viewport = viewport
@@ -129,7 +131,8 @@ class _TrayScrollButton(gtk.ToolButton):
                                self._viewport_can_scroll_changed_cb)
 
     def _viewport_can_scroll_changed_cb(self, viewport, pspec):
-        self.props.visible = self._viewport.props.can_scroll
+        #self.props.visible = self._viewport.props.can_scroll
+        pass
 
     def _clicked_cb(self, button):
         self._viewport.scroll(self._scroll_direction)
@@ -141,45 +144,28 @@ class HTray(gtk.HBox):
         gobject.GObject.__init__(self, **kwargs)
 
         scroll_left = _TrayScrollButton('go-left', _PREVIOUS_PAGE)
-        self.pack_start(scroll_left, False)
+        scroll_left_event = gtk.EventBox()
+        scroll_left_event.add(scroll_left)
+        scroll_left_event.set_size_request(55, -1)
+        self.pack_start(scroll_left_event, False)
 
         self._viewport = _TrayViewport(gtk.ORIENTATION_HORIZONTAL)
         self.pack_start(self._viewport)
         self._viewport.show()
 
         scroll_right = _TrayScrollButton('go-right', _NEXT_PAGE)
-        self.pack_start(scroll_right, False)
+        scroll_right_event = gtk.EventBox()
+        scroll_right_event.add(scroll_right)
+        scroll_right_event.set_size_request(55, -1)
+        self.pack_start(scroll_right_event, False)
 
-        scroll_left.viewport = self._viewport
-        scroll_right.viewport = self._viewport
+        scroll_left.set_focus_on_click(False)
+        scroll_left_event.modify_bg(gtk.STATE_NORMAL, sugar.graphics.style.COLOR_TOOLBAR_GREY.get_gdk_color())
+        scroll_left.modify_bg(gtk.STATE_ACTIVE, sugar.graphics.style.COLOR_BUTTON_GREY.get_gdk_color())
 
-    def get_children(self):
-        return self._viewport.traybar.get_children()
-
-    def add_item(self, item, index=-1):
-        self._viewport.traybar.insert(item, index)
-
-    def remove_item(self, item):
-        self._viewport.traybar.remove(item)
-
-    def get_item_index(self, item):
-        return self._viewport.traybar.get_item_index(item)
-
-class VTray(gtk.VBox):
-    def __init__(self, **kwargs):
-        gobject.GObject.__init__(self, **kwargs)
-
-        # FIXME we need a go-up icon
-        scroll_left = _TrayScrollButton('go-left', _PREVIOUS_PAGE)
-        self.pack_start(scroll_left, False)
-
-        self._viewport = _TrayViewport(gtk.ORIENTATION_VERTICAL)
-        self.pack_start(self._viewport)
-        self._viewport.show()
-
-        # FIXME we need a go-down icon
-        scroll_right = _TrayScrollButton('go-right', _NEXT_PAGE)
-        self.pack_start(scroll_right, False)
+        scroll_right.set_focus_on_click(False)
+        scroll_right_event.modify_bg(gtk.STATE_NORMAL, sugar.graphics.style.COLOR_TOOLBAR_GREY.get_gdk_color())
+        scroll_right.modify_bg(gtk.STATE_ACTIVE, sugar.graphics.style.COLOR_BUTTON_GREY.get_gdk_color())
 
         scroll_left.viewport = self._viewport
         scroll_right.viewport = self._viewport
@@ -198,54 +184,3 @@ class VTray(gtk.VBox):
 
     def scroll_to_end(self):
         self._viewport._scroll_to_end()
-
-
-class TrayButton(ToolButton):
-    def __init__(self, **kwargs):
-        ToolButton.__init__(self, **kwargs)
-
-class _IconWidget(gtk.EventBox):
-    __gtype_name__ = "SugarTrayIconWidget"
-
-    def __init__(self, icon_name=None, xo_color=None):
-        gtk.EventBox.__init__(self)
-
-        self._palette = None
-
-        self.set_app_paintable(True)
-
-        icon = Icon(icon_name=icon_name, xo_color=xo_color,
-                    icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
-        self.add(icon)
-        icon.show()
-
-    def do_expose_event(self, event):
-        if self._palette and self._palette.is_up():
-            invoker = self._palette.props.invoker
-            invoker.draw_rectangle(event, self._palette)
-
-        gtk.EventBox.do_expose_event(self, event)
-
-    def set_palette(self, palette):
-        if self._palette is not None:
-            self._palette.props.invoker = None
-        self._palette = palette
-        self._palette.props.invoker = ToolInvoker(self)
-
-class TrayIcon(gtk.ToolItem):
-    __gtype_name__ = "SugarTrayIcon"
-
-    def __init__(self, icon_name=None, xo_color=None):
-        gtk.ToolItem.__init__(self)
-
-        self._icon_widget = _IconWidget(icon_name, xo_color)
-        self.add(self._icon_widget)
-        self._icon_widget.show()
-
-        self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
-
-    def set_palette(self, palette):
-        self._icon_widget.set_palette(palette)
-
-    def set_tooltip(self, text):
-        self.set_palette(Palette(text))
