@@ -132,7 +132,7 @@ class _TrayScrollButton(gtk.Button):
 
     def _viewport_can_scroll_changed_cb(self, viewport, pspec):
         #self.props.visible = self._viewport.props.can_scroll
-        pass
+        self.set_sensitive(self._viewport.props.can_scroll)
 
     def _clicked_cb(self, button):
         self._viewport.scroll(self._scroll_direction)
@@ -169,6 +169,12 @@ class HTray(gtk.HBox):
 
         scroll_left.viewport = self._viewport
         scroll_right.viewport = self._viewport
+
+        self.connect_after("size-allocate", self._sizeAllocateCb)
+
+
+    def _sizeAllocateCb(self, widget, event ):
+        self._viewport.notify('can-scroll')
 
     def get_children(self):
         return self._viewport.traybar.get_children()
