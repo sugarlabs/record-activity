@@ -90,7 +90,7 @@ class Model:
 			self.setUpdating( True )
 		hash = self.mediaHashs[recd.type]
 		if (len(hash) > 0):
-			self.ca.ui.addThumb(recd)
+			self.ca.ui.addThumb(recd, forceUpdating)
 		if (forceUpdating):
 			self.setUpdating( False )
 

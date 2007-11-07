@@ -35,7 +35,7 @@ import pango
 
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.tray import HTray
+#from sugar.graphics.tray import HTray
 from sugar import profile
 from sugar import util
 from sugar.activity import activity
@@ -54,6 +54,7 @@ from button import RecdButton
 import utils
 import record
 import _camera
+from tray import HTray
 
 class UI:
 
@@ -1380,12 +1381,14 @@ class UI:
 				kids[i].setButtClickedId(0)
 
 
-	def addThumb( self, recd ):
+	def addThumb( self, recd, forceScroll ):
 		butt = RecdButton( self, recd )
 		BUTT_CLICKED_ID = butt.connect( "clicked", self._thumbClicked, recd )
 		butt.setButtClickedId(BUTT_CLICKED_ID)
 		self.thumbTray.add_item( butt, len(self.thumbTray.get_children()) )
 		butt.show()
+		if (forceScroll):
+			self.thumbTray.force_to_end()
 
 
 	def removeThumbs( self ):

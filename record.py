@@ -26,6 +26,7 @@ import telepathy
 import telepathy.client
 import logging
 import xml.dom.minidom
+import time
 
 from sugar.activity import activity
 from sugar.presence import presenceservice
@@ -59,6 +60,7 @@ class Record(activity.Activity):
 		Instance(self)
 		c = Constants(self)
 
+		print("init")
 		self.connect( "notify::active", self._activeCb )
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
@@ -122,17 +124,17 @@ class Record(activity.Activity):
 
 
 	def _activeCb( self, widget, pspec ):
-		self.__class__.log.debug('_activeCb')
+		print('_activeCb')
 		if (self.JUST_LAUNCHED):
 			self.JUST_LAUNCHED = False
 			return
 
 		if (not self.props.active):
-			self.__class__.log.debug('_activeCb:stopPipes')
+			print('_activeCb:stopPipes')
 			self.stopPipes()
 		else:
-			self.__class__.log.debug('_activeCb:restartPipes')
-			self.restartPipes()
+			print('_activeCb:restartPipes')
+			gobject.idle_add( self.restartPipes )
 
 
 	def stopPipes(self):
@@ -147,9 +149,21 @@ class Record(activity.Activity):
 
 
 	def restartPipes(self):
+		print("restartingPipes")
+
+		if (not self.props.active):
+			print("restartPipes & we're not active")
+			return
+
 		if (not self.m.UPDATING):
+			#try:
+			print("attempting to restartPipes")
 			self.ui.updateModeChange( )
 			self.ui.doMouseListener( True )
+			#except:
+			#	print("restartPipes exception")
+			#	time.sleep(0.25)
+			#	gobject.idle_add( self.restartPipes )
 
 
 	def close( self ):
