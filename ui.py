@@ -2037,7 +2037,6 @@ class RecordWindow(gtk.Window):
 
 
 	def updateCountdown(self, num):
-		#todo: fix
 		if(num>0):
 			if (num != self.num):
 				ok = self.getCairoCountdown(num)
@@ -2074,7 +2073,6 @@ class ProgressWindow(gtk.Window):
 		eb = gtk.EventBox()
 		eb.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		eb.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
-		eb.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.add( eb )
 
 		vb = gtk.VBox()
@@ -2082,6 +2080,10 @@ class ProgressWindow(gtk.Window):
 		eb.add(vb)
 
 		self.progBar = gtk.ProgressBar()
+		self.progBar.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.progBar.modify_bg( gtk.STATE_ACTIVE, Constants.colorBlack.gColor )
+		self.progBar.modify_bg( gtk.STATE_PRELIGHT, Constants.colorBlack.gColor )
+		self.progBar.modify_bg( gtk.STATE_SELECTED, Constants.colorBlack.gColor )
 		self.progBar.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		vb.add( self.progBar )
 
