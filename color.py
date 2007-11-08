@@ -54,9 +54,12 @@ class Color:
 		self.init_rgba( cTup[0], cTup[1], cTup[2], 255 )
 
 
-	def rgb_to_hex(self, rgb_tuple):
-		hexcolor = '#%02x%02x%02x' % rgb_tuple
-		# that's it! '%02x' means zero-padded, 2-digit hex values
+	def get_int(self):
+		return int(self._a * 255) + (int(self._b * 255) << 8) + (int(self._g * 255) << 16) + (int(self._r * 255) << 24)
+
+
+	def rgb_to_hex(self, rgb_tup):
+		hexcolor = '#%02x%02x%02x' % rgb_tup
 		return hexcolor
 
 

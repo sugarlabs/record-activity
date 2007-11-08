@@ -32,6 +32,7 @@ import math
 import shutil
 import time
 import pango
+import hippo
 
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
@@ -39,6 +40,7 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar import profile
 from sugar import util
 from sugar.activity import activity
+from sugar.graphics import style
 
 from instance import Instance
 from constants import Constants
@@ -127,7 +129,20 @@ class UI:
 		self.toolbox.set_current_toolbar(self.ca.m.MODE+1)
 		self.toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
 		self.TOOLBOX_SIZE_ALLOCATE_ID = self.toolbox.connect_after("size-allocate", self._toolboxSizeAllocateCb)
-		self.toolbox.show()
+
+		self.toolbox.remove(self.toolbox._separator)
+		#taken directly from toolbox.py b/c I don't know how to mod the hongry hippo
+		separator = hippo.Canvas()
+		box = hippo.CanvasBox(
+					border_color=Constants.colorBlack.get_int(),
+					background_color=Constants.colorBlack.get_int(),
+					box_height=style.TOOLBOX_SEPARATOR_HEIGHT,
+					border_bottom=style.LINE_WIDTH)
+		separator.set_root(box)
+		self.toolbox.pack_start(separator, False)
+		self.toolbox.separator = separator
+
+		self.toolbox.show_all()
 
 
 	def _toolboxSizeAllocateCb( self, widget, event ):
@@ -1782,7 +1797,7 @@ class ScrubberWindow(gtk.Window):
 
 
 	def reset(self):
-			self.adjustment.set_value(0)
+		self.adjustment.set_value(0)
 
 
 	def _buttonClickedCb(self, widget):
@@ -2053,8 +2068,13 @@ class ProgressWindow(gtk.Window):
 		self.ui = ui
 		self.update = ""
 
+		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
+
 		eb = gtk.EventBox()
 		eb.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		eb.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
+		eb.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		self.add( eb )
 
 		vb = gtk.VBox()
