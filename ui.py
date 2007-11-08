@@ -595,31 +595,28 @@ class UI:
 		#we listen here for CTRL+C events and game keys, and pass on events to gtk.Entry fields
 		keyname = gtk.gdk.keyval_name(event.keyval)
 
-		print("ok ~~>" + str(keyname))
+		print("k:" + str(keyname))
 
 		if (keyname == 'KP_Page_Up'): #O, up
-			print("GAME UP")
 			if (self.LIVEMODE):
-				if (self.RECD_INFO_ON):
-					self.infoButtonClicked()
-					return
 				if (not self.ca.m.UPDATING):
 					self.doShutter()
+				else:
+					if (self.COUNTINGDOWN):
+						self.doShutter()
 			else:
 				if (self.ca.m.MODE == Constants.MODE_PHOTO):
 					self.resumeLiveVideo()
 				else:
 					self.resumePlayLiveVideo()
 		elif (keyname == 'KP_Page_Down'): #x, down
-			print("GAME X")
-			self.ca.m.showLastThumb()
+			if (not self.ca.m.UPDATING and not self.ca.m.RECORDING):
+				self.ca.m.showLastThumb()
 		elif (keyname == 'KP_Home'): #square, left
-			print("GAME LEFT")
-			if (not self.LIVEMODE):
+			if (not self.ca.m.UPDATING and not self.ca.m.RECORDING and not self.LIVEMODE):
 				self.ca.m.showPrevThumb( self.shownRecd )
 		elif (keyname == 'KP_End'): #check, right
-			print("GAME RIGHT")
-			if (not self.LIVEMODE):
+			if (not self.ca.m.UPDATING and not self.ca.m.RECORDING and not self.LIVEMODE):
 				self.ca.m.showNextThumb( self.shownRecd )
 		elif (keyname == 'c' and event.state == gtk.gdk.CONTROL_MASK):
 			if (self.shownRecd != None):
@@ -1157,6 +1154,7 @@ class UI:
 
 
 	def doShutter( self ):
+		print("def doShutter")
 		if (self.UPDATE_TIMER_ID == 0):
 			if (not self.ca.m.RECORDING):
 				#there is no update timer running, so we need to find out if there is a timer needed
@@ -1450,7 +1448,6 @@ class UI:
 		self.updateVideoComponents( )
 
 
-
 	def showMeshRecd( self, recd ):
 		record.Record.log.debug('showMeshRecd: heres the downloaded recd to display...')
 
@@ -1489,7 +1486,6 @@ class UI:
 				type = Constants.mediaTypes[recd.type][Constants.keyIstr]
 				msg = Constants.istrCannotDownload % {"1":type}
 				self.progressWindow.updateProgress(0, msg)
-
 
 
 	def showThumbSelection( self, recd ):
