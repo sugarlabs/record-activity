@@ -34,9 +34,9 @@ import time
 import pango
 import hippo
 
-from sugar.graphics.toolcombobox import ToolComboBox
-from sugar.graphics.toolbutton import ToolButton
+#from sugar.graphics.toolcombobox import ToolComboBox
 #from sugar.graphics.tray import HTray
+from sugar.graphics.toolbutton import ToolButton
 from sugar import profile
 from sugar import util
 from sugar.activity import activity
@@ -57,6 +57,7 @@ import utils
 import record
 import _camera
 from tray import HTray
+from toolbarcombobox import ToolComboBox
 
 class UI:
 
@@ -127,8 +128,6 @@ class UI:
 		self.toolbox.add_toolbar( Constants.istrAudio, self.audioToolbar )
 		self.tbars = {Constants.MODE_PHOTO:self.photoToolbar,Constants.MODE_VIDEO:self.videoToolbar,Constants.MODE_AUDIO:self.audioToolbar}
 		self.toolbox.set_current_toolbar(self.ca.m.MODE+1)
-		self.toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
-		self.TOOLBOX_SIZE_ALLOCATE_ID = self.toolbox.connect_after("size-allocate", self._toolboxSizeAllocateCb)
 
 		self.toolbox.remove(self.toolbox._separator)
 		#taken directly from toolbox.py b/c I don't know how to mod the hongry hippo
@@ -142,6 +141,9 @@ class UI:
 		self.toolbox.pack_start(separator, False)
 		self.toolbox.separator = separator
 
+		self.TOOLBOX_SIZE_ALLOCATE_ID = self.toolbox.connect_after("size-allocate", self._toolboxSizeAllocateCb)
+		self.toolbox._notebook.set_property("can-focus", False)
+		self.toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
 		self.toolbox.show_all()
 
 
@@ -393,6 +395,8 @@ class UI:
 		self.addToWindowStack( self.progressWindow, self.windowStack[len(self.windowStack)-1] )
 
 		self.maxWindow = gtk.Window()
+		self.maxWindow.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.maxWindow.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
 		maxButton = MaxButton(self)
 		self.maxWindow.add( maxButton )
 		self.addToWindowStack( self.maxWindow, self.windowStack[len(self.windowStack)-1] )
@@ -590,6 +594,9 @@ class UI:
 
 		#we listen here for CTRL+C events and game keys, and pass on events to gtk.Entry fields
 		keyname = gtk.gdk.keyval_name(event.keyval)
+
+		print("ok ~~>" + str(keyname))
+
 		if (keyname == 'KP_Page_Up'): #O, up
 			print("GAME UP")
 			if (self.LIVEMODE):
@@ -1896,6 +1903,10 @@ class MaxButton(P5Button):
 	def __init__(self, ui):
 		P5Button.__init__(self)
 		self.ui = ui
+
+		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorBlack.gColor )
+
 		xs = []
 		ys = []
 		xs.append(0)
@@ -2209,7 +2220,6 @@ class VideoToolbar(gtk.Toolbar):
 class AudioToolbar(gtk.Toolbar):
 	def __init__(self):
 		gtk.Toolbar.__init__(self)
-		#self.ui = ui
 
 		img = ToolButton('media-audio')
 		img.connect('clicked', self._shutterClickCb)

@@ -17,12 +17,15 @@
 
 import gobject
 import gtk
+import hippo
 
 import sugar
 from sugar.graphics import style
 from sugar.graphics.palette import Palette, ToolInvoker
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon
+
+from constants import Constants
 
 _PREVIOUS_PAGE = 0
 _NEXT_PAGE = 1
@@ -139,25 +142,37 @@ class _TrayScrollButton(gtk.Button):
 
     viewport = property(fset=set_viewport)
 
-class HTray(gtk.HBox):
+class HTray(gtk.VBox):
     def __init__(self, **kwargs):
         gobject.GObject.__init__(self, **kwargs)
+
+        separator = hippo.Canvas()
+        box = hippo.CanvasBox(
+                    border_color=Constants.colorWhite.get_int(),
+                    background_color=Constants.colorWhite.get_int(),
+                    box_height=1,
+                    border_bottom=1)
+        separator.set_root(box)
+        self.pack_start(separator, False)
+
+        hbox = gtk.HBox()
+        self.pack_start(hbox)
 
         scroll_left = _TrayScrollButton('go-left', _PREVIOUS_PAGE)
         scroll_left_event = gtk.EventBox()
         scroll_left_event.add(scroll_left)
         scroll_left_event.set_size_request(55, -1)
-        self.pack_start(scroll_left_event, False)
+        hbox.pack_start(scroll_left_event, False)
 
         self._viewport = _TrayViewport(gtk.ORIENTATION_HORIZONTAL)
-        self.pack_start(self._viewport)
+        hbox.pack_start(self._viewport)
         self._viewport.show()
 
         scroll_right = _TrayScrollButton('go-right', _NEXT_PAGE)
         scroll_right_event = gtk.EventBox()
         scroll_right_event.add(scroll_right)
         scroll_right_event.set_size_request(55, -1)
-        self.pack_start(scroll_right_event, False)
+        hbox.pack_start(scroll_right_event, False)
 
         scroll_left.set_focus_on_click(False)
         scroll_left_event.modify_bg(gtk.STATE_NORMAL, sugar.graphics.style.COLOR_TOOLBAR_GREY.get_gdk_color())
@@ -171,7 +186,6 @@ class HTray(gtk.HBox):
         scroll_right.viewport = self._viewport
 
         self.connect_after("size-allocate", self._sizeAllocateCb)
-
 
     def _sizeAllocateCb(self, widget, event ):
         self._viewport.notify('can-scroll')
