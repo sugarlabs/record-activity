@@ -427,7 +427,7 @@ class Record(activity.Activity):
 		if (recd.type == Constants.TYPE_AUDIO):
 			audioImgFilepath = recd.getAudioImageFilepath()
 
-			destPath = os.path.join(Instance.tmpPath, "audioBundle")
+			destPath = os.path.join(Instance.instancePath, "audioBundle")
 			destPath = utils.getUniqueFilepath(destPath, 0)
 			cmd = "cat " + str(filepath) + " " + str(audioImgFilepath) + " > " + str(destPath)
 			self.__class__.log.debug(cmd)
@@ -479,7 +479,7 @@ class Record(activity.Activity):
 			recd.downloadedFromBuddy = True
 			if (recd.type == Constants.TYPE_AUDIO):
 				filepath = recd.getMediaFilepath()
-				bundlePath = os.path.join(Instance.tmpPath, "audioBundle")
+				bundlePath = os.path.join(Instance.instancePath, "audioBundle")
 				bundlePath = utils.getUniqueFilepath(bundlePath, 0)
 
 				cmd = "split -a 1 -b " + str(recd.mediaBytes) + " " + str(filepath) + " " + str(bundlePath)
@@ -488,12 +488,12 @@ class Record(activity.Activity):
 
 				bundleName = os.path.basename(bundlePath)
 				mediaFilename = str(bundleName) + "a"
-				mediaFilepath = os.path.join(Instance.tmpPath, mediaFilename)
-				mediaFilepathExt = os.path.join(Instance.tmpPath, mediaFilename+".ogg")
+				mediaFilepath = os.path.join(Instance.instancePath, mediaFilename)
+				mediaFilepathExt = os.path.join(Instance.instancePath, mediaFilename+".ogg")
 				os.rename(mediaFilepath, mediaFilepathExt)
 				audioImageFilename = str(bundleName) + "b"
-				audioImageFilepath = os.path.join(Instance.tmpPath, audioImageFilename)
-				audioImageFilepathExt = os.path.join(Instance.tmpPath, audioImageFilename+".png")
+				audioImageFilepath = os.path.join(Instance.instancePath, audioImageFilename)
+				audioImageFilepathExt = os.path.join(Instance.instancePath, audioImageFilename+".png")
 				os.rename(audioImageFilepath, audioImageFilepathExt)
 
 				recd.mediaFilename = os.path.basename(mediaFilepathExt)
@@ -508,7 +508,7 @@ class Record(activity.Activity):
 		self.__class__.log.debug("_getAlbumArtCb:" + str(pixbuf) + "," + str(recd))
 
 		if (pixbuf != None):
-			imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
+			imagePath = os.path.join(Instance.instancePath, "audioPicture.png")
 			imagePath = utils.getUniqueFilepath( imagePath, 0 )
 			pixbuf.save( imagePath, "png", {} )
 			recd.audioImageFilename = os.path.basename(imagePath)

@@ -151,7 +151,7 @@ def fillRecdFromNode( recd, el ):
 	bt = el.getAttributeNode(Constants.recdBase64Thumb)
 	if (bt != None):
 		try:
-			thumbPath = os.path.join(Instance.tmpPath, "datastoreThumb.jpg")
+			thumbPath = os.path.join(Instance.instancePath, "datastoreThumb.jpg")
 			thumbPath = utils.getUniqueFilepath( thumbPath, 0 )
 			thumbImg = utils.getPixbufFromString( bt.nodeValue )
 			thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
@@ -163,7 +163,7 @@ def fillRecdFromNode( recd, el ):
 	ai = el.getAttributeNode(Constants.recdAudioImage)
 	if (not ai == None):
 		try:
-			audioImagePath = os.path.join(Instance.tmpPath, "audioImage.png")
+			audioImagePath = os.path.join(Instance.instancePath, "audioImage.png")
 			audioImagePath = utils.getUniqueFilepath( audioImagePath, 0 )
 			audioImage = utils.getPixbufFromString( ai.nodeValue )
 			audioImage.save(audioImagePath, "png", {} )
@@ -312,11 +312,13 @@ def _saveMediaToDatastore( el, recd ):
 
 		mtype = Constants.mediaTypes[recd.type]
 		mime = mtype[Constants.keyMime]
+		record.Record.log.debug("mime_type:" + str(mime))
 		mediaObject.metadata['mime_type'] = mime
 
 		mediaObject.metadata['activity'] = Constants.activityId
 
 		mediaFile = recd.getMediaFilepath()
+		record.Record.log.debug("mediaFile:" + str(mediaFile))
 		mediaObject.file_path = mediaFile
 		mediaObject.transfer_ownership = True
 
