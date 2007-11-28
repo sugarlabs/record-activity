@@ -724,7 +724,6 @@ class UI:
 
 
 	def updateButtonSensitivities( self ):
-
 		switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
 		self.photoToolbar.set_sensitive( switchStuff )
 		self.videoToolbar.set_sensitive( switchStuff )
@@ -745,6 +744,13 @@ class UI:
 				self.recordWindow.shutterButton.doRecordButton()
 			else:
 				self.recordWindow.shutterButton.doNormalButton()
+
+			#display disc is full messages
+			if (self.ca.m.FULL):
+				self.recordWindow.shutterButton.set_sensitive(False)
+			self.recordWindow.displayDiscFullText(self.ca.m.FULL)
+			if (self.ca.m.FULL):
+				self.progressWindow.updateProgress( 1, Constants.istrYourDiskIsFull, "gray" )
 
 		kids = self.thumbTray.get_children()
 		for i in range (0, len(kids)):
@@ -1030,17 +1036,21 @@ class UI:
 
 	def getEyeLoc( self, full ):
 		if (not full):
-			if (self.ca.m.MODE != Constants.MODE_PHOTO):
-				return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
-			else:
-				return [(self.centerBoxPos[0]+(self.vw/2))-self.recordButtWd/2, self.centerBoxPos[1]+self.vh]
+			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
+#			if (self.ca.m.MODE != Constants.MODE_PHOTO):
+#				return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
+#			else:
+#				return [(self.centerBoxPos[0]+(self.vw/2))-self.recordButtWd/2, self.centerBoxPos[1]+self.vh]
 		else:
 			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
 	def getEyeDim( self, full ):
 		if (not full):
-			return [self.recordButtWd, self.controlBarHt]
+			if (self.ca.m.MODE == Constants.MODE_PHOTO):
+				return [self.vw, self.controlBarHt]
+			else:
+				return [self.recordButtWd, self.controlBarHt]
 		else:
 			if (self.ca.m.MODE == Constants.MODE_PHOTO):
 				return [gtk.gdk.screen_width()-(self.inset*2), self.controlBarHt]
@@ -2008,12 +2018,13 @@ class RecordButton(gtk.Button):
 		self.set_image( Constants.recImg )
 
 
-
 class RecordWindow(gtk.Window):
 	def __init__(self, ui):
 		gtk.Window.__init__(self)
 		self.ui = ui
 		self.num = -1
+
+		self.modify_bg( gtk.STATE_NORMAL, Constants.colorGreen.gColor )
 
 		self.shutterButton = RecordButton()
 		self.shutterButton.set_size_request(self.ui.recordButtWd, self.ui.recordButtWd)
@@ -2033,7 +2044,7 @@ class RecordWindow(gtk.Window):
 		self.add( hbox )
 		leftPanel = gtk.VBox()
 		leftEvent = gtk.EventBox()
-		leftEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		leftEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorRed.gColor )
 		leftEvent.add( leftPanel )
 		hbox.pack_start( leftEvent, expand=True )
 
@@ -2041,9 +2052,12 @@ class RecordWindow(gtk.Window):
 
 		rightPanel = gtk.VBox()
 		rightEvent = gtk.EventBox()
-		rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorGreen.gColor )
 		rightEvent.add( rightPanel )
 		hbox.pack_start( rightEvent, expand=True )
+
+		self.rightPanelLabel = gtk.Label()
+		rightPanel.pack_start( self.rightPanelLabel )
 
 
 	def updateCountdown(self, num):
@@ -2069,6 +2083,15 @@ class RecordWindow(gtk.Window):
 #			if (self.shutterButton.get_image() != Constants.camImg):
 #				self.shutterButton.set_image( Constants.camImg )
 		pass
+
+
+	def displayDiscFullText( self, full ):
+		if (not full or self.ui.ca.m.MODE != Constants.MODE_PHOTO):
+			self.rightPanelLabel.set_text("")
+		else:
+			self.rightPanelLabel.set_text("<b><span foreground='gray'>" + Constants.istrYourDiskIsFull + "</span></b>")
+			self.rightPanelLabel.set_use_markup( True )
+			self.rightPanelLabel.set_alignment(0, .5)
 
 
 class ProgressWindow(gtk.Window):
@@ -2106,12 +2129,12 @@ class ProgressWindow(gtk.Window):
 		hbox.pack_start(self.infoLabel)
 
 
-	def updateProgress( self, amt, update ):
+	def updateProgress( self, amt, update, color='white' ):
 		record.Record.log.debug( "::" + str(update) + "::" +str(amt))
 		self.progBar.set_fraction( amt )
 		if (update != None and update != self.update):
 			self.update = update
-			self.infoLabel.set_text( "<b><span foreground='white'>"+self.update+"</span></b>")
+			self.infoLabel.set_text( "<b><span foreground='" + color + "'>"+self.update+"</span></b>")
 			self.infoLabel.set_use_markup( True )
 
 		if (self.update==""):

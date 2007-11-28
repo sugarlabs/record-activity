@@ -54,6 +54,7 @@ class Model:
 		self.MODE = Constants.MODE_PHOTO
 		self.UPDATING = True
 		self.RECORDING = False
+		self.FULL = True #self.isXoFull()
 
 		self.mediaHashs = {}
 		for key,value in Constants.mediaTypes.items():
@@ -61,11 +62,11 @@ class Model:
 
 
 	def isXoFull( self ):
+		full = False
 		if (utils.getFreespaceKb() <= Constants.keepFreeKbOnXo):
-			self.ui.setDiskFull()
-			return True
-		else:
-			return False
+			full = True
+
+		return full
 
 
 	def getRecdByMd5( self, md5 ):
