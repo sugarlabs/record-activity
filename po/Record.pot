@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-31 11:56-0400\n"
+"POT-Creation-Date: 2007-11-27 23:25-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,177 +16,181 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: activity/activity.info:2 constants.py:80 constants.py:186
+#: activity/activity.info:2 constants.py:90
 msgid "Record"
 msgstr ""
 
-#: constants.py:81
+#: constants.py:91
 msgid "Photo"
 msgstr ""
 
-#: constants.py:82
+#: constants.py:92
 msgid "Video"
 msgstr ""
 
-#: constants.py:83
+#: constants.py:93
 msgid "Audio"
 msgstr ""
 
-#: constants.py:84
+#: constants.py:94
 msgid "Time Lapse"
 msgstr ""
 
-#: constants.py:85
+#: constants.py:95
 msgid "Animation"
 msgstr ""
 
-#: constants.py:86
+#: constants.py:96
 msgid "Panorama"
 msgstr ""
 
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:88
+#: constants.py:98
 #, python-format
 msgid "%(1)s by %(2)s"
 msgstr ""
 
-#: constants.py:89
+#: constants.py:99
 msgid "Title:"
 msgstr ""
 
-#: constants.py:90
+#: constants.py:100
 msgid "Recorder:"
 msgstr ""
 
-#: constants.py:91
+#: constants.py:101
 msgid "Date:"
 msgstr ""
 
-#: constants.py:92
+#: constants.py:102
 msgid "Tags:"
 msgstr ""
 
-#: constants.py:93
+#: constants.py:103
 msgid "Saving"
 msgstr ""
 
-#: constants.py:94
+#: constants.py:104
 msgid "Finished recording"
 msgstr ""
 
-#: constants.py:95
+#: constants.py:105
 #, python-format
 msgid "%(1)s minutes, %(1)s seconds remaining"
 msgstr ""
 
-#: constants.py:96
+#: constants.py:106
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr ""
 
-#: constants.py:97
+#: constants.py:107
 msgid "Remove"
 msgstr ""
 
-#: constants.py:98
+#: constants.py:108
 msgid "Stopped recording"
 msgstr ""
 
-#: constants.py:99
+#: constants.py:109
 msgid "Copy to clipboard"
 msgstr ""
 
-#: constants.py:100
+#: constants.py:110
 msgid "Timer:"
 msgstr ""
 
-#: constants.py:101
+#: constants.py:111
 msgid "Duration:"
 msgstr ""
 
-#: constants.py:102
+#: constants.py:112
 msgid "Immediate"
 msgstr ""
 
-#: constants.py:103
+#: constants.py:113
 #, python-format
 msgid "%(1)s seconds"
 msgstr ""
 
-#: constants.py:104
+#: constants.py:114
 #, python-format
 msgid "%(1)s minutes"
 msgstr ""
 
-#: constants.py:105
+#: constants.py:115
 msgid "Play"
 msgstr ""
 
-#: constants.py:106
+#: constants.py:116
 msgid "Pause"
 msgstr ""
 
-#: constants.py:107
+#: constants.py:117
 msgid "Add frame"
 msgstr ""
 
-#: constants.py:108
+#: constants.py:118
 msgid "Remove frame"
 msgstr ""
 
-#: constants.py:109
+#: constants.py:119
 #, python-format
 msgid "%(1)s frames per second"
 msgstr ""
 
-#: constants.py:110
+#: constants.py:120
 msgid "Quality:"
 msgstr ""
 
-#: constants.py:111
+#: constants.py:121
 msgid "Best quality"
 msgstr ""
 
-#: constants.py:112
+#: constants.py:122
 msgid "High quality"
 msgstr ""
 
-#: constants.py:113
+#: constants.py:123
 msgid "Low quality"
 msgstr ""
 
-#: constants.py:114
+#: constants.py:124
 msgid "Large file"
 msgstr ""
 
-#: constants.py:115
+#: constants.py:125
 msgid "Small file"
 msgstr ""
 
-#: constants.py:116
+#: constants.py:126
 msgid "Silent"
 msgstr ""
 
-#: constants.py:117
+#: constants.py:127
 msgid "Rotate"
 msgstr ""
 
-#: constants.py:118
+#: constants.py:128
 msgid "Click to take picture"
 msgstr ""
 
-#: constants.py:119
+#: constants.py:129
 msgid "Click to add picture"
 msgstr ""
 
 #. TRANS: Downloading Photo from Mary
-#: constants.py:121
+#: constants.py:131
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
 msgstr ""
 
 #. TRANS: Cannot download this Photo
-#: constants.py:123
+#: constants.py:133
 #, python-format
 msgid "Cannot download this %(1)s"
+msgstr ""
+
+#: constants.py:134
+msgid "Your disk is full"
 msgstr ""
