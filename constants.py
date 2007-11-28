@@ -16,7 +16,7 @@ import pangocairo
 
 class Constants:
 
-	VERSION = 41
+	VERSION = 42
 
 	SERVICE = "org.laptop.Record"
 	IFACE = SERVICE
@@ -131,6 +131,7 @@ class Constants:
 	istrDownloadingFrom = _("Downloading %(1)s from %(2)s")
 	#TRANS: Cannot download this Photo
 	istrCannotDownload = _("Cannot download this %(1)s")
+	istrYourDiskIsFull = _("Your disk is full")
 
 	mediaTypes = {}
 	mediaTypes[TYPE_PHOTO] = {keyName:"photo", keyMime:"image/jpeg", keyExt:"jpg", keyIstr:istrPhoto}
@@ -154,6 +155,8 @@ class Constants:
 	countdownImgs = {}
 
 	dim_CONTROLBAR_HT = 55
+
+	keepFreeKbOnXo = 200000
 
 	def __init__( self, ca ):
 		self.__class__.activityId = ca._activity_id

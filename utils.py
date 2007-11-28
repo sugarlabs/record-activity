@@ -109,3 +109,10 @@ def grayScalePixBuf( pb, copy ):
 	pb2 = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, pb.get_width(), pb.get_height())
 	pb.saturate_and_pixelate(pb2, 0, 0)
 	return pb2
+
+
+def getFreespaceKb( ):
+	stat = os.statvfs("/home")
+	freebytes  = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
+	freekb = freebytes / 1024
+	return freekb
