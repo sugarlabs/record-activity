@@ -302,6 +302,9 @@ class Record(activity.Activity):
  		if (recd.meshDownloading):
 			return True
 
+		if (self.m.isXoFull()):
+			return True
+
 		#this call will get the bits or request the bits if they're not available
 		if (recd.buddy and (not recd.downloadedFromBuddy)):
 			self.meshInitRoundRobin(recd)

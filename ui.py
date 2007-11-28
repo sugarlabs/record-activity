@@ -1156,6 +1156,10 @@ class UI:
 	def doShutter( self ):
 		if (self.UPDATE_TIMER_ID == 0):
 			if (not self.ca.m.RECORDING):
+
+				if (self.ca.m.isXoFull()):
+					return
+
 				#there is no update timer running, so we need to find out if there is a timer needed
 				timerTime = 0
 				if (self.ca.m.MODE == Constants.MODE_PHOTO):

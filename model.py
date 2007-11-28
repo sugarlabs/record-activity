@@ -60,6 +60,14 @@ class Model:
 			self.mediaHashs[key] = []
 
 
+	def isXoFull( self ):
+		if (utils.getFreespaceKb() <= Constants.keepFreeKbOnXo):
+			self.ui.setDiskFull()
+			return True
+		else:
+			return False
+
+
 	def getRecdByMd5( self, md5 ):
 		for mh in range (0, len(self.mediaHashs)):
 			for r in range (0, len(self.mediaHashs[mh])):
