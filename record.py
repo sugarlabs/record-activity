@@ -57,6 +57,7 @@ class Record(activity.Activity):
 		self.I_AM_SAVED = False
 		self.JUST_LAUNCHED = True
 
+		self.props.enable_fullscreen_mode = False
 		Instance(self)
 		Constants(self)
 		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )

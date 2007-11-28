@@ -648,7 +648,7 @@ class UI:
 			record.Record.log.error("doClipboardCopyStart: imgPath_s==None")
 			return None
 
-		tmpImgPath = os.path.join( Instance.tmpPath, recd.mediaFilename)
+		tmpImgPath = os.path.join( Instance.instancePath, recd.mediaFilename)
 		tmpImgPath = utils.getUniqueFilepath(tmpImgPath,0)
 		shutil.copyfile( imgPath_s, tmpImgPath )
 		return tmpImgPath
@@ -1154,7 +1154,9 @@ class UI:
 
 
 	def doShutter( self ):
-		print("def doShutter")
+		if (self.ca.m.isXoFull()):
+			return
+
 		if (self.UPDATE_TIMER_ID == 0):
 			if (not self.ca.m.RECORDING):
 				#there is no update timer running, so we need to find out if there is a timer needed
