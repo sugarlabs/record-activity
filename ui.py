@@ -327,7 +327,6 @@ class UI:
 			self.resetWidgetFadeTimer()
 			self.showLiveVideoTags()
 
-			self.recordWindow.shutterButton.set_sensitive(True)
 
 			self.photoToolbar.set_sensitive( True )
 			self.videoToolbar.set_sensitive( True )
@@ -739,18 +738,17 @@ class UI:
 				for i in range (0, len(self.windowStack)):
 					self.ca.ui.setDefaultCursor( self.windowStack[i].window )
 
-			self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING )
-			if (self.ca.m.RECORDING):
-				self.recordWindow.shutterButton.doRecordButton()
-			else:
-				self.recordWindow.shutterButton.doNormalButton()
-
 			#display disc is full messages
-			if (self.ca.m.FULL):
-				self.recordWindow.shutterButton.set_sensitive(False)
 			self.recordWindow.displayDiscFullText(self.ca.m.FULL)
 			if (self.ca.m.FULL):
+				self.recordWindow.shutterButton.set_sensitive( False, True)
 				self.progressWindow.updateProgress( 1, Constants.istrYourDiskIsFull, "gray" )
+			else:
+				self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING, False )
+				if (self.ca.m.RECORDING):
+					self.recordWindow.shutterButton.doRecordButton()
+				else:
+					self.recordWindow.shutterButton.doNormalButton()
 
 		kids = self.thumbTray.get_children()
 		for i in range (0, len(kids)):
@@ -1999,7 +1997,7 @@ class RecordButton(gtk.Button):
 		#todo: check on record state, compare button imgs
 
 
-	def set_sensitive(self, sen):
+	def set_sensitive(self, sen, full):
 		if (sen == self.sens):
 			return
 		self.sens = sen
@@ -2007,7 +2005,10 @@ class RecordButton(gtk.Button):
 		if (self.sens):
 			self.set_image( Constants.recImg )
 		else:
-			self.set_image( Constants.recInsensitiveImg )
+			if (full):
+				self.set_image( Constants.fullInsensitiveImg )
+			else:
+				self.set_image( Constants.recInsensitiveImg )
 
 		super(RecordButton, self).set_sensitive(self.sens)
 
@@ -2037,7 +2038,6 @@ class RecordWindow(gtk.Window):
 		self.shutterButton.set_relief(gtk.RELIEF_NONE)
 		self.shutterButton.set_image( Constants.recImg )
 		self.shutterButton.connect("clicked", self.ui._shutterClickCb)
-		self.shutterButton.set_sensitive(False)
 
 		shutterBox = gtk.EventBox()
 		shutterBox.add( self.shutterButton )
