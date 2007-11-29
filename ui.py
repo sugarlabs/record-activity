@@ -112,8 +112,6 @@ class UI:
 		#prep for when to show
 		self.shownRecd = None
 
-		self.setUpWindows()
-
 		#this includes the default sharing tab
 		self.toolbox = activity.ActivityToolbox(self.ca)
 		self.ca.set_toolbox(self.toolbox)
@@ -156,6 +154,8 @@ class UI:
 		self.letterBoxW = (gtk.gdk.screen_width() - self.vw)/2
 		self.letterBoxVW = (self.vw/2)-(self.inset*2)
 		self.letterBoxVH = int(self.letterBoxVW*.75)
+
+		self.setUpWindows()
 
 		#now that we know how big the toolbox is, we can layout more
 		gobject.idle_add( self.layout )
@@ -1036,13 +1036,19 @@ class UI:
 
 	def getEyeLoc( self, full ):
 		if (not full):
-			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
+			if (self.ca.m.MODE != Constants.MODE_PHOTO):
+				return [self.centerBoxPos[0]-(self.vw/2)+self.controlBarHt, self.centerBoxPos[1]+self.vh]
+			else:
+				return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 #			if (self.ca.m.MODE != Constants.MODE_PHOTO):
 #				return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 #			else:
 #				return [(self.centerBoxPos[0]+(self.vw/2))-self.recordButtWd/2, self.centerBoxPos[1]+self.vh]
 		else:
-			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
+			if (self.ca.m.MODE != Constants.MODE_PHOTO):
+				return [self.inset-(self.vw/2)+self.controlBarHt, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
+			else:
+				return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
 	def getEyeDim( self, full ):
@@ -2043,18 +2049,20 @@ class RecordWindow(gtk.Window):
 		hbox = gtk.HBox()
 		self.add( hbox )
 		leftPanel = gtk.VBox()
-		leftEvent = gtk.EventBox()
-		leftEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorRed.gColor )
-		leftEvent.add( leftPanel )
-		hbox.pack_start( leftEvent, expand=True )
+		self.leftEvent = gtk.EventBox()
+		self.leftEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.leftEvent.add( leftPanel )
+		self.leftEvent.set_size_request(self.ui.vw/2-self.ui.controlBarHt, -1)
+		hbox.pack_start( self.leftEvent, expand=True )
 
 		hbox.pack_start( shutterBox, expand=False )
 
 		rightPanel = gtk.VBox()
-		rightEvent = gtk.EventBox()
-		rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorGreen.gColor )
-		rightEvent.add( rightPanel )
-		hbox.pack_start( rightEvent, expand=True )
+		self.rightEvent = gtk.EventBox()
+		self.rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
+		self.rightEvent.add( rightPanel )
+		self.rightEvent.set_size_request(self.ui.vw/2-self.ui.controlBarHt, -1)
+		hbox.pack_start( self.rightEvent, expand=True )
 
 		self.rightPanelLabel = gtk.Label()
 		rightPanel.pack_start( self.rightPanelLabel )
@@ -2091,7 +2099,7 @@ class RecordWindow(gtk.Window):
 		else:
 			self.rightPanelLabel.set_text("<b><span foreground='gray'>" + Constants.istrYourDiskIsFull + "</span></b>")
 			self.rightPanelLabel.set_use_markup( True )
-			self.rightPanelLabel.set_alignment(0, .5)
+			self.rightPanelLabel.set_alignment(1, 1)
 
 
 class ProgressWindow(gtk.Window):
