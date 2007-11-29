@@ -54,7 +54,7 @@ class Model:
 		self.MODE = Constants.MODE_PHOTO
 		self.UPDATING = True
 		self.RECORDING = False
-		self.FULL = True #self.isXoFull()
+		self.FULL = self.isXoFull()
 
 		self.mediaHashs = {}
 		for key,value in Constants.mediaTypes.items():

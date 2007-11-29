@@ -1172,6 +1172,7 @@ class UI:
 			if (not self.ca.m.RECORDING):
 
 				if (self.ca.m.isXoFull()):
+					self.updateButtonSensitivities()
 					return
 
 				#there is no update timer running, so we need to find out if there is a timer needed
