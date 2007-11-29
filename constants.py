@@ -221,6 +221,11 @@ class Constants:
 		self.__class__.recInsensitiveImg = gtk.Image()
 		self.__class__.recInsensitiveImg.set_from_pixbuf( recInsPixbuf )
 
+		fullInsFile = os.path.join(self.__class__.gfxPath, 'full-insensitive.png')
+		fullInsPixbuf = gtk.gdk.pixbuf_new_from_file(fullInsFile)
+		self.__class__.fullInsensitiveImg = gtk.Image()
+		self.__class__.fullInsensitiveImg.set_from_pixbuf( fullInsPixbuf )
+
 		recPlayFile = os.path.join(self.__class__.gfxPath, 'media-play.png')
 		recPlayPixbuf = gtk.gdk.pixbuf_new_from_file(recPlayFile)
 		self.__class__.recPlayImg = gtk.Image()
