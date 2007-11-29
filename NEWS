@@ -1,12 +1,12 @@
 42
-* #4983 addressed
+* #4983 addressed (jedierikb)
 
 41
-* #5177, fullscreen compliance for u1
-* #4813, clipboard files via /instance not /tmp
+* #5177, fullscreen compliance for u1 (jedierikb)
+* #4813, clipboard files via /instance not /tmp (jedierikb)
 
 40
-* filepath changes for bitfrost, rainbow
+* filepath changes for bitfrost, rainbow (jedierikb)
 
 39
 * tray improvements (jedierikb)
