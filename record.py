@@ -302,7 +302,8 @@ class Record(activity.Activity):
  		if (recd.meshDownloading):
 			return True
 
-		if (self.m.isXoFull()):
+		self.m.updateXoFullStatus()
+		if (self.m.FULL):
 			return True
 
 		#this call will get the bits or request the bits if they're not available

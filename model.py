@@ -54,14 +54,18 @@ class Model:
 		self.MODE = Constants.MODE_PHOTO
 		self.UPDATING = True
 		self.RECORDING = False
-		self.FULL = self.isXoFull()
+		self.FULL = self._isXoFull()
 
 		self.mediaHashs = {}
 		for key,value in Constants.mediaTypes.items():
 			self.mediaHashs[key] = []
 
 
-	def isXoFull( self ):
+	def updateXoFullStatus( self ):
+		self.FULL = self._isXoFull()
+
+
+	def _isXoFull( self ):
 		full = False
 		if (utils.getFreespaceKb() <= Constants.keepFreeKbOnXo):
 			full = True

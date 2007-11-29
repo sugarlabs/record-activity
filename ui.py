@@ -739,6 +739,7 @@ class UI:
 					self.ca.ui.setDefaultCursor( self.windowStack[i].window )
 
 			#display disc is full messages
+			self.ca.m.updateXoFullStatus()
 			self.recordWindow.displayDiscFullText(self.ca.m.FULL)
 			if (self.ca.m.FULL):
 				self.recordWindow.shutterButton.set_sensitive( False, True)
@@ -1171,7 +1172,8 @@ class UI:
 		if (self.UPDATE_TIMER_ID == 0):
 			if (not self.ca.m.RECORDING):
 
-				if (self.ca.m.isXoFull()):
+				self.ca.m.updateXoFullStatus()
+				if (self.ca.m.FULL):
 					self.updateButtonSensitivities()
 					return
 
