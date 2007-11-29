@@ -870,7 +870,6 @@ class UI:
 		self.doMouseListener( True )
 		self.showLiveVideoTags()
 		self.LAST_MODE = -1 #force an update
-		self.recordWindow.updateGfx()
 		self.updateVideoComponents()
 		self.resetWidgetFadeTimer()
 
@@ -1035,19 +1034,9 @@ class UI:
 
 	def getEyeLoc( self, full ):
 		if (not full):
-			if (self.ca.m.MODE != Constants.MODE_PHOTO):
-				return [self.centerBoxPos[0]-(self.vw/2)+self.controlBarHt, self.centerBoxPos[1]+self.vh]
-			else:
-				return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
-#			if (self.ca.m.MODE != Constants.MODE_PHOTO):
-#				return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
-#			else:
-#				return [(self.centerBoxPos[0]+(self.vw/2))-self.recordButtWd/2, self.centerBoxPos[1]+self.vh]
+			return [self.centerBoxPos[0], self.centerBoxPos[1]+self.vh]
 		else:
-			if (self.ca.m.MODE != Constants.MODE_PHOTO):
-				return [self.inset-(self.vw/2)+self.controlBarHt, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
-			else:
-				return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
+			return [self.inset, gtk.gdk.screen_height()-(self.inset+self.controlBarHt)]
 
 
 	def getEyeDim( self, full ):
@@ -2034,7 +2023,7 @@ class RecordWindow(gtk.Window):
 		self.ui = ui
 		self.num = -1
 
-		self.modify_bg( gtk.STATE_NORMAL, Constants.colorGreen.gColor )
+		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 
 		self.shutterButton = RecordButton()
 		self.shutterButton.set_size_request(self.ui.recordButtWd, self.ui.recordButtWd)
@@ -2064,7 +2053,6 @@ class RecordWindow(gtk.Window):
 		self.rightEvent = gtk.EventBox()
 		self.rightEvent.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 		self.rightEvent.add( rightPanel )
-		self.rightEvent.set_size_request(self.ui.vw/2-self.ui.controlBarHt, -1)
 		hbox.pack_start( self.rightEvent, expand=True )
 
 		self.rightPanelLabel = gtk.Label()
@@ -2079,30 +2067,32 @@ class RecordWindow(gtk.Window):
 			self.num = num
 		else:
 			self.num = -1
-			self.updateGfx()
 
 
 	def getCairoCountdown(self, num):
 		return Constants.countdownImgs[int(num)]
 
 
-	def updateGfx( self ):
-#		if (self.ui.ca.m.MODE == Constants.MODE_AUDIO):
-#			if (self.shutterButton.get_image() != Constants.micImg):
-#				self.shutterButton.set_image( Constants.micImg )
-#		else:
-#			if (self.shutterButton.get_image() != Constants.camImg):
-#				self.shutterButton.set_image( Constants.camImg )
-		pass
+	def minimize( self ):
+		self.leftEvent.set_size_request(-1, -1)
+		self.rightEvent.set_size_request(-1, -1)
+
+
+	def maximize( self ):
+		w = self.ui.vw/2-self.ui.controlBarHt
+		self.rightEvent.set_size_request(w, -1)
+		self.leftEvent.set_size_request(w, -1)
 
 
 	def displayDiscFullText( self, full ):
 		if (not full or self.ui.ca.m.MODE != Constants.MODE_PHOTO):
 			self.rightPanelLabel.set_text("")
+			self.minimize()
 		else:
 			self.rightPanelLabel.set_text("<b><span foreground='gray'>" + Constants.istrYourDiskIsFull + "</span></b>")
 			self.rightPanelLabel.set_use_markup( True )
 			self.rightPanelLabel.set_alignment(1, 1)
+			self.maximize()
 
 
 class ProgressWindow(gtk.Window):
