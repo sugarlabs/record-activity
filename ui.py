@@ -647,7 +647,7 @@ class UI:
 			record.Record.log.error("doClipboardCopyStart: imgPath_s==None")
 			return None
 
-		tmpImgPath = os.path.join( Instance.instancePath, recd.mediaFilename)
+		tmpImgPath = recd.getMediaFilepath() #os.path.join( Instance.instancePath, recd.mediaFilename)
 		tmpImgPath = utils.getUniqueFilepath(tmpImgPath,0)
 		shutil.copyfile( imgPath_s, tmpImgPath )
 		return tmpImgPath
