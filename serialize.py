@@ -333,4 +333,4 @@ def _saveMediaToDatastore( el, recd ):
 		_saveXml( el, recd )
 
 		recd.mediaFilename = None
-		recd.thumbFilename = None
+		#recd.thumbFilename = None

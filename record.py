@@ -57,7 +57,7 @@ class Record(activity.Activity):
 		self.I_AM_SAVED = False
 		self.JUST_LAUNCHED = True
 
-		self.props.enable_fullscreen_mode = False
+#		self.props.enable_fullscreen_mode = False
 		Instance(self)
 		Constants(self)
 		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
@@ -91,7 +91,7 @@ class Record(activity.Activity):
 
 
 	def read_file(self, file):
-		serialize.fillMediaHash(file, self.m.mediaHashs)
+			serialize.fillMediaHash(file, self.m.mediaHashs)
 
 
 	def write_file(self, file):
