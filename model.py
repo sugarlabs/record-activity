@@ -373,6 +373,7 @@ class Model:
 		recd.colorStroke = Instance.colorStroke
 		recd.colorFill = Instance.colorFill
 
+		record.Record.log.debug('createNewRecorded: ' + str(recd) + ", thumbFilename:" + str(recd.thumbFilename))
 		return recd
 
 

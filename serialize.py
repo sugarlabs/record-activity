@@ -260,7 +260,10 @@ def _saveMedia( el, recd ):
 
 
 def _saveXml( el, recd ):
-	_addRecdXmlAttrs( el, recd, False )
+	if (recd.thumbFilename != None):
+		_addRecdXmlAttrs( el, recd, False )
+	else:
+		record.Record.log.debug("WOAH, ERROR: recd has no thumbFilename?! " + str(recd) )
 	recd.savedXml = True
 
 
