@@ -16,7 +16,7 @@ import pangocairo
 
 class Constants:
 
-	VERSION = 44
+	VERSION = 45
 
 	SERVICE = "org.laptop.Record"
 	IFACE = SERVICE
@@ -124,7 +124,7 @@ class Constants:
 	istrAddFrame = _("Add frame")
 	istrRemoveFrame = _("Remove frame")
 	istrFramesPerSecond = _("%(1)s frames per second")
-	istrQuality = _("Quality:")
+	istrQuality = _("Quality")
 	istrDefault = _("Default")
 	istrBestQuality = _("Best")
 	istrHighQuality = _("High")
