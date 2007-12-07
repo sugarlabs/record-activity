@@ -179,7 +179,7 @@ class Record(activity.Activity):
 			self.hide()
 
 		if self.I_AM_SAVED:
-			instance.recreateTmp()
+			instance.recreateInstance()
 			activity.Activity.destroy( self )
 
 
