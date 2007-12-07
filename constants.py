@@ -166,6 +166,7 @@ class Constants:
 	istrNoiseSensitivity = _("Noise Sensitivity")
 	istrQuick = _("Quick")
 	istrSharpness = _("Sharpness")
+	istrCapacity = _("Capacity")
 
 	mediaTypes = {}
 	mediaTypes[TYPE_PHOTO] = {keyName:"photo", keyMime:"image/jpeg", keyExt:"jpg", keyIstr:istrPhoto}
