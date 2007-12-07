@@ -36,8 +36,8 @@ class Instance:
 def recreateTmp():
 	#todo: figure out how to have multiple spaces for my media
 	#problem is, if new instance is created, with this code, it clears the whole tmp directory!
-	#if (os.path.exists(Instance.tmpPath)):
-	#	shutil.rmtree(Instance.tmpPath)
+	if (os.path.exists(Instance.tmpPath)):
+		shutil.rmtree(Instance.tmpPath)
 	if (not os.path.exists(Instance.tmpPath)):
 		os.makedirs(Instance.tmpPath)
 
@@ -45,7 +45,7 @@ def recreateTmp():
 def recreateInstance():
 	#todo: figure out how to have multiple spaces for my media
 	#problem is, if new instance is created, with this code, it clears the whole tmp directory!
-	#if (os.path.exists(Instance.tmpPath)):
-	#	shutil.rmtree(Instance.tmpPath)
+	if (os.path.exists(Instance.tmpPath)):
+		shutil.rmtree(Instance.tmpPath)
 	if (not os.path.exists(Instance.instancePath)):
 		os.makedirs(Instance.instancePath)
