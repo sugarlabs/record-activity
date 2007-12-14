@@ -16,7 +16,7 @@ import pangocairo
 
 class Constants:
 
-	VERSION = 45
+	VERSION = 46
 
 	SERVICE = "org.laptop.Record"
 	IFACE = SERVICE
@@ -63,13 +63,13 @@ class Constants:
 	TIMERS.append(TIMER_5)
 	TIMERS.append(TIMER_10)
 
-	DURATION_15 = 15
-	DURATION_30 = 30
-	DURATION_45 = 45
+	DURATION_1 = 1
+	DURATION_3 = 3
+	DURATION_5 = 5
 	DURATIONS = []
-	DURATIONS.append(DURATION_15)
-	DURATIONS.append(DURATION_30)
-	DURATIONS.append(DURATION_45)
+	DURATIONS.append(DURATION_1)
+	DURATIONS.append(DURATION_3)
+	DURATIONS.append(DURATION_5)
 
 	colorBlack = Color()
 	colorBlack.init_rgba( 0, 0, 0, 255 )
@@ -280,6 +280,11 @@ class Constants:
 	def createCountdownPng( self, num ):
 		todisk = True
 
+		if (todisk):
+			path = os.path.join(Instance.dataPath, str(num)+".png")
+			if (os.path.exists(path)):
+				return
+
 		w = self.__class__.dim_CONTROLBAR_HT
 		h = w
 		if (todisk):
@@ -314,7 +319,7 @@ class Constants:
 
 		img = gtk.Image()
 		if (todisk):
-			path = os.path.join(Instance.tmpPath, str(num)+".png")
+			path = os.path.join(Instance.dataPath, str(num)+".png")
 			path = utils.getUniqueFilepath(path, 0)
 			cimg.write_to_png(path)
 			numPixbuf = gtk.gdk.pixbuf_new_from_file(path)

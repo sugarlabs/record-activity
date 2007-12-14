@@ -647,8 +647,8 @@ class UI:
 			record.Record.log.error("doClipboardCopyStart: imgPath_s==None")
 			return None
 
-		tmpImgPath = recd.getMediaFilepath() #os.path.join( Instance.instancePath, recd.mediaFilename)
-		tmpImgPath = utils.getUniqueFilepath(tmpImgPath,0)
+		tmpImgPath = recd.getMediaFilepath()
+		tmpImgPath = utils.getUniqueFilepath(tmpImgPath, 0)
 		shutil.copyfile( imgPath_s, tmpImgPath )
 		return tmpImgPath
 
@@ -841,7 +841,13 @@ class UI:
 			return False
 		else:
 			secsRemaining = duration - passedTime
-			self.progressWindow.updateProgress( passedTime/duration, Constants.istrDuration + " " + Constants.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
+			timeRemainStr = Constants.istrSecondsRemaining % {"1":str(int(secsRemaining))}
+			if (secsRemaining >= 60):
+				mins = int( secsRemaining/60 )
+				secs = int( secsRemaining%60 )
+				timeRemainStr = Constants.istrMinutesSecondsRemaining % {"1":str(int(mins)), "2":str(int(secs))}
+
+			self.progressWindow.updateProgress( passedTime/duration, Constants.istrDuration + " " + timeRemainStr )
 			return True
 
 
@@ -2222,7 +2228,7 @@ class VideoToolbar(gtk.Toolbar):
 		durCbb = gtk.combo_box_new_text()
 		self.durCb = ToolComboBox(combo=durCbb, label_text=Constants.istrDuration)
 		for i in range (0, len(Constants.DURATIONS)):
-			self.durCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.DURATIONS[i]))} )
+			self.durCb.combo.append_text( Constants.istrMinutes % {"1":(str(Constants.DURATIONS[i]))} )
 		self.durCb.combo.set_active(0)
 		self.insert(self.durCb, -1 )
 
@@ -2237,7 +2243,7 @@ class VideoToolbar(gtk.Toolbar):
 
 
 	def getDuration(self):
-		return Constants.DURATIONS[self.durCb.combo.get_active()]
+		return 60 * Constants.DURATIONS[self.durCb.combo.get_active()]
 
 
 class AudioToolbar(gtk.Toolbar):
@@ -2277,7 +2283,7 @@ class AudioToolbar(gtk.Toolbar):
 		durCbb = gtk.combo_box_new_text()
 		self.durCb = ToolComboBox(combo=durCbb, label_text=Constants.istrDuration)
 		for i in range (0, len(Constants.DURATIONS)):
-			self.durCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.DURATIONS[i]))} )
+			self.durCb.combo.append_text( Constants.istrMinutes % {"1":(str(Constants.DURATIONS[i]))} )
 		self.durCb.combo.set_active(0)
 		self.insert(self.durCb, -1 )
 
@@ -2292,4 +2298,4 @@ class AudioToolbar(gtk.Toolbar):
 
 
 	def getDuration(self):
-		return Constants.DURATIONS[self.durCb.combo.get_active()]
+		return 60 * Constants.DURATIONS[self.durCb.combo.get_active()]
