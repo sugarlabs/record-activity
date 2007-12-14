@@ -280,48 +280,52 @@ class Constants:
 	def createCountdownPng( self, num ):
 		todisk = True
 
+		rendered = False
 		if (todisk):
 			path = os.path.join(Instance.dataPath, str(num)+".png")
 			if (os.path.exists(path)):
-				return
+				rendered = True
 
-		w = self.__class__.dim_CONTROLBAR_HT
-		h = w
-		if (todisk):
-			cimg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
-			ctx = cairo.Context(cimg)
-		else:
-			pixmap = gtk.gdk.Pixmap(None, w, h, 24)
-			ctx = pixmap.cairo_create()
-		ctx.rectangle(0, 0, w, h)
-		ctx.set_source_rgb(0, 0, 0)
-		ctx.fill()
-		x = 0
-		y = 4
-		ctx.translate(x,y)
-		ctx.set_source_surface (self.__class__.recCircleCairo, 0, 0)
-		ctx.paint()
-		ctx.translate(-x,-y)
 
-		ctx.set_source_rgb(255, 255, 255)
-		pctx = pangocairo.CairoContext(ctx)
-		play = pctx.create_layout()
-		font = pango.FontDescription("sans 30")
-		play.set_font_description(font)
-		play.set_text( ""+str(num) )
-		dim = play.get_pixel_extents()
-		ctx.translate( -dim[0][0], -dim[0][1] )
-		xoff = (w-dim[0][2])/2
-		yoff = (h-dim[0][3])/2
-		ctx.translate( xoff, yoff )
-		ctx.translate( -3, 0 )
-		pctx.show_layout(play)
+		if (not rendered):
+			w = self.__class__.dim_CONTROLBAR_HT
+			h = w
+			if (todisk):
+				cimg = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+				ctx = cairo.Context(cimg)
+			else:
+				pixmap = gtk.gdk.Pixmap(None, w, h, 24)
+				ctx = pixmap.cairo_create()
+			ctx.rectangle(0, 0, w, h)
+			ctx.set_source_rgb(0, 0, 0)
+			ctx.fill()
+			x = 0
+			y = 4
+			ctx.translate(x,y)
+			ctx.set_source_surface (self.__class__.recCircleCairo, 0, 0)
+			ctx.paint()
+			ctx.translate(-x,-y)
+
+			ctx.set_source_rgb(255, 255, 255)
+			pctx = pangocairo.CairoContext(ctx)
+			play = pctx.create_layout()
+			font = pango.FontDescription("sans 30")
+			play.set_font_description(font)
+			play.set_text( ""+str(num) )
+			dim = play.get_pixel_extents()
+			ctx.translate( -dim[0][0], -dim[0][1] )
+			xoff = (w-dim[0][2])/2
+			yoff = (h-dim[0][3])/2
+			ctx.translate( xoff, yoff )
+			ctx.translate( -3, 0 )
+			pctx.show_layout(play)
 
 		img = gtk.Image()
 		if (todisk):
 			path = os.path.join(Instance.dataPath, str(num)+".png")
-			path = utils.getUniqueFilepath(path, 0)
-			cimg.write_to_png(path)
+			if (not rendered):
+				path = utils.getUniqueFilepath(path, 0)
+				cimg.write_to_png(path)
 			numPixbuf = gtk.gdk.pixbuf_new_from_file(path)
 			img.set_from_pixbuf( numPixbuf )
 		else:
