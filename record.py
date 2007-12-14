@@ -180,7 +180,6 @@ class Record(activity.Activity):
 			self.hide()
 
 		if self.I_AM_SAVED:
-			instance.recreateInstance()
 			activity.Activity.destroy( self )
 
 

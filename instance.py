@@ -30,7 +30,7 @@ class Instance:
 		recreateTmp()
 
 		self.__class__.dataPath = os.path.join(ca.get_activity_root(), "data")
-		recreateInstance()
+		recreateData()
 
 
 def recreateTmp():
