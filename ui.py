@@ -1662,6 +1662,7 @@ class UI:
 		self.datePanel.show()
 		self.tagsPanel.show()
 		self.tagsBuffer.set_text("")
+		self.tagsField.set_sensitive(False)
 		self.tagsBuffer.set_sensitive(False)
 
 

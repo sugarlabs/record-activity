@@ -63,13 +63,13 @@ class Constants:
 	TIMERS.append(TIMER_5)
 	TIMERS.append(TIMER_10)
 
-	DURATION_1 = 1
-	DURATION_3 = 3
-	DURATION_5 = 5
+	DURATION_2 = 2
+	DURATION_4 = 4
+	DURATION_6 = 6
 	DURATIONS = []
-	DURATIONS.append(DURATION_1)
-	DURATIONS.append(DURATION_3)
-	DURATIONS.append(DURATION_5)
+	DURATIONS.append(DURATION_2)
+	DURATIONS.append(DURATION_4)
+	DURATIONS.append(DURATION_6)
 
 	colorBlack = Color()
 	colorBlack.init_rgba( 0, 0, 0, 255 )
