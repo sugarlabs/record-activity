@@ -196,12 +196,12 @@ class Model:
 		recd = self.createNewRecorded( Constants.TYPE_AUDIO )
 		os.rename( tmpPath, os.path.join(Instance.instancePath,recd.mediaFilename))
 
-		thumbPath = os.path.join(Instance.instancePath, recd.thumbFilename)
+		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.dim_THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
 		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
 
-		imagePath = os.path.join(Instance.instancePath, "audioPicture.png")
+		imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
 		imagePath = utils.getUniqueFilepath( imagePath, 0 )
 		pixbuf.save( imagePath, "png", {} )
 		recd.audioImageFilename = os.path.basename(imagePath)
@@ -257,9 +257,9 @@ class Model:
 
 	def saveVideo( self, pixbuf, tmpPath, wid, hit ):
 		recd = self.createNewRecorded( Constants.TYPE_VIDEO )
-		os.rename( tmpPath, os.path.join(Instance.instancePath,recd.mediaFilename))
+		os.rename( tmpPath, os.path.join(Instance.tmpPath,recd.mediaFilename))
 
-		thumbPath = os.path.join(Instance.instancePath, recd.thumbFilename)
+		thumbPath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.dim_THUMB_WIDTH+0.0)/(wid+0.0))
 		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbPath)
@@ -318,10 +318,10 @@ class Model:
 	def savePhoto( self, pixbuf ):
 		recd = self.createNewRecorded( Constants.TYPE_PHOTO )
 
-		imgpath = os.path.join(Instance.instancePath, recd.mediaFilename)
+		imgpath = os.path.join(Instance.tmpPath, recd.mediaFilename)
 		pixbuf.save( imgpath, "jpeg" )
 
-		thumbpath = os.path.join(Instance.instancePath, recd.thumbFilename)
+		thumbpath = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		scale = float((UI.dim_THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
 		thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
 		thumbImg.write_to_png(thumbpath)
@@ -358,12 +358,12 @@ class Model:
 		mediaThumbFilename = str(recd.recorderHash) + "_" + str(recd.time)
 		mediaFilename = mediaThumbFilename
 		mediaFilename = mediaFilename + "." + Constants.mediaTypes[type][Constants.keyExt]
-		mediaFilepath = os.path.join( Instance.instancePath, mediaFilename )
+		mediaFilepath = os.path.join( Instance.tmpPath, mediaFilename )
 		mediaFilepath = utils.getUniqueFilepath( mediaFilepath, 0 )
 		recd.mediaFilename = os.path.basename( mediaFilepath )
 
 		thumbFilename = mediaThumbFilename + "_thumb.jpg"
-		thumbFilepath = os.path.join( Instance.instancePath, thumbFilename )
+		thumbFilepath = os.path.join( Instance.tmpPath, thumbFilename )
 		thumbFilepath = utils.getUniqueFilepath( thumbFilepath, 0 )
 		recd.thumbFilename = os.path.basename( thumbFilepath )
 
@@ -379,14 +379,14 @@ class Model:
 
 	def createNewRecordedMd5Sums( self, recd ):
 		#load the thumbfile
-		thumbFile = os.path.join(Instance.instancePath, recd.thumbFilename)
+		thumbFile = os.path.join(Instance.tmpPath, recd.thumbFilename)
 		thumbMd5 = utils.md5File( thumbFile )
 		recd.thumbMd5 = thumbMd5
 		tBytes = os.stat(thumbFile)[6]
 		recd.thumbBytes = tBytes
 
 		#load the mediafile
-		mediaFile = os.path.join(Instance.instancePath, recd.mediaFilename)
+		mediaFile = os.path.join(Instance.tmpPath, recd.mediaFilename)
 		mediaMd5 = utils.md5File( mediaFile )
 		recd.mediaMd5 = mediaMd5
 		mBytes = os.stat(mediaFile)[6]

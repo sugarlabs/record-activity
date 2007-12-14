@@ -485,7 +485,7 @@ class Record(activity.Activity):
 			recd.downloadedFromBuddy = True
 			if (recd.type == Constants.TYPE_AUDIO):
 				filepath = recd.getMediaFilepath()
-				bundlePath = os.path.join(Instance.instancePath, "audioBundle")
+				bundlePath = os.path.join(Instance.tmpPath, "audioBundle")
 				bundlePath = utils.getUniqueFilepath(bundlePath, 0)
 
 				cmd = "split -a 1 -b " + str(recd.mediaBytes) + " " + str(filepath) + " " + str(bundlePath)
@@ -494,12 +494,12 @@ class Record(activity.Activity):
 
 				bundleName = os.path.basename(bundlePath)
 				mediaFilename = str(bundleName) + "a"
-				mediaFilepath = os.path.join(Instance.instancePath, mediaFilename)
-				mediaFilepathExt = os.path.join(Instance.instancePath, mediaFilename+".ogg")
+				mediaFilepath = os.path.join(Instance.tmpPath, mediaFilename)
+				mediaFilepathExt = os.path.join(Instance.tmpPath, mediaFilename+".ogg")
 				os.rename(mediaFilepath, mediaFilepathExt)
 				audioImageFilename = str(bundleName) + "b"
-				audioImageFilepath = os.path.join(Instance.instancePath, audioImageFilename)
-				audioImageFilepathExt = os.path.join(Instance.instancePath, audioImageFilename+".png")
+				audioImageFilepath = os.path.join(Instance.tmpPath, audioImageFilename)
+				audioImageFilepathExt = os.path.join(Instance.tmpPath, audioImageFilename+".png")
 				os.rename(audioImageFilepath, audioImageFilepathExt)
 
 				recd.mediaFilename = os.path.basename(mediaFilepathExt)
@@ -514,7 +514,7 @@ class Record(activity.Activity):
 		self.__class__.log.debug("_getAlbumArtCb:" + str(pixbuf) + "," + str(recd))
 
 		if (pixbuf != None):
-			imagePath = os.path.join(Instance.instancePath, "audioPicture.png")
+			imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
 			imagePath = utils.getUniqueFilepath( imagePath, 0 )
 			pixbuf.save( imagePath, "png", {} )
 			recd.audioImageFilename = os.path.basename(imagePath)
