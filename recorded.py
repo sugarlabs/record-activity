@@ -108,7 +108,7 @@ class Recorded:
 
 
 	def getThumbFilepath( self ):
-		return os.path.join(Instance.tmpPath, self.thumbFilename)
+		return os.path.join(Instance.instancePath, self.thumbFilename)
 
 
 	def getAudioImagePixbuf( self ):
@@ -126,7 +126,7 @@ class Recorded:
 
 	def getAudioImageFilepath( self ):
 		if (self.audioImageFilename != None):
-			audioFilepath = os.path.join(Instance.tmpPath, self.audioImageFilename)
+			audioFilepath = os.path.join(Instance.instancePath, self.audioImageFilename)
 			return os.path.abspath(audioFilepath)
 		else:
 			return self.getThumbFilepath()
@@ -136,24 +136,24 @@ class Recorded:
 		if (self.datastoreId == None):
 			if (not self.buddy):
 				#just taken by you, so it is in the tempSessionDir
-				mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
+				mediaFilepath = os.path.join(Instance.instancePath, self.mediaFilename)
 				return os.path.abspath(mediaFilepath)
 			else:
 				if (self.downloadedFromBuddy):
 					#the user has requested the high-res version, and it has downloaded
-					mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
+					mediaFilepath = os.path.join(Instance.instancePath, self.mediaFilename)
 					return os.path.abspath(mediaFilepath)
 				else:
 					if self.mediaFilename == None:
 						#creating a new filepath, probably just got here from the mesh
 						ext = Constants.mediaTypes[self.type][Constants.keyExt]
-						recdPath = os.path.join(Instance.tmpPath, "recdFile_"+self.mediaMd5+"."+ext)
+						recdPath = os.path.join(Instance.instancePath, "recdFile_"+self.mediaMd5+"."+ext)
 						recdPath = utils.getUniqueFilepath(recdPath, 0)
 						self.mediaFilename = os.path.basename(recdPath)
-						mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
+						mediaFilepath = os.path.join(Instance.instancePath, self.mediaFilename)
 						return os.path.abspath(mediaFilepath)
 					else:
-						mediaFilepath = os.path.join(Instance.tmpPath, self.mediaFilename)
+						mediaFilepath = os.path.join(Instance.instancePath, self.mediaFilename)
 						return os.path.abspath(mediaFilepath)
 
 		else: #pulling from the datastore, regardless of who took it, cause we got it

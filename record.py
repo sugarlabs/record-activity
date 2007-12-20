@@ -126,7 +126,9 @@ class Record(activity.Activity):
 
 
 	def _activeCb( self, widget, pspec ):
-		print('_activeCb')
+		import time
+		print( '_activeCb', self.JUST_LAUNCHED, self.props.active, time.time() )
+
 		if (self.JUST_LAUNCHED):
 			self.JUST_LAUNCHED = False
 			return
@@ -484,7 +486,7 @@ class Record(activity.Activity):
 			recd.downloadedFromBuddy = True
 			if (recd.type == Constants.TYPE_AUDIO):
 				filepath = recd.getMediaFilepath()
-				bundlePath = os.path.join(Instance.tmpPath, "audioBundle")
+				bundlePath = os.path.join(Instance.instancePath, "audioBundle")
 				bundlePath = utils.getUniqueFilepath(bundlePath, 0)
 
 				cmd = "split -a 1 -b " + str(recd.mediaBytes) + " " + str(filepath) + " " + str(bundlePath)
@@ -493,12 +495,12 @@ class Record(activity.Activity):
 
 				bundleName = os.path.basename(bundlePath)
 				mediaFilename = str(bundleName) + "a"
-				mediaFilepath = os.path.join(Instance.tmpPath, mediaFilename)
-				mediaFilepathExt = os.path.join(Instance.tmpPath, mediaFilename+".ogg")
+				mediaFilepath = os.path.join(Instance.instancePath, mediaFilename)
+				mediaFilepathExt = os.path.join(Instance.instancePath, mediaFilename+".ogg")
 				os.rename(mediaFilepath, mediaFilepathExt)
 				audioImageFilename = str(bundleName) + "b"
-				audioImageFilepath = os.path.join(Instance.tmpPath, audioImageFilename)
-				audioImageFilepathExt = os.path.join(Instance.tmpPath, audioImageFilename+".png")
+				audioImageFilepath = os.path.join(Instance.instancePath, audioImageFilename)
+				audioImageFilepathExt = os.path.join(Instance.instancePath, audioImageFilename+".png")
 				os.rename(audioImageFilepath, audioImageFilepathExt)
 
 				recd.mediaFilename = os.path.basename(mediaFilepathExt)
@@ -513,7 +515,7 @@ class Record(activity.Activity):
 		self.__class__.log.debug("_getAlbumArtCb:" + str(pixbuf) + "," + str(recd))
 
 		if (pixbuf != None):
-			imagePath = os.path.join(Instance.tmpPath, "audioPicture.png")
+			imagePath = os.path.join(Instance.instancePath, "audioPicture.png")
 			imagePath = utils.getUniqueFilepath( imagePath, 0 )
 			pixbuf.save( imagePath, "png", {} )
 			recd.audioImageFilename = os.path.basename(imagePath)

@@ -340,6 +340,7 @@ class UI:
 
 	def finalSetUp( self ):
 		self.updateVideoComponents()
+		print("finalSetupUp... play!")
 		self.ca.glive.play()
 
 

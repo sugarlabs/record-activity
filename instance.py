@@ -20,13 +20,13 @@ class Instance:
 	colorStroke.init_hex( profile.get_color().get_stroke_color() )
 
 	instanceId = None
-	tmpPath = None
+	instancePath = None
 	dataPath = None
 
 	def __init__(self, ca):
 		self.__class__.instanceId = ca._activity_id
 
-		self.__class__.tmpPath = os.path.join(ca.get_activity_root(), "tmp")
+		self.__class__.instancePath = os.path.join(ca.get_activity_root(), "instance")
 		recreateTmp()
 
 		self.__class__.dataPath = os.path.join(ca.get_activity_root(), "data")
@@ -34,8 +34,8 @@ class Instance:
 
 
 def recreateTmp():
-	if (not os.path.exists(Instance.tmpPath)):
-		os.makedirs(Instance.tmpPath)
+	if (not os.path.exists(Instance.instancePath)):
+		os.makedirs(Instance.instancePath)
 
 
 def recreateData():
