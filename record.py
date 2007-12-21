@@ -63,7 +63,8 @@ class Record(activity.Activity):
 		Constants(self)
 		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
 
-		self.connect( "notify::active", self._activeCb )
+		#self.connect( "notify::active", self._activeCb )
+
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
 

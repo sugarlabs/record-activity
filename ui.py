@@ -73,6 +73,10 @@ class UI:
 
 	def __init__( self, pca ):
 		self.ca = pca
+		self.ACTIVE = False
+		self.LAUNCHING = False
+		self.ca.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+		self.ca.connect("visibility-notify-event", self._visibleNotifyCb)
 
 		self.inset = self.__class__.dim_INSET
 		self.pgdh = self.__class__.dim_PGDH
@@ -327,7 +331,6 @@ class UI:
 			self.resetWidgetFadeTimer()
 			self.showLiveVideoTags()
 
-
 			self.photoToolbar.set_sensitive( True )
 			self.videoToolbar.set_sensitive( True )
 			self.audioToolbar.set_sensitive( True )
@@ -339,9 +342,10 @@ class UI:
 
 
 	def finalSetUp( self ):
+		self.LAUNCHING = False
 		self.updateVideoComponents()
-		print("finalSetupUp... play!")
-		self.ca.glive.play()
+		if (self.ACTIVE):
+			self.ca.glive.play()
 
 
 	def setUpWindows( self ):
@@ -412,11 +416,35 @@ class UI:
 		self.addToWindowStack( self.infWindow, self.windowStack[len(self.windowStack)-1] )
 
 		self.hideAllWindows()
-
 		self.MAP_EVENT_ID = self.liveVideoWindow.connect_after("map-event", self._mapEventCb)
-
 		for i in range (0, len(self.windowStack)):
+			self.windowStack[i].add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+			self.windowStack[i].connect("visibility-notify-event", self._visibleNotifyCb)
 			self.windowStack[i].show_all()
+
+
+	def _visibleNotifyCb( self, widget, event ):
+		temp_ACTIVE = True
+
+		#here we determine if the record activity is 'active' or not
+		if (widget == self.ca):
+			if (not self.FULLSCREEN):
+				if (event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+					temp_ACTIVE = False
+		elif (widget == self.livePhotoWindow and self.ca.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+			temp_ACTIVE = False
+		elif (widget == self.liveVideoWindow and (self.ca.MODE == Constants.MODE_PHOTO or self.ca.MODE == Constants.MODE_VIDEO) and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+			temp_ACTIVE = False
+		elif (widget == self.playOggWindow and self.ca.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+			temp_ACTIVE = False
+
+		if (temp_ACTIVE != self.ACTIVE):
+			self.ACTIVE = temp_ACTIVE
+			if (not self.LAUNCHING):
+				if (self.ACTIVE):
+					self.ca.startPipes()
+				else:
+					self.ca.stopPipes()
 
 
 	def setUpWindowsSizes( self ):
