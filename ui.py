@@ -343,13 +343,9 @@ class UI:
 
 	def finalSetUp( self ):
 		self.LAUNCHING = False
-		print("finalSetUp 1 ", self.ACTIVE)
 		self.updateVideoComponents()
 		if (self.ACTIVE):
-			print("active play!")
 			self.ca.glive.play()
-
-		print("finalSetUp 2")
 
 
 	def setUpWindows( self ):

@@ -55,8 +55,6 @@ class Record(activity.Activity):
 		#flags for controlling the writing to the datastore
 		self.I_AM_CLOSING = False
 		self.I_AM_SAVED = False
-		#self.JUST_LAUNCHED = True
-		#self.connect( "notify::active", self._activeCb )
 
 		self.props.enable_fullscreen_mode = False
 		Instance(self)
@@ -124,24 +122,7 @@ class Record(activity.Activity):
 			self.destroy()
 
 
-	def _activeCb( self, widget, pspec ):
-		import time
-		print( '_activeCb', self.JUST_LAUNCHED, self.props.active, time.time() )
-
-		if (self.JUST_LAUNCHED):
-			self.JUST_LAUNCHED = False
-			return
-
-		if (not self.props.active):
-			print('_activeCb:stopPipes')
-			self.stopPipes()
-		else:
-			print('_activeCb:restartPipes')
-			self.restartPipes()
-
-
 	def stopPipes(self):
-		print("stopPipes")
 		self.gplay.stop()
 		self.ui.doMouseListener( False )
 
@@ -153,7 +134,6 @@ class Record(activity.Activity):
 
 
 	def restartPipes(self):
-		print("restartPipes")
 		self.ui.updateModeChange( )
 		self.ui.doMouseListener( True )
 
