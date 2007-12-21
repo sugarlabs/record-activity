@@ -110,8 +110,8 @@ class Glive:
 	def play(self):
 		self.pipe().set_state(gst.STATE_PLAYING)
 		self.playing = True
-		import time
-		print("play...", int(time.time()))
+		#import time
+		#print("play...", int(time.time()))
 
 
 	def pause(self):
@@ -129,8 +129,8 @@ class Glive:
 		self._nextPipe()
 		self._NEXT_PIPETYPE = -1
 
-		import time
-		print("stop...", int(time.time()))
+		#import time
+		#print("stop...", int(time.time()))
 
 
 	def is_playing(self):
@@ -523,13 +523,6 @@ class Glive:
 			#todo: handle "No space left on the resource.gstfilesink.c"
 			err, debug = message.parse_error()
 			print "MESSAGE ERROR: %s" % err, debug
-
-
-	def showLiveVideo(self):
-		self.el('audioTee').unlink(self.el('audioWavenc'))
-		self.el('videoTee').unlink(self.el('movieQueue'))
-		self.el('videoTee').unlink(self.el('picQueue'))
-		self.pipe().set_state(gst.STATE_PLAYED)
 
 
 	def isXv(self):

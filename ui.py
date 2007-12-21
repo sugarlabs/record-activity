@@ -74,7 +74,7 @@ class UI:
 	def __init__( self, pca ):
 		self.ca = pca
 		self.ACTIVE = False
-		self.LAUNCHING = False
+		self.LAUNCHING = True
 		self.ca.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
 		self.ca.connect("visibility-notify-event", self._visibleNotifyCb)
 
@@ -343,9 +343,13 @@ class UI:
 
 	def finalSetUp( self ):
 		self.LAUNCHING = False
+		print("finalSetUp 1 ", self.ACTIVE)
 		self.updateVideoComponents()
 		if (self.ACTIVE):
+			print("active play!")
 			self.ca.glive.play()
+
+		print("finalSetUp 2")
 
 
 	def setUpWindows( self ):
@@ -360,6 +364,8 @@ class UI:
 		self.livePhotoCanvas = PhotoCanvas()
 		self.livePhotoWindow.add(self.livePhotoCanvas)
 		self.livePhotoWindow.connect("button_release_event", self._mediaClickedForPlayback)
+		self.livePhotoWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+		self.livePhotoWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
 		#border behind
 		self.pipBgdWindow = gtk.Window()
@@ -372,6 +378,8 @@ class UI:
 		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.liveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.liveVideoWindow.connect("button_release_event", self._liveButtonReleaseCb)
+		self.liveVideoWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+		self.liveVideoWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
 		#video playback windows
 		self.playOggWindow = PlayVideoWindow(Constants.colorBlack.gColor)
@@ -380,6 +388,8 @@ class UI:
 		self.ca.gplay.window = self.playOggWindow
 		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
+		self.playOggWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+		self.playOggWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
 		#border behind
 		self.pipBgdWindow2 = gtk.Window()
@@ -418,31 +428,39 @@ class UI:
 		self.hideAllWindows()
 		self.MAP_EVENT_ID = self.liveVideoWindow.connect_after("map-event", self._mapEventCb)
 		for i in range (0, len(self.windowStack)):
-			self.windowStack[i].add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
-			self.windowStack[i].connect("visibility-notify-event", self._visibleNotifyCb)
+#			self.windowStack[i].add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+#			self.windowStack[i].connect("visibility-notify-event", self._visibleNotifyCb)
 			self.windowStack[i].show_all()
 
 
 	def _visibleNotifyCb( self, widget, event ):
-		temp_ACTIVE = True
+		if (self.LAUNCHING):
+			return
 
-		#here we determine if the record activity is 'active' or not
+		temp_ACTIVE = True
 		if (widget == self.ca):
 			if (not self.FULLSCREEN):
 				if (event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
 					temp_ACTIVE = False
-		elif (widget == self.livePhotoWindow and self.ca.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+					print("a")
+
+		elif (widget == self.livePhotoWindow and self.ca.m.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and not self.LIVEMODE):
 			temp_ACTIVE = False
-		elif (widget == self.liveVideoWindow and (self.ca.MODE == Constants.MODE_PHOTO or self.ca.MODE == Constants.MODE_VIDEO) and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+			print("b")
+		elif (widget == self.liveVideoWindow and (self.ca.m.MODE == Constants.MODE_PHOTO or self.ca.m.MODE == Constants.MODE_VIDEO) and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and self.LIVEMODE):
 			temp_ACTIVE = False
-		elif (widget == self.playOggWindow and self.ca.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+			print("c")
+		elif (widget == self.playOggWindow and self.ca.m.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and not self.LIVEMODE):
 			temp_ACTIVE = False
+			print("d")
+
+		print("hrm...", temp_ACTIVE, self.ACTIVE, self.FULLSCREEN)
 
 		if (temp_ACTIVE != self.ACTIVE):
 			self.ACTIVE = temp_ACTIVE
 			if (not self.LAUNCHING):
 				if (self.ACTIVE):
-					self.ca.startPipes()
+					self.ca.restartPipes()
 				else:
 					self.ca.stopPipes()
 
@@ -926,6 +944,7 @@ class UI:
 
 
 	def doFullscreen( self ):
+		print("doFullscreen")
 		self.FULLSCREEN = not self.FULLSCREEN
 		self.updateVideoComponents()
 
@@ -2180,7 +2199,6 @@ class ProgressWindow(gtk.Window):
 
 		if (amt >= 1):
 			self.progBar.set_fraction( 0 )
-
 
 
 class PhotoToolbar(gtk.Toolbar):

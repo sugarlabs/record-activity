@@ -55,15 +55,13 @@ class Record(activity.Activity):
 		#flags for controlling the writing to the datastore
 		self.I_AM_CLOSING = False
 		self.I_AM_SAVED = False
-		self.JUST_LAUNCHED = True
+		#self.JUST_LAUNCHED = True
+		#self.connect( "notify::active", self._activeCb )
 
 		self.props.enable_fullscreen_mode = False
-
 		Instance(self)
 		Constants(self)
 		self.modify_bg( gtk.STATE_NORMAL, Constants.colorBlack.gColor )
-
-		#self.connect( "notify::active", self._activeCb )
 
 		#wait a moment so that our debug console capture mistakes
 		gobject.idle_add( self._initme, None )
@@ -143,6 +141,7 @@ class Record(activity.Activity):
 
 
 	def stopPipes(self):
+		print("stopPipes")
 		self.gplay.stop()
 		self.ui.doMouseListener( False )
 
@@ -154,6 +153,7 @@ class Record(activity.Activity):
 
 
 	def restartPipes(self):
+		print("restartPipes")
 		self.ui.updateModeChange( )
 		self.ui.doMouseListener( True )
 
