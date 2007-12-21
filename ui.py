@@ -401,6 +401,8 @@ class UI:
 		self.addToWindowStack( self.playLiveWindow, self.windowStack[len(self.windowStack)-1] )
 		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
 		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
+		self.playLiveWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+		self.playLiveWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
 		self.recordWindow = RecordWindow(self)
 		self.addToWindowStack( self.recordWindow, self.windowStack[len(self.windowStack)-1] )
@@ -447,7 +449,10 @@ class UI:
 		elif (widget == self.livePhotoWindow and self.ca.m.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and not self.LIVEMODE):
 			temp_ACTIVE = False
 			print("b")
-		elif (widget == self.liveVideoWindow and (self.ca.m.MODE == Constants.MODE_PHOTO or self.ca.m.MODE == Constants.MODE_VIDEO) and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and self.LIVEMODE):
+		elif (widget == self.liveVideoWindow and self.ca.m.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and self.LIVEMODE):
+			temp_ACTIVE = False
+			print("c")
+		elif (widget == self.playLiveWindow and self.ca.m.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and self.LIVEMODE):
 			temp_ACTIVE = False
 			print("c")
 		elif (widget == self.playOggWindow and self.ca.m.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and not self.LIVEMODE):
