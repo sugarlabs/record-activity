@@ -440,22 +440,15 @@ class UI:
 			if (not self.FULLSCREEN):
 				if (event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
 					temp_ACTIVE = False
-					print("a")
 
 		elif (widget == self.livePhotoWindow and self.ca.m.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and not self.LIVEMODE):
 			temp_ACTIVE = False
-			print("b")
 		elif (widget == self.liveVideoWindow and self.ca.m.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and self.LIVEMODE):
 			temp_ACTIVE = False
-			print("c")
 		elif (widget == self.playLiveWindow and self.ca.m.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and self.LIVEMODE):
 			temp_ACTIVE = False
-			print("c")
 		elif (widget == self.playOggWindow and self.ca.m.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and not self.LIVEMODE):
 			temp_ACTIVE = False
-			print("d")
-
-		print("hrm...", temp_ACTIVE, self.ACTIVE, self.FULLSCREEN)
 
 		if (temp_ACTIVE != self.ACTIVE):
 			self.ACTIVE = temp_ACTIVE
@@ -641,8 +634,6 @@ class UI:
 
 		#we listen here for CTRL+C events and game keys, and pass on events to gtk.Entry fields
 		keyname = gtk.gdk.keyval_name(event.keyval)
-
-		print("k:" + str(keyname))
 
 		if (keyname == 'KP_Page_Up'): #O, up
 			if (self.LIVEMODE):
@@ -945,7 +936,6 @@ class UI:
 
 
 	def doFullscreen( self ):
-		print("doFullscreen")
 		self.FULLSCREEN = not self.FULLSCREEN
 		self.updateVideoComponents()
 
@@ -1930,7 +1920,8 @@ class ScrubberWindow(gtk.Window):
 			self.ui.ca.gplay.play()
 
 		if self.UPDATE_SCALE_ID != 0:
-			print('Had a previous update timeout id')
+			pass
+			#print('Had a previous update timeout id')
 		else:
 			self.UPDATE_SCALE_ID = gobject.timeout_add(self.UPDATE_INTERVAL, self._updateScaleCb)
 

@@ -110,8 +110,6 @@ class Glive:
 	def play(self):
 		self.pipe().set_state(gst.STATE_PLAYING)
 		self.playing = True
-		#import time
-		#print("play...", int(time.time()))
 
 
 	def pause(self):
