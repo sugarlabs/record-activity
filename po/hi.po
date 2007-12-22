@@ -1,0 +1,352 @@
+# translation of record-activity.po to Hindi
+# G Karunakar <karunakar@indlinux.org>, 2007.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+msgid ""
+msgstr ""
+"Project-Id-Version: record-activity\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-11-22 05:01+0000\n"
+"Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
+"Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "रिकार्ड"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "फोटो"
+
+#: constants.py:92
+msgid "Video"
+msgstr "वीडियो"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "ऑडियो"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "बीता समय"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "एनिमेशन"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "दीर्घ दृश्य"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(2)s द्वारा %(1)s"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "शीर्षक:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "रिकार्डर:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "तारीख़ः"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "चिप्पियाँ:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "सहेजें"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "रिकार्डिंग खतम"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1) मिनट, %(1) सेकण्ड बाकी"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "%(1) सेकण्ड बाकी"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "हटाएँ"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "रेकॉर्डिंग बन्द"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "क्लिपबोर्ड में नकल करें"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "टाइमर:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "अवधिः"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "तुरंत"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s सेकेंड"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s मिनट"
+
+#: constants.py:122
+msgid "Play"
+msgstr "बजाएँ"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "ठहरें"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "फ्रेम जोडो"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "फ्रेम हटाओ"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "%(1)s फ्रेम प्रति सेकंड"
+
+#: constants.py:110
+msgid "Quality:"
+msgstr "गुणवत्ता"
+
+#: constants.py:111
+msgid "Best quality"
+msgstr "बढिया गुणवत्ता"
+
+#: constants.py:112
+msgid "High quality"
+msgstr "उच्च गुणवत्ता"
+
+#: constants.py:113
+msgid "Low quality"
+msgstr "कम गुणवत्ता"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "बडी फ़ाईल"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "छोटी फ़ाईल"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "मूक"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "घुमाएँ"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "फोटो खींचने के लिए क्लिक करें"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "फोटो जोड़ने के लिए क्लिक करें"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "%(1) से %(2) डाउनलोड किया जा रहा है"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "%(1) को डाउनलोड नहीं किया जा सकता"
+
+#: constants.py:97
+msgid "Interview"
+msgstr ""
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1) मिनट, %(1) सेकण्ड बाकी"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "%(1) सेकण्ड बाकी"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr ""
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr ""
+
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
+msgstr "गुणवत्ता"
+
+#: constants.py:128
+msgid "Default"
+msgstr ""
+
+#: constants.py:129
+msgid "Best"
+msgstr ""
+
+#: constants.py:130
+msgid "High"
+msgstr ""
+
+#: constants.py:131
+msgid "Low"
+msgstr ""
+
+#: constants.py:136
+msgid "Width"
+msgstr ""
+
+#: constants.py:137
+msgid "Height"
+msgstr ""
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr ""
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr ""
+
+#: constants.py:147
+msgid "Journal"
+msgstr ""
+
+#: constants.py:148
+msgid "USB"
+msgstr ""
+
+#: constants.py:149
+msgid "SD Card"
+msgstr ""
+
+#: constants.py:150
+msgid "Preferences"
+msgstr ""
+
+#: constants.py:151
+msgid "Free space:"
+msgstr ""
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr ""
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr ""
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr ""
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr ""
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr ""
+
+#: constants.py:158
+msgid "Border"
+msgstr ""
+
+#: constants.py:159
+msgid "Center"
+msgstr ""
+
+#: constants.py:160
+msgid "Frames"
+msgstr ""
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr ""
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr ""
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr ""
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr ""
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr ""
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr ""
+
+#: constants.py:167
+msgid "Quick"
+msgstr ""
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr ""
+
+#: constants.py:169
+msgid "Capacity"
+msgstr ""

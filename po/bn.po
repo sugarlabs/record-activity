@@ -1,0 +1,351 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: Update1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-12-21 19:06+0000\n"
+"Last-Translator: Khandakar Mujahidul Islam <suzan229@gmail.com>\n"
+"Language-Team: Bengali <core@bengalinux.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.2\n"
+"X-Poedit-Language: Bengali\n"
+"X-Poedit-Country: BANGLADESH\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "রেকর্ড"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "ফটো"
+
+#: constants.py:92
+msgid "Video"
+msgstr "ভিডিও"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "অডিও"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "সময় সীমা"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "অ্যানিমেশন"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "প্যানারোমা"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(2) এর %(1)"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "শিরোনাম:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "রেকর্ডার:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "তারিখ:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "ট্যাগ:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "সেইভ করা হচ্ছে"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "রেকর্ডিং শেষ হয়েছে"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s মিনিট, %(1)s সেকেন্ড বাকী আছে"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "%(1)s সেকেন্ড বাকী আছে"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "মোছো"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "থামানো রেকর্ডিং"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "ক্লিপবোর্ডে কপি করো"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "সময় গণনাকারী:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "সময়সীমা:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "শীঘ্রই"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s সেকেন্ড"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s মিনিট"
+
+#: constants.py:122
+msgid "Play"
+msgstr "চালাও"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "স্থগিত করো"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "ফ্রেম যোগ করো"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "ফ্রেম মোছো"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "প্রতি সেকেন্ডে %(1)s ফ্রেম"
+
+#: constants.py:110
+msgid "Quality:"
+msgstr "মান:"
+
+#: constants.py:111
+msgid "Best quality"
+msgstr "সেরা মান"
+
+#: constants.py:112
+msgid "High quality"
+msgstr "উচ্চ মান"
+
+#: constants.py:113
+msgid "Low quality"
+msgstr "নিম্ন মান"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "বড় ফাইল"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "ছোট ফাইল"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "নিরব"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "ঘোরাও"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "ছবি তোলার জন্য ক্লিক করো"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "ছবি যোগ করার জন্য ক্লিক করো"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "%(2)s থেকে %(1)s ডাউনলোড করা হচ্ছে"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "এই %(1)s ডাউনলোড করতে পারে নি"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "সাক্ষাৎকার"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s ঘন্টা, %(2)s মিনিট, %(1)s সেকেন্ড বাকী আছে"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s মিনিট, %(1)s সেকেন্ড বাকী আছে"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "%(1)s সেকেন্ড বাকী আছে"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "%(1)s মিনিট বাকী আছে"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s ঘন্টা"
+
+#: constants.py:127
+msgid "Quality"
+msgstr "মান"
+
+#: constants.py:128
+msgid "Default"
+msgstr "ডিফল্ট"
+
+#: constants.py:129
+msgid "Best"
+msgstr "সেরা"
+
+#: constants.py:130
+msgid "High"
+msgstr "উচ্চ"
+
+#: constants.py:131
+msgid "Low"
+msgstr "নিম্ন"
+
+#: constants.py:136
+msgid "Width"
+msgstr "প্রশস্ত"
+
+#: constants.py:137
+msgid "Height"
+msgstr "উচ্চতা"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "%(1) সংরক্ষণ করো:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "আপনার %(1)s ভরে গেছে"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "জার্নাল"
+
+#: constants.py:148
+msgid "USB"
+msgstr "ইউএসবি"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "এসডি কার্ড"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "পছন্দসমূহ"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "খালি জায়গা:"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "%(1)s ফটো"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "বিটরেট"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "সর্বোচ্চ বিটরেট"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "সর্বনিম্ন বিটরেট"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "বিটরেট ব্যবস্থাপনা"
+
+#: constants.py:158
+msgid "Border"
+msgstr "সীমা"
+
+#: constants.py:159
+msgid "Center"
+msgstr "মধ্য"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "ফ্রেম"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "স্বয়ক্রিয় কীফ্রেম সনাক্তকরণ"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "কীফ্রেমে জোর"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "কীফ্রেম কম্পাংক"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "কীফ্রেম সর্বনিম্ন দুরত্ব"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "কীফ্রেম থ্রেশল্ড"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "কোলাহল স্পর্শকাতরতা"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "দ্রুত"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "তীক্ষ্ণতা"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "ক্ষমতা"

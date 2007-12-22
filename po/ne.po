@@ -1,0 +1,348 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-12-18 19:45+0000\n"
+"Last-Translator: Shankar Pokharel <memshankar@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "रेकर्ड"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "तश्वीर"
+
+#: constants.py:92
+msgid "Video"
+msgstr "श्रब्यदृश्य"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "ध्वनि"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "समयान्तर"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "एनिमेशन"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "प्यानोरमा"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(2)s को %(1)s"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "शिर्षक:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "रेकर्डर:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "मिति:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "चिनोहरु:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "बचत गर्दै"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "रेकर्ड सकियो"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s मिनेट, %(1)s सेकेण्ड बाँकी"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "%(1)s सेकेण्ड बाँकी"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "हटाऊ"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "रेकर्डिङ बन्द"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "क्लिपबोर्डमा प्रतिलिपि बनाऊ"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "समय गणक:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "अवधि:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "तुरुन्तै"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s सेकेण्ड"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s मिनेट"
+
+#: constants.py:122
+msgid "Play"
+msgstr "बजाऊ"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "रोक्नुहोस"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "फ्रेम जोड"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "फ्रेम हटाऊ"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "%(1)s फ्रेम प्रति सेकेण्ड"
+
+#: constants.py:110
+msgid "Quality:"
+msgstr "गुणस्तर:"
+
+#: constants.py:111
+msgid "Best quality"
+msgstr "सर्वोत्कृष्ट गुणस्तर"
+
+#: constants.py:112
+msgid "High quality"
+msgstr "उच्च गुणस्तर"
+
+#: constants.py:113
+msgid "Low quality"
+msgstr "निम्न गुणस्तर"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "ठूलो फाइल"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "सानो फाइल"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "शान्त"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "घुमाऊ"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "तस्बिर लिन थिच"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "तस्विर थप्न थिच"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "%(2)s वाट %(1)s डाउनलोड गर्दै"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "यो %(1)s डाउनलोड गर्न सकिएन"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "अन्तर्वार्ता"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s घण्टा, %(2)s मिनेट, %(1)s सेकेण्ड बाँकी"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s मिनेट, %(2)s सेकेण्ड बाँकी"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "%(1)s घण्टा बाँकी"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "%(1)s मिनेट बाँकी"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s घण्टा"
+
+#: constants.py:127
+msgid "Quality"
+msgstr "गुणस्तर"
+
+#: constants.py:128
+msgid "Default"
+msgstr "पूर्वनिर्धारित"
+
+#: constants.py:129
+msgid "Best"
+msgstr "सर्वोत्तम"
+
+#: constants.py:130
+msgid "High"
+msgstr "उच्च"
+
+#: constants.py:131
+msgid "Low"
+msgstr "निम्न"
+
+#: constants.py:136
+msgid "Width"
+msgstr "चौडाई"
+
+#: constants.py:137
+msgid "Height"
+msgstr "उचाई"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "%(1) लाइ याहाँ बचत गर्नुहोस:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "तपाँइको %(1)s भरी छ"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "पंजिका"
+
+#: constants.py:148
+msgid "USB"
+msgstr "युएसबी"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "एस डी कार्ड"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "प्राथमिकताहरु"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "खालि ठाऊँ"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "%(1)s तस्विरहरु"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "बिटदर"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "अधिकतम बिटदर"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "न्युनतम बिटदर"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "बिटदर मिलाऊ"
+
+#: constants.py:158
+msgid "Border"
+msgstr "किनारा"
+
+#: constants.py:159
+msgid "Center"
+msgstr "मध्यभाग"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "फ्रेमहरु"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "मुख्यफ्रेम आफै पत्ता लगाउने"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "मुख्यफ्रेम बल गर"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "मुख्यफ्रेम आवृत्ती"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "मुख्यफ्रेमको न्यूनतम दुरी"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "मुख्यफ्रेमको सीमा"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "हल्ला संबेदनशीलता"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "छिटो"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "तिखोपना"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "क्षमता"

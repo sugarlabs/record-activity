@@ -1,0 +1,348 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-12-12 13:38+0000\n"
+"Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "紀錄"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "照片"
+
+#: constants.py:92
+msgid "Video"
+msgstr "影像"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "聲音"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "時間長度"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "動畫"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "寬景圖"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(2)s 拍攝的 %(1)s"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "標題:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "紀錄者:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "日期:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "標籤:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "儲存中"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "已完成紀錄"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "剩餘 %(1)s 分 %(1)s 秒"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "剩餘 %(1)s 秒"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "移除"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "停止紀錄"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "複製到剪貼簿"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "計時器:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "長度:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "立即"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s秒"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s分"
+
+#: constants.py:122
+msgid "Play"
+msgstr "播放"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "暫停"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "增加畫格"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "移除畫格"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "每秒%(1)s格畫面"
+
+#: constants.py:110
+msgid "Quality:"
+msgstr "品質:"
+
+#: constants.py:111
+msgid "Best quality"
+msgstr "最佳品質"
+
+#: constants.py:112
+msgid "High quality"
+msgstr "高品質"
+
+#: constants.py:113
+msgid "Low quality"
+msgstr "低品質"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "大檔案"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "小檔案"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "靜音"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "旋轉"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "點選拍攝照片"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "點選增加照片"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "下載 %(1)s 自 (2)%s."
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "無法下載 %(1)s"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "訪談"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "剩餘%(1)s小時%(2)s分%(1)s秒"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "剩餘%(1)s分%(1)s秒"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "剩餘%(1)s小時"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "剩餘%(1)s分鐘"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "剩餘%(1)s小時"
+
+#: constants.py:127
+msgid "Quality"
+msgstr "品質"
+
+#: constants.py:128
+msgid "Default"
+msgstr "預設"
+
+#: constants.py:129
+msgid "Best"
+msgstr "最佳"
+
+#: constants.py:130
+msgid "High"
+msgstr "高"
+
+#: constants.py:131
+msgid "Low"
+msgstr "低"
+
+#: constants.py:136
+msgid "Width"
+msgstr "寬度"
+
+#: constants.py:137
+msgid "Height"
+msgstr "高度"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "將%(1)儲存到:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "%(1)s已無剩餘空間"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "日誌"
+
+#: constants.py:148
+msgid "USB"
+msgstr "USB隨身碟"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "SD記憶卡"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "偏好設定"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "剩餘空間:"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "%(1)s張相片"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "流量"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "最高流量"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "最低流量"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "調整畫質流量"
+
+#: constants.py:158
+msgid "Border"
+msgstr "邊緣"
+
+#: constants.py:159
+msgid "Center"
+msgstr "中央"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "畫格"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "自動關鍵格偵測"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "強制指定關鍵格"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "關鍵格頻率"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "最短關鍵格間距"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "關鍵格臨界值"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "雜訊感度"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "快速"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "清晰度"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "容量"

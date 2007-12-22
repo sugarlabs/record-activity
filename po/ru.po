@@ -1,0 +1,353 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-12-22 10:26+0000\n"
+"Last-Translator: Maxim Osipov <maxim.osipov@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "Записать"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "Фото"
+
+#: constants.py:92
+msgid "Video"
+msgstr "Видео"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "Аудио"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "Промежуток Времени"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "Анимация"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "Панорама"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(1)s на %(2)s"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "Название:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "Записал:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "Дата:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "Метки"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "Сохраняется"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "Запись завершена"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "Осталось %(1)s минут, %(1)s секунд"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "Осталось %(1)s секунд"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "Удалить"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "Запись остановлена"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "Копировать в буфер"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "Таймер:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "Длительность:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "Немедленно"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s секунд"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s минут"
+
+#: constants.py:122
+msgid "Play"
+msgstr "Запуск"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "Пауза"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "Добавить кадр"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "Удалить кадр"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "%(1)s кадров в секунду"
+
+#: constants.py:110
+msgid "Quality:"
+msgstr "Качество:"
+
+#: constants.py:111
+msgid "Best quality"
+msgstr "Отличное качество"
+
+#: constants.py:112
+msgid "High quality"
+msgstr "Высокое качество"
+
+#: constants.py:113
+msgid "Low quality"
+msgstr "Низкое качество"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "Большой файл"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "Маленький файл"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "Тихий"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "Повернуть"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "Нажмите для съемки"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "Нажмите для добавления картинки"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "Загружается %(1)s из %(2)s"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "Не могу загрузить %(1)s"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "Интервью"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "осталось %(1)s часов, %(2)s минут, %(1)s секунд"
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "осталось %(1)s минут, %(1)s секунд"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "осталось %(1)s часов"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "осталось %(1)s минут"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s часов"
+
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
+msgstr "Качество:"
+
+#: constants.py:128
+msgid "Default"
+msgstr "По-умолчанию"
+
+#: constants.py:129
+msgid "Best"
+msgstr "Лучшее"
+
+#: constants.py:130
+msgid "High"
+msgstr "Хорошее"
+
+#: constants.py:131
+msgid "Low"
+msgstr "Низкое"
+
+#: constants.py:136
+msgid "Width"
+msgstr "Ширина"
+
+#: constants.py:137
+msgid "Height"
+msgstr "Высота"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "Сохранить %(1) в:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "Ваш %(1)s полон"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "журнал"
+
+#: constants.py:148
+msgid "USB"
+msgstr "USB"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "SD карта"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "Предпочтения"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "Свободное место:"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "%(1)s фотографий"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "Битрейт"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "Максимальный Битрейт"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "Минимальный Битрейт"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "Изменить Битрейт"
+
+#: constants.py:158
+msgid "Border"
+msgstr "Граница"
+
+#: constants.py:159
+msgid "Center"
+msgstr "Центр"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "Рамки"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "Автоматическое определение ключевого фрейма"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "Использовать ключевой фрейм"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "Частота ключевого фрейма"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "Минимальная дистанция ключевого фрейма"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "Порог ключевого фрейма"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "Чувствительность к шуму"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "Быстро"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "Четкость"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "Емкость"

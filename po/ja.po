@@ -1,0 +1,426 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-12-15 03:27+0000\n"
+"Last-Translator: Taizo Shiozaki <taizo@shiozaki.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: activity/activity.info:2 constants.py:90
+#, fuzzy
+msgid "Record"
+msgstr "レコード"
+
+#: constants.py:91
+#, fuzzy
+msgid "Photo"
+msgstr "写真"
+
+#: constants.py:92
+#, fuzzy
+msgid "Video"
+msgstr "動画"
+
+#: constants.py:93
+#, fuzzy
+msgid "Audio"
+msgstr "音"
+
+#: constants.py:94
+#, fuzzy
+msgid "Time Lapse"
+msgstr "時間経過"
+
+#: constants.py:95
+#, fuzzy
+msgid "Animation"
+msgstr "アニメーション"
+
+#: constants.py:96
+#, fuzzy
+msgid "Panorama"
+msgstr "パノラマ"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+#, fuzzy
+msgid "%(1)s by %(2)s"
+msgstr "%(1)s(撮影:%(2)s)"
+
+#: constants.py:100
+#, fuzzy
+msgid "Title:"
+msgstr "タイトル:"
+
+#: constants.py:101
+#, fuzzy
+msgid "Recorder:"
+msgstr "記録者:"
+
+#: constants.py:102
+#, fuzzy
+msgid "Date:"
+msgstr "日時:"
+
+#: constants.py:103
+#, fuzzy
+msgid "Tags:"
+msgstr "タグ:"
+
+#: constants.py:104
+#, fuzzy
+msgid "Saving"
+msgstr "保存中"
+
+#: constants.py:105
+#, fuzzy
+msgid "Finished recording"
+msgstr "記録終了:"
+
+#: constants.py:95
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s分, %(1)s秒残っています"
+
+#: constants.py:110
+#, python-format
+#, fuzzy
+msgid "%(1)s seconds remaining"
+msgstr "%(1)s秒残っています"
+
+#: constants.py:114
+#, fuzzy
+msgid "Remove"
+msgstr "削除"
+
+#: constants.py:115
+#, fuzzy
+msgid "Stopped recording"
+msgstr "記録中止"
+
+#: constants.py:116
+#, fuzzy
+msgid "Copy to clipboard"
+msgstr "クリップボードにコピー"
+
+#: constants.py:117
+#, fuzzy
+msgid "Timer:"
+msgstr "タイマー:"
+
+#: constants.py:118
+#, fuzzy
+msgid "Duration:"
+msgstr "継続時間:"
+
+#: constants.py:119
+#, fuzzy
+msgid "Immediate"
+msgstr "今すぐ"
+
+#: constants.py:113 constants.py:120
+#, python-format
+#, fuzzy
+msgid "%(1)s seconds"
+msgstr "%(1)s秒"
+
+#: constants.py:112 constants.py:121
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes"
+msgstr "%(1)s分"
+
+#: constants.py:122
+#, fuzzy
+msgid "Play"
+msgstr "再生"
+
+#: constants.py:123
+#, fuzzy
+msgid "Pause"
+msgstr "一時停止"
+
+#: constants.py:124
+#, fuzzy
+msgid "Add frame"
+msgstr "フレームを追加"
+
+#: constants.py:125
+#, fuzzy
+msgid "Remove frame"
+msgstr "フレームを削除"
+
+#: constants.py:126
+#, python-format
+#, fuzzy
+msgid "%(1)s frames per second"
+msgstr "%(1)sフレーム/秒"
+
+#: constants.py:110
+#, fuzzy
+msgid "Quality:"
+msgstr "品質:"
+
+#: constants.py:111
+#, fuzzy
+msgid "Best quality"
+msgstr "最高品質"
+
+#: constants.py:112
+#, fuzzy
+msgid "High quality"
+msgstr "高品質"
+
+#: constants.py:113
+#, fuzzy
+msgid "Low quality"
+msgstr "低品質"
+
+#: constants.py:132
+#, fuzzy
+msgid "Large file"
+msgstr "大きなファイル"
+
+#: constants.py:133
+#, fuzzy
+msgid "Small file"
+msgstr "小さなファイル"
+
+#: constants.py:134
+#, fuzzy
+msgid "Silent"
+msgstr "無音"
+
+#: constants.py:135
+#, fuzzy
+msgid "Rotate"
+msgstr "回転"
+
+#: constants.py:138
+#, fuzzy
+msgid "Click to take picture"
+msgstr "クリックして写真を取り出す"
+
+#: constants.py:139
+#, fuzzy
+msgid "Click to add picture"
+msgstr "クリックして写真を加える"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+#, fuzzy
+msgid "Downloading %(1)s from %(2)s"
+msgstr "%(2)sから%(1)sをダウンロードしています"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+#, fuzzy
+msgid "Cannot download this %(1)s"
+msgstr "%(1)sをダウンロードできません"
+
+#: constants.py:97
+#, fuzzy
+msgid "Interview"
+msgstr "インタビュー"
+
+#: constants.py:106
+#, python-format
+#, fuzzy
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "残り%(1)s時間%(2)s分%(1)s秒です"
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "残り%(1)s分%(2)s秒です"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "残り%(1)s秒です"
+
+#: constants.py:109
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes remaining"
+msgstr "残り%(1)s分です"
+
+#: constants.py:111
+#, python-format
+#, fuzzy
+msgid "%(1)s hours"
+msgstr "残り%(1)s時間です"
+
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
+msgstr "品質"
+
+#: constants.py:128
+#, fuzzy
+msgid "Default"
+msgstr "デフォルト値"
+
+#: constants.py:129
+#, fuzzy
+msgid "Best"
+msgstr "最高"
+
+#: constants.py:130
+#, fuzzy
+msgid "High"
+msgstr "高い"
+
+#: constants.py:131
+#, fuzzy
+msgid "Low"
+msgstr "低い"
+
+#: constants.py:136
+#, fuzzy
+msgid "Width"
+msgstr "幅"
+
+#: constants.py:137
+#, fuzzy
+msgid "Height"
+msgstr "高さ"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+#, fuzzy
+msgid "Save %(1) to:"
+msgstr "%(1)の保存先："
+
+#: constants.py:146
+#, python-format
+#, fuzzy
+msgid "Your %(1)s is full"
+msgstr "%(1)sは満杯です"
+
+#: constants.py:147
+#, fuzzy
+msgid "Journal"
+msgstr "日誌"
+
+#: constants.py:148
+#, fuzzy
+msgid "USB"
+msgstr "USB"
+
+#: constants.py:149
+#, fuzzy
+msgid "SD Card"
+msgstr "SDカード"
+
+#: constants.py:150
+#, fuzzy
+msgid "Preferences"
+msgstr "設定"
+
+#: constants.py:151
+#, fuzzy
+msgid "Free space:"
+msgstr "空きスペース"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+#, fuzzy
+msgid "%(1)s photos"
+msgstr "%(1)s枚の写真"
+
+#: constants.py:154
+#, fuzzy
+msgid "Bitrate"
+msgstr "ビットレート"
+
+#: constants.py:155
+#, fuzzy
+msgid "Maximum Bitrate"
+msgstr "最高ビットレート"
+
+#: constants.py:156
+#, fuzzy
+msgid "Minumum Bitrate"
+msgstr "最低ビットレート"
+
+#: constants.py:157
+#, fuzzy
+msgid "Manage Bitrate"
+msgstr "ビットレート管理"
+
+#: constants.py:158
+#, fuzzy
+msgid "Border"
+msgstr "淵"
+
+#: constants.py:159
+#, fuzzy
+msgid "Center"
+msgstr "センター"
+
+#: constants.py:160
+#, fuzzy
+msgid "Frames"
+msgstr "フレーム"
+
+#: constants.py:161
+#, fuzzy
+msgid "Automatic keyframe detection"
+msgstr "自動キーフレーム感知"
+
+#: constants.py:162
+#, fuzzy
+msgid "Force keyframe"
+msgstr "キーフレームを強制設置"
+
+#: constants.py:163
+#, fuzzy
+msgid "Keyframe frequency"
+msgstr "キーフレームの頻度"
+
+#: constants.py:164
+#, fuzzy
+msgid "Keyframe minimum distance"
+msgstr "キーフレームの最小間隔"
+
+#: constants.py:165
+#, fuzzy
+msgid "Keyframe threshold"
+msgstr "キーフレームのしきい値"
+
+#: constants.py:166
+#, fuzzy
+msgid "Noise Sensitivity"
+msgstr "ノイズ感度"
+
+#: constants.py:167
+#, fuzzy
+msgid "Quick"
+msgstr "クイック"
+
+#: constants.py:168
+#, fuzzy
+msgid "Sharpness"
+msgstr "シャープネス"
+
+#: constants.py:169
+#, fuzzy
+msgid "Capacity"
+msgstr "限界値"

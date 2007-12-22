@@ -1,0 +1,350 @@
+# translation of record-activity.po to Arabic
+# Khaled Hosny <khaledhosny@eglug.org>, 2007.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+msgid ""
+msgstr ""
+"Project-Id-Version: record-activity\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-12-22 07:55+0000\n"
+"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
+"Language-Team: Arabic <doc@arabeyes.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n>=3 && "
+"n<=10 ? 3 : n>=11 && n<=99 ? 4 : 5;\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "سجّل"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "صورة"
+
+#: constants.py:92
+msgid "Video"
+msgstr "فيديو"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "صوت"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "اختصار الزمن"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "رسوم متحركة"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "بانوراما"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(1)s من %(2)s"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "العنوان:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "المُسجِّل:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "التاريخ:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "الوسوم:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "يحفظ"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "اكتمل التسجيل"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "بقي %(1)s دقائق و %(1)s ثوان"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "بقي %(1)s ثوان"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "أزِل"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "توقّف التسجيل"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "انسخ للحافظة"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "المُؤقِّت:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "المدّة:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "حالا"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s ثوان"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s دقائق"
+
+#: constants.py:122
+msgid "Play"
+msgstr "شغّل"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "قف مؤقتا"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "أضِف إطارًا"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "أزِل إطارًا"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "%(1)s إطار في الثانية"
+
+#: constants.py:110
+msgid "Quality:"
+msgstr "الجودة:"
+
+#: constants.py:111
+msgid "Best quality"
+msgstr "أفضل جودة"
+
+#: constants.py:112
+msgid "High quality"
+msgstr "جودة عالية"
+
+#: constants.py:113
+msgid "Low quality"
+msgstr "جودة منخفضة"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "ملف كبير"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "ملف صغير"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "صامت"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "أدِر"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "انقر لتأخذ صورة"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "انقر لتضيف صورة"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "يُنزِّل %(1)s من %(2)s"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "تعذّر تنزيل %(1)s"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "مقابلة"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "بقي %(1)s ساعة، و %(2)s دقيقة و %(1)s ثانية"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "بقي %(1)s دقيقة، و %(2)s ساعة"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "بقي %(1)s ساعة"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "بقي %(1)s دقيقة"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s ساعة"
+
+#: constants.py:127
+msgid "Quality"
+msgstr "الجودة:"
+
+#: constants.py:128
+msgid "Default"
+msgstr "المبدئية"
+
+#: constants.py:129
+msgid "Best"
+msgstr "الأفضل"
+
+#: constants.py:130
+msgid "High"
+msgstr "مرتفعة"
+
+#: constants.py:131
+msgid "Low"
+msgstr "منخفضة"
+
+#: constants.py:136
+msgid "Width"
+msgstr "العرض"
+
+#: constants.py:137
+msgid "Height"
+msgstr "الارتفاع"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "احفظ %(1)s إلى:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "%(1)s الخاص ممتلأ"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "اليوميات"
+
+#: constants.py:148
+msgid "USB"
+msgstr "USB"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "بطاقة الذاكرة"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "التفضيلات"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "المساحة الخالية:"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr " %(1)s صور"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "معدل البتات"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "أقصى معدل بتات"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "أدنى معدل بتات"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "تحكّم في معدل البتات"
+
+#: constants.py:158
+msgid "Border"
+msgstr "حد"
+
+#: constants.py:159
+msgid "Center"
+msgstr "وسط"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "إطارات"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "تحديد آلي للإطار الرئيس"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "أجبر الإطار الرئيس"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "تردد الإطار الرئيس"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "أدنى مسافة للإطار الرئيس"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "حد الإطار الرئيس"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "الحساسية للضوضاء"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "سريع"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "الوضوح"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "السعة"

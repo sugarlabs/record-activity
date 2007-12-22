@@ -1,0 +1,350 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-12-19 02:09+0000\n"
+"Last-Translator: Juliano Bittencourt <juliano@laptop.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "Gravar"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "Foto"
+
+#: constants.py:92
+msgid "Video"
+msgstr "Vídeo"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "Som"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "Lapso de tempo"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "Animação"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "Panorama"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(1) por %(2)"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "Título:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "Gravador:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "Data:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "Etiquetas:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "Salvando"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "Gravação terminada"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s minutos, %(1)s segundos faltando"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "%(1)s segundos faltando"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "Remover"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "Gravação interrompida"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "Copiar para a prancheta"
+
+# I think it's better not to translate this term because it's used by brazilians.
+# Yet I agree, there is a new law in Brazil that forbits foreing terms into schools. Using a portuguese word, even when not very know is now necessary.
+#: constants.py:117
+msgid "Timer:"
+msgstr "Temporizador:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "Duração:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "Imediato(a)"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s segundos"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s minutos"
+
+#: constants.py:122
+msgid "Play"
+msgstr "Reproduzir"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "Pausar"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "Adicionar quadro"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "Remover quadro"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "%(1)s quadros por segundo"
+
+#: constants.py:110
+msgid "Quality:"
+msgstr "Qualidade:"
+
+#: constants.py:111
+msgid "Best quality"
+msgstr "Melhor qualidade"
+
+#: constants.py:112
+msgid "High quality"
+msgstr "Alta qualidade"
+
+#: constants.py:113
+msgid "Low quality"
+msgstr "Baixa qualidade"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "Arquivo grande"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "Arquivo pequeno"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "Silencioso(a)"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "Gire"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "Clique para tirar foto"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "Clique para adicionar imagem"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "Efetuando o download de %(1)s a partir de %(2)s"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "Não é possível efetuar o download de %(1)s"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "Entrevista"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s horas, %(2)s minutos, %(1)s segundos faltando"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s minutos, %(1)s segundos faltando"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "%(1)s segundos faltando"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "%(1)s minutos faltando"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s horas"
+
+#: constants.py:127
+msgid "Quality"
+msgstr "Qualidade"
+
+#: constants.py:128
+msgid "Default"
+msgstr "Padrão"
+
+#: constants.py:129
+msgid "Best"
+msgstr "Melhor"
+
+#: constants.py:130
+msgid "High"
+msgstr "Alto"
+
+#: constants.py:131
+msgid "Low"
+msgstr "Baixo"
+
+#: constants.py:136
+msgid "Width"
+msgstr "Largura"
+
+#: constants.py:137
+msgid "Height"
+msgstr "Altura"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "Salvar %(1) para:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "Seu %(1)s está cheio"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "Diário"
+
+#: constants.py:148
+msgid "USB"
+msgstr "USB"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "Cartão SD"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "Preferêcias"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "Espaço Livre:"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "%(1)s fotos"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "Taxa de transferência"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "Taxa de transferência máxima"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "Taxa de transferência mínima"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "Gerênciar a Taxa de transferência"
+
+#: constants.py:158
+msgid "Border"
+msgstr "Borda"
+
+#: constants.py:159
+msgid "Center"
+msgstr "Centro"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "Quadros"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "Detecção automática do quadro chave"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "Forçar o quadro chave"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "Frequência  do quadro chave"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "Distância entre os quadro chave"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "Limite do quadro chave"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "Sensibilidade ao Ruído"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "Rapidamente"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "Nitidez"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "Capacidade"

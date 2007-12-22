@@ -1,0 +1,351 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"PO-Revision-Date: 2007-12-15 02:21+0000\n"
+"Last-Translator: Manatsawin <manatsawin@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "บันทึก"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "รูปถ่าย"
+
+#: constants.py:92
+msgid "Video"
+msgstr "รูปภาพ"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "เสียง"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "เวลาผ่านไป"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "ภาพเคลื่อนไหว"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "ภาพมุมกว้าง"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "$(1) โดย %(2)"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "ชื่อเรื่อง:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "ตัวบันทึก:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "วันที่:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "ป้าย:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "กำลังบันทึก"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "เสร็จสิ้นการบันทึก"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "เหลืออยู่ $(1)s นาที %(1)s วินาที"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "เหลืออยู่ $(1)s วินาที"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "ลบ"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "หยุดการบันทึก"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "คัดลอกลงคลิปบอร์ด"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "จับเวลา:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "ระยะเวลา:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "ทันที"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "$(1)s วินาที"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "$(1)s นาที"
+
+#: constants.py:122
+msgid "Play"
+msgstr "เล่น"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "หยุดชั่วคราว"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "เพิ่มเฟรม"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "ลบเฟรม"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "$(1)s เฟรมต่อวินาที"
+
+#: constants.py:110
+msgid "Quality:"
+msgstr "คุณภาพ:"
+
+#: constants.py:111
+msgid "Best quality"
+msgstr "คุณภาพดีที่สุด"
+
+#: constants.py:112
+msgid "High quality"
+msgstr "คุณภาพสูง"
+
+#: constants.py:113
+msgid "Low quality"
+msgstr "คุณภาพต่ำ"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "ไฟล์ใหญ่"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "ไฟล์เล็ก"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "เงียบ"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "หมุน"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "คลิกเพื่อถ่ายภาพ"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "คลิกเพื่อเพิ่มภาพ"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "กำลังดาวน์โหลด $(1)s จาก $(2)s"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "ไม่สามารถดาวน์โหลด $(1)s"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "สัมภาษณ์"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "เหลืออยู่ %(1)s ชั่วโมง %(2)s นาที %(1)s วินาที"
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "เหลืออยู่ %(1)s นาที %(1)s วินาที"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "เหลืออยู่ %(1)s วินาที"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "เหลืออยู่ %(1)s นาที"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s ชั่วโมง"
+
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
+msgstr "คุณภาพ:"
+
+#: constants.py:128
+msgid "Default"
+msgstr "มาตราฐาน"
+
+#: constants.py:129
+msgid "Best"
+msgstr "ดีที่สุด"
+
+#: constants.py:130
+msgid "High"
+msgstr "สูง"
+
+#: constants.py:131
+msgid "Low"
+msgstr "ต่ำ"
+
+#: constants.py:136
+msgid "Width"
+msgstr "กว้าง"
+
+#: constants.py:137
+msgid "Height"
+msgstr "สูง"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "บันทึก %(1) ไปยัง:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "%(1)s ของคุณเต็ม"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "บันทึกประจำวัน"
+
+#: constants.py:148
+msgid "USB"
+msgstr "USB"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "SD Card"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "ตั้งค่า"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "ที่ว่าง:"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "%(1)s ภาพ"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "บิตเรต"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "บิตเรตสูงสุด"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "บิตเรตต่ำสุด"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "จัดการบิตเรต"
+
+#: constants.py:158
+msgid "Border"
+msgstr "ขอบ"
+
+#: constants.py:159
+msgid "Center"
+msgstr "ศูนย์กลาง"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "เฟรม"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "ตรวจจับเฟรมสำคัญอัตโนมัติ"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "บังคับเฟรมสำคัญ"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "ความถี่เฟรมสำคัญ"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "ระยะทางเฟรมสำคัญต่ำสุด"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr ""
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "ความไวต่อสิ่งรบกวน"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "เร็ว"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "ความคมชัด"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "ความจุ"
