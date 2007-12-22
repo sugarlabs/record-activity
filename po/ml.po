@@ -193,8 +193,7 @@ msgstr ""
 
 #: constants.py:134
 msgid "Your disk is full"
-msgstr "
-
+msgstr ""
 
 #: constants.py:97
 msgid "Interview"
