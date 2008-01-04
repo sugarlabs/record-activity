@@ -318,7 +318,7 @@ def _saveMediaToDatastore( el, recd ):
 		record.Record.log.debug("mime_type:" + str(mime))
 		mediaObject.metadata['mime_type'] = mime
 
-		mediaObject.metadata['activity'] = Constants.activityId
+		mediaObject.metadata['activity_id'] = Constants.activityId
 
 		mediaFile = recd.getMediaFilepath()
 		record.Record.log.debug("mediaFile:" + str(mediaFile))
