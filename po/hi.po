@@ -76,13 +76,13 @@ msgstr "रिकार्डिंग खतम"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1) मिनट, %(1) सेकण्ड बाकी"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s मिनट, %(2)s सेकण्ड बाकी"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr "%(1) सेकण्ड बाकी"
+msgstr "%(1)s सेकण्ड बाकी"
 
 #: constants.py:114
 msgid "Remove"
@@ -183,13 +183,13 @@ msgstr "फोटो जोड़ने के लिए क्लिक कर�
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "%(1) से %(2) डाउनलोड किया जा रहा है"
+msgstr "%(1)s से %(2)s डाउनलोड किया जा रहा है"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr "%(1) को डाउनलोड नहीं किया जा सकता"
+msgstr "%(1)s को डाउनलोड नहीं किया जा सकता"
 
 #: constants.py:97
 msgid "Interview"
@@ -197,20 +197,20 @@ msgstr ""
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
 msgstr ""
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1) मिनट, %(1) सेकण्ड बाकी"
+msgstr "%(1)s मिनट, %(2)s सेकण्ड बाकी"
 
 #: constants.py:108
 #, python-format
 #, fuzzy
 msgid "%(1)s hours remaining"
-msgstr "%(1) सेकण्ड बाकी"
+msgstr "%(1)s सेकण्ड बाकी"
 
 #: constants.py:109
 #, python-format
@@ -253,7 +253,7 @@ msgstr ""
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
+msgid "Save %(1)s to:"
 msgstr ""
 
 #: constants.py:146

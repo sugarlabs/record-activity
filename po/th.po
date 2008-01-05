@@ -47,7 +47,7 @@ msgstr "ภาพมุมกว้าง"
 #: constants.py:99
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr "$(1) โดย %(2)"
+msgstr "%(1)s โดย %(2)s"
 
 #: constants.py:100
 msgid "Title:"
@@ -75,13 +75,13 @@ msgstr "เสร็จสิ้นการบันทึก"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "เหลืออยู่ $(1)s นาที %(1)s วินาที"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "เหลืออยู่ %(1)s นาที %(2)s วินาที"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr "เหลืออยู่ $(1)s วินาที"
+msgstr "เหลืออยู่ %(1)s วินาที"
 
 #: constants.py:114
 msgid "Remove"
@@ -110,12 +110,12 @@ msgstr "ทันที"
 #: constants.py:113 constants.py:120
 #, python-format
 msgid "%(1)s seconds"
-msgstr "$(1)s วินาที"
+msgstr "%(1)s วินาที"
 
 #: constants.py:112 constants.py:121
 #, python-format
 msgid "%(1)s minutes"
-msgstr "$(1)s นาที"
+msgstr "%(1)s นาที"
 
 #: constants.py:122
 msgid "Play"
@@ -136,7 +136,7 @@ msgstr "ลบเฟรม"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "$(1)s เฟรมต่อวินาที"
+msgstr "%(1)s เฟรมต่อวินาที"
 
 #: constants.py:110
 msgid "Quality:"
@@ -182,13 +182,13 @@ msgstr "คลิกเพื่อเพิ่มภาพ"
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "กำลังดาวน์โหลด $(1)s จาก $(2)s"
+msgstr "กำลังดาวน์โหลด %(1)s จาก %(2)s"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr "ไม่สามารถดาวน์โหลด $(1)s"
+msgstr "ไม่สามารถดาวน์โหลด %(1)s"
 
 #: constants.py:97
 msgid "Interview"
@@ -196,14 +196,14 @@ msgstr "สัมภาษณ์"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "เหลืออยู่ %(1)s ชั่วโมง %(2)s นาที %(1)s วินาที"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "เหลืออยู่ %(1)s ชั่วโมง %(2)s นาที %(3)s วินาที"
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "เหลืออยู่ %(1)s นาที %(1)s วินาที"
+msgstr "เหลืออยู่ %(1)s นาที %(2)s วินาที"
 
 #: constants.py:108
 #, python-format
@@ -252,8 +252,8 @@ msgstr "สูง"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "บันทึก %(1) ไปยัง:"
+msgid "Save %(1)s to:"
+msgstr "บันทึก %(1)s ไปยัง:"
 
 #: constants.py:146
 #, python-format

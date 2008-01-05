@@ -76,8 +76,8 @@ msgstr "Ολοκλήρωση εγγραφής"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s λεπτά, %(1)s δευτερόλεπτα απομένουν"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s λεπτά, %(2)s δευτερόλεπτα απομένουν"
 
 #: constants.py:110
 #, python-format
@@ -197,8 +197,8 @@ msgstr "Συνέντευξη"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "Υπολείπονται %(1)s ώρες, %(2)s λεπτά, %(1)s δευτερόλεπτα"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "Υπολείπονται %(1)s ώρες, %(2)s λεπτά, %(3)s δευτερόλεπτα"
 
 #: constants.py:107
 #, python-format
@@ -250,8 +250,8 @@ msgstr "Ύψος"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "Αποθήκευση %(1) σε:"
+msgid "Save %(1)s to:"
+msgstr "Αποθήκευση %(1)s σε:"
 
 #: constants.py:146
 #, python-format

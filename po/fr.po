@@ -76,8 +76,8 @@ msgstr "Enregistrement terminé"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "Il reste %(1)s minute(s,) %(1)s seconde(s)"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "Il reste %(1)s minute(s,) %(2)s seconde(s)"
 
 #: constants.py:110
 #, python-format
@@ -197,8 +197,8 @@ msgstr "Interview"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "Il reste %(1)s heure(s), %(2)s minute(s), %(1)s seconde(s)"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "Il reste %(1)s heure(s), %(2)s minute(s), %(3)s seconde(s)"
 
 #: constants.py:107
 #, python-format
@@ -250,8 +250,8 @@ msgstr "Hauteur"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "Enregistrer %(1) sur :"
+msgid "Save %(1)s to:"
+msgstr "Enregistrer %(1)s sur :"
 
 #: constants.py:146
 #, python-format

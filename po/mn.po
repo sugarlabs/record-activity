@@ -51,7 +51,7 @@ msgstr "Ярилцлага"
 #: constants.py:99
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr "%(1) -ээс %(2)"
+msgstr "%(1)s -ээс %(2)s"
 
 #: constants.py:100
 msgid "Title:"
@@ -79,43 +79,43 @@ msgstr "Бичлэг хийж дууслаа"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1) цаг, %(2) минут, %(1) секунд үлдэж байна"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "%(1)s цаг, %(2)s минут, %(3)s секунд үлдэж байна"
 
 #: constants.py:107
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1) минут, %(2) секунд үлдэж байна"
+msgstr "%(1)s минут, %(2)s секунд үлдэж байна"
 
 #: constants.py:108
 #, python-format
 msgid "%(1)s hours remaining"
-msgstr "%(1) цаг үлдэж байна"
+msgstr "%(1)s цаг үлдэж байна"
 
 #: constants.py:109
 #, python-format
 msgid "%(1)s minutes remaining"
-msgstr "%(1) минут үлдэж байна"
+msgstr "%(1)s минут үлдэж байна"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr "%(1) секунд үлдэж байна"
+msgstr "%(1)s секунд үлдэж байна"
 
 #: constants.py:111
 #, python-format
 msgid "%(1)s hours"
-msgstr "%(1) цаг"
+msgstr "%(1)s цаг"
 
 #: constants.py:112 constants.py:121
 #, python-format
 msgid "%(1)s minutes"
-msgstr "%(1) минут"
+msgstr "%(1)s минут"
 
 #: constants.py:113 constants.py:120
 #, python-format
 msgid "%(1)s seconds"
-msgstr "%(1) секунд"
+msgstr "%(1)s секунд"
 
 #: constants.py:114
 msgid "Remove"
@@ -160,7 +160,7 @@ msgstr "Хүрээг арилгах"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "нэг секунд дэхь кадр %(1) "
+msgstr "нэг секунд дэхь кадр %(1)s"
 
 #: constants.py:127
 msgid "Quality"
@@ -218,7 +218,7 @@ msgstr "Зураг оруулахын тулд дарна уу"
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "%(2)-ээс %(1) татаж байна"
+msgstr "%(2)s-ээс %(1)s татаж байна"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
@@ -228,13 +228,13 @@ msgstr "%(1) үүнийг татаж чадахгүй байна"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "%(1) ийш нь хадгалах:"
+msgid "Save %(1)s to:"
+msgstr "%(1)s ийш нь хадгалах:"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "Таны %(1) дүүрсэн байна"
+msgstr "Таны %(1)s дүүрсэн байна"
 
 #: constants.py:147
 msgid "Journal"
@@ -260,7 +260,7 @@ msgstr "сул зай"
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr "%(1) зураг"
+msgstr "%(1)s зураг"
 
 #: constants.py:154
 msgid "Bitrate"

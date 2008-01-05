@@ -47,7 +47,7 @@ msgstr "Panorama"
 #: constants.py:99
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr "%(1) por %(2)"
+msgstr "%(1)s por %(2)s"
 
 #: constants.py:100
 msgid "Title:"
@@ -75,8 +75,8 @@ msgstr "Gravação terminada"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s minutos, %(1)s segundos faltando"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s minutos, %(2)s segundos faltando"
 
 #: constants.py:110
 #, python-format
@@ -198,13 +198,13 @@ msgstr "Entrevista"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s horas, %(2)s minutos, %(1)s segundos faltando"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "%(1)s horas, %(2)s minutos, %(3)s segundos faltando"
 
 #: constants.py:107
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s minutos, %(1)s segundos faltando"
+msgstr "%(1)s minutos, %(2)s segundos faltando"
 
 #: constants.py:108
 #, python-format
@@ -251,8 +251,8 @@ msgstr "Altura"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "Salvar %(1) para:"
+msgid "Save %(1)s to:"
+msgstr "Salvar %(1)s para:"
 
 #: constants.py:146
 #, python-format

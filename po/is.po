@@ -48,7 +48,7 @@ msgstr ""
 #: constants.py:99
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr "%(1) eftir %(2)"
+msgstr "%(1)s eftir %(2)s"
 
 #: constants.py:100
 msgid "Title:"
@@ -76,13 +76,13 @@ msgstr "Endaði upptöku"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1) mínúndur, %(1) sekúndur eftir"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s mínúndur, %(2)s sekúndur eftir"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr "%(1) sekúndur eftir"
+msgstr "%(1)s sekúndur eftir"
 
 #: constants.py:114
 msgid "Remove"
@@ -111,12 +111,12 @@ msgstr ""
 #: constants.py:113 constants.py:120
 #, python-format
 msgid "%(1)s seconds"
-msgstr "%(1) sekúndur"
+msgstr "%(1)s sekúndur"
 
 #: constants.py:112 constants.py:121
 #, python-format
 msgid "%(1)s minutes"
-msgstr "%(1) mínúndur"
+msgstr "%(1)s mínúndur"
 
 #: constants.py:122
 msgid "Play"
@@ -137,7 +137,7 @@ msgstr "Fjarlægja ramma"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "%(1) rammar á sekúndu"
+msgstr "%(1)s rammar á sekúndu"
 
 #: constants.py:110
 msgid "Quality:"
@@ -183,13 +183,13 @@ msgstr "Smelltu til að bæta við mynd"
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "Sæki %(1) frá %(2)"
+msgstr "Sæki %(1)s frá %(2)s"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr "Gat ekki sótt þetta %(1)"
+msgstr "Gat ekki sótt þetta %(1)s"
 
 #: constants.py:97
 msgid "Interview"
@@ -197,20 +197,20 @@ msgstr ""
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
 msgstr ""
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1) mínúndur, %(1) sekúndur eftir"
+msgstr "%(1)s mínúndur, %(2)s sekúndur eftir"
 
 #: constants.py:108
 #, python-format
 #, fuzzy
 msgid "%(1)s hours remaining"
-msgstr "%(1) sekúndur eftir"
+msgstr "%(1)s sekúndur eftir"
 
 #: constants.py:109
 #, python-format
@@ -253,7 +253,7 @@ msgstr ""
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
+msgid "Save %(1)s to:"
 msgstr ""
 
 #: constants.py:146

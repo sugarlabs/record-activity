@@ -76,8 +76,8 @@ msgstr "Klaar met opnemen"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s minuut, %(1)s seconden beschikbaar"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s minuut, %(2)s seconden beschikbaar"
 
 #: constants.py:110
 #, python-format
@@ -198,8 +198,8 @@ msgstr "Interview"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "nog %(1)s uur, %(2)s minuten, %(1)s seconden te gaan"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "nog %(1)s uur, %(2)s minuten, %(3)s seconden te gaan"
 
 #: constants.py:107
 #, python-format
@@ -251,8 +251,8 @@ msgstr "Hoogte"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "Sla %(1) op naar:"
+msgid "Save %(1)s to:"
+msgstr "Sla %(1)s op naar:"
 
 #: constants.py:146
 #, python-format

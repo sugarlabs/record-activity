@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 #Copyright (c) 2007, Media Modifications Ltd.
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy

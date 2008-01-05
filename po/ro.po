@@ -77,8 +77,8 @@ msgstr "Înregistrare încheiată"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "au mai rămas %(1)s minute, %(1)s secunde"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "au mai rămas %(1)s minute, %(2)s secunde"
 
 #: constants.py:110
 #, python-format
@@ -199,14 +199,14 @@ msgstr ""
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
 msgstr ""
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "au mai rămas %(1)s minute, %(1)s secunde"
+msgstr "au mai rămas %(1)s minute, %(2)s secunde"
 
 #: constants.py:108
 #, python-format
@@ -255,7 +255,7 @@ msgstr ""
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
+msgid "Save %(1)s to:"
 msgstr ""
 
 #: constants.py:146

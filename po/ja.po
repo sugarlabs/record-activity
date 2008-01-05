@@ -90,8 +90,8 @@ msgstr "記録終了:"
 #: constants.py:95
 #, python-format
 #, fuzzy
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s分, %(1)s秒残っています"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s分, %(2)s秒残っています"
 
 #: constants.py:110
 #, python-format
@@ -239,8 +239,8 @@ msgstr "インタビュー"
 #: constants.py:106
 #, python-format
 #, fuzzy
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "残り%(1)s時間%(2)s分%(1)s秒です"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "残り%(1)s時間%(2)s分%(3)s秒です"
 
 #: constants.py:107
 #, python-format
@@ -304,8 +304,8 @@ msgstr "高さ"
 #. TRANS: Save Photo to:
 #: constants.py:145
 #, fuzzy
-msgid "Save %(1) to:"
-msgstr "%(1)の保存先："
+msgid "Save %(1)s to:"
+msgstr "%(1)sの保存先："
 
 #: constants.py:146
 #, python-format

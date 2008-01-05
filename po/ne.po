@@ -75,8 +75,8 @@ msgstr "रेकर्ड सकियो"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s मिनेट, %(1)s सेकेण्ड बाँकी"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s मिनेट, %(2)s सेकेण्ड बाँकी"
 
 #: constants.py:110
 #, python-format
@@ -196,8 +196,8 @@ msgstr "अन्तर्वार्ता"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s घण्टा, %(2)s मिनेट, %(1)s सेकेण्ड बाँकी"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "%(1)s घण्टा, %(2)s मिनेट, %(3)s सेकेण्ड बाँकी"
 
 #: constants.py:107
 #, python-format
@@ -249,8 +249,8 @@ msgstr "उचाई"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "%(1) लाइ याहाँ बचत गर्नुहोस:"
+msgid "Save %(1)s to:"
+msgstr "%(1)s लाइ याहाँ बचत गर्नुहोस:"
 
 #: constants.py:146
 #, python-format

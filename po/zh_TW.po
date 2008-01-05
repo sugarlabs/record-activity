@@ -75,8 +75,8 @@ msgstr "已完成紀錄"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "剩餘 %(1)s 分 %(1)s 秒"
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "剩餘 %(1)s 分 %(2)s 秒"
 
 #: constants.py:110
 #, python-format
@@ -196,13 +196,13 @@ msgstr "訪談"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "剩餘%(1)s小時%(2)s分%(1)s秒"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "剩餘%(1)s小時%(2)s分%(3)s秒"
 
 #: constants.py:107
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "剩餘%(1)s分%(1)s秒"
+msgstr "剩餘%(1)s分%(2)s秒"
 
 #: constants.py:108
 #, python-format
@@ -249,8 +249,8 @@ msgstr "高度"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "將%(1)儲存到:"
+msgid "Save %(1)s to:"
+msgstr "將%(1)s儲存到:"
 
 #: constants.py:146
 #, python-format

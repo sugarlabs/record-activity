@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import os
 import gtk
 from gettext import gettext as _
@@ -97,13 +98,14 @@ class Constants:
 	istrInterview= _('Interview')
 	#TRANS: photo by photographer, e.g., "Photo by Mary"
 	istrBy = _("%(1)s by %(2)s")
+	print( "istrBy", istrBy )
 	istrTitle = _('Title:')
 	istrRecorder = _('Recorder:')
 	istrDate = _('Date:')
 	istrTags = _('Tags:')
 	istrSaving = _('Saving')
 	istrFinishedRecording = _("Finished recording")
-	istrHoursMinutesSecondsRemaining = _("%(1)s hours, %(2)s minutes, %(1)s seconds remaining")
+	istrHoursMinutesSecondsRemaining = _("%(1)s hours, %(2)s minutes, %(3)s seconds remaining")
 	istrMinutesSecondsRemaining = _("%(1)s minutes, %(2)s seconds remaining")
 	istrHoursRemaining = _("%(1)s hours remaining")
 	istrMinutesRemaining = _("%(1)s minutes remaining")
@@ -142,7 +144,7 @@ class Constants:
 	#TRANS: Cannot download this Photo
 	istrCannotDownload = _("Cannot download this %(1)s")
 	#TRANS: Save Photo to:
-	istrSaveTo = _("Save %(1) to:")
+	istrSaveTo = _("Save %(1)s to:")
 	istrYourDiskIsFull = _("Your %(1)s is full")
 	istrJournal = _("Journal")
 	istrUSB = _("USB")
