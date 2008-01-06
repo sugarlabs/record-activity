@@ -344,6 +344,8 @@ class UI:
 	def finalSetUp( self ):
 		self.LAUNCHING = False
 		self.updateVideoComponents()
+
+		self.ACTIVE = self.ca.get_property( "visible" )
 		if (self.ACTIVE):
 			self.ca.glive.play()
 
@@ -2178,7 +2180,6 @@ class ProgressWindow(gtk.Window):
 
 
 	def updateProgress( self, amt, update, color='white' ):
-		record.Record.log.debug( "::" + str(update) + "::" +str(amt))
 		self.progBar.set_fraction( amt )
 		if (update != None and update != self.update):
 			self.update = update
