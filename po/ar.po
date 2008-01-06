@@ -75,11 +75,6 @@ msgstr "يحفظ"
 msgid "Finished recording"
 msgstr "اكتمل التسجيل"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "بقي %(1)s دقائق و %(1)s ثوان"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
@@ -198,8 +193,8 @@ msgstr "مقابلة"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "بقي %(1)s ساعة، و %(2)s دقيقة و %(1)s ثانية"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "بقي %(1)s ساعة، و %(2)s دقيقة و %(3)s ثانية"
 
 #: constants.py:107
 #, python-format
@@ -251,7 +246,7 @@ msgstr "الارتفاع"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
+msgid "Save %(1)s to:"
 msgstr "احفظ %(1)s إلى:"
 
 #: constants.py:146

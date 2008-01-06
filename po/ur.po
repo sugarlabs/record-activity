@@ -74,12 +74,6 @@ msgstr "محفوظ کر رہا ہے"
 msgid "Finished recording"
 msgstr "ریکارڈ کرنا مکمل"
 
-# it wont let me write properly so have to change in the orgirnal po file
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s منٹ، %(1)s سیکنڈ باقی"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
@@ -198,8 +192,8 @@ msgstr "انٹرويو"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s گھنٹے، %(2)s منٹ، %(1)s سیکنڈ باقی"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "%(1)s گھنٹے، %(2)s منٹ، %(3)s سیکنڈ باقی"
 
 # it wont let me write properly so have to change in the orgirnal po file
 #: constants.py:107
@@ -252,8 +246,8 @@ msgstr "اونچائی"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
-msgstr "%(1) محفوظ کر رہا ہے:"
+msgid "Save %(1)s to:"
+msgstr "%(1)s محفوظ کر رہا ہے:"
 
 #: constants.py:146
 #, python-format

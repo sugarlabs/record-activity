@@ -51,7 +51,7 @@ msgstr "پانوراما"
 #, python-format
 #, fuzzy
 msgid "%(1)s by %(2)s"
-msgstr "%(1) از %(2)"
+msgstr "%(1)s از %(2)s"
 
 #: constants.py:100
 msgid "Title:"
@@ -77,15 +77,10 @@ msgstr "ذخیره‌سازی"
 msgid "Finished recording"
 msgstr "ضبطهای تمام‌شده"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1) دقیقه %(1) ثانیه مانده"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr "%(1) ثانیه مانده"
+msgstr "%(1)s ثانیه مانده"
 
 #: constants.py:114
 msgid "Remove"
@@ -115,12 +110,12 @@ msgstr "فوری"
 #: constants.py:113 constants.py:120
 #, python-format
 msgid "%(1)s seconds"
-msgstr "%(1) ثانیه"
+msgstr "%(1)s ثانیه"
 
 #: constants.py:112 constants.py:121
 #, python-format
 msgid "%(1)s minutes"
-msgstr "%(1) دقیقه"
+msgstr "%(1)s دقیقه"
 
 #: constants.py:122
 msgid "Play"
@@ -141,7 +136,7 @@ msgstr "برداشتن قاب"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "%(1) قاب در ثانیه"
+msgstr "%(1)s قاب در ثانیه"
 
 #: constants.py:110
 msgid "Quality:"
@@ -187,13 +182,13 @@ msgstr "برای افزودن عکس کلیک کن"
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "در حال دریافت %(1) از %(2)"
+msgstr "در حال دریافت %(1)s از %(2)s"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr "این %(1) دریافت نمی‌شود"
+msgstr "این %(1)s دریافت نمی‌شود"
 
 #: constants.py:97
 msgid "Interview"
@@ -201,20 +196,20 @@ msgstr ""
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
 msgstr ""
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1) دقیقه %(1) ثانیه مانده"
+msgstr "%(1)s دقیقه %(1)s ثانیه مانده"
 
 #: constants.py:108
 #, python-format
 #, fuzzy
 msgid "%(1)s hours remaining"
-msgstr "%(1) ثانیه مانده"
+msgstr "%(1)s ثانیه مانده"
 
 #: constants.py:109
 #, python-format
@@ -257,7 +252,7 @@ msgstr ""
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1) to:"
+msgid "Save %(1)s to:"
 msgstr ""
 
 #: constants.py:146
