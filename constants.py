@@ -98,7 +98,6 @@ class Constants:
 	istrInterview= _('Interview')
 	#TRANS: photo by photographer, e.g., "Photo by Mary"
 	istrBy = _("%(1)s by %(2)s")
-	print( "istrBy", istrBy )
 	istrTitle = _('Title:')
 	istrRecorder = _('Recorder:')
 	istrDate = _('Date:')
@@ -119,8 +118,6 @@ class Constants:
 	istrTimer = _("Timer:")
 	istrDuration = _("Duration:")
 	istrNow = _("Immediate")
-	istrSeconds = _("%(1)s seconds")
-	istrMinutes = _("%(1)s minutes")
 	istrPlay = _("Play")
 	istrPause = _("Pause")
 	istrAddFrame = _("Add frame")

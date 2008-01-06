@@ -73,11 +73,6 @@ msgstr "Gravando"
 msgid "Finished recording"
 msgstr "Gravação terminada"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "faltam %(1)s minutos, %(2)s segundos"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"

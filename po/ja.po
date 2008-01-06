@@ -87,12 +87,6 @@ msgstr "保存中"
 msgid "Finished recording"
 msgstr "記録終了:"
 
-#: constants.py:95
-#, python-format
-#, fuzzy
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s分, %(2)s秒残っています"
-
 #: constants.py:110
 #, python-format
 #, fuzzy

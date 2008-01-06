@@ -73,11 +73,6 @@ msgstr "กำลังบันทึก"
 msgid "Finished recording"
 msgstr "เสร็จสิ้นการบันทึก"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "เหลืออยู่ %(1)s นาที %(2)s วินาที"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"

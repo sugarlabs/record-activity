@@ -74,11 +74,6 @@ msgstr "Sauvegarde"
 msgid "Finished recording"
 msgstr "Enregistrement terminé"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "Il reste %(1)s minute(s,) %(2)s seconde(s)"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"

@@ -74,11 +74,6 @@ msgstr "Снимам"
 msgid "Finished recording"
 msgstr "Снимањето е завршено"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "преостанато %(1)s минути, %(2)s секунди"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"

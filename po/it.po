@@ -78,11 +78,6 @@ msgstr "Scrittura"
 msgid "Finished recording"
 msgstr "Registrazione terminata"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s minuti, %(2)s secondi rimanenti"
-
 #: constants.py:110
 #, python-format
 #, fuzzy

@@ -200,11 +200,6 @@ msgstr ""
 msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
 msgstr ""
 
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr ""
-
 #: constants.py:108
 #, python-format
 msgid "%(1)s hours remaining"

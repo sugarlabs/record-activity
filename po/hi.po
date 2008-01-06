@@ -74,11 +74,6 @@ msgstr "सहेजें"
 msgid "Finished recording"
 msgstr "रिकार्डिंग खतम"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s मिनट, %(2)s सेकण्ड बाकी"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"

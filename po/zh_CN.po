@@ -74,11 +74,6 @@ msgstr "保存中"
 msgid "Finished recording"
 msgstr "完成记录"
 
-#: constants.py:95
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "剩余 %(1)s 分 %(2)s 秒"
-
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
