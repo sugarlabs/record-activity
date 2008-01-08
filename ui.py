@@ -342,13 +342,11 @@ class UI:
 
 
 	def finalSetUp( self ):
-		print("finalSetUp")
 		self.LAUNCHING = False
 		self.ACTIVE = self.ca.get_property( "visible" )
 		self.updateVideoComponents()
 
 		if (self.ACTIVE):
-			print("finalSetUp 2, active!")
 			self.ca.glive.play()
 
 
