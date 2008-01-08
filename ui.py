@@ -343,9 +343,9 @@ class UI:
 
 	def finalSetUp( self ):
 		self.LAUNCHING = False
+		self.ACTIVE = self.ca.get_property( "visible" )
 		self.updateVideoComponents()
 
-		self.ACTIVE = self.ca.get_property( "visible" )
 		if (self.ACTIVE):
 			self.ca.glive.play()
 
@@ -434,31 +434,37 @@ class UI:
 
 
 	def _visibleNotifyCb( self, widget, event ):
+
 		if (self.LAUNCHING):
 			return
 
 		temp_ACTIVE = True
-		if (widget == self.ca):
+
+		if (event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+
 			if (not self.FULLSCREEN):
-				if (event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED):
+				if (widget == self.ca):
 					temp_ACTIVE = False
 
-		elif (widget == self.livePhotoWindow and self.ca.m.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and not self.LIVEMODE):
-			temp_ACTIVE = False
-		elif (widget == self.liveVideoWindow and self.ca.m.MODE == Constants.MODE_PHOTO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and self.LIVEMODE):
-			temp_ACTIVE = False
-		elif (widget == self.playLiveWindow and self.ca.m.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and self.LIVEMODE):
-			temp_ACTIVE = False
-		elif (widget == self.playOggWindow and self.ca.m.MODE == Constants.MODE_VIDEO and self.FULLSCREEN and event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED and not self.LIVEMODE):
-			temp_ACTIVE = False
+			else:
+				if (self.ca.m.MODE == Constants.MODE_PHOTO):
+					if (not self.LIVEMODE and widget == self.livePhotoWindow):
+						temp_ACTIVE = False
+					if (    self.LIVEMODE and widget == self.liveVideoWindow):
+						temp_ACTIVE = False
+
+				if (self.ca.m.MODE == Constants.MODE_VIDEO):
+					if (not self.LIVEMODE and widget == self.playOggWindow):
+						temp_ACTIVE = False
+					if (    self.LIVEMODE and widget == self.playLiveWindow):
+						temp_ACTIVE = False
 
 		if (temp_ACTIVE != self.ACTIVE):
 			self.ACTIVE = temp_ACTIVE
-			if (not self.LAUNCHING):
-				if (self.ACTIVE):
-					self.ca.restartPipes()
-				else:
-					self.ca.stopPipes()
+			if (self.ACTIVE):
+				self.ca.restartPipes()
+			else:
+				self.ca.stopPipes()
 
 
 	def setUpWindowsSizes( self ):
@@ -874,7 +880,7 @@ class UI:
 			duration = self.audioToolbar.getDuration()+0.0
 
 		if (passedTime >= duration ):
-			gobject.source_remove( self.UPDATE_DURATION_ID )
+			self.completeCountdown()
 			self.progressWindow.updateProgress( 1, Constants.istrFinishedRecording )
 			if (self.ca.m.RECORDING):
 				gobject.idle_add( self.doShutter )
@@ -890,6 +896,12 @@ class UI:
 
 			self.progressWindow.updateProgress( passedTime/duration, Constants.istrDuration + " " + timeRemainStr )
 			return True
+
+
+	def completeCountdown( self ):
+		if (self.UPDATE_DURATION_ID != 0):
+			gobject.source_remove( self.UPDATE_DURATION_ID )
+			self.UPDATE_DURATION_ID = 0
 
 
 	def updateModeChange(self):
@@ -1235,11 +1247,11 @@ class UI:
 
 		else:
 			#we're timing down something, but interrupted by user click or the timer completing
-			self._completeTimer()
+			self.completeTimer()
 			gobject.idle_add( self.clickShutter )
 
 
-	def _completeTimer( self ):
+	def completeTimer( self ):
 		self.COUNTINGDOWN = False
 		self.ca.m.setUpdating(False)
 		self.recordWindow.updateCountdown(-1)
@@ -1290,6 +1302,9 @@ class UI:
 				and (self.LAST_TRANSCODING == self.TRANSCODING)
 				and (self.LAST_MESHING == self.MESHING)
 			):
+			return
+
+		if (not self.ACTIVE):
 			return
 
 		#something's changing so start counting anew

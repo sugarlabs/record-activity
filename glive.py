@@ -47,6 +47,10 @@ class Glive:
 
 		self.playing = False
 
+		self.AUDIO_TRANSCODE_ID = 0
+		self.TRANSCODE_ID = 0
+		self.VIDEO_TRANSCODE_ID = 0
+
 		self.PIPETYPE_SUGAR_JHBUILD = 0
 		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 1
 		self.PIPETYPE_X_VIDEO_DISPLAY = 2
@@ -311,7 +315,7 @@ class Glive:
 
 			audioBus = audioline.get_bus()
 			audioBus.add_signal_watch()
-			self.AUDIO_MUX_MESSAGE_ID = audioBus.connect('message', self._onMuxedAudioMessageCb, audioline)
+			self.AUDIO_TRANSCODE_ID = audioBus.connect('message', self._onMuxedAudioMessageCb, audioline)
 			self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, audioline)
 			record.Record.log.debug("post AUDIO_TRANSCODE_ID")
 			gobject.idle_add( audioline.set_state, gst.STATE_PLAYING )
@@ -487,8 +491,8 @@ class Glive:
 			record.Record.log.debug("audio gst.MESSAGE_EOS")
 			self.record = False
 			self.audio = False
-			gobject.source_remove(self.AUDIO_MUX_MESSAGE_ID)
-			self.AUDIO_MUX_MESSAGE_ID = 0
+			gobject.source_remove(self.AUDIO_TRANSCODE_ID)
+			self.AUDIO_TRANSCODE_ID = 0
 			gobject.source_remove(self.TRANSCODE_ID)
 			self.TRANSCODE_ID = 0
 			pipe.set_state(gst.STATE_NULL)
@@ -525,6 +529,30 @@ class Glive:
 
 	def isXv(self):
 		return self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
+
+
+	def abandonMedia(self):
+		self.stop()
+
+		if (self.AUDIO_TRANSCODE_ID != 0):
+			gobject.source_remove(self.AUDIO_TRANSCODE_ID)
+			self.AUDIO_TRANSCODE_ID = 0
+		if (self.TRANSCODE_ID != 0):
+			gobject.source_remove(self.TRANSCODE_ID)
+			self.TRANSCODE_ID = 0
+		if (self.VIDEO_TRANSCODE_ID != 0):
+			gobject.source_remove(self.VIDEO_TRANSCODE_ID)
+			self.VIDEO_TRANSCODE_ID = 0
+
+		wavFilepath = os.path.join(Instance.instancePath, "output.wav")
+		if (os.path.exists(wavFilepath)):
+			os.remove(wavFilepath)
+		oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
+		if (os.path.exists(oggFilepath)):
+			os.remove(oggFilepath)
+		muxFilepath = os.path.join(Instance.instancePath, "mux.ogg") #ogv
+		if (os.path.exists(muxFilepath)):
+			os.remove(muxFilepath)
 
 
 class LiveVideoWindow(gtk.Window):

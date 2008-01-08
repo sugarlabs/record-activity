@@ -89,7 +89,7 @@ class Record(activity.Activity):
 
 
 	def read_file(self, file):
-			serialize.fillMediaHash(file, self.m.mediaHashs)
+		serialize.fillMediaHash(file, self.m.mediaHashs)
 
 
 	def write_file(self, file):
@@ -126,9 +126,9 @@ class Record(activity.Activity):
 		self.gplay.stop()
 		self.ui.doMouseListener( False )
 
-		if (self.m.RECORDING):
+		if (self.ui.COUNTINGDOWN or self.m.RECORDING or self.ui.TRANSCODING):
 			self.m.setUpdating( False )
-			self.m.doShutter()
+			self.m.abandonRecording()
 		else:
 			self.glive.stop()
 

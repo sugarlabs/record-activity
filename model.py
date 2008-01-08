@@ -296,15 +296,28 @@ class Model:
 		#prep the ui for your return
 		self.ca.ui.LAST_MODE = -1
 		self.ca.ui.TRANSCODING = False
-		self.ca.ui.updateVideoComponents()
 
 		#resume live video from the camera (if the activity is active)
-		if (self.ca.props.active):
+		if (self.ca.ui.ACTIVE):
+			self.ca.ui.updateVideoComponents()
 			self.ca.glive.play()
 
 		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.setRecording( False )
 		self.setUpdating( False )
+
+
+	def abandonRecording( self ):
+
+		self.ca.ui.LAST_MODE = -1
+		self.ca.ui.TRANSCODING = False
+		self.ca.ui.completeTimer()
+		self.ca.ui.completeCountdown()
+		self.setRecording(False)
+
+		self.ca.ui.progressWindow.updateProgress( 0, "" )
+
+		self.ca.glive.abandonMedia()
 
 
 	def stoppedRecordingVideo( self ):
