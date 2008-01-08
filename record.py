@@ -367,6 +367,8 @@ class Record(activity.Activity):
 	def _meshCheckOnRecdRequest( self, recdRequesting ):
 		self.__class__.log.debug('_meshCheckOnRecdRequest')
 
+		#todo: add category for "not active activity, so go ahead and delete"
+
 		if (recdRequesting.downloadedFromBuddy):
 			self.__class__.log.debug('_meshCheckOnRecdRequest: recdRequesting.downloadedFromBuddy')
 			if (recdRequesting.meshReqCallbackId != 0):
