@@ -1,4 +1,4 @@
-#Copyright (c) 2007, Media Modifications Ltd.
+#Copyright (c) 2008, Media Modifications Ltd.
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -122,13 +122,25 @@ class Record(activity.Activity):
 			self.destroy()
 
 
+#	def stopPipes(self):
+#		self.gplay.stop()
+#		self.ui.doMouseListener( False )
+
+#		#todo: only abandon iff countingdown
+#		if (self.ui.COUNTINGDOWN or self.m.RECORDING or self.ui.TRANSCODING):
+#			self.m.setUpdating( False )
+#			self.m.abandonRecording()
+#		else:
+#			self.glive.stop()
+
+
 	def stopPipes(self):
 		self.gplay.stop()
 		self.ui.doMouseListener( False )
 
-		if (self.ui.COUNTINGDOWN or self.m.RECORDING or self.ui.TRANSCODING):
+		if (self.m.RECORDING):
 			self.m.setUpdating( False )
-			self.m.abandonRecording()
+			self.m.doShutter()
 		else:
 			self.glive.stop()
 

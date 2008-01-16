@@ -1,4 +1,4 @@
-#Copyright (c) 2007, Media Modifications Ltd.
+#Copyright (c) 2008, Media Modifications Ltd.
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -89,8 +89,7 @@ class Glive:
 
 
 	def el(self, name):
-		n = str(len(self.pipes)-1)
-		return self.pipe().get_by_name(name+"_"+n)
+		return self.pipe().get_by_name(name)
 
 
 	def thumbPipe(self):
@@ -98,8 +97,7 @@ class Glive:
 
 
 	def thumbEl(self, name):
-		n = str(len(self.thumbPipes)-1)
-		return self.thumbPipe().get_by_name(name+"_"+n)
+		return self.thumbPipe().get_by_name(name)
 
 
 	def muxPipe(self):
@@ -107,8 +105,7 @@ class Glive:
 
 
 	def muxEl(self, name):
-		n = str(len(self.muxPipes)-1)
-		return self.muxPipe().get_by_name(name+"_"+n)
+		return self.muxPipe().get_by_name(name)
 
 
 	def play(self):
@@ -155,73 +152,71 @@ class Glive:
 				bus.remove_signal_watch()
 				bus.disable_sync_message_emission()
 				if (self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
-					pipe.get_by_name("picFakesink_"+n).disconnect(self.HANDOFF_ID)
+					pipe.get_by_name("picFakesink").disconnect(self.HANDOFF_ID)
 				if (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-					pipe.get_by_name("picFakesink_"+n).disconnect(self.HANDOFF_ID)
+					pipe.get_by_name("picFakesink").disconnect(self.HANDOFF_ID)
 
-
-		n = str(len(self.pipes))
 		v4l2 = False
 		if (self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! queue name=movieQueue_"+n+" ! videorate name=movieVideorate_"+n+" ! video/x-raw-yuv,framerate="+str(self.VIDEO_FRAMERATE_SMALL)+"/1 ! videoscale name=movieVideoscale_"+n+" ! video/x-raw-yuv,width="+str(self.VIDEO_WIDTH_SMALL)+",height="+str(self.VIDEO_HEIGHT_SMALL)+" ! ffmpegcolorspace name=movieFfmpegcolorspace_"+n+" ! theoraenc quality=16 name=movieTheoraenc_"+n+" ! oggmux name=movieOggmux_"+n+" ! filesink name=movieFilesink_"+n+" videoTee_"+n+". ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n + " audioTee_"+n+". ! fakesink name=audioFakesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src ! tee name=videoTee ! queue name=movieQueue ! videorate name=movieVideorate ! video/x-raw-yuv,framerate="+str(self.VIDEO_FRAMERATE_SMALL)+"/1 ! videoscale name=movieVideoscale ! video/x-raw-yuv,width="+str(self.VIDEO_WIDTH_SMALL)+",height="+str(self.VIDEO_HEIGHT_SMALL)+" ! ffmpegcolorspace name=movieFfmpegcolorspace ! theoraenc quality=16 name=movieTheoraenc ! oggmux name=movieOggmux ! filesink name=movieFilesink videoTee. ! xvimagesink name=xvimagesink videoTee. ! queue name=picQueue ! ffmpegcolorspace name=picFfmpegcolorspace ! jpegenc name=picJPegenc ! fakesink name=picFakesink alsasrc name=audioAlsasrc ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee ! wavenc name=audioWavenc ! filesink name=audioFilesink audioTee. ! fakesink name=audioFakesink" )
 			v4l2 = True
 
-			videoTee = pipeline.get_by_name('videoTee_'+n)
+			videoTee = pipeline.get_by_name('videoTee')
 
-			picQueue = pipeline.get_by_name('picQueue_'+n)
+			picQueue = pipeline.get_by_name('picQueue')
 			picQueue.set_property("leaky", True)
 			picQueue.set_property("max-size-buffers", 1)
-			picFakesink = pipeline.get_by_name("picFakesink_"+n)
+			picFakesink = pipeline.get_by_name("picFakesink")
 			self.HANDOFF_ID = picFakesink.connect("handoff", self.copyPic)
 			picFakesink.set_property("signal-handoffs", True)
 			self.picExposureOpen = False
 
-			movieQueue = pipeline.get_by_name("movieQueue_"+n)
-			movieFilesink = pipeline.get_by_name("movieFilesink_"+n)
+			movieQueue = pipeline.get_by_name("movieQueue")
+			movieFilesink = pipeline.get_by_name("movieFilesink")
 			movieFilepath = os.path.join(Instance.instancePath, "output.ogg" ) #ogv
 			movieFilesink.set_property("location", movieFilepath )
 
-			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
+			audioFilesink = pipeline.get_by_name('audioFilesink')
 			audioFilepath = os.path.join(Instance.instancePath, "output.wav")
 			audioFilesink.set_property("location", audioFilepath )
-			audioTee = pipeline.get_by_name('audioTee_'+n)
-			audioWavenc = pipeline.get_by_name('audioWavenc_'+n)
+			audioTee = pipeline.get_by_name('audioTee')
+			audioWavenc = pipeline.get_by_name('audioWavenc')
 
 			audioTee.unlink(audioWavenc)
 			videoTee.unlink(movieQueue)
 			videoTee.unlink(picQueue)
 
 		elif (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width="+str(ui.UI.dim_PIPW)+",height="+str(ui.UI.dim_PIPH)+" ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
+			pipeline = gst.parse_launch("v4l2src name=v4l2src ! queue name=xQueue ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width="+str(ui.UI.dim_PIPW)+",height="+str(ui.UI.dim_PIPH)+" ! ffmpegcolorspace ! ximagesink name=ximagesink")
 			v4l2 = True
 
 		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
-			pipeline = gst.parse_launch("v4l2src name=v4l2src_"+n+" ! tee name=videoTee_"+n+" ! xvimagesink name=xvimagesink_"+n+" videoTee_"+n+". ! queue name=picQueue_"+n+" ! ffmpegcolorspace name=picFfmpegcolorspace_"+n+" ! jpegenc name=picJPegenc_"+n+" ! fakesink name=picFakesink_"+n+" alsasrc name=audioAlsasrc_"+n+" ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! queue name=audioQueue_"+n+ " ! audioconvert name=audioAudioconvert_"+n +" ! wavenc name=audioWavenc_"+n+" ! filesink name=audioFilesink_"+n )
+			pipeline = gst.parse_launch("v4l2src name=v4l2src ! tee name=videoTee ! xvimagesink name=xvimagesink videoTee. ! queue name=picQueue ! ffmpegcolorspace name=picFfmpegcolorspace ! jpegenc name=picJPegenc ! fakesink name=picFakesink alsasrc name=audioAlsasrc ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! queue name=audioQueue ! audioconvert name=audioAudioconvert ! wavenc name=audioWavenc ! filesink name=audioFilesink" )
 			v4l2 = True
 
-			audioQueue = pipeline.get_by_name('audioQueue_'+n)
-			audioAudioconvert = pipeline.get_by_name('audioAudioconvert_'+n)
+			audioQueue = pipeline.get_by_name('audioQueue')
+			audioAudioconvert = pipeline.get_by_name('audioAudioconvert')
 			audioQueue.unlink(audioAudioconvert)
 
-			videoTee = pipeline.get_by_name('videoTee_'+n)
-			picQueue = pipeline.get_by_name('picQueue_'+n)
+			videoTee = pipeline.get_by_name('videoTee')
+			picQueue = pipeline.get_by_name('picQueue')
 			picQueue.set_property("leaky", True)
 			picQueue.set_property("max-size-buffers", 1)
-			picFakesink = pipeline.get_by_name("picFakesink_"+n)
+			picFakesink = pipeline.get_by_name('picFakesink')
 			self.HANDOFF_ID = picFakesink.connect("handoff", self.copyPic)
 			picFakesink.set_property("signal-handoffs", True)
 			self.picExposureOpen = False
 			videoTee.unlink(picQueue)
 
-			audioFilesink = pipeline.get_by_name('audioFilesink_'+n)
+			audioFilesink = pipeline.get_by_name('audioFilesink')
 			audioFilepath = os.path.join(Instance.instancePath, "output.wav")
 			audioFilesink.set_property("location", audioFilepath )
 
 		elif (self._PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
-			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue_"+n+" ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink_"+n)
+			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink")
 
 		if (v4l2):
-			v4l2src = pipeline.get_by_name('v4l2src_'+n)
+			v4l2src = pipeline.get_by_name('v4l2src')
 			try:
 				v4l2src.set_property("queue-size", 2)
 			except:
@@ -248,9 +243,9 @@ class Glive:
 		if ( len(self.thumbPipes) > 0 ):
 			thumbline = self.thumbPipes[len(self.thumbPipes)-1]
 			n = str(len(self.thumbPipes)-1)
-			thumbline.get_by_name( "thumbFakesink_"+n ).disconnect( self.THUMB_HANDOFF )
+			thumbline.get_by_name('thumbFakesink').disconnect(self.THUMB_HANDOFF_ID)
 
-		oggFilepath = os.path.join(Instance.instancePath, "output.ogg" ) #ogv
+		oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
 		if (not os.path.exists(oggFilepath)):
 			self.record = False
 			self.ca.m.cannotSaveVideo()
@@ -263,15 +258,14 @@ class Glive:
 			self.ca.m.stoppedRecordingVideo()
 			return
 
-		n = str(len(self.thumbPipes))
-		line = 'filesrc location=' + str(oggFilepath) + ' name=thumbFilesrc_'+n+' ! oggdemux name=thumbOggdemux_'+n+' ! theoradec name=thumbTheoradec_'+n+' ! tee name=thumbTee_'+n+' ! queue name=thumbQueue_'+n+' ! ffmpegcolorspace name=thumbFfmpegcolorspace_'+n+ ' ! jpegenc name=thumbJPegenc_'+n+' ! fakesink name=thumbFakesink_'+n
+		line = 'filesrc location=' + str(oggFilepath) + ' name=thumbFilesrc ! oggdemux name=thumbOggdemux ! theoradec name=thumbTheoradec ! tee name=thumbTee ! queue name=thumbQueue ! ffmpegcolorspace name=thumbFfmpegcolorspace ! jpegenc name=thumbJPegenc ! fakesink name=thumbFakesink'
 		thumbline = gst.parse_launch(line)
-		thumbQueue = thumbline.get_by_name('thumbQueue_'+n)
+		thumbQueue = thumbline.get_by_name('thumbQueue')
 		thumbQueue.set_property("leaky", True)
 		thumbQueue.set_property("max-size-buffers", 1)
-		thumbTee = thumbline.get_by_name('thumbTee_'+n)
-		thumbFakesink = thumbline.get_by_name("thumbFakesink_"+n)
-		self.THUMB_HANDOFF = thumbFakesink.connect("handoff", self.copyThumbPic)
+		thumbTee = thumbline.get_by_name('thumbTee')
+		thumbFakesink = thumbline.get_by_name('thumbFakesink')
+		self.THUMB_HANDOFF_ID = thumbFakesink.connect("handoff", self.copyThumbPic)
 		thumbFakesink.set_property("signal-handoffs", True)
 		self.thumbPipes.append(thumbline)
 		self.thumbExposureOpen = True
@@ -293,33 +287,26 @@ class Glive:
 				self.ca.m.cannotSaveVideo()
 				return
 
-			record.Record.log.debug("pre self.ca.ui.setPostProcessPixBuf")
 			self.ca.ui.setPostProcessPixBuf(self.audioPixbuf)
-			record.Record.log.debug("post self.ca.ui.setPostProcessPixBuf")
 
-			n = "0"
-			line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc_'+n+' ! wavparse name=audioWavparse_'+n+' ! audioconvert name=audioAudioconvert_'+n+' ! vorbisenc name=audioVorbisenc_'+n+' ! oggmux name=audioOggmux_'+n+' ! filesink name=audioFilesink_'+n
+			line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc ! wavparse name=audioWavparse ! audioconvert name=audioAudioconvert ! vorbisenc name=audioVorbisenc ! oggmux name=audioOggmux ! filesink name=audioFilesink'
 			audioline = gst.parse_launch(line)
 			taglist = self.getTags(Constants.TYPE_AUDIO)
 			base64AudioSnapshot = utils.getStringFromPixbuf(self.audioPixbuf)
 			taglist[gst.TAG_EXTENDED_COMMENT] = "coverart="+str(base64AudioSnapshot)
-			record.Record.log.debug("post taglist[gst.TAG_EXTENDED_COMMENT]")
 
-			vorbisEnc = audioline.get_by_name('audioVorbisenc_'+n)
-			vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)
+			vorbisEnc = audioline.get_by_name('audioVorbisenc')
+			vorbisEnc.merge_tags(taglist, gst.TAG_REPLACE_ALL)
 
-			audioFilesink = audioline.get_by_name('audioFilesink_'+n)
+			audioFilesink = audioline.get_by_name('audioFilesink')
 			audioOggFilepath = os.path.join(Instance.instancePath, "output.ogg")
 			audioFilesink.set_property("location", audioOggFilepath )
-			record.Record.log.debug("post audioFilesink")
 
 			audioBus = audioline.get_bus()
 			audioBus.add_signal_watch()
 			self.AUDIO_TRANSCODE_ID = audioBus.connect('message', self._onMuxedAudioMessageCb, audioline)
 			self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, audioline)
-			record.Record.log.debug("post AUDIO_TRANSCODE_ID")
 			gobject.idle_add( audioline.set_state, gst.STATE_PLAYING )
-			record.Record.log.debug("post idle_add")
 		else:
 			self.record = False
 			self.audio = False
@@ -416,11 +403,10 @@ class Glive:
 				wavFilepath = os.path.join(Instance.instancePath, "output.wav")
 				muxFilepath = os.path.join(Instance.instancePath, "mux.ogg") #ogv
 
-				n = str(len(self.muxPipes))
-				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc_'+n+' ! oggdemux name=muxOggdemux_'+n+' ! theoradec name=muxTheoradec_'+n+' ! theoraenc name=muxTheoraenc_'+n+' ! oggmux name=muxOggmux_'+n+' ! filesink location=' + str(muxFilepath) + ' name=muxFilesink_'+n+' filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc_'+n+' ! wavparse name=muxWavparse_'+n+' ! audioconvert name=muxAudioconvert_'+n+' ! vorbisenc name=muxVorbisenc_'+n+' ! muxOggmux_'+n+'.')
+				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc ! oggdemux name=muxOggdemux ! theoradec name=muxTheoradec ! theoraenc name=muxTheoraenc ! oggmux name=muxOggmux ! filesink location=' + str(muxFilepath) + ' name=muxFilesink filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc ! wavparse name=muxWavparse ! audioconvert name=muxAudioconvert ! vorbisenc name=muxVorbisenc ! muxOggmux.')
 				taglist = self.getTags(Constants.TYPE_VIDEO)
-				vorbisEnc = muxline.get_by_name('muxVorbisenc_'+n)
-				vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_KEEP)
+				vorbisEnc = muxline.get_by_name('muxVorbisenc')
+				vorbisEnc.merge_tags(taglist, gst.TAG_REPLACE_ALL)
 
 				muxBus = muxline.get_bus()
 				muxBus.add_signal_watch()
@@ -486,7 +472,6 @@ class Glive:
 
 	def _onMuxedAudioMessageCb(self, bus, message, pipe):
 		t = message.type
-		record.Record.log.debug("_onMuxedAudioMessageCb " + str(t) + ", " + str(pipe))
 		if (t == gst.MESSAGE_EOS):
 			record.Record.log.debug("audio gst.MESSAGE_EOS")
 			self.record = False
@@ -519,12 +504,13 @@ class Glive:
 	def _onMessageCb(self, bus, message):
 		t = message.type
 		if t == gst.MESSAGE_EOS:
-			print("MESSAGE_EOS")
+			#print("MESSAGE_EOS")
+			pass
 		elif t == gst.MESSAGE_ERROR:
 			#todo: if we come out of suspend/resume with errors, then get us back up and running...
 			#todo: handle "No space left on the resource.gstfilesink.c"
-			err, debug = message.parse_error()
-			print "MESSAGE ERROR: %s" % err, debug
+			#err, debug = message.parse_error()
+			pass
 
 
 	def isXv(self):
