@@ -1305,9 +1305,6 @@ class UI:
 			):
 			return
 
-		if (not self.ACTIVE):
-			return
-
 		#something's changing so start counting anew
 		self.resetWidgetFadeTimer()
 
