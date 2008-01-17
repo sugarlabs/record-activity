@@ -128,9 +128,6 @@ class Glive:
 		self._nextPipe()
 		self._NEXT_PIPETYPE = -1
 
-		#import time
-		#print("stop...", int(time.time()))
-
 
 	def is_playing(self):
 		return self.playing
@@ -242,7 +239,6 @@ class Glive:
 	def stoppedRecordingVideo(self):
 		if ( len(self.thumbPipes) > 0 ):
 			thumbline = self.thumbPipes[len(self.thumbPipes)-1]
-			n = str(len(self.thumbPipes)-1)
 			thumbline.get_by_name('thumbFakesink').disconnect(self.THUMB_HANDOFF_ID)
 
 		oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
@@ -291,12 +287,12 @@ class Glive:
 
 			line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc ! wavparse name=audioWavparse ! audioconvert name=audioAudioconvert ! vorbisenc name=audioVorbisenc ! oggmux name=audioOggmux ! filesink name=audioFilesink'
 			audioline = gst.parse_launch(line)
+
 			taglist = self.getTags(Constants.TYPE_AUDIO)
 			base64AudioSnapshot = utils.getStringFromPixbuf(self.audioPixbuf)
 			taglist[gst.TAG_EXTENDED_COMMENT] = "coverart="+str(base64AudioSnapshot)
-
 			vorbisEnc = audioline.get_by_name('audioVorbisenc')
-			vorbisEnc.merge_tags(taglist, gst.TAG_REPLACE_ALL)
+			vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
 
 			audioFilesink = audioline.get_by_name('audioFilesink')
 			audioOggFilepath = os.path.join(Instance.instancePath, "output.ogg")
@@ -397,7 +393,6 @@ class Glive:
 
 			oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
 			if (self.audio):
-
 				self.ca.ui.setPostProcessPixBuf(self.thumbBuf)
 
 				wavFilepath = os.path.join(Instance.instancePath, "output.wav")
@@ -406,7 +401,7 @@ class Glive:
 				muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc ! oggdemux name=muxOggdemux ! theoradec name=muxTheoradec ! theoraenc name=muxTheoraenc ! oggmux name=muxOggmux ! filesink location=' + str(muxFilepath) + ' name=muxFilesink filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc ! wavparse name=muxWavparse ! audioconvert name=muxAudioconvert ! vorbisenc name=muxVorbisenc ! muxOggmux.')
 				taglist = self.getTags(Constants.TYPE_VIDEO)
 				vorbisEnc = muxline.get_by_name('muxVorbisenc')
-				vorbisEnc.merge_tags(taglist, gst.TAG_REPLACE_ALL)
+				vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
 
 				muxBus = muxline.get_bus()
 				muxBus.add_signal_watch()

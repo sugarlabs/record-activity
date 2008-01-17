@@ -315,13 +315,11 @@ def _saveMediaToDatastore( el, recd ):
 
 		mtype = Constants.mediaTypes[recd.type]
 		mime = mtype[Constants.keyMime]
-		record.Record.log.debug("mime_type:" + str(mime))
 		mediaObject.metadata['mime_type'] = mime
 
 		mediaObject.metadata['activity_id'] = Constants.activityId
 
 		mediaFile = recd.getMediaFilepath()
-		record.Record.log.debug("mediaFile:" + str(mediaFile))
 		mediaObject.file_path = mediaFile
 		mediaObject.transfer_ownership = True
 
@@ -333,4 +331,3 @@ def _saveMediaToDatastore( el, recd ):
 		_saveXml( el, recd )
 
 		recd.mediaFilename = None
-		#recd.thumbFilename = None
