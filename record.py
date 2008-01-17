@@ -122,32 +122,22 @@ class Record(activity.Activity):
 			self.destroy()
 
 
-#	def stopPipes(self):
-#		self.gplay.stop()
-#		self.ui.doMouseListener( False )
-
-#		#todo: only abandon iff countingdown
-#		if (self.ui.COUNTINGDOWN or self.m.RECORDING or self.ui.TRANSCODING):
-#			self.m.setUpdating( False )
-#			self.m.abandonRecording()
-#		else:
-#			self.glive.stop()
-
-
 	def stopPipes(self):
-		self.gplay.stop()
 		self.ui.doMouseListener( False )
+		self.m.setUpdating( False )
 
-		if (self.m.RECORDING):
-			self.m.setUpdating( False )
+		if (self.ui.COUNTINGDOWN):
+			self.m.abandonRecording()
+		elif (self.m.RECORDING):
 			self.m.doShutter()
 		else:
 			self.glive.stop()
 
 
 	def restartPipes(self):
-		self.ui.updateModeChange( )
-		self.ui.doMouseListener( True )
+		if (not self.ui.TRANSCODING):
+			self.ui.updateModeChange( )
+			self.ui.doMouseListener( True )
 
 
 	def close( self ):
@@ -179,22 +169,17 @@ class Record(activity.Activity):
 
 
 	def _sharedCb( self, activity ):
-		self.__class__.log.debug('_sharedCb: My activity was shared')
 		self._setup()
 
-		self.__class__.log.debug('_sharedCb: This is my activity: making a tube...')
 		id = self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].OfferDBusTube( Constants.SERVICE, {})
 
 
 	def _meshJoinedCb( self, activity ):
-		self.__class__.log.debug('_meshJoinedCb')
 		if not self._shared_activity:
 			return
 
-		self.__class__.log.debug('_meshJoinedCb: Joined an existing shared activity')
 		self._setup()
 
-		self.__class__.log.debug('_meshJoinedCb: This is not my activity: waiting for a tube...')
 		self.tubes_chan[telepathy.CHANNEL_TYPE_TUBES].ListTubes( reply_handler=self._list_tubes_reply_cb, error_handler=self._list_tubes_error_cb)
 
 
@@ -208,8 +193,6 @@ class Record(activity.Activity):
 
 
 	def _setup(self):
-		self.__class__.log.debug("_setup")
-
 		#sets up the tubes...
 		if self._shared_activity is None:
 			self.__class__.log.error('_setup: Failed to share or join activity')

@@ -251,6 +251,7 @@ class Model:
 		gobject.source_remove( self.ca.ui.UPDATE_DURATION_ID )
 		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.setUpdating( True )
+		self.setRecording( False )
 		self.ca.ui.TRANSCODING = True
 		self.ca.ui.FULLSCREEN = False
 		self.ca.ui.updateVideoComponents()
@@ -278,15 +279,11 @@ class Model:
 		record.Record.log.debug('meshShareRecd')
 		#hey, i just took a cool video.audio.photo!  let me show you!
 		if (self.ca.recTube != None):
-			record.Record.log.debug('meshShareRecd: we have a recTube')
 			recdXml = serialize.getRecdXmlMeshString(recd)
-			record.Record.log.debug('meshShareRecd: created XML: ' + str(recdXml) )
 			self.ca.recTube.notifyBudsOfNewRecd( Instance.keyHashPrintable, recdXml )
-			record.Record.log.debug('meshShareRecd: notifyBuds')
 
 
 	def cannotSaveVideo( self ):
-		record.Record.log.debug("bad recorded video")
 		self.doPostSaveVideo()
 
 
