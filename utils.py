@@ -116,12 +116,3 @@ def getFreespaceKb( ):
 	freekb = freebytes / 1024
 	return freekb
 
-
-def getIStr( s, args ):
-	try:
-		iStr = _(s) % args
-	except:
-		iStr = s % args
-
-	return iStr
-
