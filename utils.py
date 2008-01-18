@@ -88,7 +88,6 @@ def scaleSvgToDim( handle, dim ):
 
 
 def getDateString( when ):
-	#todo: internationalize the date
 	return strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(when) )
 
 
@@ -116,3 +115,13 @@ def getFreespaceKb( ):
 	freebytes  = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
 	freekb = freebytes / 1024
 	return freekb
+
+
+def getIStr( s, args ):
+	try:
+		iStr = _(s) % args
+	except:
+		iStr = s % args
+
+	return iStr
+

@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import os
 import gtk
-from gettext import gettext as _
+from gettext import gettext as gt
 
 import sugar.graphics.style
 from sugar.activity import activity
@@ -17,7 +17,7 @@ import pangocairo
 
 class Constants:
 
-	VERSION = 50
+	VERSION = 51
 
 	SERVICE = "org.laptop.Record"
 	IFACE = SERVICE
@@ -88,6 +88,9 @@ class Constants:
 	gfxPath = os.path.join(activity.get_bundle_path(), "gfx")
 	soundClick = os.path.join(gfxPath, 'photoShutter.wav')
 
+	istrsTest = {}
+	for i in range (0,10):
+		istrsTest[str(i)] = str(i)
 	istrActivityName = _('Record')
 	istrPhoto = _('Photo')
 	istrVideo = _('Video')
@@ -275,8 +278,10 @@ class Constants:
 		for i in range (0, longestTime):
 			self.createCountdownPng( i )
 
+		checkInternationalStrings()
 
-	def createCountdownPng( self, num ):
+
+	def createCountdownPng(self, num):
 		todisk = True
 
 		rendered = False
@@ -331,3 +336,15 @@ class Constants:
 			img.set_from_pixmap(pixmap, None)
 
 		self.__class__.countdownImgs[int(num)] = img
+
+
+	def _(self, s):
+		i = s
+		try:
+			#test translating the string with many replacements
+			i = gt(s) % self.__class__.istrTests
+		except:
+			#if it doesn't work, revert
+			i = s
+
+		return i
