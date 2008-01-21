@@ -274,8 +274,10 @@ class UI:
 		tagsLabel.set_alignment(0, .5)
 		self.tagsPanel.pack_start(tagsLabel, expand=False)
 		self.tagsBuffer = gtk.TextBuffer()
-		self.tagsField = gtk.TextView( self.tagsBuffer )
-		self.tagsPanel.pack_start( self.tagsField, expand=True )
+		self.tagsBuffer.connect('changed', self._tagsBufferEditedCb)
+		self.tagsField = gtk.TextView(self.tagsBuffer)
+		self.tagsField.set_size_request( 100, 100 )
+		self.tagsPanel.pack_start(self.tagsField, expand=True)
 		self.infoBoxTopLeft.pack_start(self.tagsPanel, expand=True)
 
 		infoBotBox = gtk.HBox()
@@ -634,6 +636,13 @@ class UI:
 		if (self.shownRecd != None):
 			if (self.nameTextfield.get_text() != self.shownRecd.title):
 				self.shownRecd.setTitle( self.nameTextfield.get_text() )
+
+
+	def _tagsBufferEditedCb(self, widget):
+		if (self.shownRecd != None):
+			txt = self.tagsBuffer.get_text( self.tagsBuffer.get_start_iter(), self.tagsBuffer.get_end_iter() )
+			if (txt != self.shownRecd.tags):
+				self.shownRecd.setTags( txt )
 
 
 	def _keyPressEventCb( self, widget, event):
@@ -1533,12 +1542,7 @@ class UI:
 
 	def updateMeshProgress( self, progressMade, recd ):
 		self.resetWidgetFadeTimer()
-		record.Record.log.debug("updateMeshProgress:" + str(progressMade) )
-		record.Record.log.debug( "recd:" + str(recd) )
-		record.Record.log.debug( "recd:" + str(self.shownRecd) )
 		if (self.shownRecd != recd):
-			record.Record.log.debug("updateMeshProgress: self.shownRecd != recd")
-
 			if (self.shownRecd == None):
 				type = Constants.mediaTypes[recd.type][Constants.keyIstr]
 				if (progressMade):
@@ -1709,14 +1713,14 @@ class UI:
 		self.photographerNameLabel.set_label( recd.recorderName )
 		self.nameTextfield.set_text( recd.title )
 		self.nameTextfield.set_sensitive( True )
+		self.tagsBuffer.set_text( recd.tags )
 		self.dateDateLabel.set_label( utils.getDateString(recd.time) )
 
 		self.photographerPanel.show()
 		self.namePanel.show()
 		self.datePanel.show()
 		self.tagsPanel.show()
-		self.tagsBuffer.set_text("")
-		self.tagsField.set_sensitive(False)
+		self.tagsField.set_sensitive(True)
 
 
 	def setWaitCursor( self, win ):

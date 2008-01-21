@@ -25,6 +25,7 @@ class Constants:
 	activityId = None
 
 	recdTitle = "title"
+	recdTags = "tags"
 	recdTime = "time"
 	recdRecorderName = "photographer"
 	recdRecorderHash = "recorderHash"
@@ -67,7 +68,7 @@ class Constants:
 	DURATION_2 = 2
 	DURATION_4 = 4
 	DURATION_6 = 6
-	DURATIONS = []
+	DURATIONS = []                                                                        	
 	DURATIONS.append(DURATION_2)
 	DURATIONS.append(DURATION_4)
 	DURATIONS.append(DURATION_6)
@@ -88,9 +89,26 @@ class Constants:
 	gfxPath = os.path.join(activity.get_bundle_path(), "gfx")
 	soundClick = os.path.join(gfxPath, 'photoShutter.wav')
 
-	istrsTest = {}
-	for i in range (0,10):
-		istrsTest[str(i)] = str(i)
+
+	#defensive method against variables not translated correctly
+	def _(s):
+		#todo: permanent variable
+		istrsTest = {}
+		for i in range (0,4):
+			istrsTest[str(i)] = str(i)
+
+		i = s
+		try:
+			#test translating the string with many replacements
+			i = gt(s)
+			test = i % istrsTest
+		except:
+			#if it doesn't work, revert
+			i = s
+
+		return i
+
+
 	istrActivityName = _('Record')
 	istrPhoto = _('Photo')
 	istrVideo = _('Video')
@@ -278,8 +296,6 @@ class Constants:
 		for i in range (0, longestTime):
 			self.createCountdownPng( i )
 
-		checkInternationalStrings()
-
 
 	def createCountdownPng(self, num):
 		todisk = True
@@ -336,15 +352,3 @@ class Constants:
 			img.set_from_pixmap(pixmap, None)
 
 		self.__class__.countdownImgs[int(num)] = img
-
-
-	def _(self, s):
-		i = s
-		try:
-			#test translating the string with many replacements
-			i = gt(s) % self.__class__.istrTests
-		except:
-			#if it doesn't work, revert
-			i = s
-
-		return i

@@ -396,6 +396,8 @@ class Model:
 		tBytes = os.stat(thumbFile)[6]
 		recd.thumbBytes = tBytes
 
+		recd.tags = ""
+
 		#load the mediafile
 		mediaFile = os.path.join(Instance.instancePath, recd.mediaFilename)
 		mediaMd5 = utils.md5File( mediaFile )

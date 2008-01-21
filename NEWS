@@ -1,3 +1,8 @@
+51
+* #4525 defensive techniques against translations with bad variables (jedierikb)
+* #5899 fixed (jedierikb)
+* tag support (jedierikb)
+
 50
 * #5830 fix (jedierikb)
 * #4525 updates with fixes to .po files (jedierikb)

@@ -46,6 +46,8 @@ def _loadMediaIntoHash( el, hash ):
 				#name might have been changed in the journal, so reflect that here
 				if (recd.title != recd.datastoreOb.metadata['title']):
 					recd.setTitle(recd.datastoreOb.metadata['title'])
+				if (recd.tags != recd.datastoreOb.metadata['tags']):
+					recd.setTags(recd.datastoreOb.metadata['tags'])
 				if (recd.buddy):
 					recd.downloadedFromBuddy = True
 
@@ -57,7 +59,6 @@ def _loadMediaIntoHash( el, hash ):
 
 def getMediaFromDatastore( recd ):
 	if (recd.datastoreId == None):
-		print("RecordActivity error -- request for recd from datastore with no datastoreId")
 		return None
 
 	if (recd.datastoreOb != None):
@@ -69,7 +70,6 @@ def getMediaFromDatastore( recd ):
 		mediaObject = datastore.get( recd.datastoreId )
 	finally:
 		if (mediaObject == None):
-				print("RecordActivity error -- request for recd from datastore returning None")
 				return None
 
 	return mediaObject
@@ -111,6 +111,11 @@ def fillRecdFromNode( recd, el ):
 
 	if (el.getAttributeNode(Constants.recdRecorderName) != None):
 		recd.recorderName = el.getAttribute(Constants.recdRecorderName)
+
+	if (el.getAttributeNode(Constants.recdTags) != None):
+		recd.tags = el.getAttribute(Constants.recdTags)
+	else:
+		recd.tags = ""
 
 	if (el.getAttributeNode(Constants.recdRecorderHash) != None):
 		recd.recorderHash = el.getAttribute(Constants.recdRecorderHash)
@@ -274,14 +279,17 @@ def _saveMediaToDatastore( el, recd ):
 	if (recd.datastoreId != None):
 		#already saved to the datastore, don't need to re-rewrite the file since the mediums are immutable
 		#However, they might have changed the name of the file
-		if (recd.titleChange):
+		if (recd.metaChange):
 			recd.datastoreOb = getMediaFromDatastore( recd )
 			if (recd.datastoreOb.metadata['title'] != recd.title):
 				recd.datastoreOb.metadata['title'] = recd.title
 				datastore.write(recd.datastoreOb)
+			if (recd.datastoreOb.metadata['tags'] != recd.tags):
+				recd.datastoreOb.metadata['tags'] = recd.tags
+				datastore.write(recd.datastoreOb)
 
 			#reset for the next title change if not closing...
-			recd.titleChange = False
+			recd.metaChange = False
 			#save the title to the xml
 			recd.savedMedia = True
 			_saveXml( el, recd )
@@ -294,6 +302,7 @@ def _saveMediaToDatastore( el, recd ):
 		#therefore this is only called when write_file is called by the activity superclass
 		mediaObject = datastore.create()
 		mediaObject.metadata['title'] = recd.title
+		mediaObject.metadata['tags'] = recd.tags
 
 		datastorePreviewPixbuf = recd.getThumbPixbuf()
 		if (recd.type == Constants.TYPE_AUDIO):

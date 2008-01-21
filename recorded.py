@@ -42,9 +42,10 @@ class Recorded:
 		self.thumbMd5 = None
 		self.mediaBytes = None
 		self.thumbBytes = None
+		self.tags = None
 
 		#flag to alert need to re-datastore the title
-		self.titleChange = False
+		self.metaChange = False
 
 		#when you are datastore-serialized, you get one of these ids...
 		self.datastoreId = None
@@ -78,7 +79,12 @@ class Recorded:
 
 	def setTitle( self, newTitle ):
 		self.title = newTitle
-		self.titleChange = True
+		self.metaChange = True
+
+
+	def setTags( self, newTags ):
+		self.tags = newTags
+		self.metaChange = True
 
 
 	def isClipboardCopyable( self ):

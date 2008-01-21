@@ -108,7 +108,6 @@ class Record(activity.Activity):
 
 				if ( (not recd.savedMedia) or (not recd.savedXml) ):
 					allDone = False
-					self.__log__.error("somehow we didn't serialize a recd...")
 
 				if (self.I_AM_CLOSING):
 					mediaObject = recd.datastoreOb
@@ -450,7 +449,9 @@ class Record(activity.Activity):
 		recd.meshDownlodingPercent = (part+0.0)/(numparts+0.0)
 		recd.meshDownloadingProgress = True
 		self.ui.updateMeshProgress(True, recd)
-		f = open(recd.getMediaFilepath(), 'a+').write(bytes)
+		f = open(recd.getMediaFilepath(), 'a+')
+		f.write(bytes)
+		f.close()
 
 		if part == numparts:
 			self.__class__.log.debug('Finished receiving %s' % recd.title)
@@ -487,7 +488,6 @@ class Record(activity.Activity):
 
 
 	def _getAlbumArtCb( self, objectThatSentTheSignal, pixbuf, recd ):
-		self.__class__.log.debug("_getAlbumArtCb:" + str(pixbuf) + "," + str(recd))
 
 		if (pixbuf != None):
 			imagePath = os.path.join(Instance.instancePath, "audioPicture.png")
