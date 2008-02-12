@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-19 02:09+0000\n"
+"PO-Revision-Date: 2008-01-22 17:13+0000\n"
 "Last-Translator: Juliano Bittencourt <juliano@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,11 @@ msgstr "Salvando"
 msgid "Finished recording"
 msgstr "Gravação terminada"
 
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s minutos, %(1)s segundos faltando"
+
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
@@ -94,7 +99,7 @@ msgstr "Copiar para a prancheta"
 # Yet I agree, there is a new law in Brazil that forbits foreing terms into schools. Using a portuguese word, even when not very know is now necessary.
 #: constants.py:117
 msgid "Timer:"
-msgstr "Temporizador:"
+msgstr "Cronômetro:"
 
 #: constants.py:118
 msgid "Duration:"
@@ -102,7 +107,7 @@ msgstr "Duração:"
 
 #: constants.py:119
 msgid "Immediate"
-msgstr "Imediato(a)"
+msgstr "Imediato"
 
 #: constants.py:113 constants.py:120
 #, python-format
@@ -161,11 +166,11 @@ msgstr "Arquivo pequeno"
 
 #: constants.py:134
 msgid "Silent"
-msgstr "Silencioso(a)"
+msgstr "Silencioso"
 
 #: constants.py:135
 msgid "Rotate"
-msgstr "Gire"
+msgstr "Girar"
 
 #: constants.py:138
 msgid "Click to take picture"
@@ -193,8 +198,8 @@ msgstr "Entrevista"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1)s horas, %(2)s minutos, %(3)s segundos faltando"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s horas, %(2)s minutos, %(1)s segundos faltando"
 
 #: constants.py:107
 #, python-format
@@ -230,11 +235,11 @@ msgstr "Melhor"
 
 #: constants.py:130
 msgid "High"
-msgstr "Alto"
+msgstr "Alta"
 
 #: constants.py:131
 msgid "Low"
-msgstr "Baixo"
+msgstr "Baixa"
 
 #: constants.py:136
 msgid "Width"
@@ -246,8 +251,8 @@ msgstr "Altura"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "Salvar %(1)s para:"
+msgid "Save %(1) to:"
+msgstr "Salvar %(1) para:"
 
 #: constants.py:146
 #, python-format
@@ -268,11 +273,11 @@ msgstr "Cartão SD"
 
 #: constants.py:150
 msgid "Preferences"
-msgstr "Preferêcias"
+msgstr "Preferências"
 
 #: constants.py:151
 msgid "Free space:"
-msgstr "Espaço Livre:"
+msgstr "Espaço livre:"
 
 #. TRANS: 7 photos
 #: constants.py:153
@@ -280,21 +285,22 @@ msgstr "Espaço Livre:"
 msgid "%(1)s photos"
 msgstr "%(1)s fotos"
 
+# Não acho que bitrate seja normalmente traduzido.
 #: constants.py:154
 msgid "Bitrate"
-msgstr "Taxa de transferência"
+msgstr "Bitrate"
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr "Taxa de transferência máxima"
+msgstr "Bitrate Máximo"
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr "Taxa de transferência mínima"
+msgstr "Bitrate Mínimo"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr "Gerênciar a Taxa de transferência"
+msgstr "Gerenciar o Bitrate"
 
 #: constants.py:158
 msgid "Border"
@@ -318,11 +324,11 @@ msgstr "Forçar o quadro chave"
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr "Frequência  do quadro chave"
+msgstr "Freqüência do quadro chave"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr "Distância entre os quadro chave"
+msgstr "Distância mínima entre os quadro chave"
 
 #: constants.py:165
 msgid "Keyframe threshold"

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-15 11:42+0000\n"
+"PO-Revision-Date: 2008-01-20 14:38+0000\n"
 "Last-Translator: Simos Xenitellis <simos.lists@googlemail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -76,8 +76,8 @@ msgstr "Ολοκλήρωση εγγραφής"
 
 #: constants.py:95
 #, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s λεπτά, %(2)s δευτερόλεπτα απομένουν"
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s λεπτά, %(1)s δευτερόλεπτα απομένουν"
 
 #: constants.py:110
 #, python-format
@@ -197,8 +197,13 @@ msgstr "Συνέντευξη"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "Υπολείπονται %(1)s ώρες, %(2)s λεπτά, %(3)s δευτερόλεπτα"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "Υπολείπονται %(1)s ώρες, %(2)s λεπτά, %(1)s δευτερόλεπτα"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "Υπολείπονται %(1)s λεπτά, %(2)s δευτερόλεπτα"
 
 #: constants.py:108
 #, python-format
@@ -245,8 +250,8 @@ msgstr "Ύψος"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "Αποθήκευση %(1)s σε:"
+msgid "Save %(1) to:"
+msgstr "Αποθήκευση %(1) σε:"
 
 #: constants.py:146
 #, python-format
@@ -325,7 +330,7 @@ msgstr "Ελάχιστη απόσταση βασικού πλαισίου"
 
 #: constants.py:165
 msgid "Keyframe threshold"
-msgstr "Κατώφλι βασικού πλαισίου"
+msgstr "Κατώφλι καρέ κλειδιού"
 
 #: constants.py:166
 msgid "Noise Sensitivity"

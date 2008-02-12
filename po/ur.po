@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-21 15:01+0000\n"
+"PO-Revision-Date: 2007-12-29 22:05+0000\n"
 "Last-Translator: Huda Sarfraz <huda.sarfraz@nu.edu.pk>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,12 @@ msgstr "محفوظ کر رہا ہے"
 #: constants.py:105
 msgid "Finished recording"
 msgstr "ریکارڈ کرنا مکمل"
+
+# it wont let me write properly so have to change in the orgirnal po file
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s منٹ، %(1)s سیکنڈ باقی"
 
 #: constants.py:110
 #, python-format
@@ -192,8 +198,8 @@ msgstr "انٹرويو"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1)s گھنٹے، %(2)s منٹ، %(3)s سیکنڈ باقی"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s گھنٹے، %(2)s منٹ، %(1)s سیکنڈ باقی"
 
 # it wont let me write properly so have to change in the orgirnal po file
 #: constants.py:107
@@ -246,8 +252,8 @@ msgstr "اونچائی"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "%(1)s محفوظ کر رہا ہے:"
+msgid "Save %(1) to:"
+msgstr "%(1) محفوظ کر رہا ہے:"
 
 #: constants.py:146
 #, python-format
@@ -294,7 +300,7 @@ msgstr "کم سے کم بٹ ريٹ"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr "بٹ ريٹ بندوبست کری"
+msgstr "بٹ ريٹ بندوبست کریں"
 
 #: constants.py:158
 msgid "Border"

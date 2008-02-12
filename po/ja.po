@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-15 03:27+0000\n"
+"PO-Revision-Date: 2008-01-04 08:55+0000\n"
 "Last-Translator: Taizo Shiozaki <taizo@shiozaki.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: activity/activity.info:2 constants.py:90
 #, fuzzy
 msgid "Record"
-msgstr "レコード"
+msgstr "録音・録画"
 
 #: constants.py:91
 #, fuzzy
@@ -86,6 +86,12 @@ msgstr "保存中"
 #, fuzzy
 msgid "Finished recording"
 msgstr "記録終了:"
+
+#: constants.py:95
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s分, %(1)s秒残っています"
 
 #: constants.py:110
 #, python-format
@@ -233,8 +239,8 @@ msgstr "インタビュー"
 #: constants.py:106
 #, python-format
 #, fuzzy
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "残り%(1)s時間%(2)s分%(3)s秒です"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "残り%(1)s時間%(2)s分%(1)s秒です"
 
 #: constants.py:107
 #, python-format
@@ -298,8 +304,8 @@ msgstr "高さ"
 #. TRANS: Save Photo to:
 #: constants.py:145
 #, fuzzy
-msgid "Save %(1)s to:"
-msgstr "%(1)sの保存先："
+msgid "Save %(1) to:"
+msgstr "%(1)の保存先："
 
 #: constants.py:146
 #, python-format

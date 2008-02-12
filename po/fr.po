@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-18 23:17+0000\n"
+"PO-Revision-Date: 2007-12-23 00:39+0000\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,11 @@ msgstr "Sauvegarde"
 #: constants.py:105
 msgid "Finished recording"
 msgstr "Enregistrement terminé"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "Il reste %(1)s minute(s,) %(1)s seconde(s)"
 
 #: constants.py:110
 #, python-format
@@ -192,8 +197,8 @@ msgstr "Interview"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "Il reste %(1)s heure(s), %(2)s minute(s), %(3)s seconde(s)"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "Il reste %(1)s heure(s), %(2)s minute(s), %(1)s seconde(s)"
 
 #: constants.py:107
 #, python-format
@@ -245,8 +250,8 @@ msgstr "Hauteur"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "Enregistrer %(1)s sur :"
+msgid "Save %(1) to:"
+msgstr "Enregistrer %(1) sur :"
 
 #: constants.py:146
 #, python-format
@@ -314,7 +319,7 @@ msgstr "Détection automatique des images clés"
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr "Forcer les image clés"
+msgstr "Forcer l'image clés"
 
 #: constants.py:163
 msgid "Keyframe frequency"

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-12 13:38+0000\n"
+"PO-Revision-Date: 2008-02-01 14:12-0500\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,15 +21,15 @@ msgstr "紀錄"
 
 #: constants.py:91
 msgid "Photo"
-msgstr "照片"
+msgstr "拍照"
 
 #: constants.py:92
 msgid "Video"
-msgstr "影像"
+msgstr "錄影"
 
 #: constants.py:93
 msgid "Audio"
-msgstr "聲音"
+msgstr "錄音"
 
 #: constants.py:94
 msgid "Time Lapse"
@@ -72,6 +72,11 @@ msgstr "儲存中"
 #: constants.py:105
 msgid "Finished recording"
 msgstr "已完成紀錄"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "剩餘 %(1)s 分 %(1)s 秒"
 
 #: constants.py:110
 #, python-format
@@ -177,7 +182,7 @@ msgstr "點選增加照片"
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "下載 %(1)s 自 (2)%s."
+msgstr "下載 %(1)s 自 %(2)s."
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
@@ -191,8 +196,8 @@ msgstr "訪談"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "剩餘%(1)s小時%(2)s分%(3)s秒"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "剩餘%(1)s小時%(2)s分%(1)s秒"
 
 #: constants.py:107
 #, python-format
@@ -244,8 +249,8 @@ msgstr "高度"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "將%(1)s儲存到:"
+msgid "Save %(1) to:"
+msgstr "將%(1)儲存到:"
 
 #: constants.py:146
 #, python-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: record-activity\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-22 07:55+0000\n"
+"PO-Revision-Date: 2008-01-08 16:46+0000\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -75,6 +75,11 @@ msgstr "يحفظ"
 msgid "Finished recording"
 msgstr "اكتمل التسجيل"
 
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "بقي %(1)s دقائق و %(1)s ثوان"
+
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
@@ -120,7 +125,7 @@ msgstr "شغّل"
 
 #: constants.py:123
 msgid "Pause"
-msgstr "قف مؤقتا"
+msgstr "أَسبِت"
 
 #: constants.py:124
 msgid "Add frame"
@@ -133,7 +138,7 @@ msgstr "أزِل إطارًا"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "%(1)s إطار في الثانية"
+msgstr "%(1)s إطارا في الثانية"
 
 #: constants.py:110
 msgid "Quality:"
@@ -193,13 +198,13 @@ msgstr "مقابلة"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "بقي %(1)s ساعة، و %(2)s دقيقة و %(3)s ثانية"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "بقي %(1)s ساعة، و %(2)s دقيقة و %(1)s ثانية"
 
 #: constants.py:107
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "بقي %(1)s دقيقة، و %(2)s ساعة"
+msgstr "بقي %(1)s دقيقة و %(2)s ثانية"
 
 #: constants.py:108
 #, python-format
@@ -246,7 +251,7 @@ msgstr "الارتفاع"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
+msgid "Save %(1) to:"
 msgstr "احفظ %(1)s إلى:"
 
 #: constants.py:146

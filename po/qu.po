@@ -74,6 +74,11 @@ msgstr ""
 msgid "Finished recording"
 msgstr ""
 
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr ""
+
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
@@ -192,7 +197,7 @@ msgstr ""
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
 msgstr ""
 
 #: constants.py:107

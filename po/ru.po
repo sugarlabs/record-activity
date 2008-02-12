@@ -75,6 +75,11 @@ msgstr "Сохраняется"
 msgid "Finished recording"
 msgstr "Запись завершена"
 
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "Осталось %(1)s минут, %(1)s секунд"
+
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
@@ -193,14 +198,14 @@ msgstr "Интервью"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "осталось %(1)s часов, %(2)s минут, %(3)s секунд"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "осталось %(1)s часов, %(2)s минут, %(1)s секунд"
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "осталось %(1)s минут, %(2)s секунд"
+msgstr "осталось %(1)s минут, %(1)s секунд"
 
 #: constants.py:108
 #, python-format
@@ -249,8 +254,8 @@ msgstr "Высота"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "Сохранить %(1)s в:"
+msgid "Save %(1) to:"
+msgstr "Сохранить %(1) в:"
 
 #: constants.py:146
 #, python-format

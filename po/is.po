@@ -74,10 +74,15 @@ msgstr "Vista"
 msgid "Finished recording"
 msgstr "Endaði upptöku"
 
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s mínúndur, %(1)s sekúndur eftir"
+
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr "%(1)s sekúndur eftir"
+msgstr "%(1) sekúndur eftir"
 
 #: constants.py:114
 msgid "Remove"
@@ -106,7 +111,7 @@ msgstr ""
 #: constants.py:113 constants.py:120
 #, python-format
 msgid "%(1)s seconds"
-msgstr "%(1)s sekúndur"
+msgstr "%(1) sekúndur"
 
 #: constants.py:112 constants.py:121
 #, python-format
@@ -132,7 +137,7 @@ msgstr "Fjarlægja ramma"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "%(1)s rammar á sekúndu"
+msgstr "%(1) rammar á sekúndu"
 
 #: constants.py:110
 msgid "Quality:"
@@ -192,20 +197,20 @@ msgstr ""
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
 msgstr ""
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s mínúndur, %(2)s sekúndur eftir"
+msgstr "%(1) mínúndur, %(1) sekúndur eftir"
 
 #: constants.py:108
 #, python-format
 #, fuzzy
 msgid "%(1)s hours remaining"
-msgstr "%(1)s sekúndur eftir"
+msgstr "%(1) sekúndur eftir"
 
 #: constants.py:109
 #, python-format
@@ -248,7 +253,7 @@ msgstr ""
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
+msgid "Save %(1) to:"
 msgstr ""
 
 #: constants.py:146

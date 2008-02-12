@@ -73,6 +73,11 @@ msgstr "Gravando"
 msgid "Finished recording"
 msgstr "Gravação terminada"
 
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "faltam %(1)s minutos, %(1)s segundos"
+
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
@@ -191,8 +196,8 @@ msgstr "Entrevista"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "faltam %(1)s horas, %(2)s minutos, %(3)s segundos"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "faltam %(1)s horas, %(2)s minutos, %(1)s segundos"
 
 #: constants.py:107
 #, python-format
@@ -244,8 +249,8 @@ msgstr "Altura"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "Gravar %(1)s em:"
+msgid "Save %(1) to:"
+msgstr "Gravar %(1) em:"
 
 #: constants.py:146
 #, python-format

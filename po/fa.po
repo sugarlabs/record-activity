@@ -51,7 +51,7 @@ msgstr "پانوراما"
 #, python-format
 #, fuzzy
 msgid "%(1)s by %(2)s"
-msgstr "%(1)s از %(2)s"
+msgstr "%(1) از %(2)"
 
 #: constants.py:100
 msgid "Title:"
@@ -76,6 +76,11 @@ msgstr "ذخیره‌سازی"
 #: constants.py:105
 msgid "Finished recording"
 msgstr "ضبطهای تمام‌شده"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s دقیقه %(1)s ثانیه مانده"
 
 #: constants.py:110
 #, python-format
@@ -196,14 +201,14 @@ msgstr ""
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
 msgstr ""
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s دقیقه %(1)s ثانیه مانده"
+msgstr "%(1)s دقیقه %(2)s ثانیه مانده"
 
 #: constants.py:108
 #, python-format
@@ -252,7 +257,7 @@ msgstr ""
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
+msgid "Save %(1) to:"
 msgstr ""
 
 #: constants.py:146

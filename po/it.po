@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-01 23:20+0000\n"
+"PO-Revision-Date: 2008-01-14 19:12+0000\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -77,6 +77,11 @@ msgstr "Scrittura"
 #: constants.py:105
 msgid "Finished recording"
 msgstr "Registrazione terminata"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s minuti, %(1)s secondi rimanenti"
 
 #: constants.py:110
 #, python-format
@@ -200,34 +205,35 @@ msgid "Cannot download this %(1)s"
 msgstr "Impossibile trasferire %(1)s"
 
 #: constants.py:97
+#, fuzzy
 msgid "Interview"
-msgstr ""
+msgstr "Interrogazione"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr ""
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s ore, %(2)s minuti, %(1)s secondi rimanenti"
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s minuti, %(2)s secondi rimanenti"
+msgstr "%(1)s minuti, %(1)s secondi rimanenti"
 
 #: constants.py:108
 #, python-format
 msgid "%(1)s hours remaining"
-msgstr ""
+msgstr "%(1)s ore rimanenti"
 
 #: constants.py:109
 #, python-format
 msgid "%(1)s minutes remaining"
-msgstr ""
+msgstr "%(1)s minuti rimanenti"
 
 #: constants.py:111
 #, python-format
 msgid "%(1)s hours"
-msgstr ""
+msgstr "%(1)s ore"
 
 #: constants.py:127
 #, fuzzy
@@ -235,125 +241,136 @@ msgid "Quality"
 msgstr "Qualità:"
 
 #: constants.py:128
+#, fuzzy
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #: constants.py:129
 msgid "Best"
-msgstr ""
+msgstr "Migliore"
 
 #: constants.py:130
 msgid "High"
-msgstr ""
+msgstr "Alta"
 
 #: constants.py:131
 msgid "Low"
-msgstr ""
+msgstr "Bassa"
 
 #: constants.py:136
 msgid "Width"
-msgstr ""
+msgstr "Larghezza"
 
 #: constants.py:137
 msgid "Height"
-msgstr ""
+msgstr "Altezza"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr ""
+msgid "Save %(1) to:"
+msgstr "Salva %(1) in:"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr ""
+msgstr "Il tuo %(1)s è pieno"
 
 #: constants.py:147
 msgid "Journal"
-msgstr ""
+msgstr "Diario"
 
 #: constants.py:148
 msgid "USB"
-msgstr ""
+msgstr "USB"
 
 #: constants.py:149
 msgid "SD Card"
-msgstr ""
+msgstr "Carta SD"
 
 #: constants.py:150
 msgid "Preferences"
-msgstr ""
+msgstr "Preferenze"
 
 #: constants.py:151
 msgid "Free space:"
-msgstr ""
+msgstr "Spazio disponibile:"
 
 #. TRANS: 7 photos
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr ""
+msgstr "%(1)s foto"
 
 #: constants.py:154
 msgid "Bitrate"
-msgstr ""
+msgstr "Bitrate"
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr ""
+msgstr "Massimo Bitrate"
 
 #: constants.py:156
+#, fuzzy
 msgid "Minumum Bitrate"
-msgstr ""
+msgstr "Minimo Bitrate"
 
 #: constants.py:157
+#, fuzzy
 msgid "Manage Bitrate"
-msgstr ""
+msgstr "Gestisci Bitrate"
 
 #: constants.py:158
 msgid "Border"
-msgstr ""
+msgstr "Bordo"
 
 #: constants.py:159
 msgid "Center"
-msgstr ""
+msgstr "Centro"
 
 #: constants.py:160
+#, fuzzy
 msgid "Frames"
-msgstr ""
+msgstr "Cornici"
 
 #: constants.py:161
+#, fuzzy
 msgid "Automatic keyframe detection"
-msgstr ""
+msgstr "Identificazione automatica delle scene"
 
 #: constants.py:162
+#, fuzzy
 msgid "Force keyframe"
-msgstr ""
+msgstr "Forza il cambioscena"
 
 #: constants.py:163
+#, fuzzy
 msgid "Keyframe frequency"
-msgstr ""
+msgstr "Frequenza cambioscena"
 
 #: constants.py:164
+#, fuzzy
 msgid "Keyframe minimum distance"
-msgstr ""
+msgstr "Distanza minima fra cambiscena"
 
 #: constants.py:165
+#, fuzzy
 msgid "Keyframe threshold"
-msgstr ""
+msgstr "Soglia di cambioscena"
 
 #: constants.py:166
+#, fuzzy
 msgid "Noise Sensitivity"
-msgstr ""
+msgstr "Sensibilità al rumore"
 
 #: constants.py:167
+#, fuzzy
 msgid "Quick"
-msgstr ""
+msgstr "Rapido"
 
 #: constants.py:168
 msgid "Sharpness"
-msgstr ""
+msgstr "Definizione"
 
 #: constants.py:169
 msgid "Capacity"
-msgstr ""
+msgstr "Capacità"

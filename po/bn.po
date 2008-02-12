@@ -76,6 +76,11 @@ msgstr "সেইভ করা হচ্ছে"
 msgid "Finished recording"
 msgstr "রেকর্ডিং শেষ হয়েছে"
 
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s মিনিট, %(1)s সেকেন্ড বাকী আছে"
+
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
@@ -194,13 +199,13 @@ msgstr "সাক্ষাৎকার"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1)s ঘন্টা, %(2)s মিনিট, %(3)s সেকেন্ড বাকী আছে"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s ঘন্টা, %(2)s মিনিট, %(1)s সেকেন্ড বাকী আছে"
 
 #: constants.py:107
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s মিনিট, %(2)s সেকেন্ড বাকী আছে"
+msgstr "%(1)s মিনিট,  %(2)s কেন্ড বাকী আছে"
 
 #: constants.py:108
 #, python-format
@@ -247,8 +252,8 @@ msgstr "উচ্চতা"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "%(1)s সংরক্ষণ করো:"
+msgid "Save %(1) to:"
+msgstr "%(1) সংরক্ষণ করো:"
 
 #: constants.py:146
 #, python-format

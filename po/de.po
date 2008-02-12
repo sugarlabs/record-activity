@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-21 10:34+0000\n"
+"PO-Revision-Date: 2008-01-27 18:04-0500\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,7 @@ msgstr "Datum:"
 
 #: constants.py:103
 msgid "Tags:"
-msgstr "Stichworte:"
+msgstr "Stichwörter:"
 
 #: constants.py:104
 msgid "Saving"
@@ -73,6 +73,11 @@ msgstr "Speichern"
 #: constants.py:105
 msgid "Finished recording"
 msgstr "Beendete Aufnahme"
+
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s Minuten, %(1)s Sekunden verbleibend"
 
 #: constants.py:110
 #, python-format
@@ -168,11 +173,11 @@ msgstr "Drehen"
 
 #: constants.py:138
 msgid "Click to take picture"
-msgstr "Klick für Bildaufnahme"
+msgstr "Klicken für Aufnahme eines Bildes"
 
 #: constants.py:139
 msgid "Click to add picture"
-msgstr "Klick um Bild anzufügen"
+msgstr "Klicken zum Hinzufügen eines Bildes"
 
 #. TRANS: Downloading Photo from Mary
 #: constants.py:141
@@ -192,8 +197,8 @@ msgstr "Interview"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1)s Stunden, %(2)s Minuten, %(3)s Sekunden verbleibend"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s Stunden, %(2)s Minuten, %(1)s Sekunden verbleibend"
 
 #: constants.py:107
 #, python-format
@@ -245,8 +250,8 @@ msgstr "Höhe"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "Speichere %(1)s in:"
+msgid "Save %(1) to:"
+msgstr "Speichere %(1) in:"
 
 #: constants.py:146
 #, python-format
@@ -296,7 +301,6 @@ msgid "Manage Bitrate"
 msgstr "Bitrate einstellen"
 
 #: constants.py:158
-#, fuzzy
 msgid "Border"
 msgstr "Rand"
 
@@ -313,12 +317,10 @@ msgid "Automatic keyframe detection"
 msgstr "Automatische Frame Feststellung"
 
 #: constants.py:162
-#, fuzzy
 msgid "Force keyframe"
 msgstr "Frame erzwingen"
 
 #: constants.py:163
-#, fuzzy
 msgid "Keyframe frequency"
 msgstr "Frame Frequenz"
 
@@ -327,7 +329,6 @@ msgid "Keyframe minimum distance"
 msgstr "Minimalabstand der Frames"
 
 #: constants.py:165
-#, fuzzy
 msgid "Keyframe threshold"
 msgstr "Frame Schwelle"
 

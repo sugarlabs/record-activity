@@ -73,10 +73,16 @@ msgstr "กำลังบันทึก"
 msgid "Finished recording"
 msgstr "เสร็จสิ้นการบันทึก"
 
+#: constants.py:95
+#, python-format
+msgid "%(1)s minutes, %(1)s seconds remaining"
+msgstr "เหลืออยู่ $(1)s นาที %(1)s วินาที"
+
 #: constants.py:110
 #, python-format
+#, fuzzy
 msgid "%(1)s seconds remaining"
-msgstr "เหลืออยู่ %(1)s วินาที"
+msgstr "เหลืออยู่ $( 1)%s าที"
 
 #: constants.py:114
 msgid "Remove"
@@ -191,14 +197,14 @@ msgstr "สัมภาษณ์"
 
 #: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "เหลืออยู่ %(1)s ชั่วโมง %(2)s นาที %(3)s วินาที"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "เหลืออยู่ %(1)s ชั่วโมง %(2)s นาที %(1)s วินาที"
 
 #: constants.py:107
 #, python-format
 #, fuzzy
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "เหลืออยู่ %(1)s นาที %(2)s วินาที"
+msgstr "เหลืออยู่ %(1)s นาที %(1)s วินาที"
 
 #: constants.py:108
 #, python-format
@@ -247,8 +253,8 @@ msgstr "สูง"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
-msgid "Save %(1)s to:"
-msgstr "บันทึก %(1)s ไปยัง:"
+msgid "Save %(1) to:"
+msgstr "บันทึก %(1) ไปยัง:"
 
 #: constants.py:146
 #, python-format
