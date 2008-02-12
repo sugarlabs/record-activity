@@ -800,7 +800,8 @@ class UI:
 			self.recordWindow.displayDiscFullText(self.ca.m.FULL)
 			if (self.ca.m.FULL):
 				self.recordWindow.shutterButton.set_sensitive( False, True)
-				self.progressWindow.updateProgress( 1, Constants.istrYourDiskIsFull, "gray" )
+				fullMessage = Constants.istrYourDiskIsFull % {"1":Constants.istrJournal}
+				self.progressWindow.updateProgress( 1, fullMessage, "gray" )
 			else:
 				self.recordWindow.shutterButton.set_sensitive( not self.ca.m.UPDATING, False )
 				if (self.ca.m.RECORDING):
@@ -2155,7 +2156,8 @@ class RecordWindow(gtk.Window):
 			self.rightPanelLabel.set_text("")
 			self.minimize()
 		else:
-			self.rightPanelLabel.set_text("<b><span foreground='gray'>" + Constants.istrYourDiskIsFull + "</span></b>")
+			fullMessage = Constants.istrYourDiskIsFull % {"1":Constants.istrJournal}
+			self.rightPanelLabel.set_text("<b><span foreground='gray'>" + fullMessage + "</span></b>")
 			self.rightPanelLabel.set_use_markup( True )
 			self.rightPanelLabel.set_alignment(1, 1)
 			self.maximize()
