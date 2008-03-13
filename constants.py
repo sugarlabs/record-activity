@@ -17,7 +17,7 @@ import pangocairo
 
 class Constants:
 
-	VERSION = 53
+	VERSION = 54
 
 	SERVICE = "org.laptop.Record"
 	IFACE = SERVICE

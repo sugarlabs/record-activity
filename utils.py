@@ -47,12 +47,12 @@ def loadSvg( data, stroke, fill ):
 
 def getUniqueFilepath( path, i ):
 	pathOb = os.path.abspath( path )
-	if (os.path.exists(pathOb)):
-		i = i+1
-		newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
-		return getUniqueFilepath( str(newPath), i )
+	newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
+	if (os.path.exists(newPath)):
+		i = i + 1
+		return getUniqueFilepath( pathOb, i )
 	else:
-		return os.path.abspath( path )
+		return os.path.abspath( newPath )
 
 
 def md5File( filepath ):
