@@ -450,8 +450,8 @@ class Glive:
 			gobject.source_remove(self.TRANSCODE_ID)
 			self.TRANSCODE_ID = 0
 			pipe.set_state(gst.STATE_NULL)
-			pipe.get_bus().disable_sync_message_emission()
 			pipe.get_bus().remove_signal_watch()
+			pipe.get_bus().disable_sync_message_emission()
 
 			wavFilepath = os.path.join(Instance.instancePath, "output.wav")
 			oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
@@ -476,8 +476,8 @@ class Glive:
 			gobject.source_remove(self.TRANSCODE_ID)
 			self.TRANSCODE_ID = 0
 			pipe.set_state(gst.STATE_NULL)
-			pipe.get_bus().disable_sync_message_emission()
 			pipe.get_bus().remove_signal_watch()
+			pipe.get_bus().disable_sync_message_emission()
 
 			wavFilepath = os.path.join(Instance.instancePath, "output.wav")
 			oggFilepath = os.path.join(Instance.instancePath, "output.ogg")
