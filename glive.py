@@ -133,6 +133,10 @@ class Glive:
 		return self.playing
 
 
+	def idlePlayElement(self, element):
+		element.set_state(gst.STATE_PLAYING)
+		return False
+
 	def _nextPipe(self):
 		if ( len(self.pipes) > 0 ):
 
@@ -265,7 +269,7 @@ class Glive:
 		thumbFakesink.set_property("signal-handoffs", True)
 		self.thumbPipes.append(thumbline)
 		self.thumbExposureOpen = True
-		gobject.idle_add( thumbline.set_state, gst.STATE_PLAYING )
+		gobject.idle_add( self.idlePlayElement, thumbline )
 
 
 	def stoppedRecordingAudio( self ):
@@ -302,7 +306,7 @@ class Glive:
 			audioBus.add_signal_watch()
 			self.AUDIO_TRANSCODE_ID = audioBus.connect('message', self._onMuxedAudioMessageCb, audioline)
 			self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, audioline)
-			gobject.idle_add( audioline.set_state, gst.STATE_PLAYING )
+			gobject.idle_add( self.idlePlayElement, audioline )
 		else:
 			self.record = False
 			self.audio = False
