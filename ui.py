@@ -554,7 +554,7 @@ class UI:
 				self.moveWinOffscreen( self.liveVideoWindow )
 		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 			if (not self.LIVEMODE):
-				self.moveWinOffscreen( self.playLiveWindow )
+				self.moveWinOffscreen( self.liveVideoWindow )
 		elif (self.ca.m.MODE == Constants.MODE_AUDIO):
 			if (not self.LIVEMODE):
 				self.moveWinOffscreen( self.liveVideoWindow )
@@ -862,7 +862,7 @@ class UI:
 
 		self.showLiveVideoTags()
 		self.LIVEMODE = True
-		self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, False )
+		self.startLiveVideo( self.playLiveWindow, False )
 		self.updateVideoComponents()
 
 
@@ -927,11 +927,11 @@ class UI:
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
 		if (self.ca.m.MODE == Constants.MODE_PHOTO):
-			self.startLiveVideo( self.liveVideoWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, True )
+			self.startLiveVideo( self.liveVideoWindow, True )
 		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
-			self.startLiveVideo( self.playLiveWindow,  self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, True )
+			self.startLiveVideo( self.liveVideoWindow, True )
 		elif (self.ca.m.MODE == Constants.MODE_AUDIO):
-			self.startLiveVideo( self.liveVideoWindow,  self.ca.glive.PIPETYPE_AUDIO_RECORD, True )
+			self.startLiveVideo( self.liveVideoWindow, True )
 
 		bottomKid = self.bottomCenter.get_child()
 		if (bottomKid != None):
@@ -944,19 +944,16 @@ class UI:
 		self.resetWidgetFadeTimer()
 
 
-	def startLiveVideo(self, window, pipetype, force):
+	def startLiveVideo(self, window, force):
 		#We need to know which window and which pipe here
 
 		#if returning from another activity, active won't be false and needs to be to get started
-		if (self.ca.glive.getPipeType() == pipetype
-			and self.ca.glive.window == window
+		if (self.ca.glive.window == window
 			and self.ca.props.active
 			and not force):
 			return
 
-		self.ca.glive.setPipeType( pipetype )
 		window.set_glive(self.ca.glive)
-		self.ca.glive.stop()
 		self.ca.glive.play()
 
 
@@ -1352,7 +1349,7 @@ class UI:
 						pos.append({"position":"tmr", "window":self.progressWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 				if (self.LIVEMODE):
-					pos.append({"position":"img", "window":self.playLiveWindow} )
+					pos.append({"position":"img", "window":self.liveVideoWindow} )
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"eye", "window":self.recordWindow} )
 					pos.append({"position":"prg", "window":self.progressWindow} )
@@ -1617,11 +1614,6 @@ class UI:
 
 
 	def showVideo( self, recd ):
-		if (self.LIVEMODE):
-			if (self.ca.glive.isXv()):
-				self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_X_VIDEO_DISPLAY )
-				self.ca.glive.stop()
-				self.ca.glive.play()
 		downloading = self.ca.requestMeshDownload(recd)
 
 		if (not downloading):
@@ -1641,12 +1633,15 @@ class UI:
 		if (not downloading):
 			mediaFilepath = recd.getMediaFilepath()
 			if (mediaFilepath != None):
+				self.ca.glive.stop()
 				videoUrl = "file://" + str( mediaFilepath )
 				self.ca.gplay.setLocation(videoUrl)
 				self.scrubWindow.doPlay()
 				ableToShowVideo = True
 
 		if (not ableToShowVideo):
+			# FIXME is this correct?
+			self.ca.glive.stop()
 			thumbFilepath = recd.getThumbFilepath( )
 			thumbUrl = "file://" + str( thumbFilepath )
 			self.ca.gplay.setLocation(thumbUrl)
@@ -1664,7 +1659,7 @@ class UI:
 				self.livePhotoCanvas.setImage( None )
 			elif (recd.type == Constants.TYPE_VIDEO):
 				self.ca.gplay.stop()
-				self.startLiveVideo( self.playLiveWindow, self.ca.glive.PIPETYPE_XV_VIDEO_DISPLAY_RECORD, False )
+				self.startLiveVideo( self.playLiveWindow, False )
 			elif (recd.type == Constants.TYPE_AUDIO):
 				self.livePhotoCanvas.setImage( None )
 				self.startLiveAudio()
@@ -1679,7 +1674,6 @@ class UI:
 		self.ca.m.setUpdating(True)
 		self.ca.gplay.stop()
 
-		self.ca.glive.setPipeType( self.ca.glive.PIPETYPE_AUDIO_RECORD )
 		self.liveVideoWindow.set_glive(self.ca.glive)
 
 		self.showLiveVideoTags()
