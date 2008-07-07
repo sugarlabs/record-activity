@@ -152,7 +152,6 @@ class Record(activity.Activity):
 		if (self.gplay != None):
 			self.gplay.stop( )
 		if (self.glive != None):
-			self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
 			self.glive.stop( )
 
 		#this calls write_file
