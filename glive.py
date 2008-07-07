@@ -147,7 +147,12 @@ class Glive:
 
 	def createPipeline ( self ):
 		src = gst.element_factory_make("v4l2src", "camsrc")
-		src.set_property("queue-size", 2)
+		try:
+			# old gst-plugins-good does not have this property
+			src.set_property("queue-size", 2)
+		except:
+			pass
+
 		tee = gst.element_factory_make("tee", "tee")
 		queue = gst.element_factory_make("queue", "dispqueue")
 		xvsink = gst.element_factory_make("xvimagesink", "xvsink")
