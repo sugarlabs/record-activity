@@ -176,10 +176,11 @@ class Glive:
 
 
 	def play(self):
+		self.pipeline.set_state(gst.STATE_PLAYING)
 		self.playing = True
 
 	def pause(self):
-		self.pipe().set_state(gst.STATE_PAUSED)
+		self.pipeline.set_state(gst.STATE_PAUSED)
 		self.playing = False
 
 
