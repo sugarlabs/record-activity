@@ -336,6 +336,15 @@ class Glive:
 		self.record = True
 		self.audio = True
 
+		# It would be nicer to connect the video/audio-recording elements
+		# without stopping the pipeline. However, that seems to cause a
+		# very long delay at the start of the video recording where the first
+		# frame is 'frozen' for several seconds. MikeS from #gstreamer
+		# suggested that the videorate element might not be receiving a
+		# "new segment" signal soon enough.
+		#
+		# Stopping the pipeline while we reshuffle neatly works around this
+		# with minimal user experience impact.
 		self.pipeline.set_state(gst.STATE_NULL)
 		self.pipeline.add(self.videobin)
 		self.pipeline.get_by_name("tee").link(self.videobin)
@@ -353,14 +362,15 @@ class Glive:
 		self.audiobin.set_state(gst.STATE_PLAYING)
 
 	def stopRecordingVideo(self):
-		self.audiobin.set_state(gst.STATE_NULL)
-		self.videobin.set_state(gst.STATE_NULL)
-		pad = self.videobin.get_static_pad("sink")
-		pad.set_blocked_async(True, self.blockedCb, None)
+		# Similarly to as when we start recording, we also stop the pipeline
+		# while we are adjusting the pipeline to stop recording. If we do
+		# it on-the-fly, the following video live feed to the screen becomes
+		# several seconds delayed. Weird!
+		self.pipeline.set_state(gst.STATE_NULL)
 		self.pipeline.get_by_name("tee").unlink(self.videobin)
 		self.pipeline.remove(self.videobin)
-		pad.set_blocked_async(False, self.blockedCb, None)
 		self.pipeline.remove(self.audiobin)
+		self.pipeline.set_state(gst.STATE_PLAYING)
 		gobject.idle_add( self.stoppedRecordingVideo )
 
 
