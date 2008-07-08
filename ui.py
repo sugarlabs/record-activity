@@ -92,7 +92,13 @@ class UI:
 		self.piph = self.__class__.dim_PIPH
 
 		#ui modes
+
+		# True when we're in full-screen mode, False otherwise
 		self.FULLSCREEN = False
+
+		# True when we're showing live video feed in the primary screen
+		# area, False otherwise (even when we are still showing live video
+		# in a p-i-p)
 		self.LIVEMODE = True
 
 		self.LAST_MODE = -1
@@ -103,7 +109,11 @@ class UI:
 		self.LAST_TRANSCODING = False
 		self.TRANSCODING = False
 		self.MESHING = False
+
+		# RECD_INFO_ON is True when the 'info' for a recording is being
+		# display on-screen (who recorded it, tags, etc), and False otherwise.
 		self.RECD_INFO_ON = False
+
 		self.UPDATE_DURATION_ID = 0
 		self.UPDATE_TIMER_ID = 0
 		self.COUNTINGDOWN = False
@@ -367,6 +377,16 @@ class UI:
 		self.livePhotoWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
 		self.livePhotoWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
+		#video playback windows
+		self.playOggWindow = PlayVideoWindow(Constants.colorBlack.gColor)
+		self.addToWindowStack( self.playOggWindow, self.windowStack[len(self.windowStack)-1] )
+		#self.playOggWindow.set_gplay(self.ca.gplay)
+		self.ca.gplay.window = self.playOggWindow
+		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
+		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
+		self.playOggWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+		self.playOggWindow.connect("visibility-notify-event", self._visibleNotifyCb)
+
 		#border behind
 		self.pipBgdWindow = gtk.Window()
 		self.pipBgdWindow.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
@@ -381,15 +401,12 @@ class UI:
 		self.liveVideoWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
 		self.liveVideoWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
-		#video playback windows
-		self.playOggWindow = PlayVideoWindow(Constants.colorBlack.gColor)
-		self.addToWindowStack( self.playOggWindow, self.windowStack[len(self.windowStack)-1] )
-		#self.playOggWindow.set_gplay(self.ca.gplay)
-		self.ca.gplay.window = self.playOggWindow
-		self.playOggWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.playOggWindow.connect("button_release_event", self._mediaClickedForPlayback)
-		self.playOggWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
-		self.playOggWindow.connect("visibility-notify-event", self._visibleNotifyCb)
+		self.returnToLiveWindow = ReturnToLiveWindow()
+		self.addToWindowStack( self.returnToLiveWindow, self.windowStack[len(self.windowStack)-1] )
+		self.returnToLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
+		self.returnToLiveWindow.connect("button_release_event", self._returnButtonReleaseCb)
+		self.returnToLiveWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+		self.returnToLiveWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
 		#border behind
 		self.pipBgdWindow2 = gtk.Window()
@@ -458,7 +475,7 @@ class UI:
 				if (self.ca.m.MODE == Constants.MODE_VIDEO):
 					if (not self.LIVEMODE and widget == self.playOggWindow):
 						temp_ACTIVE = False
-					if (    self.LIVEMODE and widget == self.playLiveWindow):
+					if (    self.LIVEMODE and widget == self.liveVideoWindow):
 						temp_ACTIVE = False
 
 
@@ -543,6 +560,7 @@ class UI:
 		self.moveWinOffscreen( self.pipBgdWindow )
 		self.moveWinOffscreen( self.pipBgdWindow2 )
 		self.moveWinOffscreen( self.infWindow )
+		self.moveWinOffscreen( self.returnToLiveWindow )
 
 		if (self.FULLSCREEN):
 			self.moveWinOffscreen( self.recordWindow )
@@ -830,6 +848,12 @@ class UI:
 		self.resumeLiveVideo()
 
 
+	def _returnButtonReleaseCb(self, widget, event):
+		self.ca.gplay.stop()
+		self.ca.glive.play()
+		self.resumeLiveVideo()
+
+
 	def resumeLiveVideo( self ):
 		self.livePhotoCanvas.setImage( None )
 
@@ -862,7 +886,7 @@ class UI:
 
 		self.showLiveVideoTags()
 		self.LIVEMODE = True
-		self.startLiveVideo( self.playLiveWindow, False )
+		self.startLiveVideo( self.liveVideoWindow, False )
 		self.updateVideoComponents()
 
 
@@ -1323,8 +1347,8 @@ class UI:
 				pos.append({"position":"inb", "window":self.livePhotoWindow} )
 				pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_VIDEO):
-				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
-				pos.append({"position":"pip", "window":self.playLiveWindow} )
+				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
+				pos.append({"position":"pip", "window":self.returnToLiveWindow} )
 				pos.append({"position":"inb", "window":self.playOggWindow} )
 				pos.append({"position":"inf", "window":self.infWindow} )
 			elif (self.ca.m.MODE == Constants.MODE_AUDIO):
@@ -1355,8 +1379,8 @@ class UI:
 					pos.append({"position":"prg", "window":self.progressWindow} )
 				else:
 					pos.append({"position":"img", "window":self.playOggWindow} )
-					pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
-					pos.append({"position":"pip", "window":self.playLiveWindow} )
+					pos.append({"position":"pgd", "window":self.pipBgdWindow} )
+					pos.append({"position":"pip", "window":self.returnToLiveWindow} )
 					if (not self.MESHING):
 						pos.append({"position":"max", "window":self.maxWindow} )
 						pos.append({"position":"scr", "window":self.scrubWindow} )
@@ -1404,6 +1428,7 @@ class UI:
 
 	def showWidgets( self ):
 		pos = []
+		print "showwidgets livemode %s" % self.LIVEMODE
 		if (self.ca.m.MODE == Constants.MODE_PHOTO):
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
@@ -1416,8 +1441,8 @@ class UI:
 				pos.append({"position":"eye", "window":self.recordWindow} )
 		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
 			if (not self.LIVEMODE):
-				pos.append({"position":"pgd", "window":self.pipBgdWindow2} )
-				pos.append({"position":"pip", "window":self.playLiveWindow} )
+				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
+				pos.append({"position":"pip", "window":self.returnToLiveWindow} )
 				if (not self.MESHING):
 					pos.append({"position":"max", "window":self.maxWindow} )
 					pos.append({"position":"scr", "window":self.scrubWindow} )
@@ -1659,7 +1684,7 @@ class UI:
 				self.livePhotoCanvas.setImage( None )
 			elif (recd.type == Constants.TYPE_VIDEO):
 				self.ca.gplay.stop()
-				self.startLiveVideo( self.playLiveWindow, False )
+				self.startLiveVideo( self.liveVideoWindow, False )
 			elif (recd.type == Constants.TYPE_AUDIO):
 				self.livePhotoCanvas.setImage( None )
 				self.startLiveAudio()
@@ -1811,6 +1836,12 @@ class xoPanel(P5):
 			#todo: scale mr xo to fit in his box
 			ctx.scale( .6, .6 )
 			self.xoGuy.render_cairo( ctx )
+
+
+class ReturnToLiveWindow(gtk.Window):
+	def __init__(self):
+		gtk.Window.__init__(self)
+		self.add(gtk.Label("Back"))
 
 
 class ScrubberWindow(gtk.Window):
