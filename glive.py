@@ -336,15 +336,11 @@ class Glive:
 		self.record = True
 		self.audio = True
 
-		pad = self.videobin.get_static_pad("sink")
-		pad.set_blocked_async(True, self.blockedCb, None)
+		self.pipeline.set_state(gst.STATE_NULL)
 		self.pipeline.add(self.videobin)
-		self.videobin.set_state(gst.STATE_PLAYING)
 		self.pipeline.get_by_name("tee").link(self.videobin)
-		pad.set_blocked_async(False, self.blockedCb, None)
-
 		self.pipeline.add(self.audiobin)
-		self.audiobin.set_state(gst.STATE_PLAYING)
+		self.pipeline.set_state(gst.STATE_PLAYING)
 
 	def startRecordingAudio(self):
 		self.audioPixbuf = None
