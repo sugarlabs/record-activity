@@ -408,19 +408,6 @@ class UI:
 		self.returnToLiveWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
 		self.returnToLiveWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
-		#border behind
-		self.pipBgdWindow2 = gtk.Window()
-		self.pipBgdWindow2.modify_bg( gtk.STATE_NORMAL, Constants.colorWhite.gColor )
-		self.pipBgdWindow2.modify_bg( gtk.STATE_INSENSITIVE, Constants.colorWhite.gColor )
-		self.addToWindowStack( self.pipBgdWindow2, self.windowStack[len(self.windowStack)-1] )
-
-		self.playLiveWindow = LiveVideoWindow(Constants.colorBlack.gColor)
-		self.addToWindowStack( self.playLiveWindow, self.windowStack[len(self.windowStack)-1] )
-		self.playLiveWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
-		self.playLiveWindow.connect("button_release_event", self._playLiveButtonReleaseCb)
-		self.playLiveWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
-		self.playLiveWindow.connect("visibility-notify-event", self._visibleNotifyCb)
-
 		self.recordWindow = RecordWindow(self)
 		self.addToWindowStack( self.recordWindow, self.windowStack[len(self.windowStack)-1] )
 
@@ -499,8 +486,6 @@ class UI:
 		self.pipBgdWindow.resize( pgdDim[0], pgdDim[1] )
 		self.liveVideoWindow.resize( imgDim[0], imgDim[1] )
 		self.playOggWindow.resize( imgDim[0], imgDim[1] )
-		self.playLiveWindow.resize( imgDim[0], imgDim[1] )
-		self.pipBgdWindow2.resize( pgdDim[0], pgdDim[1] )
 		self.recordWindow.resize( eyeDim[0], eyeDim[1] )
 		self.maxWindow.resize( maxDim[0], maxDim[1] )
 		self.progressWindow.resize( prgDim[0], prgDim[1] )
@@ -558,7 +543,6 @@ class UI:
 	def hideWidgets( self ):
 		self.moveWinOffscreen( self.maxWindow )
 		self.moveWinOffscreen( self.pipBgdWindow )
-		self.moveWinOffscreen( self.pipBgdWindow2 )
 		self.moveWinOffscreen( self.infWindow )
 		self.moveWinOffscreen( self.returnToLiveWindow )
 
@@ -886,7 +870,7 @@ class UI:
 
 		self.showLiveVideoTags()
 		self.LIVEMODE = True
-		self.startLiveVideo( self.liveVideoWindow, False )
+		self.startLiveVideo( False )
 		self.updateVideoComponents()
 
 
@@ -950,12 +934,7 @@ class UI:
 
 		#set up the x & xv x-ition (if need be)
 		self.ca.gplay.stop()
-		if (self.ca.m.MODE == Constants.MODE_PHOTO):
-			self.startLiveVideo( self.liveVideoWindow, True )
-		elif (self.ca.m.MODE == Constants.MODE_VIDEO):
-			self.startLiveVideo( self.liveVideoWindow, True )
-		elif (self.ca.m.MODE == Constants.MODE_AUDIO):
-			self.startLiveVideo( self.liveVideoWindow, True )
+		self.startLiveVideo( True )
 
 		bottomKid = self.bottomCenter.get_child()
 		if (bottomKid != None):
@@ -968,16 +947,16 @@ class UI:
 		self.resetWidgetFadeTimer()
 
 
-	def startLiveVideo(self, window, force):
+	def startLiveVideo(self, force):
 		#We need to know which window and which pipe here
 
 		#if returning from another activity, active won't be false and needs to be to get started
-		if (self.ca.glive.window == window
+		if (self.ca.glive.window == self.liveVideoWindow
 			and self.ca.props.active
 			and not force):
 			return
 
-		window.set_glive(self.ca.glive)
+		self.liveVideoWindow.set_glive(self.ca.glive)
 		self.ca.glive.play()
 
 
@@ -1684,7 +1663,7 @@ class UI:
 				self.livePhotoCanvas.setImage( None )
 			elif (recd.type == Constants.TYPE_VIDEO):
 				self.ca.gplay.stop()
-				self.startLiveVideo( self.liveVideoWindow, False )
+				self.startLiveVideo( False )
 			elif (recd.type == Constants.TYPE_AUDIO):
 				self.livePhotoCanvas.setImage( None )
 				self.startLiveAudio()
