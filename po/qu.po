@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,6 +44,10 @@ msgstr ""
 msgid "Panorama"
 msgstr ""
 
+#: constants.py:97
+msgid "Interview"
+msgstr ""
+
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -74,14 +78,44 @@ msgstr ""
 msgid "Finished recording"
 msgstr ""
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr ""
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr ""
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
 msgstr ""
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr ""
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr ""
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
 msgstr ""
 
 #: constants.py:114
@@ -108,16 +142,6 @@ msgstr ""
 msgid "Immediate"
 msgstr ""
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr ""
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr ""
-
 #: constants.py:122
 msgid "Play"
 msgstr ""
@@ -137,87 +161,6 @@ msgstr ""
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr ""
-
-#: constants.py:110
-msgid "Quality:"
-msgstr ""
-
-#: constants.py:111
-msgid "Best quality"
-msgstr ""
-
-#: constants.py:112
-msgid "High quality"
-msgstr ""
-
-#: constants.py:113
-msgid "Low quality"
-msgstr ""
-
-#: constants.py:132
-msgid "Large file"
-msgstr ""
-
-#: constants.py:133
-msgid "Small file"
-msgstr ""
-
-#: constants.py:134
-msgid "Silent"
-msgstr ""
-
-#: constants.py:135
-msgid "Rotate"
-msgstr ""
-
-#: constants.py:138
-msgid "Click to take picture"
-msgstr ""
-
-#: constants.py:139
-msgid "Click to add picture"
-msgstr ""
-
-#. TRANS: Downloading Photo from Mary
-#: constants.py:141
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr ""
-
-#. TRANS: Cannot download this Photo
-#: constants.py:143
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr ""
-
-#: constants.py:97
-msgid "Interview"
-msgstr ""
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr ""
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr ""
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr ""
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr ""
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
 msgstr ""
 
 #: constants.py:127
@@ -240,12 +183,48 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
+#: constants.py:132
+msgid "Large file"
+msgstr ""
+
+#: constants.py:133
+msgid "Small file"
+msgstr ""
+
+#: constants.py:134
+msgid "Silent"
+msgstr ""
+
+#: constants.py:135
+msgid "Rotate"
+msgstr ""
+
 #: constants.py:136
 msgid "Width"
 msgstr ""
 
 #: constants.py:137
 msgid "Height"
+msgstr ""
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr ""
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr ""
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr ""
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
 msgstr ""
 
 #. TRANS: Save Photo to:
@@ -347,3 +326,4 @@ msgstr ""
 #: constants.py:169
 msgid "Capacity"
 msgstr ""
+

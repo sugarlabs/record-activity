@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2008-02-08 13:02-0500\n"
-"Last-Translator: Rafael Ortiz <rafael@laptop.org>\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-07-15 13:25-0400\n"
+"Last-Translator: Cristian Andrés Rodríguez Ferreira "
+"<djtoxicsoftware@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:90
 msgid "Record"
@@ -44,6 +45,11 @@ msgstr "Animación"
 msgid "Panorama"
 msgstr "Panorama"
 
+#: constants.py:97
+msgid "Interview"
+msgstr "Entrevista"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -54,15 +60,11 @@ msgstr "%(1)s por %(2)s"
 msgid "Title:"
 msgstr "Título:"
 
-# Recorder seria el que hizo la grabacion...? En que difiere de "Author"
-# 
-# En la mayoría de los casos en que no te grabas a ti mismo, tu no eres el 'autor' de lo que estas grabando, pero si el autor de la grabacion.
-# 
-# Quitando esta fuzzy word debido a las aclaraciones de Erik.
-#
+# Recorder seria el que hizo la grabacion...? En que difiere de "Author".
+# Respuesta: No hay diferencia válida para una traducción. Es más, en una cámara de video VHS se sustituye Recorder por Autor.
 #: constants.py:101
 msgid "Recorder:"
-msgstr "Autor de la grabación:"
+msgstr "Autor:"
 
 #: constants.py:102
 msgid "Date:"
@@ -80,19 +82,50 @@ msgstr "Guardando"
 msgid "Finished recording"
 msgstr "Grabación terminada"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s horas, %(2)s minutos, %(1)s segundos restantes"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "%(1)s minutos, %(1)s segundos restantes"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "%(1)s horas restantes"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "%(1)s minutos restantes"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1)s segundos restantes"
 
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s horas"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s minutos"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s segundos"
+
 #: constants.py:114
 msgid "Remove"
-msgstr "Sacar"
+msgstr "Eliminar"
 
 #: constants.py:115
 msgid "Stopped recording"
@@ -102,9 +135,10 @@ msgstr "Grabación detenida"
 msgid "Copy to clipboard"
 msgstr "Copiar al portapapel"
 
+# Cronometro is more readily understood as a timing device.
 #: constants.py:117
 msgid "Timer:"
-msgstr "Temporizador:"
+msgstr "Cronometro"
 
 # duracion o largo / longitud? ie: largometraje
 #: constants.py:118
@@ -115,16 +149,6 @@ msgstr "Duración:"
 #: constants.py:119
 msgid "Immediate"
 msgstr "Inmediato"
-
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s segundos"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s minutos"
 
 #: constants.py:122
 msgid "Play"
@@ -147,21 +171,25 @@ msgstr "Eliminar cuadro"
 msgid "%(1)s frames per second"
 msgstr "%(1)s cuadros por segundo"
 
-#: constants.py:110
-msgid "Quality:"
-msgstr "Calidad:"
+#: constants.py:127
+msgid "Quality"
+msgstr "Calidad"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "Máxima calidad"
+#: constants.py:128
+msgid "Default"
+msgstr "Predeterminada"
 
-#: constants.py:112
-msgid "High quality"
-msgstr "Alta calidad"
+#: constants.py:129
+msgid "Best"
+msgstr "Óptima"
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "Baja calidad"
+#: constants.py:130
+msgid "High"
+msgstr "Alta"
+
+#: constants.py:131
+msgid "Low"
+msgstr "Baja"
 
 #: constants.py:132
 msgid "Large file"
@@ -172,17 +200,22 @@ msgid "Small file"
 msgstr "Archivo pequeño"
 
 # context? -- xavi
-# 
-# Quitando fuzzy por aclaracion de erik.
-# 
-#
 #: constants.py:134
+#, fuzzy
 msgid "Silent"
 msgstr "Silencioso"
 
 #: constants.py:135
 msgid "Rotate"
 msgstr "Rotar"
+
+#: constants.py:136
+msgid "Width"
+msgstr "Ancho"
+
+#: constants.py:137
+msgid "Height"
+msgstr "Altura"
 
 #: constants.py:138
 msgid "Click to take picture"
@@ -206,74 +239,15 @@ msgstr "Descargando %(1)s desde %(2)s"
 msgid "Cannot download this %(1)s"
 msgstr "Imposible descargar este %(1)s"
 
-#: constants.py:97
-msgid "Interview"
-msgstr "Entrevista"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s horas, %(2)s minutos, %(1)s segundos restantes"
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s minutos, %(2)s segundos restantes"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "%(1)s horas restantes"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "%(1)s minutos restantes"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s horas"
-
-#: constants.py:127
-msgid "Quality"
-msgstr "Calidad"
-
-#: constants.py:128
-msgid "Default"
-msgstr "Por omisión"
-
-#: constants.py:129
-msgid "Best"
-msgstr "Mejor"
-
-#: constants.py:130
-msgid "High"
-msgstr "Alto"
-
-#: constants.py:131
-msgid "Low"
-msgstr "Bajo"
-
-# google
-#: constants.py:136
-msgid "Width"
-msgstr "Anchura"
-
-# google
-#: constants.py:137
-msgid "Height"
-msgstr "Altura"
-
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr "Guardar %(1) a:"
+msgstr "Guardar %(1) en:"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "Tu %(1)s esta lleno"
+msgstr "Su %(1)s está lleno"
 
 #: constants.py:147
 msgid "Journal"
@@ -291,8 +265,6 @@ msgstr "Tarjeta SD"
 msgid "Preferences"
 msgstr "Preferencias"
 
-# space available is clearer, ne?
-# -- certainly but 'free' isn't necesarily the same as 'available', here I think we need to trust the english author.
 #: constants.py:151
 msgid "Free space:"
 msgstr "Espacio libre:"
@@ -307,20 +279,18 @@ msgstr "%(1)s fotos"
 msgid "Bitrate"
 msgstr "Tasa de bits"
 
-# google
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr "Tasa Máxima de Bits"
+msgstr "Tasa máxima de bits"
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr "Tipo Mínimo de Bits"
+msgstr "Tasa mínima de bits"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr "Administrar la Tasa de Bits"
+msgstr "Manejar tasa de bits"
 
-# agree with the anterior comment, unfuzzing..
 #: constants.py:158
 msgid "Border"
 msgstr "Borde"
@@ -329,45 +299,44 @@ msgstr "Borde"
 msgid "Center"
 msgstr "Centro"
 
+# segun wikipedia esa seria la traduccion http://es.wikipedia.org/wiki/Fotograma
+# DjToXiC: Verdad, pero debería ser sustituido por Cuadros porque está en plural, en demás traducciones está como cuadros, es una palabra más larga que frame por lo tanto se puede ir de la pantalla y además es una laptop para niños, no?
 #: constants.py:160
 msgid "Frames"
-msgstr "Marcos"
+msgstr "Cuadros"
 
-# keyframe is a video encoding word for which there is no agreed alternative in spanish, besides, any guy for which this message makes _any_ sence should be already aware of its meaning
+# "fotograma clave" is used for keyframe, but this needs to be consistent with other uses of frame.
+# DjToXiC: I agree, but "cuadros clave" is present in others translations, and it is used in Video Editors.
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr "Detectar los keyframes automáticamente"
+msgstr "Detección automática de cuadros clave"
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr "Forzar keyframe"
+msgstr "Forzar cuadro clave"
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr "Tiempo entre keyframes"
+msgstr "frecuencia de cuadros clave"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr "Distancia mínima entre keyframes"
+msgstr "Distancia mínima entre cuadros clave"
 
+# DjToXiC: La palabra "keyframe" permanecía en la traducción anterior.
 #: constants.py:165
-#, fuzzy
 msgid "Keyframe threshold"
-msgstr "Límite del keyframe"
+msgstr "Umbral del cuadro clave"
 
 #: constants.py:166
 msgid "Noise Sensitivity"
-msgstr "Sensibilidad al Ruido"
+msgstr "Sensibilidad de ruido"
 
 #: constants.py:167
 msgid "Quick"
-msgstr "Rapido"
+msgstr "Rápido"
 
-# Then again I wouldn't even translate this word.
-# 
-# this word can be translated perfectly with nitidez.
-# as discussed on mailist
-#
+# Video sharpness is not the same as definitiion (or resolution) - Nitidez is a more accurate term here
 #: constants.py:168
 msgid "Sharpness"
 msgstr "Nitidez"
@@ -375,3 +344,15 @@ msgstr "Nitidez"
 #: constants.py:169
 msgid "Capacity"
 msgstr "Capacidad"
+
+#~ msgid "Best quality"
+#~ msgstr "Máxima calidad"
+
+#~ msgid "High quality"
+#~ msgstr "Alta calidad"
+
+#~ msgid "Low quality"
+#~ msgstr "Baja calidad"
+
+#~ msgid "Your disk is full"
+#~ msgstr "Su disco está lleno"

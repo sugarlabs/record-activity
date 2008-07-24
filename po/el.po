@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2008-01-20 14:38+0000\n"
-"Last-Translator: Simos Xenitellis <simos.lists@googlemail.com>\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-07-05 05:28-0400\n"
+"Last-Translator: Γιάννης Κασκαμανίδης <ttnfy17@yahoo.gr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:90
 msgid "Record"
@@ -44,11 +44,16 @@ msgstr "Κίνηση"
 msgid "Panorama"
 msgstr "Πανόραμα"
 
+#: constants.py:97
+msgid "Interview"
+msgstr "Συνέντευξη"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr "%(1)s με %(2)s"
+msgstr "%(1)s από την %(2)s"
 
 #: constants.py:100
 msgid "Title:"
@@ -56,7 +61,7 @@ msgstr "Τίτλος:"
 
 #: constants.py:101
 msgid "Recorder:"
-msgstr "Μηχάνημα εγγραφής:"
+msgstr "Εγγραφέας Ήχου:"
 
 #: constants.py:102
 msgid "Date:"
@@ -68,29 +73,60 @@ msgstr "Ετικέτες:"
 
 #: constants.py:104
 msgid "Saving"
-msgstr "Σε κατάσταση αποθήκευσης"
+msgstr "Αποθηκεύω"
 
 #: constants.py:105
 msgid "Finished recording"
-msgstr "Ολοκλήρωση εγγραφής"
+msgstr "Η εγγραφή ολοκληρώθηκε"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s ώρες, %(2)s λεπτά, %(1)s δευτερόλεπτα απομένουν"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "%(1)s λεπτά, %(1)s δευτερόλεπτα απομένουν"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "%(1)s ώρες απομένουν"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "%(1)s λεπτά απομένουν"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1)s δευτερόλεπτα απομένουν"
 
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s ώρες"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s λεπτά"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s δευτερόλεπτα"
+
 #: constants.py:114
 msgid "Remove"
-msgstr "Απομακρύνω"
+msgstr "Αφαίρεση"
 
 #: constants.py:115
 msgid "Stopped recording"
-msgstr "Σταμάτημα εγγραφής"
+msgstr "Η εγγραφή σταμάτησε"
 
 #: constants.py:116
 msgid "Copy to clipboard"
@@ -98,25 +134,15 @@ msgstr "Αντιγραφή στο πρόχειρο"
 
 #: constants.py:117
 msgid "Timer:"
-msgstr "Χρονόμετρο"
+msgstr "Χρονόμετρο:"
 
 #: constants.py:118
 msgid "Duration:"
-msgstr "Διάρκεια"
+msgstr "Διάρκεια:"
 
 #: constants.py:119
 msgid "Immediate"
-msgstr "Άμεσος"
-
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s δευτερόλεπτα"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s λεπτά"
+msgstr "Αμέσως"
 
 #: constants.py:122
 msgid "Play"
@@ -128,7 +154,7 @@ msgstr "Παύση"
 
 #: constants.py:124
 msgid "Add frame"
-msgstr "Πρόσθεση πλαισίου"
+msgstr "Προσθήκη πλαισίου"
 
 #: constants.py:125
 msgid "Remove frame"
@@ -139,21 +165,25 @@ msgstr "Αφαίρεση πλαισίου"
 msgid "%(1)s frames per second"
 msgstr "%(1)s πλαίσια ανά δευτερόλεπτο"
 
-#: constants.py:110
-msgid "Quality:"
-msgstr "Ποιότητα:"
+#: constants.py:127
+msgid "Quality"
+msgstr "Ποιότητα"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "Η καλύτερη ποιότητα"
+#: constants.py:128
+msgid "Default"
+msgstr "Προκαθορισμένο"
 
-#: constants.py:112
-msgid "High quality"
-msgstr "Υψηλή ποιότητα"
+#: constants.py:129
+msgid "Best"
+msgstr "Βέλτιστο"
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "Χαμηλή ποιότητα"
+#: constants.py:130
+msgid "High"
+msgstr "Υψηλό"
+
+#: constants.py:131
+msgid "Low"
+msgstr "Χαμηλό"
 
 #: constants.py:132
 msgid "Large file"
@@ -169,15 +199,23 @@ msgstr "Σιωπηλός"
 
 #: constants.py:135
 msgid "Rotate"
-msgstr "Περιστρέφω"
+msgstr "Περιστροφή"
+
+#: constants.py:136
+msgid "Width"
+msgstr "Πλάτος"
+
+#: constants.py:137
+msgid "Height"
+msgstr "Ύψος"
 
 #: constants.py:138
 msgid "Click to take picture"
-msgstr "Κλικ για να πάρεις την εικόνα"
+msgstr "Κλικ για να πάρεις εικόνα"
 
 #: constants.py:139
 msgid "Click to add picture"
-msgstr "Κλικ για να προσθέσεις την εικόνα"
+msgstr "Κλικ για να προσθέσεις εικόνα"
 
 #. TRANS: Downloading Photo from Mary
 #: constants.py:141
@@ -191,72 +229,15 @@ msgstr "Κατέβασμα %(1)s από %(2)s"
 msgid "Cannot download this %(1)s"
 msgstr "Αδυνατώ να το κατεβάσω %(1)s"
 
-#: constants.py:97
-msgid "Interview"
-msgstr "Συνέντευξη"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "Υπολείπονται %(1)s ώρες, %(2)s λεπτά, %(1)s δευτερόλεπτα"
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "Υπολείπονται %(1)s λεπτά, %(2)s δευτερόλεπτα"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "Υπολείπονται %(1)s ώρες"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "Υπολείπονται %(1)s λεπτά"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s ώρες"
-
-#: constants.py:127
-msgid "Quality"
-msgstr "Ποιότητα"
-
-#: constants.py:128
-msgid "Default"
-msgstr "Προεπιλογή"
-
-#: constants.py:129
-msgid "Best"
-msgstr "Βέλτιστη"
-
-#: constants.py:130
-msgid "High"
-msgstr "Υψηλή"
-
-#: constants.py:131
-msgid "Low"
-msgstr "Χαμηλή"
-
-#: constants.py:136
-msgid "Width"
-msgstr "Πλάτος"
-
-#: constants.py:137
-msgid "Height"
-msgstr "Ύψος"
-
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr "Αποθήκευση %(1) σε:"
+msgstr "Σώσε την %(1) στο:"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "Το %(1)s είναι γεμάτο"
+msgstr "Τo %(1)s σας είναι γεμάτo"
 
 #: constants.py:147
 msgid "Journal"
@@ -264,7 +245,7 @@ msgstr "Ημερολόγιο"
 
 #: constants.py:148
 msgid "USB"
-msgstr "Θύρα USB"
+msgstr "USB"
 
 #: constants.py:149
 msgid "SD Card"
@@ -286,55 +267,56 @@ msgstr "%(1)s φωτογραφίες"
 
 #: constants.py:154
 msgid "Bitrate"
-msgstr "Ρυθμός ροής δεδομένων"
+msgstr "Ρυθμός μετάδοσης bit"
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr "Μέγιστος ρυθμός ροής δεδομένων"
+msgstr "Μέγιστος ρυθμός μετάδοσης bit"
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr "Ελάχιστος ρυθμός ροής δεδομένων"
+msgstr "Ελάχιστος ρυθμός μετάδοσης bit"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr "Χειρισμός ρυθμού ροής δεδομένων"
+msgstr "Διαχείριση ρυθμού μετάδοσης bit"
 
 #: constants.py:158
 msgid "Border"
-msgstr "Όριο"
+msgstr "Περίγραμμα"
 
 #: constants.py:159
 msgid "Center"
 msgstr "Κέντρο"
 
+# Είναι οι εικόνες που σχηματίζουν την ταινία (την κίνηση) π.χ.  25 πλαίσια ανα δεπτερόλεπτο ή π.χ. 25 καρέ ανά δεπτερόλεπτο
 #: constants.py:160
 msgid "Frames"
-msgstr "Πλαίσια"
+msgstr "Καρέ"
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr "Αυτόματoς εντοπισμός βασικού πλαισίου"
+msgstr "Αυτόματος εντοπισμός καρέ-κλειδιών"
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr "Εξαναγκασμός βασικού πλαισίου"
+msgstr "Εξαναγκασμός καρέ-κλειδιού"
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr "Συχνότητα βασικού πλαισίου"
+msgstr "Συχνότητα καρέ-κλειδιών"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr "Ελάχιστη απόσταση βασικού πλαισίου"
+msgstr "Ελάχιστη απόσταση καρέ-κλειδιών"
 
 #: constants.py:165
 msgid "Keyframe threshold"
-msgstr "Κατώφλι καρέ κλειδιού"
+msgstr "Κατώφλι καρέ-κλειδιών"
 
 #: constants.py:166
 msgid "Noise Sensitivity"
-msgstr "Ευαισθησία σε θόρυβο"
+msgstr "Ευαισθησία θορύβου"
 
 #: constants.py:167
 msgid "Quick"
@@ -342,8 +324,20 @@ msgstr "Γρήγορο"
 
 #: constants.py:168
 msgid "Sharpness"
-msgstr "Eυκρίνεια"
+msgstr "Οξύτητα"
 
 #: constants.py:169
 msgid "Capacity"
 msgstr "Χωρητικότητα"
+
+#~ msgid "Best quality"
+#~ msgstr "Βέλτιστη ποιότητα"
+
+#~ msgid "High quality"
+#~ msgstr "Υψηλή ποιότητα"
+
+#~ msgid "Low quality"
+#~ msgstr "Χαμηλή ποιότητα"
+
+#~ msgid "Your disk is full"
+#~ msgstr "Ο δίσκος σου είναι γεμάτος"

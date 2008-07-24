@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: record-activity\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2008-01-08 16:46+0000\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-03-13 09:09-0400\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n>=3 && "
 "n<=10 ? 3 : n>=11 && n<=99 ? 4 : 5;\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:90
 msgid "Record"
@@ -45,6 +45,11 @@ msgstr "رسوم متحركة"
 msgid "Panorama"
 msgstr "بانوراما"
 
+#: constants.py:97
+msgid "Interview"
+msgstr "مقابلة"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -75,15 +80,46 @@ msgstr "يحفظ"
 msgid "Finished recording"
 msgstr "اكتمل التسجيل"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "بقي %(1)s دقائق و %(1)s ثوان"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "بقي %(1)s ساعات، و %(2) دقائق و %(1)s ثوان"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "بقي %(1)s دقائق و %(2)s ثوان"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "بقي %(1)s ساعات"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "بقي %(1)s دقائق"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "بقي %(1)s ثوان"
+
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s ساعات"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s دقائق"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s ثوان"
 
 #: constants.py:114
 msgid "Remove"
@@ -109,23 +145,13 @@ msgstr "المدّة:"
 msgid "Immediate"
 msgstr "حالا"
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s ثوان"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s دقائق"
-
 #: constants.py:122
 msgid "Play"
 msgstr "شغّل"
 
 #: constants.py:123
 msgid "Pause"
-msgstr "أَسبِت"
+msgstr "قف مؤقتا"
 
 #: constants.py:124
 msgid "Add frame"
@@ -138,23 +164,27 @@ msgstr "أزِل إطارًا"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "%(1)s إطارا في الثانية"
+msgstr "%(1)s إطار في الثانية"
 
-#: constants.py:110
-msgid "Quality:"
-msgstr "الجودة:"
+#: constants.py:127
+msgid "Quality"
+msgstr "الجودة"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "أفضل جودة"
+#: constants.py:128
+msgid "Default"
+msgstr "المبدئي"
 
-#: constants.py:112
-msgid "High quality"
-msgstr "جودة عالية"
+#: constants.py:129
+msgid "Best"
+msgstr "الأفضل"
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "جودة منخفضة"
+#: constants.py:130
+msgid "High"
+msgstr "عالية"
+
+#: constants.py:131
+msgid "Low"
+msgstr "منخفضة"
 
 #: constants.py:132
 msgid "Large file"
@@ -171,6 +201,14 @@ msgstr "صامت"
 #: constants.py:135
 msgid "Rotate"
 msgstr "أدِر"
+
+#: constants.py:136
+msgid "Width"
+msgstr "العرض"
+
+#: constants.py:137
+msgid "Height"
+msgstr "الارتفاع"
 
 #: constants.py:138
 msgid "Click to take picture"
@@ -192,72 +230,15 @@ msgstr "يُنزِّل %(1)s من %(2)s"
 msgid "Cannot download this %(1)s"
 msgstr "تعذّر تنزيل %(1)s"
 
-#: constants.py:97
-msgid "Interview"
-msgstr "مقابلة"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "بقي %(1)s ساعة، و %(2)s دقيقة و %(1)s ثانية"
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "بقي %(1)s دقيقة و %(2)s ثانية"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "بقي %(1)s ساعة"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "بقي %(1)s دقيقة"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s ساعة"
-
-#: constants.py:127
-msgid "Quality"
-msgstr "الجودة:"
-
-#: constants.py:128
-msgid "Default"
-msgstr "المبدئية"
-
-#: constants.py:129
-msgid "Best"
-msgstr "الأفضل"
-
-#: constants.py:130
-msgid "High"
-msgstr "مرتفعة"
-
-#: constants.py:131
-msgid "Low"
-msgstr "منخفضة"
-
-#: constants.py:136
-msgid "Width"
-msgstr "العرض"
-
-#: constants.py:137
-msgid "Height"
-msgstr "الارتفاع"
-
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr "احفظ %(1)s إلى:"
+msgstr "احفظ %(1) في:"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "%(1)s الخاص ممتلأ"
+msgstr "ال%(1)s ممتلئ"
 
 #: constants.py:147
 msgid "Journal"
@@ -283,7 +264,7 @@ msgstr "المساحة الخالية:"
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr " %(1)s صور"
+msgstr "%(1)s صور"
 
 #: constants.py:154
 msgid "Bitrate"
@@ -299,39 +280,39 @@ msgstr "أدنى معدل بتات"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr "تحكّم في معدل البتات"
+msgstr "أدِر معدّل البتات"
 
 #: constants.py:158
 msgid "Border"
-msgstr "حد"
+msgstr "الحد"
 
 #: constants.py:159
 msgid "Center"
-msgstr "وسط"
+msgstr "المركز"
 
 #: constants.py:160
 msgid "Frames"
-msgstr "إطارات"
+msgstr "الإطارات"
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr "تحديد آلي للإطار الرئيس"
+msgstr "تعرف آلي على الإطار الأساسي"
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr "أجبر الإطار الرئيس"
+msgstr "افرِض الإطار الأساسي"
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr "تردد الإطار الرئيس"
+msgstr "سرعة الإطار الأساسي"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr "أدنى مسافة للإطار الرئيس"
+msgstr "أقل فاصل بين الإطار الأساسي"
 
 #: constants.py:165
 msgid "Keyframe threshold"
-msgstr "حد الإطار الرئيس"
+msgstr "عتبة الإطار الأساسي"
 
 #: constants.py:166
 msgid "Noise Sensitivity"
@@ -347,4 +328,16 @@ msgstr "الوضوح"
 
 #: constants.py:169
 msgid "Capacity"
-msgstr "السعة"
+msgstr "السِّعة"
+
+#~ msgid "Best quality"
+#~ msgstr "أفضل جودة"
+
+#~ msgid "High quality"
+#~ msgstr "جودة عالية"
+
+#~ msgid "Low quality"
+#~ msgstr "جودة منخفضة"
+
+#~ msgid "Your disk is full"
+#~ msgstr "القرص ممتلئ"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,11 +44,16 @@ msgstr ""
 msgid "Panorama"
 msgstr ""
 
+#: constants.py:97
+msgid "Interview"
+msgstr ""
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr "%(1)s eftir %(2)s"
+msgstr "%(1) eftir %(2)"
 
 #: constants.py:100
 msgid "Title:"
@@ -74,15 +79,48 @@ msgstr "Vista"
 msgid "Finished recording"
 msgstr "Endaði upptöku"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s mínúndur, %(1)s sekúndur eftir"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1) mínúndur, %(1) sekúndur eftir"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "%(1) sekúndur eftir"
+
+#: constants.py:109
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes remaining"
+msgstr "%(1) sekúndur eftir"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1) sekúndur eftir"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr ""
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1) mínúndur"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1) sekúndur"
 
 #: constants.py:114
 msgid "Remove"
@@ -108,16 +146,6 @@ msgstr ""
 msgid "Immediate"
 msgstr ""
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1) sekúndur"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s mínúndur"
-
 #: constants.py:122
 msgid "Play"
 msgstr "Spila"
@@ -138,89 +166,6 @@ msgstr "Fjarlægja ramma"
 #, python-format
 msgid "%(1)s frames per second"
 msgstr "%(1) rammar á sekúndu"
-
-#: constants.py:110
-msgid "Quality:"
-msgstr "Gæði:"
-
-#: constants.py:111
-msgid "Best quality"
-msgstr "Bestu gæði"
-
-#: constants.py:112
-msgid "High quality"
-msgstr "Góð gæði"
-
-#: constants.py:113
-msgid "Low quality"
-msgstr "Léleg gæði"
-
-#: constants.py:132
-msgid "Large file"
-msgstr "Stór skrá"
-
-#: constants.py:133
-msgid "Small file"
-msgstr "Lítil skrá"
-
-#: constants.py:134
-msgid "Silent"
-msgstr "Hljótt"
-
-#: constants.py:135
-msgid "Rotate"
-msgstr "Snúa"
-
-#: constants.py:138
-msgid "Click to take picture"
-msgstr "Smelltu til að taka mynd"
-
-#: constants.py:139
-msgid "Click to add picture"
-msgstr "Smelltu til að bæta við mynd"
-
-#. TRANS: Downloading Photo from Mary
-#: constants.py:141
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "Sæki %(1)s frá %(2)s"
-
-#. TRANS: Cannot download this Photo
-#: constants.py:143
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "Gat ekki sótt þetta %(1)s"
-
-#: constants.py:97
-msgid "Interview"
-msgstr ""
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr ""
-
-#: constants.py:107
-#, python-format
-#, fuzzy
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1) mínúndur, %(1) sekúndur eftir"
-
-#: constants.py:108
-#, python-format
-#, fuzzy
-msgid "%(1)s hours remaining"
-msgstr "%(1) sekúndur eftir"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr ""
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr ""
 
 #: constants.py:127
 #, fuzzy
@@ -243,6 +188,22 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
+#: constants.py:132
+msgid "Large file"
+msgstr "Stór skrá"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "Lítil skrá"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "Hljótt"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "Snúa"
+
 #: constants.py:136
 msgid "Width"
 msgstr ""
@@ -250,6 +211,26 @@ msgstr ""
 #: constants.py:137
 msgid "Height"
 msgstr ""
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "Smelltu til að taka mynd"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "Smelltu til að bæta við mynd"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "Sæki %(1) frá %(2)"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "Gat ekki sótt þetta %(1)"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
@@ -350,3 +331,4 @@ msgstr ""
 #: constants.py:169
 msgid "Capacity"
 msgstr ""
+

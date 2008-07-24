@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-11-25 19:31+0000\n"
-"Last-Translator: Behnam B.Marandi <blixbox@gmail.com>\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-01-09 08:58+0000\n"
+"Last-Translator: Sohaib Obaidi <ebtihaj_obaidi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,25 +33,27 @@ msgid "Audio"
 msgstr "صدا"
 
 #: constants.py:94
-#, fuzzy
 msgid "Time Lapse"
-msgstr "گذر زمان"
+msgstr "گذشت زمان"
 
 #: constants.py:95
 msgid "Animation"
 msgstr "پویانمایی"
 
 #: constants.py:96
-#, fuzzy
 msgid "Panorama"
-msgstr "پانوراما"
+msgstr " چشم انداز"
 
+#: constants.py:97
+msgid "Interview"
+msgstr ""
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
-#, fuzzy
 msgid "%(1)s by %(2)s"
-msgstr "%(1) از %(2)"
+msgstr "%(1)s در %(2)s"
 
 #: constants.py:100
 msgid "Title:"
@@ -77,15 +79,50 @@ msgstr "ذخیره‌سازی"
 msgid "Finished recording"
 msgstr "ضبطهای تمام‌شده"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "%(1)s دقیقه %(1)s ثانیه مانده"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "%(1)s ثانیه مانده"
+
+#: constants.py:109
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes remaining"
+msgstr "%(1)s ثانیه مانده"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1)s ثانیه مانده"
+
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+#, fuzzy
+msgid "%(1)s hours"
+msgstr "%(1)s عکسها"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s دقیقه"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s ثانیه"
 
 #: constants.py:114
 msgid "Remove"
@@ -96,7 +133,6 @@ msgid "Stopped recording"
 msgstr "ضبط متوقف شده"
 
 #: constants.py:116
-#, fuzzy
 msgid "Copy to clipboard"
 msgstr "کپی به حافظه"
 
@@ -111,16 +147,6 @@ msgstr "مدت:"
 #: constants.py:119
 msgid "Immediate"
 msgstr "فوری"
-
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s ثانیه"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s دقیقه"
 
 #: constants.py:122
 msgid "Play"
@@ -143,89 +169,6 @@ msgstr "برداشتن قاب"
 msgid "%(1)s frames per second"
 msgstr "%(1)s قاب در ثانیه"
 
-#: constants.py:110
-msgid "Quality:"
-msgstr "کیفیت:"
-
-#: constants.py:111
-msgid "Best quality"
-msgstr "بهترین کیفیت"
-
-#: constants.py:112
-msgid "High quality"
-msgstr "کیفیت بالا"
-
-#: constants.py:113
-msgid "Low quality"
-msgstr "کیفیت پایین"
-
-#: constants.py:132
-msgid "Large file"
-msgstr "پرونده بزرگ"
-
-#: constants.py:133
-msgid "Small file"
-msgstr "پرونده کوچک"
-
-#: constants.py:134
-msgid "Silent"
-msgstr "سکوت"
-
-#: constants.py:135
-msgid "Rotate"
-msgstr "چرخش"
-
-#: constants.py:138
-msgid "Click to take picture"
-msgstr "برای عکس گرفتن کلیک کن"
-
-#: constants.py:139
-msgid "Click to add picture"
-msgstr "برای افزودن عکس کلیک کن"
-
-#. TRANS: Downloading Photo from Mary
-#: constants.py:141
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "در حال دریافت %(1)s از %(2)s"
-
-#. TRANS: Cannot download this Photo
-#: constants.py:143
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "این %(1)s دریافت نمی‌شود"
-
-#: constants.py:97
-msgid "Interview"
-msgstr ""
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr ""
-
-#: constants.py:107
-#, python-format
-#, fuzzy
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s دقیقه %(2)s ثانیه مانده"
-
-#: constants.py:108
-#, python-format
-#, fuzzy
-msgid "%(1)s hours remaining"
-msgstr "%(1)s ثانیه مانده"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr ""
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr ""
-
 #: constants.py:127
 #, fuzzy
 msgid "Quality"
@@ -247,110 +190,158 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
+#: constants.py:132
+msgid "Large file"
+msgstr "پرونده بزرگ"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "پرونده کوچک"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "سکوت"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "چرخش"
+
 #: constants.py:136
 msgid "Width"
-msgstr ""
+msgstr "عرض"
 
 #: constants.py:137
 msgid "Height"
-msgstr ""
+msgstr "ارتفاع"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "برای عکس گرفتن کلیک کن"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "برای افزودن عکس کلیک کن"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "در حال دریافت %(1)s از %(2)s"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "این %(1)s دریافت نمی‌شود"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr ""
+msgstr "%(1)s ثبت شد در:"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr ""
+msgstr "%(1)s شما پر است"
 
 #: constants.py:147
 msgid "Journal"
-msgstr ""
+msgstr "روزنامه"
 
 #: constants.py:148
 msgid "USB"
-msgstr ""
+msgstr "مسیر فراگیر مسلسلUniversal Serial Bus"
 
 #: constants.py:149
 msgid "SD Card"
-msgstr ""
+msgstr "کارت SD"
 
 #: constants.py:150
 msgid "Preferences"
-msgstr ""
+msgstr "اولویت ها"
 
 #: constants.py:151
 msgid "Free space:"
-msgstr ""
+msgstr "فضای خالی"
 
 #. TRANS: 7 photos
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr ""
+msgstr "%(1)s عکسها"
 
 #: constants.py:154
 msgid "Bitrate"
-msgstr ""
+msgstr "شرح جریان بت"
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr ""
+msgstr "بیشترین شرح جریان بت"
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr ""
+msgstr "کمترین شرح جریان بت"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr ""
+msgstr "اداره شرح جریان بت"
 
 #: constants.py:158
 msgid "Border"
-msgstr ""
+msgstr "حاشیه"
 
 #: constants.py:159
 msgid "Center"
-msgstr ""
+msgstr "مرکز"
 
 #: constants.py:160
 msgid "Frames"
-msgstr ""
+msgstr "قاب ها"
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr ""
+msgstr "کشف اتوماتیکی قاب کلیدی"
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr ""
+msgstr "قاب کلیدی نفوذ"
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr ""
+msgstr "تناوب قاب کلیدی"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr ""
+msgstr "کمترین فاصله قاب کلیدی"
 
 #: constants.py:165
 msgid "Keyframe threshold"
-msgstr ""
+msgstr "آستانه قاب کلیدی"
 
 #: constants.py:166
 msgid "Noise Sensitivity"
-msgstr ""
+msgstr "حساسیت صدا"
 
 #: constants.py:167
 msgid "Quick"
-msgstr ""
+msgstr "سریع"
 
 #: constants.py:168
 msgid "Sharpness"
-msgstr ""
+msgstr "تیزی"
 
 #: constants.py:169
 msgid "Capacity"
-msgstr ""
+msgstr "ظرفیت"
+
+#~ msgid "Best quality"
+#~ msgstr "بهترین کیفیت"
+
+#~ msgid "High quality"
+#~ msgstr "کیفیت بالا"
+
+#~ msgid "Low quality"
+#~ msgstr "کیفیت پایین"
+
+#~ msgid "Your disk is full"
+#~ msgstr "دسک شما پر است"

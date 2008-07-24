@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-17 17:22+0000\n"
-"Last-Translator: novica <nnovica@gmail.com>\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2007-11-24 19:12+0000\n"
+"Last-Translator: Arangel Angov <arangel@slobodensoftver.org.mk>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +44,11 @@ msgstr "Анимација"
 msgid "Panorama"
 msgstr "Панорама"
 
+#: constants.py:97
+msgid "Interview"
+msgstr ""
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -68,21 +73,54 @@ msgstr "Ознаки:"
 
 #: constants.py:104
 msgid "Saving"
-msgstr "Снимам"
+msgstr "Зачувувам"
 
 #: constants.py:105
 msgid "Finished recording"
 msgstr "Снимањето е завршено"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "преостанато %(1)s минути, %(1)s секунди"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "преостанато %(1)s секунди"
+
+#: constants.py:109
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes remaining"
+msgstr "преостанато %(1)s секунди"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "преостанато %(1)s секунди"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr ""
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s минути"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s секунди"
 
 #: constants.py:114
 msgid "Remove"
@@ -108,16 +146,6 @@ msgstr "Времетраење:"
 msgid "Immediate"
 msgstr "Веднаш"
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s секунди"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s минути"
-
 #: constants.py:122
 msgid "Play"
 msgstr "Пушти"
@@ -139,21 +167,26 @@ msgstr "Отстрани рамка"
 msgid "%(1)s frames per second"
 msgstr "%(1)s рамки во секунда"
 
-#: constants.py:110
-msgid "Quality:"
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
 msgstr "Квалитет:"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "Најдобар квалитет"
+#: constants.py:128
+msgid "Default"
+msgstr ""
 
-#: constants.py:112
-msgid "High quality"
-msgstr "Висок квалитет"
+#: constants.py:129
+msgid "Best"
+msgstr ""
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "Низок квалитет"
+#: constants.py:130
+msgid "High"
+msgstr ""
+
+#: constants.py:131
+msgid "Low"
+msgstr ""
 
 #: constants.py:132
 msgid "Large file"
@@ -170,6 +203,14 @@ msgstr "Тивко"
 #: constants.py:135
 msgid "Rotate"
 msgstr "Ротирај"
+
+#: constants.py:136
+msgid "Width"
+msgstr ""
+
+#: constants.py:137
+msgid "Height"
+msgstr ""
 
 #: constants.py:138
 msgid "Click to take picture"
@@ -191,159 +232,111 @@ msgstr "Преземам %(1)s од %(2)s"
 msgid "Cannot download this %(1)s"
 msgstr "Не можам да ја преземам оваа %(1)s"
 
-#: constants.py:97
-msgid "Interview"
-msgstr "Интервју"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "преостануваат %(1)s часови, %(2)s минути, %(1)s секунди"
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "преостануваат %(1)s минути, %(2)s секунди"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "преостануваат %(1)s часа"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "преостануваат %(1)s минути"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s часови"
-
-#: constants.py:127
-msgid "Quality"
-msgstr "Квалитет"
-
-#: constants.py:128
-msgid "Default"
-msgstr "Обичен"
-
-#: constants.py:129
-msgid "Best"
-msgstr "Најдобар"
-
-#: constants.py:130
-msgid "High"
-msgstr "Висок"
-
-#: constants.py:131
-msgid "Low"
-msgstr "Низок"
-
-#: constants.py:136
-msgid "Width"
-msgstr "Широчина"
-
-#: constants.py:137
-msgid "Height"
-msgstr "Височина"
-
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr "Сними ја %(1) во:"
+msgstr ""
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "Вашиот %(1)s е полн"
+msgstr ""
 
 #: constants.py:147
 msgid "Journal"
-msgstr "Дневник"
+msgstr ""
 
 #: constants.py:148
 msgid "USB"
-msgstr "USB"
+msgstr ""
 
 #: constants.py:149
 msgid "SD Card"
-msgstr "SD картичка"
+msgstr ""
 
 #: constants.py:150
 msgid "Preferences"
-msgstr "Преференции"
+msgstr ""
 
 #: constants.py:151
 msgid "Free space:"
-msgstr "Слободен простор:"
+msgstr ""
 
 #. TRANS: 7 photos
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr "%(1)s фотографии"
+msgstr ""
 
 #: constants.py:154
 msgid "Bitrate"
-msgstr "Стапка на битови"
+msgstr ""
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr "Максимална стапка"
+msgstr ""
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr "Минимална стапка"
+msgstr ""
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr "Управувај ја стапката"
+msgstr ""
 
 #: constants.py:158
 msgid "Border"
-msgstr "Граница"
+msgstr ""
 
 #: constants.py:159
 msgid "Center"
-msgstr "Центар"
+msgstr ""
 
 #: constants.py:160
 msgid "Frames"
-msgstr "Рамки"
+msgstr ""
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr "Автоматско отркивање на клучна"
+msgstr ""
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr "Присили клучна рамка"
+msgstr ""
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr "Фреквенција на клучната рамка"
+msgstr ""
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr "Минимално растојание на клучната рамка"
+msgstr ""
 
 #: constants.py:165
 msgid "Keyframe threshold"
-msgstr "Праг на клучна рамка"
+msgstr ""
 
 #: constants.py:166
 msgid "Noise Sensitivity"
-msgstr "Осетливост на бука"
+msgstr ""
 
 #: constants.py:167
 msgid "Quick"
-msgstr "Брзо"
+msgstr ""
 
 #: constants.py:168
 msgid "Sharpness"
-msgstr "Острина"
+msgstr ""
 
 #: constants.py:169
 msgid "Capacity"
-msgstr "Капацитет"
+msgstr ""
+
+#~ msgid "Best quality"
+#~ msgstr "Најдобар квалитет"
+
+#~ msgid "High quality"
+#~ msgstr "Висок квалитет"
+
+#~ msgid "Low quality"
+#~ msgstr "Низок квалитет"

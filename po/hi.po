@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: record-activity\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-11-22 05:01+0000\n"
-"Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-04-09 06:26-0400\n"
+"Last-Translator: Prashant Thakkar <prashantbthakkar@gmail.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:90
 msgid "Record"
@@ -44,6 +44,11 @@ msgstr "एनिमेशन"
 msgid "Panorama"
 msgstr "दीर्घ दृश्य"
 
+#: constants.py:97
+msgid "Interview"
+msgstr "मुलाकात"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -74,15 +79,48 @@ msgstr "सहेजें"
 msgid "Finished recording"
 msgstr "रिकार्डिंग खतम"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s घंटे,%(2)s मिनट,%(1)s सेकण्ड बाकी"
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "%(1)s मिनट, %(1)s सेकण्ड बाकी"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "%(1)s घंटे बाकी"
+
+#: constants.py:109
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes remaining"
+msgstr "%(1)s मिनट"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1)s सेकण्ड बाकी"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s घंटे"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s मिनट"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s सेकेंड"
 
 #: constants.py:114
 msgid "Remove"
@@ -108,16 +146,6 @@ msgstr "अवधिः"
 msgid "Immediate"
 msgstr "तुरंत"
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s सेकेंड"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s मिनट"
-
 #: constants.py:122
 msgid "Play"
 msgstr "बजाएँ"
@@ -139,21 +167,26 @@ msgstr "फ्रेम हटाओ"
 msgid "%(1)s frames per second"
 msgstr "%(1)s फ्रेम प्रति सेकंड"
 
-#: constants.py:110
-msgid "Quality:"
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
 msgstr "गुणवत्ता"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "बढिया गुणवत्ता"
+#: constants.py:128
+msgid "Default"
+msgstr "तयशुदा"
 
-#: constants.py:112
-msgid "High quality"
-msgstr "उच्च गुणवत्ता"
+#: constants.py:129
+msgid "Best"
+msgstr "सर्वोत्तम"
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "कम गुणवत्ता"
+#: constants.py:130
+msgid "High"
+msgstr "तेज"
+
+#: constants.py:131
+msgid "Low"
+msgstr "धीमा"
 
 #: constants.py:132
 msgid "Large file"
@@ -170,6 +203,14 @@ msgstr "मूक"
 #: constants.py:135
 msgid "Rotate"
 msgstr "घुमाएँ"
+
+#: constants.py:136
+msgid "Width"
+msgstr "चौड़ाई"
+
+#: constants.py:137
+msgid "Height"
+msgstr "ऊंचाई"
 
 #: constants.py:138
 msgid "Click to take picture"
@@ -191,162 +232,111 @@ msgstr "%(1)s से %(2)s डाउनलोड किया जा रहा �
 msgid "Cannot download this %(1)s"
 msgstr "%(1)s को डाउनलोड नहीं किया जा सकता"
 
-#: constants.py:97
-msgid "Interview"
-msgstr ""
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr ""
-
-#: constants.py:107
-#, python-format
-#, fuzzy
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1) मिनट, %(1) सेकण्ड बाकी"
-
-#: constants.py:108
-#, python-format
-#, fuzzy
-msgid "%(1)s hours remaining"
-msgstr "%(1) सेकण्ड बाकी"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr ""
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr ""
-
-#: constants.py:127
-#, fuzzy
-msgid "Quality"
-msgstr "गुणवत्ता"
-
-#: constants.py:128
-msgid "Default"
-msgstr ""
-
-#: constants.py:129
-msgid "Best"
-msgstr ""
-
-#: constants.py:130
-msgid "High"
-msgstr ""
-
-#: constants.py:131
-msgid "Low"
-msgstr ""
-
-#: constants.py:136
-msgid "Width"
-msgstr ""
-
-#: constants.py:137
-msgid "Height"
-msgstr ""
-
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr ""
+msgstr "संग्रहितकरें"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr ""
+msgstr "  आपकी %(1)भर गयी है"
 
 #: constants.py:147
 msgid "Journal"
-msgstr ""
+msgstr "चिठ्ठा"
 
 #: constants.py:148
 msgid "USB"
-msgstr ""
+msgstr "यू.एस.बी"
 
 #: constants.py:149
 msgid "SD Card"
-msgstr ""
+msgstr "  एस.डी. कार्ड "
 
 #: constants.py:150
 msgid "Preferences"
-msgstr ""
+msgstr "पसंद नापसंद"
 
 #: constants.py:151
 msgid "Free space:"
-msgstr ""
+msgstr "मुक्त जगहा"
 
 #. TRANS: 7 photos
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr ""
+msgstr "%(1)s तस्वीरे"
 
 #: constants.py:154
 msgid "Bitrate"
-msgstr ""
+msgstr " बिट रेट"
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr ""
+msgstr "अधिकतम बिट रेट"
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr ""
+msgstr "न्यूनतम बिट रेट"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr ""
+msgstr " बिट रेट काबू करे"
 
 #: constants.py:158
 msgid "Border"
-msgstr ""
+msgstr "किनारा"
 
 #: constants.py:159
 msgid "Center"
-msgstr ""
+msgstr "मध्य"
 
 #: constants.py:160
 msgid "Frames"
-msgstr ""
+msgstr "ढांचा"
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr ""
+msgstr "महत्वपूर्ण ढाँचे की स्वचलित खोज  "
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr ""
+msgstr "महत्वपूर्ण ढाँचे को  दबाना"
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr ""
+msgstr "महत्वपूर्ण ढाँचे की आवृत्ति"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr ""
+msgstr " महत्वपूर्ण ढाँचे की न्यूनतम दूरी "
 
 #: constants.py:165
 msgid "Keyframe threshold"
-msgstr ""
+msgstr "महत्वपूर्ण ढाँचे की दहलीज़"
 
 #: constants.py:166
 msgid "Noise Sensitivity"
-msgstr ""
+msgstr "शोर की संवेदीती"
 
 #: constants.py:167
 msgid "Quick"
-msgstr ""
+msgstr "तुरंत"
 
 #: constants.py:168
 msgid "Sharpness"
-msgstr ""
+msgstr "स्पष्टता"
 
 #: constants.py:169
 msgid "Capacity"
-msgstr ""
+msgstr "धारण शक्ति"
+
+#~ msgid "Best quality"
+#~ msgstr "बढिया गुणवत्ता"
+
+#~ msgid "High quality"
+#~ msgstr "उच्च गुणवत्ता"
+
+#~ msgid "Low quality"
+#~ msgstr "कम गुणवत्ता"

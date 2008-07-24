@@ -6,18 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2008-01-22 09:23+0000\n"
-"Last-Translator: usman mansoor ansari <jalalkut@gmail.com>\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-03-12 05:09-0400\n"
+"Last-Translator: Usman Mansoor Ansari <jalalkut@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:90
 msgid "Record"
-msgstr "رېکارډول"
+msgstr "ریکارډ"
 
 #: constants.py:91
 msgid "Photo"
@@ -25,7 +25,7 @@ msgstr "انځور"
 
 #: constants.py:92
 msgid "Video"
-msgstr "ليديز"
+msgstr "لیدیز"
 
 #: constants.py:93
 msgid "Audio"
@@ -45,8 +45,9 @@ msgstr "هراړخیزه منظره"
 
 #: constants.py:97
 msgid "Interview"
-msgstr "مركه"
+msgstr "مرکه"
 
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -55,7 +56,7 @@ msgstr "%(1)s پر %(2)s"
 
 #: constants.py:100
 msgid "Title:"
-msgstr "سرليك:"
+msgstr "سرلیک:"
 
 #: constants.py:101
 msgid "Recorder:"
@@ -67,11 +68,11 @@ msgstr "نیټه:"
 
 #: constants.py:103
 msgid "Tags:"
-msgstr "بچوېګانې:"
+msgstr "وروستۍ برخې:"
 
 #: constants.py:104
 msgid "Saving"
-msgstr "ساتل"
+msgstr "ساتنه"
 
 #: constants.py:105
 msgid "Finished recording"
@@ -80,46 +81,47 @@ msgstr "رېکارډونه پای ته ورسېده"
 #: constants.py:106
 #, python-format
 msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s ساعته، %(2)s دقیقې، %(1)s ثانیې پاتې"
+msgstr "%(1)s ساعتونه, %(2)s دقیقې, %(1)s ثانیې پاتې دي"
 
 #: constants.py:107
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s دقيقې، %(2)s ثانیې پاتې"
+msgstr "%(1)s دقیقې، %(1)s ثانیې پاتې"
 
 #: constants.py:108
 #, python-format
 msgid "%(1)s hours remaining"
-msgstr "%(1)s ساعته پاتې"
+msgstr "٪(1)s ثانیې پاتې دي"
 
 #: constants.py:109
 #, python-format
 msgid "%(1)s minutes remaining"
-msgstr "%(1)s دقيقې پاتې"
+msgstr "%(1)s دقیقې پاتې دي"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr "%(1)s ثانيې پاتې"
+msgstr "٪(1)s ثانیې پاتې دي"
 
+# TRANS: 7 photos
 #: constants.py:111
 #, python-format
 msgid "%(1)s hours"
-msgstr "%(1)s ساعته"
+msgstr "%(۱)s ساعته"
 
 #: constants.py:112 constants.py:121
 #, python-format
 msgid "%(1)s minutes"
-msgstr "%(1)s دقيقې"
+msgstr "٪(1)s دقیقې"
 
 #: constants.py:113 constants.py:120
 #, python-format
 msgid "%(1)s seconds"
-msgstr "%(1)s ثانيې"
+msgstr "٪(1)s ثانیې"
 
 #: constants.py:114
 msgid "Remove"
-msgstr "لركول"
+msgstr "لرکول"
 
 #: constants.py:115
 msgid "Stopped recording"
@@ -160,11 +162,11 @@ msgstr "چوکاټ لرکول"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "%(1)s چوکاټه پر ثانيه"
+msgstr "٪(1)s چوکاټه پر ثانیه"
 
 #: constants.py:127
 msgid "Quality"
-msgstr "څرنګتيا"
+msgstr "څرنګتیا"
 
 #: constants.py:128
 msgid "Default"
@@ -172,7 +174,7 @@ msgstr "تلواله"
 
 #: constants.py:129
 msgid "Best"
-msgstr "غوره"
+msgstr "ترټولو غوره"
 
 #: constants.py:130
 msgid "High"
@@ -180,19 +182,19 @@ msgstr "لوړ"
 
 #: constants.py:131
 msgid "Low"
-msgstr "ټيټ"
+msgstr "ټیټ"
 
 #: constants.py:132
 msgid "Large file"
-msgstr "لويه دوتنه"
+msgstr "لویه دوتنه"
 
 #: constants.py:133
 msgid "Small file"
-msgstr "كوچنۍ دوتنه"
+msgstr "وړه دوتنه"
 
 #: constants.py:134
 msgid "Silent"
-msgstr "غلې-چوپ"
+msgstr "غلي-چوپ"
 
 #: constants.py:135
 msgid "Rotate"
@@ -214,12 +216,14 @@ msgstr "انځور کښنې لپاره ټک کړﺉ"
 msgid "Click to add picture"
 msgstr "انځور زیاتوونې لپاره ټک وکړﺉ"
 
+# TRANS: Downloading Photo from Mary
 #. TRANS: Downloading Photo from Mary
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
 msgstr "رالېښل %(1)s له %(2)s"
 
+# TRANS: Cannot download this Photo
 #. TRANS: Cannot download this Photo
 #: constants.py:143
 #, python-format
@@ -229,12 +233,12 @@ msgstr "دا %(1)s نشي رالېښل کېدای"
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr "ساتل %(1) كې:"
+msgstr "ساتل %(۱) په:"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "ستاسې %(1)s بشپړ دى"
+msgstr "ستاسې (۱)% بشپړ دى"
 
 #: constants.py:147
 msgid "Journal"
@@ -242,11 +246,11 @@ msgstr "ورځپاڼه"
 
 #: constants.py:148
 msgid "USB"
-msgstr "USB"
+msgstr "یو.اېس.بي"
 
 #: constants.py:149
 msgid "SD Card"
-msgstr "SD كارټ"
+msgstr "اېس.ډي کارټ"
 
 #: constants.py:150
 msgid "Preferences"
@@ -254,13 +258,13 @@ msgstr "غوره توبونه"
 
 #: constants.py:151
 msgid "Free space:"
-msgstr "خپلواكه تشته"
+msgstr "خپلواكه تشه:"
 
 #. TRANS: 7 photos
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr "%(1)s انځورونه"
+msgstr "%(۱)s انځورونه"
 
 #: constants.py:154
 msgid "Bitrate"
@@ -288,7 +292,7 @@ msgstr "منځول"
 
 #: constants.py:160
 msgid "Frames"
-msgstr "چوکاټون"
+msgstr "چوکاټونه"
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
@@ -304,11 +308,11 @@ msgstr "د كليدي چوكاټ فرېكوينسي"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr "د كليدي چوكاټ ترټولو لږ واټ"
+msgstr "د كليدي چوكاټ ترټولو لږ واټن"
 
 #: constants.py:165
 msgid "Keyframe threshold"
-msgstr "كليدي چوكاټ درشل"
+msgstr "د كليدي چوكاټ درشل"
 
 #: constants.py:166
 msgid "Noise Sensitivity"
@@ -325,3 +329,15 @@ msgstr "ځيږوالې"
 #: constants.py:169
 msgid "Capacity"
 msgstr "ضرفيت"
+
+#~ msgid "Best quality"
+#~ msgstr "ښه څرنګتیا"
+
+#~ msgid "High quality"
+#~ msgstr "لوړه څرنګتیا"
+
+#~ msgid "Low quality"
+#~ msgstr "ټیټه څرنګتیا"
+
+#~ msgid "Your disk is full"
+#~ msgstr "ستاسې ټیکلی ډک دی"

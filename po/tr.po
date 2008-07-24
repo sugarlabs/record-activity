@@ -6,323 +6,322 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2008-01-03 18:18+0000\n"
-"Last-Translator: Thomas Hannen <tomhannen@gmail.com>\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-07-18 03:55-0400\n"
+"Last-Translator: abdullah kocabas <abdullah.kocabas@abcdizustu.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:90
 msgid "Record"
-msgstr "Kayıt"
+msgstr "kayıt, kaydetmek"
 
 #: constants.py:91
 msgid "Photo"
-msgstr "Fotoğraf"
+msgstr "resim, fotoğraf"
 
 #: constants.py:92
 msgid "Video"
-msgstr "Video"
+msgstr "video"
 
 #: constants.py:93
 msgid "Audio"
-msgstr "Ses"
+msgstr "ses"
 
 #: constants.py:94
 msgid "Time Lapse"
-msgstr "Zamanda sapma"
+msgstr "gecikme"
 
 #: constants.py:95
 msgid "Animation"
-msgstr "Animasyon"
+msgstr "canlandırma"
 
-# panorama can be used as well
 #: constants.py:96
 msgid "Panorama"
-msgstr "Genel görünüm"
+msgstr "genel görünüm"
 
 #: constants.py:97
 msgid "Interview"
-msgstr "Görüşme"
+msgstr "röportaj"
 
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr ""
+msgstr "%(2)den %(1)"
 
 #: constants.py:100
 msgid "Title:"
-msgstr "Başlık"
+msgstr "başlık"
 
 #: constants.py:101
 msgid "Recorder:"
-msgstr ""
+msgstr "kayıt aleti"
 
 #: constants.py:102
 msgid "Date:"
-msgstr "Tarih"
+msgstr "tarih"
 
 #: constants.py:103
 msgid "Tags:"
-msgstr "Etiketler"
+msgstr "etiket"
 
 #: constants.py:104
 msgid "Saving"
-msgstr "Kaydediyor"
+msgstr "kaydetme"
 
 #: constants.py:105
 msgid "Finished recording"
-msgstr "Kayıt tamamlandı"
+msgstr "kayıt bitti"
 
 #: constants.py:106
 #, python-format
 msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr ""
+msgstr "%(1) saat, %(2) dakika, %(1) saniye kaldı"
 
 #: constants.py:107
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr ""
+msgstr "%(1) dakika, %(2) saniye kaldı"
 
 #: constants.py:108
 #, python-format
 msgid "%(1)s hours remaining"
-msgstr ""
+msgstr "%(1) saat kaldı"
 
 #: constants.py:109
 #, python-format
 msgid "%(1)s minutes remaining"
-msgstr ""
+msgstr "%(1) dakika kaldı"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr ""
+msgstr "%(1) saniye kaldı"
 
 #: constants.py:111
 #, python-format
 msgid "%(1)s hours"
-msgstr ""
+msgstr "%(1) saat"
 
 #: constants.py:112 constants.py:121
 #, python-format
 msgid "%(1)s minutes"
-msgstr ""
+msgstr "%(1) dakika"
 
 #: constants.py:113 constants.py:120
 #, python-format
 msgid "%(1)s seconds"
-msgstr ""
+msgstr "%(1) saniye"
 
 #: constants.py:114
 msgid "Remove"
-msgstr "Kaldır"
+msgstr "çıkarmak, kaldırmak"
 
 #: constants.py:115
 msgid "Stopped recording"
-msgstr "Kayıt durduruldu"
+msgstr "kayıt durdu"
 
 #: constants.py:116
 msgid "Copy to clipboard"
-msgstr "Panoya kopyala"
+msgstr "klasöre kopyala"
 
 #: constants.py:117
 msgid "Timer:"
-msgstr "Sayaç"
+msgstr "süre ölçer"
 
 #: constants.py:118
 msgid "Duration:"
-msgstr "Süre"
+msgstr "devam, süreklilik, süre"
 
 #: constants.py:119
 msgid "Immediate"
-msgstr "Acil"
+msgstr "hemen"
 
 #: constants.py:122
 msgid "Play"
-msgstr "Çal"
+msgstr "oynamak, oyun"
 
 #: constants.py:123
 msgid "Pause"
-msgstr "Duraklat"
+msgstr "ara"
 
 #: constants.py:124
 msgid "Add frame"
-msgstr "Çerçeve ekle"
+msgstr "çerçeve ekle"
 
 #: constants.py:125
 msgid "Remove frame"
-msgstr "Çerçeveyi kaldır"
+msgstr "çerçeveyi kaldır"
 
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr ""
+msgstr "saniyede %(1) çerçeve "
 
 #: constants.py:127
 msgid "Quality"
-msgstr "Kalite"
+msgstr "nitelik, kalite"
 
 #: constants.py:128
 msgid "Default"
-msgstr ""
+msgstr "hata"
 
 #: constants.py:129
 msgid "Best"
-msgstr ""
+msgstr "en iyi"
 
 #: constants.py:130
 msgid "High"
-msgstr "Yüksek"
+msgstr "yüksek"
 
 #: constants.py:131
 msgid "Low"
-msgstr "Düşük"
+msgstr "az"
 
 #: constants.py:132
 msgid "Large file"
-msgstr "Büyük dosya"
+msgstr "büyük dosya"
 
 #: constants.py:133
 msgid "Small file"
-msgstr "Küçük dosya"
+msgstr "küçük dosya"
 
 #: constants.py:134
 msgid "Silent"
-msgstr "Sessiz"
+msgstr "sessiz"
 
 #: constants.py:135
 msgid "Rotate"
-msgstr "Döndür"
+msgstr "döndür"
 
 #: constants.py:136
 msgid "Width"
-msgstr "Genişlik"
+msgstr "en, genişlik"
 
 #: constants.py:137
 msgid "Height"
-msgstr "Yükseklik"
+msgstr "yükseklik, boy"
 
 #: constants.py:138
 msgid "Click to take picture"
-msgstr "Fotoğraf çekmek için tıklayın"
+msgstr "resmi almak için tıklayınız"
 
 #: constants.py:139
 msgid "Click to add picture"
-msgstr "Fotoğraf eklemek için tıklayın"
+msgstr "resmi kaydetmek için tıklayınız"
 
 #. TRANS: Downloading Photo from Mary
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr ""
+msgstr "%(2)'nin %(1)'i yüklendi"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr ""
+msgstr "%(1) yüklenemiyor"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr ""
+msgstr "%(1) _'e kaydedildi"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr ""
+msgstr "%(1) dolu"
 
 #: constants.py:147
 msgid "Journal"
-msgstr "Günce"
+msgstr "makale"
 
 #: constants.py:148
 msgid "USB"
-msgstr ""
+msgstr "USB"
 
 #: constants.py:149
 msgid "SD Card"
-msgstr ""
+msgstr "SD kartı"
 
 #: constants.py:150
 msgid "Preferences"
-msgstr "Seçenekler"
+msgstr "seçenekler"
 
 #: constants.py:151
 msgid "Free space:"
-msgstr "Boş alan"
+msgstr "boşluk"
 
 #. TRANS: 7 photos
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr ""
+msgstr "%(1) resimler"
 
 #: constants.py:154
 msgid "Bitrate"
-msgstr ""
+msgstr "ses ölçüm birimi"
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr ""
+msgstr "en yüksek ses birimi"
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr ""
+msgstr "en düşük ses birimi"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr ""
+msgstr "ses birimini ayarla"
 
 #: constants.py:158
 msgid "Border"
-msgstr "Sınır"
+msgstr "sınır"
 
 #: constants.py:159
 msgid "Center"
-msgstr "Merkez"
+msgstr "merkez"
 
 #: constants.py:160
 msgid "Frames"
-msgstr "Çerçeveler"
+msgstr "çerçeveler"
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr ""
+msgstr "otomatik çerçeve arama"
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr ""
+msgstr "çerçeveyi zorlama"
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr ""
+msgstr "çerçeve sıklığı"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr ""
+msgstr "çerçevenin en az uzaklığı"
 
 #: constants.py:165
 msgid "Keyframe threshold"
-msgstr ""
+msgstr "çerçeve eşiği"
 
 #: constants.py:166
 msgid "Noise Sensitivity"
-msgstr "Sese duyarlılık"
+msgstr "ses duyarlılığı"
 
 #: constants.py:167
 msgid "Quick"
-msgstr "Çabuk"
+msgstr "hızlı"
 
 #: constants.py:168
 msgid "Sharpness"
-msgstr "Keskinlik"
+msgstr "netlik"
 
 #: constants.py:169
 msgid "Capacity"
-msgstr "Kapasite"
+msgstr "kapasite"

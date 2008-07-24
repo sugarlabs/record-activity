@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-15 02:21+0000\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2007-12-10 05:49+0000\n"
 "Last-Translator: Manatsawin <manatsawin@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,11 @@ msgstr "ภาพเคลื่อนไหว"
 msgid "Panorama"
 msgstr "ภาพมุมกว้าง"
 
+#: constants.py:97
+msgid "Interview"
+msgstr ""
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -73,16 +78,48 @@ msgstr "กำลังบันทึก"
 msgid "Finished recording"
 msgstr "เสร็จสิ้นการบันทึก"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "เหลืออยู่ $(1)s นาที %(1)s วินาที"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "เหลืออยู่  %(1)s วินาที"
+
+#: constants.py:109
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes remaining"
+msgstr "เหลืออยู่  %(1)s วินาที"
 
 #: constants.py:110
 #, python-format
-#, fuzzy
 msgid "%(1)s seconds remaining"
-msgstr "เหลืออยู่ $( 1)%s าที"
+msgstr "เหลืออยู่  %(1)s วินาที"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr ""
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s นาที"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s วินาที"
 
 #: constants.py:114
 msgid "Remove"
@@ -108,16 +145,6 @@ msgstr "ระยะเวลา:"
 msgid "Immediate"
 msgstr "ทันที"
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s วินาที"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s นาที"
-
 #: constants.py:122
 msgid "Play"
 msgstr "เล่น"
@@ -139,21 +166,26 @@ msgstr "ลบเฟรม"
 msgid "%(1)s frames per second"
 msgstr "%(1)s เฟรมต่อวินาที"
 
-#: constants.py:110
-msgid "Quality:"
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
 msgstr "คุณภาพ:"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "คุณภาพดีที่สุด"
+#: constants.py:128
+msgid "Default"
+msgstr ""
 
-#: constants.py:112
-msgid "High quality"
-msgstr "คุณภาพสูง"
+#: constants.py:129
+msgid "Best"
+msgstr ""
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "คุณภาพต่ำ"
+#: constants.py:130
+msgid "High"
+msgstr ""
+
+#: constants.py:131
+msgid "Low"
+msgstr ""
 
 #: constants.py:132
 msgid "Large file"
@@ -171,6 +203,14 @@ msgstr "เงียบ"
 msgid "Rotate"
 msgstr "หมุน"
 
+#: constants.py:136
+msgid "Width"
+msgstr ""
+
+#: constants.py:137
+msgid "Height"
+msgstr ""
+
 #: constants.py:138
 msgid "Click to take picture"
 msgstr "คลิกเพื่อถ่ายภาพ"
@@ -183,153 +223,93 @@ msgstr "คลิกเพื่อเพิ่มภาพ"
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "กำลังดาวน์โหลด %(1)s จาก %(2)s"
+msgstr "กำลังดาวน์โหลด $(%)s จาก $(2)s"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr "ไม่สามารถดาวน์โหลด %(1)s"
-
-#: constants.py:97
-msgid "Interview"
-msgstr "สัมภาษณ์"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "เหลืออยู่ %(1)s ชั่วโมง %(2)s นาที %(1)s วินาที"
-
-#: constants.py:107
-#, python-format
-#, fuzzy
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "เหลืออยู่ %(1)s นาที %(1)s วินาที"
-
-#: constants.py:108
-#, python-format
-#, fuzzy
-msgid "%(1)s hours remaining"
-msgstr "เหลืออยู่ %(1)s วินาที"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "เหลืออยู่ %(1)s นาที"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s ชั่วโมง"
-
-#: constants.py:127
-#, fuzzy
-msgid "Quality"
-msgstr "คุณภาพ:"
-
-#: constants.py:128
-msgid "Default"
-msgstr "มาตราฐาน"
-
-#: constants.py:129
-msgid "Best"
-msgstr "ดีที่สุด"
-
-#: constants.py:130
-msgid "High"
-msgstr "สูง"
-
-#: constants.py:131
-msgid "Low"
-msgstr "ต่ำ"
-
-#: constants.py:136
-msgid "Width"
-msgstr "กว้าง"
-
-#: constants.py:137
-msgid "Height"
-msgstr "สูง"
+msgstr "ไม่สามารถดาวน์โหลด $(i)s"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr "บันทึก %(1) ไปยัง:"
+msgstr ""
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "%(1)s ของคุณเต็ม"
+msgstr ""
 
 #: constants.py:147
 msgid "Journal"
-msgstr "บันทึกประจำวัน"
+msgstr ""
 
 #: constants.py:148
 msgid "USB"
-msgstr "USB"
+msgstr ""
 
 #: constants.py:149
 msgid "SD Card"
-msgstr "SD Card"
+msgstr ""
 
 #: constants.py:150
 msgid "Preferences"
-msgstr "ตั้งค่า"
+msgstr ""
 
 #: constants.py:151
 msgid "Free space:"
-msgstr "ที่ว่าง:"
+msgstr ""
 
 #. TRANS: 7 photos
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr "%(1)s ภาพ"
+msgstr ""
 
 #: constants.py:154
 msgid "Bitrate"
-msgstr "บิตเรต"
+msgstr ""
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr "บิตเรตสูงสุด"
+msgstr ""
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr "บิตเรตต่ำสุด"
+msgstr ""
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr "จัดการบิตเรต"
+msgstr ""
 
 #: constants.py:158
 msgid "Border"
-msgstr "ขอบ"
+msgstr ""
 
 #: constants.py:159
 msgid "Center"
-msgstr "ศูนย์กลาง"
+msgstr ""
 
 #: constants.py:160
 msgid "Frames"
-msgstr "เฟรม"
+msgstr ""
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr "ตรวจจับเฟรมสำคัญอัตโนมัติ"
+msgstr ""
 
 #: constants.py:162
 msgid "Force keyframe"
-msgstr "บังคับเฟรมสำคัญ"
+msgstr ""
 
 #: constants.py:163
 msgid "Keyframe frequency"
-msgstr "ความถี่เฟรมสำคัญ"
+msgstr ""
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr "ระยะทางเฟรมสำคัญต่ำสุด"
+msgstr ""
 
 #: constants.py:165
 msgid "Keyframe threshold"
@@ -337,16 +317,25 @@ msgstr ""
 
 #: constants.py:166
 msgid "Noise Sensitivity"
-msgstr "ความไวต่อสิ่งรบกวน"
+msgstr ""
 
 #: constants.py:167
 msgid "Quick"
-msgstr "เร็ว"
+msgstr ""
 
 #: constants.py:168
 msgid "Sharpness"
-msgstr "ความคมชัด"
+msgstr ""
 
 #: constants.py:169
 msgid "Capacity"
-msgstr "ความจุ"
+msgstr ""
+
+#~ msgid "Best quality"
+#~ msgstr "คุณภาพดีที่สุด"
+
+#~ msgid "High quality"
+#~ msgstr "คุณภาพสูง"
+
+#~ msgid "Low quality"
+#~ msgstr "คุณภาพต่ำ"

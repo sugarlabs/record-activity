@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-29 22:05+0000\n"
-"Last-Translator: Huda Sarfraz <huda.sarfraz@nu.edu.pk>\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-03-19 05:17-0400\n"
+"Last-Translator: salman minhas <sulmanminhas@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:90
 msgid "Record"
@@ -44,11 +44,16 @@ msgstr "اینیمشن"
 msgid "Panorama"
 msgstr "پينوراما"
 
+#: constants.py:97
+msgid "Interview"
+msgstr "انٹرويو"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr "%(1)s از %(2)s"
+msgstr "%(1)s از %(2)"
 
 #: constants.py:100
 msgid "Title:"
@@ -74,16 +79,47 @@ msgstr "محفوظ کر رہا ہے"
 msgid "Finished recording"
 msgstr "ریکارڈ کرنا مکمل"
 
-# it wont let me write properly so have to change in the orgirnal po file
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)sگھنٹے، %(2)s منٹ،%(1)s سيکنڈ باقی ہيں"
+
+# it wont let me write properly so have to change in the orgirnal po file
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "%(1)s منٹ، %(1)s سیکنڈ باقی"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "%(1)s سیکنڈ باقی"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "% (1)s منٹ باقی ہیں"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1)s سیکنڈ باقی"
+
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s گھنٹے"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s منٹ"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s سيکنڈ"
 
 #: constants.py:114
 msgid "Remove"
@@ -109,16 +145,6 @@ msgstr "دورانیہ:"
 msgid "Immediate"
 msgstr "فوری"
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s سيکنڈ"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s منٹ"
-
 #: constants.py:122
 msgid "Play"
 msgstr "چلائیں"
@@ -140,21 +166,25 @@ msgstr "فریم ہٹا دیں"
 msgid "%(1)s frames per second"
 msgstr "%(1)s فریم فی سیکنڈ"
 
-#: constants.py:110
-msgid "Quality:"
-msgstr "کوالٹی:"
+#: constants.py:127
+msgid "Quality"
+msgstr "کوالٹی"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "بہترین کوالٹی"
+#: constants.py:128
+msgid "Default"
+msgstr "ڈيفالٹ"
 
-#: constants.py:112
-msgid "High quality"
-msgstr "اعلٰی کوالٹی"
+#: constants.py:129
+msgid "Best"
+msgstr "بہترين"
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "کم کوالٹی"
+#: constants.py:130
+msgid "High"
+msgstr "اونچا"
+
+#: constants.py:131
+msgid "Low"
+msgstr "نیچا"
 
 #: constants.py:132
 msgid "Large file"
@@ -171,6 +201,14 @@ msgstr "خاموش"
 #: constants.py:135
 msgid "Rotate"
 msgstr "گهمائیں"
+
+#: constants.py:136
+msgid "Width"
+msgstr "چوڑائی"
+
+#: constants.py:137
+msgid "Height"
+msgstr "اونچائی"
 
 #: constants.py:138
 msgid "Click to take picture"
@@ -191,64 +229,6 @@ msgstr "%(2)s سے %(1)s ڈاؤن لوڈ کر رہا ہے"
 #, python-format
 msgid "Cannot download this %(1)s"
 msgstr "یہ %(1)s نہیں ڈاؤن لوڈ کر سکتا"
-
-#: constants.py:97
-msgid "Interview"
-msgstr "انٹرويو"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s گھنٹے، %(2)s منٹ، %(1)s سیکنڈ باقی"
-
-# it wont let me write properly so have to change in the orgirnal po file
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s منٹ، %(2)s سیکنڈ باقی"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "%(1)s گھنٹے باقی"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "%(1)s منٹ باقی"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s گھنٹے"
-
-#: constants.py:127
-msgid "Quality"
-msgstr "کوالٹی"
-
-#: constants.py:128
-msgid "Default"
-msgstr "طے شدہ"
-
-#: constants.py:129
-msgid "Best"
-msgstr "بہترين"
-
-#: constants.py:130
-msgid "High"
-msgstr "اعلٰی"
-
-#: constants.py:131
-msgid "Low"
-msgstr "پست"
-
-#: constants.py:136
-msgid "Width"
-msgstr "چوڑائی"
-
-#: constants.py:137
-msgid "Height"
-msgstr "اونچائی"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
@@ -328,7 +308,7 @@ msgstr "کی فريم کا تعدد"
 
 #: constants.py:164
 msgid "Keyframe minimum distance"
-msgstr "کی فريم کا کم سے کم فاصلہ"
+msgstr "کی فريم کا کم سے کم فاصل"
 
 #: constants.py:165
 msgid "Keyframe threshold"
@@ -349,3 +329,15 @@ msgstr "نفاست"
 #: constants.py:169
 msgid "Capacity"
 msgstr "گنجائش"
+
+#~ msgid "Best quality"
+#~ msgstr "بہترین کوالٹی"
+
+#~ msgid "High quality"
+#~ msgstr "اعلٰی کوالٹی"
+
+#~ msgid "Low quality"
+#~ msgstr "کم کوالٹی"
+
+#~ msgid "Your disk is full"
+#~ msgstr "آپ کی ڈسک بھر گئی ہے"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
 "PO-Revision-Date: 2008-01-03 12:28+0000\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,6 +44,11 @@ msgstr "动画"
 msgid "Panorama"
 msgstr "宽景图"
 
+#: constants.py:97
+msgid "Interview"
+msgstr ""
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -74,15 +79,50 @@ msgstr "保存中"
 msgid "Finished recording"
 msgstr "完成记录"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "剩余 %(1)s 分 %(1)s 秒"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "剩余 %(1)s 秒"
+
+#: constants.py:109
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes remaining"
+msgstr "剩余 %(1)s 秒"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "剩余 %(1)s 秒"
+
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+#, fuzzy
+msgid "%(1)s hours"
+msgstr "%(1)s 个照片"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s 分"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s 秒"
 
 #: constants.py:114
 msgid "Remove"
@@ -108,16 +148,6 @@ msgstr "长度:"
 msgid "Immediate"
 msgstr "立即"
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s 秒"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s 分"
-
 #: constants.py:122
 msgid "Play"
 msgstr "播放"
@@ -137,23 +167,28 @@ msgstr "删除帧"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "每秒%(1)s帧"
+msgstr "每秒 %(1)s 格帧"
 
-#: constants.py:110
-msgid "Quality:"
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
 msgstr "质量:"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "最佳质量"
+#: constants.py:128
+msgid "Default"
+msgstr ""
 
-#: constants.py:112
-msgid "High quality"
-msgstr "高质量"
+#: constants.py:129
+msgid "Best"
+msgstr ""
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "低质量"
+#: constants.py:130
+msgid "High"
+msgstr ""
+
+#: constants.py:131
+msgid "Low"
+msgstr ""
 
 #: constants.py:132
 msgid "Large file"
@@ -171,75 +206,6 @@ msgstr "无声"
 msgid "Rotate"
 msgstr "旋转"
 
-#: constants.py:138
-msgid "Click to take picture"
-msgstr "点选拍摄照片"
-
-#: constants.py:139
-msgid "Click to add picture"
-msgstr "点选加入照片"
-
-#. TRANS: Downloading Photo from Mary
-#: constants.py:141
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "自%(2)s下载%(1)s中"
-
-#. TRANS: Cannot download this Photo
-#: constants.py:143
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "无法下载%(1)s"
-
-#: constants.py:97
-msgid "Interview"
-msgstr "访谈"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "剩余%(1)s時%(2)s分%(1)s秒"
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "剩余%(1)s分%(2)s秒"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "剩余%(1)s小时"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "剩余%(1)s分钟"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s小时"
-
-#: constants.py:127
-msgid "Quality"
-msgstr "质量"
-
-#: constants.py:128
-msgid "Default"
-msgstr "默认"
-
-#: constants.py:129
-msgid "Best"
-msgstr "最佳"
-
-#: constants.py:130
-msgid "High"
-msgstr "高"
-
-#: constants.py:131
-msgid "Low"
-msgstr "低"
-
 #: constants.py:136
 msgid "Width"
 msgstr "宽度"
@@ -248,27 +214,47 @@ msgstr "宽度"
 msgid "Height"
 msgstr "高度"
 
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "点选拍摄照片"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "点选增加照片"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "下载 %(1)s 自 %(2)s."
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "无法下载 %(1)s"
+
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr "保存 %(1) 到:"
+msgstr "将%(1)保存到:"
 
 #: constants.py:146
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "%(1)s 已无剩余空间"
+msgstr "%(1)s已无剩余空间"
 
 #: constants.py:147
 msgid "Journal"
-msgstr "日志"
+msgstr "增加到日志"
 
 #: constants.py:148
 msgid "USB"
-msgstr "USB"
+msgstr "U盘"
 
 #: constants.py:149
 msgid "SD Card"
-msgstr "SD储存卡"
+msgstr "SD卡"
 
 #: constants.py:150
 msgid "Preferences"
@@ -282,7 +268,7 @@ msgstr "剩余空间"
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr "%(1)s 照片"
+msgstr "%(1)s 个照片"
 
 #: constants.py:154
 msgid "Bitrate"
@@ -290,11 +276,11 @@ msgstr "码率"
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr "最大码率"
+msgstr "最高码率"
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr "最小码率"
+msgstr "最低码率"
 
 #: constants.py:157
 msgid "Manage Bitrate"
@@ -314,7 +300,7 @@ msgstr "帧"
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr "自动寻找关键帧"
+msgstr "自动关键帧探测"
 
 #: constants.py:162
 msgid "Force keyframe"
@@ -347,3 +333,15 @@ msgstr "清晰度"
 #: constants.py:169
 msgid "Capacity"
 msgstr "容量"
+
+#~ msgid "Best quality"
+#~ msgstr "最佳质量"
+
+#~ msgid "High quality"
+#~ msgstr "高质量"
+
+#~ msgid "Low quality"
+#~ msgstr "低质量"
+
+#~ msgid "Your disk is full"
+#~ msgstr "你的空间已满"

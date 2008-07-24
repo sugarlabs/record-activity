@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2008-01-22 17:13+0000\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-07-09 08:31-0400\n"
 "Last-Translator: Juliano Bittencourt <juliano@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:90
 msgid "Record"
@@ -33,7 +33,7 @@ msgstr "Som"
 
 #: constants.py:94
 msgid "Time Lapse"
-msgstr "Lapso de tempo"
+msgstr "Duração"
 
 #: constants.py:95
 msgid "Animation"
@@ -43,6 +43,11 @@ msgstr "Animação"
 msgid "Panorama"
 msgstr "Panorama"
 
+#: constants.py:97
+msgid "Interview"
+msgstr "Entrevista"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -73,15 +78,46 @@ msgstr "Salvando"
 msgid "Finished recording"
 msgstr "Gravação terminada"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s minutos, %(1)s segundos faltando"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "%(1)s horas, %(2)s minutos, %(1)s segundos restantes"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "%(1)s minutos, %(1)s segundos restantes"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "%(1)s horas restantes"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "%(1)s minutos restantes"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1)s segundos faltando"
+
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s horas"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s minutos"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s segundos"
 
 #: constants.py:114
 msgid "Remove"
@@ -96,10 +132,9 @@ msgid "Copy to clipboard"
 msgstr "Copiar para a prancheta"
 
 # I think it's better not to translate this term because it's used by brazilians.
-# Yet I agree, there is a new law in Brazil that forbits foreing terms into schools. Using a portuguese word, even when not very know is now necessary.
 #: constants.py:117
 msgid "Timer:"
-msgstr "Cronômetro:"
+msgstr "Timer:"
 
 #: constants.py:118
 msgid "Duration:"
@@ -108,16 +143,6 @@ msgstr "Duração:"
 #: constants.py:119
 msgid "Immediate"
 msgstr "Imediato"
-
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s segundos"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s minutos"
 
 #: constants.py:122
 msgid "Play"
@@ -140,21 +165,25 @@ msgstr "Remover quadro"
 msgid "%(1)s frames per second"
 msgstr "%(1)s quadros por segundo"
 
-#: constants.py:110
-msgid "Quality:"
+#: constants.py:127
+msgid "Quality"
 msgstr "Qualidade:"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "Melhor qualidade"
+#: constants.py:128
+msgid "Default"
+msgstr "Padrão"
 
-#: constants.py:112
-msgid "High quality"
-msgstr "Alta qualidade"
+#: constants.py:129
+msgid "Best"
+msgstr "Melhor"
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "Baixa qualidade"
+#: constants.py:130
+msgid "High"
+msgstr "Alta"
+
+#: constants.py:131
+msgid "Low"
+msgstr "Baixa"
 
 #: constants.py:132
 msgid "Large file"
@@ -171,6 +200,14 @@ msgstr "Silencioso"
 #: constants.py:135
 msgid "Rotate"
 msgstr "Girar"
+
+#: constants.py:136
+msgid "Width"
+msgstr "Largura"
+
+#: constants.py:137
+msgid "Height"
+msgstr "Altura"
 
 #: constants.py:138
 msgid "Click to take picture"
@@ -191,63 +228,6 @@ msgstr "Efetuando o download de %(1)s a partir de %(2)s"
 #, python-format
 msgid "Cannot download this %(1)s"
 msgstr "Não é possível efetuar o download de %(1)s"
-
-#: constants.py:97
-msgid "Interview"
-msgstr "Entrevista"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1)s horas, %(2)s minutos, %(1)s segundos faltando"
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s minutos, %(2)s segundos faltando"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "%(1)s segundos faltando"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "%(1)s minutos faltando"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s horas"
-
-#: constants.py:127
-msgid "Quality"
-msgstr "Qualidade"
-
-#: constants.py:128
-msgid "Default"
-msgstr "Padrão"
-
-#: constants.py:129
-msgid "Best"
-msgstr "Melhor"
-
-#: constants.py:130
-msgid "High"
-msgstr "Alta"
-
-#: constants.py:131
-msgid "Low"
-msgstr "Baixa"
-
-#: constants.py:136
-msgid "Width"
-msgstr "Largura"
-
-#: constants.py:137
-msgid "Height"
-msgstr "Altura"
 
 #. TRANS: Save Photo to:
 #: constants.py:145
@@ -285,7 +265,6 @@ msgstr "Espaço livre:"
 msgid "%(1)s photos"
 msgstr "%(1)s fotos"
 
-# Não acho que bitrate seja normalmente traduzido.
 #: constants.py:154
 msgid "Bitrate"
 msgstr "Bitrate"
@@ -302,6 +281,7 @@ msgstr "Bitrate Mínimo"
 msgid "Manage Bitrate"
 msgstr "Gerenciar o Bitrate"
 
+# Moldura?
 #: constants.py:158
 msgid "Border"
 msgstr "Borda"
@@ -349,3 +329,15 @@ msgstr "Nitidez"
 #: constants.py:169
 msgid "Capacity"
 msgstr "Capacidade"
+
+#~ msgid "Best quality"
+#~ msgstr "Melhor qualidade"
+
+#~ msgid "High quality"
+#~ msgstr "Alta qualidade"
+
+#~ msgid "Low quality"
+#~ msgstr "Baixa qualidade"
+
+#~ msgid "Your disk is full"
+#~ msgstr "Seu disco está cheio"

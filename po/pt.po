@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-07 13:55-0500\n"
-"PO-Revision-Date: 2007-12-13 05:32+0000\n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-01-07 18:29+0000\n"
 "Last-Translator: Ivo Emanuel Gonçalves <justivo@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,11 @@ msgstr "Animação"
 msgid "Panorama"
 msgstr "Panorama"
 
+#: constants.py:97
+msgid "Interview"
+msgstr ""
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:99
 #, python-format
@@ -73,15 +78,50 @@ msgstr "Gravando"
 msgid "Finished recording"
 msgstr "Gravação terminada"
 
-#: constants.py:95
+#: constants.py:106
 #, python-format
-msgid "%(1)s minutes, %(1)s seconds remaining"
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr ""
+
+#: constants.py:107
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "faltam %(1)s minutos, %(1)s segundos"
+
+#: constants.py:108
+#, python-format
+#, fuzzy
+msgid "%(1)s hours remaining"
+msgstr "faltam %(1)s segundos"
+
+#: constants.py:109
+#, python-format
+#, fuzzy
+msgid "%(1)s minutes remaining"
+msgstr "faltam %(1)s segundos"
 
 #: constants.py:110
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "faltam %(1)s segundos"
+
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+#, fuzzy
+msgid "%(1)s hours"
+msgstr "%(1)s fotografias"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s minutos"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s segundos"
 
 #: constants.py:114
 msgid "Remove"
@@ -107,16 +147,6 @@ msgstr "Duração:"
 msgid "Immediate"
 msgstr "Imediato"
 
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s segundos"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s minutos"
-
 #: constants.py:122
 msgid "Play"
 msgstr "Mostrar"
@@ -138,21 +168,26 @@ msgstr "Remover frame"
 msgid "%(1)s frames per second"
 msgstr "%(1)s frames por segundo"
 
-#: constants.py:110
-msgid "Quality:"
+#: constants.py:127
+#, fuzzy
+msgid "Quality"
 msgstr "Qualidade:"
 
-#: constants.py:111
-msgid "Best quality"
-msgstr "Melhor qualidade"
+#: constants.py:128
+msgid "Default"
+msgstr ""
 
-#: constants.py:112
-msgid "High quality"
-msgstr "Alta qualidade"
+#: constants.py:129
+msgid "Best"
+msgstr ""
 
-#: constants.py:113
-msgid "Low quality"
-msgstr "Baixa qualidade"
+#: constants.py:130
+msgid "High"
+msgstr ""
+
+#: constants.py:131
+msgid "Low"
+msgstr ""
 
 #: constants.py:132
 msgid "Large file"
@@ -169,6 +204,14 @@ msgstr "Silêncio"
 #: constants.py:135
 msgid "Rotate"
 msgstr "Rodar"
+
+#: constants.py:136
+msgid "Width"
+msgstr "Largura"
+
+#: constants.py:137
+msgid "Height"
+msgstr "Altura"
 
 #: constants.py:138
 msgid "Click to take picture"
@@ -190,67 +233,10 @@ msgstr "Obtendo %(1)s de %(2)s"
 msgid "Cannot download this %(1)s"
 msgstr "Não é possível obter esta %(1)s"
 
-#: constants.py:97
-msgid "Interview"
-msgstr "Entrevista"
-
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "faltam %(1)s horas, %(2)s minutos, %(1)s segundos"
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "faltam %(1)s minutos, %(2)s segundos"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "faltam %(1)s segundos"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "faltam %(1)s minutos"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s horas"
-
-#: constants.py:127
-msgid "Quality"
-msgstr "Qualidade"
-
-#: constants.py:128
-msgid "Default"
-msgstr "Normal"
-
-#: constants.py:129
-msgid "Best"
-msgstr "Melhor"
-
-#: constants.py:130
-msgid "High"
-msgstr "Alta"
-
-#: constants.py:131
-msgid "Low"
-msgstr "Baixa"
-
-#: constants.py:136
-msgid "Width"
-msgstr "Largura"
-
-#: constants.py:137
-msgid "Height"
-msgstr "Altura"
-
 #. TRANS: Save Photo to:
 #: constants.py:145
 msgid "Save %(1) to:"
-msgstr "Gravar %(1) em:"
+msgstr "Gravar %(1) para:"
 
 #: constants.py:146
 #, python-format
@@ -281,23 +267,23 @@ msgstr "Espaço livre:"
 #: constants.py:153
 #, python-format
 msgid "%(1)s photos"
-msgstr "%(1)s fotos"
+msgstr "%(1)s fotografias"
 
 #: constants.py:154
 msgid "Bitrate"
-msgstr "Bit rate"
+msgstr "Bitrate"
 
 #: constants.py:155
 msgid "Maximum Bitrate"
-msgstr "Bit rate máximo"
+msgstr "Bitrate Máximo"
 
 #: constants.py:156
 msgid "Minumum Bitrate"
-msgstr "Bit rate mínimo"
+msgstr "Bitrate Mínimo"
 
 #: constants.py:157
 msgid "Manage Bitrate"
-msgstr "Manejar bit rate"
+msgstr "Manipular Bitrate"
 
 #: constants.py:158
 msgid "Border"
@@ -309,11 +295,11 @@ msgstr "Centro"
 
 #: constants.py:160
 msgid "Frames"
-msgstr "Frames"
+msgstr "Molduras"
 
 #: constants.py:161
 msgid "Automatic keyframe detection"
-msgstr "Deteção automática de keyframe"
+msgstr "Detecção automática de keyframe"
 
 #: constants.py:162
 msgid "Force keyframe"
@@ -333,7 +319,7 @@ msgstr "Limiar de keyframe"
 
 #: constants.py:166
 msgid "Noise Sensitivity"
-msgstr "Sensibilidade Sonora"
+msgstr "Sensibilidade de Barulho"
 
 #: constants.py:167
 msgid "Quick"
@@ -341,8 +327,20 @@ msgstr "Rápido"
 
 #: constants.py:168
 msgid "Sharpness"
-msgstr "Acutância"
+msgstr "Nitidez"
 
 #: constants.py:169
 msgid "Capacity"
 msgstr "Capacidade"
+
+#~ msgid "Best quality"
+#~ msgstr "Melhor qualidade"
+
+#~ msgid "High quality"
+#~ msgstr "Alta qualidade"
+
+#~ msgid "Low quality"
+#~ msgstr "Baixa qualidade"
+
+#~ msgid "Your disk is full"
+#~ msgstr "O teu disco está cheio"
