@@ -72,6 +72,9 @@ class GliveX:
 			pass
 
 		queue = gst.element_factory_make("queue", "dispqueue")
+		queue.set_property("leaky", True)
+		queue.set_property('max-size-buffers', 1)
+
 		scale = gst.element_factory_make("videoscale", "scale")
 		scalecaps = gst.Caps('video/x-raw-yuv,width='+str(ui.UI.dim_PIPW)+',height='+str(ui.UI.dim_PIPH))
 		colorspace = gst.element_factory_make("ffmpegcolorspace", "colorspace")
