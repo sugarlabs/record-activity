@@ -43,6 +43,7 @@ class Glive:
 	def __init__(self, pca):
 		self.window = None
 		self.ca = pca
+		self._eos_cb = None
 
 		self.playing = False
 		self.picExposureOpen = False
@@ -366,6 +367,11 @@ class Glive:
 		# while we are adjusting the pipeline to stop recording. If we do
 		# it on-the-fly, the following video live feed to the screen becomes
 		# several seconds delayed. Weird!
+		self._eos_cb = self.stopRecordingVideoEOS
+		self.pipeline.get_by_name('camsrc').send_event(gst.event_new_eos())
+		self.audiobin.get_by_name('absrc').send_event(gst.event_new_eos())
+
+	def stopRecordingVideoEOS(self):
 		self.pipeline.set_state(gst.STATE_NULL)
 		self.pipeline.get_by_name("tee").unlink(self.videobin)
 		self.pipeline.remove(self.videobin)
@@ -492,8 +498,10 @@ class Glive:
 	def _onMessageCb(self, bus, message):
 		t = message.type
 		if t == gst.MESSAGE_EOS:
-			#print("MESSAGE_EOS")
-			pass
+			if self._eos_cb:
+				cb = self._eos_cb
+				self._eos_cb = None
+				cb()
 		elif t == gst.MESSAGE_ERROR:
 			#todo: if we come out of suspend/resume with errors, then get us back up and running...
 			#todo: handle "No space left on the resource.gstfilesink.c"
