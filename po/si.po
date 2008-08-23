@@ -1,0 +1,341 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-05-23 09:35-0400\n"
+"Last-Translator: Rashan Anushka <rashan.uoc@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.1.0rc2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "තැටිගතකරන්න"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "ඡායාරූපය"
+
+#: constants.py:92
+msgid "Video"
+msgstr "වීඩියෝ දසුන"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "ශබ්දය"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "කාල ඉකුත්වීම"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "සජීවනය"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "පරිදර්ශනය"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "සම්මුඛ සාකච්ඡාව"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(2)s ගෙන් %(1)s"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "මාතෘකාව:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "වාර්තාකරු:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "දිනය:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "හැඳුනුම් වදන්:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "සුරකිමින් පවතී"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "තැටිගතකර අවසන්"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "පැය %(1)s, මිනිත්තු %(2)s , තත්පර %(1)s ක් ඉතිරිව පවතී"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "මිනිත්තු %(1)s යි, තත්පර %(1)s ක් ඉතිරිව පවතී"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "පැය %(1)s ක් ඉතිරිව පවතී"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "මිනිත්තු %(1)s ක් ඉතිරිව පවතී"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "තත්පර %(1)s ක් ඉතිරිව පවතී"
+
+# TRANS: 7 photos
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "පැය %(1)s "
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "මිනිත්තු %(1)s "
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "තත්පර %(1)s "
+
+#: constants.py:114
+msgid "Remove"
+msgstr "ඉවත් කරන්න"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "තැටිගතකිරීම නවත්වන ලදී"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "පසුරු පුවරුවට පිටපත් කරන්න"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "මුහුර්තකය:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "පැවැතුම් කාලය:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "එකෙණෙහිම"
+
+#: constants.py:122
+msgid "Play"
+msgstr "ධාවනය කරන්න"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "තාවකාලිව නවත්වන්න"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "රාමුවක් එකතු කරන්න"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "රාමුව ඉවත් කරන්න"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "තත්පරයට රාමු %(1)s බැගින්"
+
+#: constants.py:127
+msgid "Quality"
+msgstr "ගුණාත්මකභාවය:"
+
+#: constants.py:128
+msgid "Default"
+msgstr "පෙරනිමිය"
+
+#: constants.py:129
+msgid "Best"
+msgstr "හොඳම"
+
+#: constants.py:130
+msgid "High"
+msgstr "උසස්"
+
+#: constants.py:131
+msgid "Low"
+msgstr "පහත්"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "විශාල ගොනුවක්"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "කුඩා ගොනුවක්"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "නිශ්ශබ්ද"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "භ්‍රමණය කරන්න"
+
+#: constants.py:136
+msgid "Width"
+msgstr "පළල"
+
+#: constants.py:137
+msgid "Height"
+msgstr "උස"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "පිංතූරයක් ගැනීමට ක්ලික් කරන්න"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "පිංතූරයක් එකතු කිරීමට ක්ලික් කරන්න"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr " %(1)s සිට %(2)s දක්වා බාගත වෙමින් පවතී"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "%(1)s බාගත නොහැක"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "%(1) සුරකිණුයේ:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "ඔබේ %(1)s පිරී ඇතl"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "ජර්නලය"
+
+#: constants.py:148
+msgid "USB"
+msgstr "USB"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "SD කාඩ් පත"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "අභිරුචියන්"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "නිදැලි ඉඩ:"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "ඡායාරූ %(1)s "
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "බිට් ශීඝ්‍රතාව"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "උපරිම බිට් ශීඝ්‍රතාව"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "අවම බිට් ශීඝ්‍රතාව"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "බිට් ශීඝ්‍රතාව පාලනය කරන්න"
+
+#: constants.py:158
+msgid "Border"
+msgstr "දාරය"
+
+#: constants.py:159
+msgid "Center"
+msgstr "මධ්‍යය"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "රාමු"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "ස්වයංක්‍රීය ප්‍රධාන රාමු අනාවරණය"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "ප්‍රධාන රාමුව බල කරන්න"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "ප්‍රධාන රාමු සංඛ්‍යාතය"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "ප්‍රධාන රාමු අවම දුර"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "ප්‍රධාන රාමු දේහලිය"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "ඝෝෂා සංවේදිතාව"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "ඉක්මන්"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "තියුණු බව"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "ධාරිතාව"
+
+#~ msgid "Best quality"
+#~ msgstr "ඉහළම ගුණත්වය"
+
+#~ msgid "High quality"
+#~ msgstr "ඉහළ ගුණත්වය"
+
+#~ msgid "Low quality"
+#~ msgstr "අඩු ගුණත්වය"
+
+#~ msgid "Your disk is full"
+#~ msgstr "ඔබගේ තැටිය සම්පූර්ණයෙන් පිරී ඇත"

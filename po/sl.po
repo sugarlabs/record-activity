@@ -1,0 +1,328 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: 2008-07-09 08:52-0400\n"
+"Last-Translator: Denis Oštir <denis.ostir@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.1.0rc2\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "Snemalnik"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "Fotografiraj"
+
+#: constants.py:92
+msgid "Video"
+msgstr "Snemaj video"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "Snemaj zvok"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "Časovni zamik"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "Animacija"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "Panorama"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "Intervju"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(1)s posnel %(2)s"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "Naslov:"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "Snemalec:"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "Datum:"
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "Oznake:"
+
+#: constants.py:104
+msgid "Saving"
+msgstr "Shranjujem"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "Končal snemanje"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "Ostane še %(1)s ur, %(2)s minut, %(1)s sekund snemalnega časa"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "Ostane še %(1)s minut, %(2)s sekund snemalnega časa"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "Ostane še %(1)s ur snemalnega časa"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "Ostane še %(1)s minut snemalnega časa"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "Ostane še %(1) sekund snemalnega časa"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s ur"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s minut"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s sekund"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "Odstrani"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "Snemanje ustavljeno"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "Kopiraj na namizje"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "Štoparica:"
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "Trajanje:"
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "Takojšnje"
+
+#: constants.py:122
+msgid "Play"
+msgstr "Predvajaj"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "Premor"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "Dodaj sličico"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "Odstrani sličico"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "%(1)s sličic na sekundo"
+
+#: constants.py:127
+msgid "Quality"
+msgstr "Kakovost"
+
+#: constants.py:128
+msgid "Default"
+msgstr "Prednastavljena"
+
+#: constants.py:129
+msgid "Best"
+msgstr "Najboljša"
+
+#: constants.py:130
+msgid "High"
+msgstr "Visoka"
+
+#: constants.py:131
+msgid "Low"
+msgstr "Nizka"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "Velika datoteka"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "Majhna datoteka"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "Tiho"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "Zasuči"
+
+#: constants.py:136
+msgid "Width"
+msgstr "Širina"
+
+#: constants.py:137
+msgid "Height"
+msgstr "Višina"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "Pritisni za fotografiranje"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "Pritisni za dodajanje slike"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "Prenašam %(1)s od %(2)s"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "Ne morem prenesti %(1)s"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "Shrani %(1) na:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "Tvoj %(1) je poln:"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "Beležka"
+
+#: constants.py:148
+msgid "USB"
+msgstr "USB"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "SD-kartica"
+
+# a obstaja kak boljši izraz?
+#: constants.py:150
+msgid "Preferences"
+msgstr "Preference"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "Prost pomnilnik:"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "%(1)s fotografij"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "Bitrate"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "Največji bitrate"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "Najmanjši bitrate"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "Upravljaj z bitrate"
+
+#: constants.py:158
+msgid "Border"
+msgstr "Rob"
+
+#: constants.py:159
+msgid "Center"
+msgstr "Sredina"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "Slike"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "Samodejno zaznavanje ključnih slik"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "Nastavi ključno sliko"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "Pogostost ključnih slik"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "Najmanjša oddaljenost ključnih slik"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "Nivo ključnih slik"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "Občutljivost na šum"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "Hitro"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "Ostrina"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "Kapaciteta"

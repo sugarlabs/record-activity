@@ -1,0 +1,328 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Rit Lim <rit.lim@gmail.com>, 2008.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.0.1\n"
+
+#: activity/activity.info:2 constants.py:90
+msgid "Record"
+msgstr "កំណត់"
+
+#: constants.py:91
+msgid "Photo"
+msgstr "រូបថត"
+
+#: constants.py:92
+msgid "Video"
+msgstr "វីដេអូ"
+
+#: constants.py:93
+msgid "Audio"
+msgstr "សំលេង"
+
+#: constants.py:94
+msgid "Time Lapse"
+msgstr "រយពេល"
+
+#: constants.py:95
+msgid "Animation"
+msgstr "ចលនា"
+
+#: constants.py:96
+msgid "Panorama"
+msgstr "មើល​ពី​ចំងាយ"
+
+#: constants.py:97
+msgid "Interview"
+msgstr "សម្ភាសន៏"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:99
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(1)s ដោយ %(2)s"
+
+#: constants.py:100
+msgid "Title:"
+msgstr "ចំណង​ជើង"
+
+#: constants.py:101
+msgid "Recorder:"
+msgstr "ថត​កំណត់"
+
+#: constants.py:102
+msgid "Date:"
+msgstr "ថ្ងៃ​ខែ: "
+
+#: constants.py:103
+msgid "Tags:"
+msgstr "គំនូស: "
+
+#: constants.py:104
+msgid "Saving"
+msgstr "ថត​ទុក"
+
+#: constants.py:105
+msgid "Finished recording"
+msgstr "ថត​រួច​ហើយ"
+
+#: constants.py:106
+#, python-format
+msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+msgstr "មានសល់ពេល %(1)s ម៉ោង, %(2)s នាទី, %(1)s វិនាទី"
+
+#: constants.py:107
+#, python-format
+msgid "%(1)s minutes, %(2)s seconds remaining"
+msgstr "មានសល់ពេល %(1)s នាទី, %(2)s វិនាទី"
+
+#: constants.py:108
+#, python-format
+msgid "%(1)s hours remaining"
+msgstr "មានសល់ពេល %(1)s ម៉ោង"
+
+#: constants.py:109
+#, python-format
+msgid "%(1)s minutes remaining"
+msgstr "មានសល់ពេល %(1)s នាទី"
+
+#: constants.py:110
+#, python-format
+msgid "%(1)s seconds remaining"
+msgstr "មានសល់ពេល %(1)s វិនាទី"
+
+#: constants.py:111
+#, python-format
+msgid "%(1)s hours"
+msgstr "%(1)s ម៉ោង"
+
+#: constants.py:112 constants.py:121
+#, python-format
+msgid "%(1)s minutes"
+msgstr "%(1)s នាទី"
+
+#: constants.py:113 constants.py:120
+#, python-format
+msgid "%(1)s seconds"
+msgstr "%(1)s វិនាទី"
+
+#: constants.py:114
+msgid "Remove"
+msgstr "យកចេញ"
+
+#: constants.py:115
+msgid "Stopped recording"
+msgstr "ឈប់​ថត"
+
+#: constants.py:116
+msgid "Copy to clipboard"
+msgstr "ចំលង"
+
+#: constants.py:117
+msgid "Timer:"
+msgstr "ម៉ោង: "
+
+#: constants.py:118
+msgid "Duration:"
+msgstr "រយពេល: "
+
+#: constants.py:119
+msgid "Immediate"
+msgstr "ភ្លាម"
+
+#: constants.py:122
+msgid "Play"
+msgstr "លេញ"
+
+#: constants.py:123
+msgid "Pause"
+msgstr "ផ្អាក"
+
+#: constants.py:124
+msgid "Add frame"
+msgstr "បន្ថែម​ស៊ុម"
+
+#: constants.py:125
+msgid "Remove frame"
+msgstr "ដក​ស៊ុម"
+
+#: constants.py:126
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "%(1)s ស៊ុម​ក្នុង​មួយ​ម៉ោង"
+
+#: constants.py:127
+msgid "Quality"
+msgstr "គុណភាព"
+
+#: constants.py:128
+msgid "Default"
+msgstr "លំនាំដើម"
+
+#: constants.py:129
+msgid "Best"
+msgstr "ល្អ​ដាច់​គេ"
+
+#: constants.py:130
+msgid "High"
+msgstr "ខ្ពស់"
+
+#: constants.py:131
+msgid "Low"
+msgstr "ទាប"
+
+#: constants.py:132
+msgid "Large file"
+msgstr "ឯកសារ​ធំ"
+
+#: constants.py:133
+msgid "Small file"
+msgstr "ឯកសារ​តូច"
+
+#: constants.py:134
+msgid "Silent"
+msgstr "ស្ងាត់"
+
+#: constants.py:135
+msgid "Rotate"
+msgstr "បង្វិល"
+
+#: constants.py:136
+msgid "Width"
+msgstr "ទទឹង"
+
+#: constants.py:137
+msgid "Height"
+msgstr "កំពស់"
+
+#: constants.py:138
+msgid "Click to take picture"
+msgstr "ថត​រូបភាព"
+
+#: constants.py:139
+msgid "Click to add picture"
+msgstr "បន្ថែម​រូបភាព"
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:141
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "ទាញ %(1)s ពី %(2)s"
+
+#. TRANS: Cannot download this Photo
+#: constants.py:143
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "មិន​អាច​ទាញ %(1)s បាន​ទេ"
+
+#. TRANS: Save Photo to:
+#: constants.py:145
+msgid "Save %(1) to:"
+msgstr "ថត %(1) ទៅ:"
+
+#: constants.py:146
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "%(1)s របស់អ្នក​ពេញ​ហ៊ា"
+
+#: constants.py:147
+msgid "Journal"
+msgstr "កំណត់​ប្រចាំ​ថ្ងៃ"
+
+#: constants.py:148
+msgid "USB"
+msgstr "យូអេសប៊ី"
+
+#: constants.py:149
+msgid "SD Card"
+msgstr "កាត​អេសឌី"
+
+#: constants.py:150
+msgid "Preferences"
+msgstr "ចំណូល​ចិត្ត"
+
+#: constants.py:151
+msgid "Free space:"
+msgstr "ថាស​នៅ​សល់"
+
+#. TRANS: 7 photos
+#: constants.py:153
+#, python-format
+msgid "%(1)s photos"
+msgstr "%(1)s រូបភាព"
+
+#: constants.py:154
+msgid "Bitrate"
+msgstr "អត្រាប៊ីត"
+
+#: constants.py:155
+msgid "Maximum Bitrate"
+msgstr "អត្រាប៊ីត​ធំ​ជាង​គេ"
+
+#: constants.py:156
+msgid "Minumum Bitrate"
+msgstr "អត្រាប៊ីត​តូច​ជាង​គេ"
+
+#: constants.py:157
+msgid "Manage Bitrate"
+msgstr "គ្រប់គ្រង​អត្រាប៊ីត"
+
+#: constants.py:158
+msgid "Border"
+msgstr "ព្រំដែន"
+
+#: constants.py:159
+msgid "Center"
+msgstr "កណ្ដាល"
+
+#: constants.py:160
+msgid "Frames"
+msgstr "ស៊ុម"
+
+#: constants.py:161
+msgid "Automatic keyframe detection"
+msgstr "អង្តេត​ស៊ុមឃីដោយ​ស្វ័យប្រវត្តិ"
+
+#: constants.py:162
+msgid "Force keyframe"
+msgstr "បង្ខំ​ស៊ុមឃី"
+
+#: constants.py:163
+msgid "Keyframe frequency"
+msgstr "ចង្វាក់​ស៊ុមឃី​"
+
+#: constants.py:164
+msgid "Keyframe minimum distance"
+msgstr "ស៊ុមឃី​ចំងាយ​តូចបំផុត"
+
+#: constants.py:165
+msgid "Keyframe threshold"
+msgstr "កម្រិត​ស៊ុមឃី"
+
+#: constants.py:166
+msgid "Noise Sensitivity"
+msgstr "កម្រិត​ប្រកាន​ជ្រៀតជ្រេត"
+
+#: constants.py:167
+msgid "Quick"
+msgstr "ឆាប់ៗ"
+
+#: constants.py:168
+msgid "Sharpness"
+msgstr "កម្រិតស្រួច"
+
+#: constants.py:169
+msgid "Capacity"
+msgstr "កម្រិត​ទំហំ"
