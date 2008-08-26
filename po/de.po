@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"POT-Creation-Date: 2008-08-19 17:10-0400\n"
 "PO-Revision-Date: 2008-03-17 06:23-0400\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,322 +16,329 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: activity/activity.info:2 constants.py:90
+#: activity/activity.info:2 constants.py:112
 msgid "Record"
 msgstr "Aufnehmen"
 
-#: constants.py:91
+#: constants.py:113
 msgid "Photo"
 msgstr "Foto"
 
-#: constants.py:92
+#: constants.py:114
 msgid "Video"
 msgstr "Video"
 
-#: constants.py:93
+#: constants.py:115
 msgid "Audio"
 msgstr "Audio"
 
-#: constants.py:94
+#: constants.py:116
 msgid "Time Lapse"
 msgstr "Zeitraffer"
 
-#: constants.py:95
+#: constants.py:117
 msgid "Animation"
 msgstr "Animation"
 
-#: constants.py:96
+#: constants.py:118
 msgid "Panorama"
 msgstr "Panorama"
 
-#: constants.py:97
+#: constants.py:119
 msgid "Interview"
 msgstr "Interview"
 
 # TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:99
+#: constants.py:121
 #, python-format
 msgid "%(1)s by %(2)s"
 msgstr "%(1)s von %(2)s"
 
-#: constants.py:100
+#: constants.py:122
 msgid "Title:"
 msgstr "Titel:"
 
-#: constants.py:101
+#: constants.py:123
 msgid "Recorder:"
 msgstr "Rekorder:"
 
-#: constants.py:102
+#: constants.py:124
 msgid "Date:"
 msgstr "Datum:"
 
-#: constants.py:103
+#: constants.py:125
 msgid "Tags:"
 msgstr "Stichworte:"
 
-#: constants.py:104
+#: constants.py:126
 msgid "Saving"
 msgstr "Speichern"
 
-#: constants.py:105
+#: constants.py:127
 msgid "Finished recording"
 msgstr "Beendete Aufnahme"
 
-#: constants.py:106
+#: constants.py:128
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+#, fuzzy
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
 msgstr "%(1)s Stunden, %(2)s Minuten, %(1)s Sekunden verbleibend"
 
-#: constants.py:107
+#: constants.py:129
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
 msgstr "%(1)s Minuten, %(2)s Sekunden verbleibend"
 
-#: constants.py:108
+#: constants.py:130
 #, python-format
 msgid "%(1)s hours remaining"
 msgstr "%(1)s Stunden verbleibend"
 
-#: constants.py:109
+#: constants.py:131
 #, python-format
 msgid "%(1)s minutes remaining"
 msgstr "%(1)s Minuten verbleibend"
 
-#: constants.py:110
+#: constants.py:132
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1)s Sekunden verbleibend"
 
 # Hours, not photos
-#: constants.py:111
+#: constants.py:133
 #, python-format
 msgid "%(1)s hours"
 msgstr "%(1)s Stunden"
 
-#: constants.py:112 constants.py:121
+#: constants.py:134
 #, python-format
 msgid "%(1)s minutes"
 msgstr "%(1)s Minuten"
 
-#: constants.py:113 constants.py:120
+#: constants.py:135
 #, python-format
 msgid "%(1)s seconds"
 msgstr "%(1)s Sekunden"
 
-#: constants.py:114
+#: constants.py:136
 msgid "Remove"
 msgstr "Entfernen"
 
-#: constants.py:115
+#: constants.py:137
 msgid "Stopped recording"
 msgstr "Gestoppte Aufnahme"
 
-#: constants.py:116
+#: constants.py:138
 msgid "Copy to clipboard"
 msgstr "In Zwischenablage kopieren"
 
-#: constants.py:117
+#: constants.py:139
 msgid "Timer:"
 msgstr "Timer:"
 
-#: constants.py:118
+#: constants.py:140
 msgid "Duration:"
 msgstr "Dauer:"
 
-#: constants.py:119
+#: constants.py:141
 msgid "Immediate"
 msgstr "Augenblicklich"
 
-#: constants.py:122
+#: constants.py:142
 msgid "Play"
 msgstr "Wiedergabe"
 
-#: constants.py:123
+#: constants.py:143
 msgid "Pause"
 msgstr "Pause"
 
-#: constants.py:124
+#: constants.py:144
 msgid "Add frame"
 msgstr "Frame hinzufügen"
 
-#: constants.py:125
+#: constants.py:145
 msgid "Remove frame"
 msgstr "Frame entfernen"
 
-#: constants.py:126
+#: constants.py:146
 #, python-format
 msgid "%(1)s frames per second"
 msgstr "%(1)s Frames pro Sekunde"
 
-#: constants.py:127
+#: constants.py:147
 msgid "Quality"
 msgstr "Qualität"
 
-#: constants.py:128
+#: constants.py:148
 msgid "Default"
 msgstr "Voreinstellung"
 
-#: constants.py:129
+#: constants.py:149
 msgid "Best"
 msgstr "Am Besten"
 
-#: constants.py:130
+#: constants.py:150
 msgid "High"
 msgstr "Hoch"
 
-#: constants.py:131
+#: constants.py:151
 msgid "Low"
 msgstr "Niedrig"
 
-#: constants.py:132
+#: constants.py:152
 msgid "Large file"
 msgstr "Große Datei"
 
-#: constants.py:133
+#: constants.py:153
 msgid "Small file"
 msgstr "Kleine Datei"
 
-#: constants.py:134
+#: constants.py:154
 msgid "Silent"
 msgstr "Leise"
 
-#: constants.py:135
+#: constants.py:155
 msgid "Rotate"
 msgstr "Drehen"
 
-#: constants.py:136
+#: constants.py:156
 msgid "Width"
 msgstr "Breite"
 
-#: constants.py:137
+#: constants.py:157
 msgid "Height"
 msgstr "Höhe"
 
-#: constants.py:138
+#: constants.py:158
 msgid "Click to take picture"
 msgstr "Klicken für Aufnahme eines Bildes"
 
-#: constants.py:139
+#: constants.py:159
 msgid "Click to add picture"
 msgstr "Klicken zum Hinzufügen eines Bildes"
 
+# TRANS: Downloading Photo from Mary
 #. TRANS: Downloading Photo from Mary
-#: constants.py:141
+#: constants.py:161
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
 msgstr "Herunterladen %(1)s von %(2)s"
 
+# TRANS: Cannot download this Photo
 #. TRANS: Cannot download this Photo
-#: constants.py:143
+#: constants.py:163
 #, python-format
 msgid "Cannot download this %(1)s"
 msgstr "Herunterladen unmöglich von %(1)s"
 
+# TRANS: Save Photo to:
 #. TRANS: Save Photo to:
-#: constants.py:145
-msgid "Save %(1) to:"
+#: constants.py:165
+#, python-format
+#, fuzzy
+msgid "Save %(1)s to:"
 msgstr "%(1) speichern nach:"
 
-#: constants.py:146
+#: constants.py:166
 #, python-format
 msgid "Your %(1)s is full"
 msgstr "Dein %(1)s ist voll"
 
-#: constants.py:147
+#: constants.py:167
 msgid "Journal"
 msgstr "Journal"
 
-#: constants.py:148
+#: constants.py:168
 msgid "USB"
 msgstr "USB"
 
-#: constants.py:149
+#: constants.py:169
 msgid "SD Card"
 msgstr "SD-Karte"
 
-#: constants.py:150
+#: constants.py:170
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: constants.py:151
+#: constants.py:171
 msgid "Free space:"
 msgstr "Freier Speicher:"
 
+# TRANS: 7 photos
 #. TRANS: 7 photos
-#: constants.py:153
+#: constants.py:173
 #, python-format
 msgid "%(1)s photos"
 msgstr "%(1)s Fotos"
 
-#: constants.py:154
+#: constants.py:174
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: constants.py:155
+#: constants.py:175
 msgid "Maximum Bitrate"
 msgstr "Maximale Bitrate"
 
-#: constants.py:156
+#: constants.py:176
 msgid "Minumum Bitrate"
 msgstr "Minimale Bitrate"
 
-#: constants.py:157
+#: constants.py:177
 msgid "Manage Bitrate"
 msgstr "Bitrate verwalten"
 
-#: constants.py:158
+#: constants.py:178
 msgid "Border"
 msgstr "Rand"
 
-#: constants.py:159
+#: constants.py:179
 msgid "Center"
 msgstr "Zentrum"
 
-#: constants.py:160
+#: constants.py:180
 msgid "Frames"
 msgstr "Frames"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: constants.py:161
+#: constants.py:181
 msgid "Automatic keyframe detection"
 msgstr "Automatische Feststellung der Schlüsselbilder"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: constants.py:162
+#: constants.py:182
 msgid "Force keyframe"
 msgstr "Schlüsselbild erzwingen"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: constants.py:163
+#: constants.py:183
 msgid "Keyframe frequency"
 msgstr "Schlüsselbild- Frequenz"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: constants.py:164
+#: constants.py:184
 msgid "Keyframe minimum distance"
 msgstr "Minimaler Schlüsselbildabstand"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: constants.py:165
+#: constants.py:185
 msgid "Keyframe threshold"
 msgstr "Schlüsselbild-Schwelle"
 
-#: constants.py:166
+#: constants.py:186
 msgid "Noise Sensitivity"
 msgstr "Rauschempfindlichkeit"
 
-#: constants.py:167
+#: constants.py:187
 msgid "Quick"
 msgstr "Schnell"
 
-#: constants.py:168
+#: constants.py:188
 msgid "Sharpness"
 msgstr "Schärfe"
 
 # ???
-#: constants.py:169
+#: constants.py:189
 msgid "Capacity"
 msgstr "Kapazität"
 
