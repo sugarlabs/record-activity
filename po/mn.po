@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-20 09:20-0500\n"
-"PO-Revision-Date: 2008-06-27 07:04-0400\n"
+"POT-Creation-Date: 2008-08-19 17:10-0400\n"
+"PO-Revision-Date: 2008-07-30 02:36-0400\n"
 "Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,316 +15,323 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: activity/activity.info:2 constants.py:90
+#: activity/activity.info:2 constants.py:112
 msgid "Record"
 msgstr "Бичлэг хийх"
 
-#: constants.py:91
+#: constants.py:113
 msgid "Photo"
 msgstr "Зураг"
 
-#: constants.py:92
+#: constants.py:114
 msgid "Video"
 msgstr "Видео"
 
-#: constants.py:93
+#: constants.py:115
 msgid "Audio"
 msgstr "Дуу"
 
-#: constants.py:94
+#: constants.py:116
 msgid "Time Lapse"
 msgstr "Хугацааны хурдасгуур"
 
-#: constants.py:95
+#: constants.py:117
 msgid "Animation"
 msgstr "Хөдөлгөөнт зураг"
 
-#: constants.py:96
+#: constants.py:118
 msgid "Panorama"
-msgstr "Өргөн дэлгэц"
+msgstr "Панорам"
 
-#: constants.py:97
+#: constants.py:119
 msgid "Interview"
 msgstr "Ярилцлага"
 
 # TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:99
+#: constants.py:121
 #, python-format
 msgid "%(1)s by %(2)s"
 msgstr "%(2)s-гын %(1)s"
 
-#: constants.py:100
+#: constants.py:122
 msgid "Title:"
 msgstr "Гарчиг:"
 
-#: constants.py:101
+#: constants.py:123
 msgid "Recorder:"
 msgstr "Дуу хураагуур:"
 
-#: constants.py:102
+#: constants.py:124
 msgid "Date:"
 msgstr "Огноо:"
 
-#: constants.py:103
+#: constants.py:125
 msgid "Tags:"
 msgstr "Шошго:"
 
-#: constants.py:104
+#: constants.py:126
 msgid "Saving"
 msgstr "Хадгалж байна"
 
-#: constants.py:105
+#: constants.py:127
 msgid "Finished recording"
 msgstr "Бичлэг хийж дууслаа"
 
-#: constants.py:106
+#: constants.py:128
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+#, fuzzy
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
 msgstr "%(1)s цаг, %(2)s минут, %(1)s секунд үлдлээ"
 
-#: constants.py:107
+#: constants.py:129
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s минут, %(1)s секунд үлдлээ"
+msgstr "%(1)s минут, %(2)s секунд үлдлээ"
 
-#: constants.py:108
+#: constants.py:130
 #, python-format
 msgid "%(1)s hours remaining"
 msgstr "%(1)s цаг үлдлээ"
 
-#: constants.py:109
+#: constants.py:131
 #, python-format
 msgid "%(1)s minutes remaining"
 msgstr "%(1)s минут үлдлээ"
 
-#: constants.py:110
+#: constants.py:132
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "%(1)s секунд үлдлээ"
 
 # TRANS: 7 photos
-#: constants.py:111
+#: constants.py:133
 #, python-format
 msgid "%(1)s hours"
 msgstr "%(1)s цаг"
 
-#: constants.py:112 constants.py:121
+#: constants.py:134
 #, python-format
 msgid "%(1)s minutes"
 msgstr "%(1)s минут"
 
-#: constants.py:113 constants.py:120
+#: constants.py:135
 #, python-format
 msgid "%(1)s seconds"
 msgstr "%(1)s секунд"
 
-#: constants.py:114
+#: constants.py:136
 msgid "Remove"
 msgstr "Устгах"
 
-#: constants.py:115
+#: constants.py:137
 msgid "Stopped recording"
 msgstr "Бичлэгийг зогсоолоо"
 
-#: constants.py:116
+#: constants.py:138
 msgid "Copy to clipboard"
 msgstr "Самбарт хуулах"
 
-#: constants.py:117
+#: constants.py:139
 msgid "Timer:"
-msgstr "Хүгацаа хянагч:"
+msgstr "Тоолуур:"
 
-#: constants.py:118
+#: constants.py:140
 msgid "Duration:"
 msgstr "Үргэлжлэх хугацаа:"
 
-#: constants.py:119
+#: constants.py:141
 msgid "Immediate"
 msgstr "Яаралтай"
 
-#: constants.py:122
+#: constants.py:142
 msgid "Play"
 msgstr "Үзэх"
 
-#: constants.py:123
+#: constants.py:143
 msgid "Pause"
 msgstr "Завсарлах"
 
-#: constants.py:124
+#: constants.py:144
 msgid "Add frame"
 msgstr "Хүрээ нэмэх"
 
-#: constants.py:125
+#: constants.py:145
 msgid "Remove frame"
 msgstr "Хүрээг арилгах"
 
-#: constants.py:126
+#: constants.py:146
 #, python-format
 msgid "%(1)s frames per second"
 msgstr "Секунд тутамд %(1)s кадр"
 
-#: constants.py:127
+#: constants.py:147
 msgid "Quality"
 msgstr "Чанар"
 
-#: constants.py:128
+#: constants.py:148
 msgid "Default"
 msgstr "Ердийн"
 
-#: constants.py:129
+#: constants.py:149
 msgid "Best"
 msgstr "Хамгийн сайн"
 
-#: constants.py:130
+#: constants.py:150
 msgid "High"
 msgstr "Өндөр"
 
-#: constants.py:131
+#: constants.py:151
 msgid "Low"
 msgstr "Нам"
 
-#: constants.py:132
+#: constants.py:152
 msgid "Large file"
 msgstr "Том файл"
 
-#: constants.py:133
+#: constants.py:153
 msgid "Small file"
 msgstr "Жижиг файл"
 
-#: constants.py:134
+#: constants.py:154
 msgid "Silent"
 msgstr "Дуугүй"
 
-#: constants.py:135
+#: constants.py:155
 msgid "Rotate"
 msgstr "Эргүүлэх"
 
-#: constants.py:136
+#: constants.py:156
 msgid "Width"
 msgstr "Өргөн"
 
-#: constants.py:137
+#: constants.py:157
 msgid "Height"
 msgstr "Өндөр"
 
-#: constants.py:138
+#: constants.py:158
 msgid "Click to take picture"
 msgstr "Зураг авахдаа энд дарна уу"
 
-#: constants.py:139
+#: constants.py:159
 msgid "Click to add picture"
 msgstr "Зураг нэмэхдээ энд дарна уу"
 
+# TRANS: Downloading Photo from Mary
 #. TRANS: Downloading Photo from Mary
-#: constants.py:141
+#: constants.py:161
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
 msgstr "%(2)s-ээс %(1)s-ийг татаж байна "
 
+# TRANS: Cannot download this Photo
 #. TRANS: Cannot download this Photo
-#: constants.py:143
+#: constants.py:163
 #, python-format
 msgid "Cannot download this %(1)s"
 msgstr "Энэ %(1)s-г татаж чадахгүй байна"
 
+# TRANS: Save Photo to:
 #. TRANS: Save Photo to:
-#: constants.py:145
-msgid "Save %(1) to:"
+#: constants.py:165
+#, python-format
+#, fuzzy
+msgid "Save %(1)s to:"
 msgstr "%(1)s-ийг хадгалах хавцас:"
 
-#: constants.py:146
+#: constants.py:166
 #, python-format
 msgid "Your %(1)s is full"
 msgstr "Таны %(1)s дүүрэн байна"
 
-#: constants.py:147
+#: constants.py:167
 msgid "Journal"
 msgstr "Бүртгэл"
 
-#: constants.py:148
+#: constants.py:168
 msgid "USB"
 msgstr "USB"
 
-#: constants.py:149
+#: constants.py:169
 msgid "SD Card"
 msgstr "SD карт"
 
-#: constants.py:150
+#: constants.py:170
 msgid "Preferences"
 msgstr "Тохиргоо"
 
-#: constants.py:151
+#: constants.py:171
 msgid "Free space:"
 msgstr "Сул зай:"
 
+# TRANS: 7 photos
 #. TRANS: 7 photos
-#: constants.py:153
+#: constants.py:173
 #, python-format
 msgid "%(1)s photos"
 msgstr "%(1)s зураг"
 
-#: constants.py:154
+#: constants.py:174
 msgid "Bitrate"
 msgstr "Бит-н хурд"
 
-#: constants.py:155
+#: constants.py:175
 msgid "Maximum Bitrate"
 msgstr "Хамгийн их бит-н хурд"
 
-#: constants.py:156
+#: constants.py:176
 msgid "Minumum Bitrate"
 msgstr "Хамгийн бага бит-н хурд"
 
-#: constants.py:157
+#: constants.py:177
 msgid "Manage Bitrate"
 msgstr "Бит-н хурдыг тохируулах"
 
-#: constants.py:158
+#: constants.py:178
 msgid "Border"
 msgstr "Хүрээ"
 
-#: constants.py:159
+#: constants.py:179
 msgid "Center"
 msgstr "Төв"
 
-#: constants.py:160
+#: constants.py:180
 msgid "Frames"
 msgstr "Кадрууд"
 
-#: constants.py:161
+#: constants.py:181
 msgid "Automatic keyframe detection"
 msgstr "Үндсэн кадрыг автоматаар олох"
 
-#: constants.py:162
+#: constants.py:182
 msgid "Force keyframe"
 msgstr "Үндсэн кадрыг оноох"
 
-#: constants.py:163
+#: constants.py:183
 msgid "Keyframe frequency"
 msgstr "Үндсэн кадрын давтамж"
 
-#: constants.py:164
+#: constants.py:184
 msgid "Keyframe minimum distance"
-msgstr "Үндсэн кадрын хоорондын доод зай"
+msgstr "Үндсэн кадрын хоорондын хамгийн бага зай"
 
-#: constants.py:165
+#: constants.py:185
 msgid "Keyframe threshold"
 msgstr "Үндсэн кадрын хязгаар"
 
-#: constants.py:166
+#: constants.py:186
 msgid "Noise Sensitivity"
-msgstr "Дууны мэдрэмж"
+msgstr "Шуугиан мэдрэгч"
 
-#: constants.py:167
+#: constants.py:187
 msgid "Quick"
 msgstr "Хурдан"
 
-#: constants.py:168
+#: constants.py:188
 msgid "Sharpness"
 msgstr "Тодрол"
 
-#: constants.py:169
+#: constants.py:189
 msgid "Capacity"
 msgstr "Багтаамж"
 
