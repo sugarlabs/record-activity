@@ -80,12 +80,12 @@ msgstr "Tèmine Anrejistreman "
 #: constants.py:106
 #, python-format
 msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(1) lè, %(2)s minit, %(1) segond ki rete"
+msgstr "%(1)s lè, %(2)s minit, %(1)s segond ki rete"
 
 #: constants.py:107
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s minit, %(2) segond ki rete"
+msgstr "%(1)s minit, %(2)s segond ki rete"
 
 #: constants.py:108
 #, python-format
@@ -160,7 +160,7 @@ msgstr "Retire bòdi"
 #: constants.py:126
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "%(1) Kantite bòdi pa segond"
+msgstr "%(1)s Kantite bòdi pa segond"
 
 #: constants.py:127
 msgid "Quality"
@@ -218,7 +218,7 @@ msgstr "Klike pou ajoute foto"
 #: constants.py:141
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "Telechaje %(1) apati de %(2)s"
+msgstr "Telechaje %(1)s apati de %(2)s"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:143
