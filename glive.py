@@ -43,16 +43,21 @@ class Glive:
 	def __init__(self, pca):
 		self.window = None
 		self.ca = pca
+		self.pipes = []
 
 		self.playing = False
-		self.picExposureOpen = False
 
 		self.AUDIO_TRANSCODE_ID = 0
 		self.TRANSCODE_ID = 0
 		self.VIDEO_TRANSCODE_ID = 0
 
-		self.PHOTO_MODE_PHOTO = 0
-		self.PHOTO_MODE_AUDIO = 1
+		self.PIPETYPE_SUGAR_JHBUILD = 0
+		self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD = 1
+		self.PIPETYPE_X_VIDEO_DISPLAY = 2
+		self.PIPETYPE_AUDIO_RECORD = 3
+		self._PIPETYPE = self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
+		self._LAST_PIPETYPE = self._PIPETYPE
+		self._NEXT_PIPETYPE = -1
 
 		self.TRANSCODE_UPDATE_INTERVAL = 200
 
@@ -65,99 +70,27 @@ class Glive:
 		self.VIDEO_HEIGHT_LARGE = 150
 		self.VIDEO_FRAMERATE_SMALL = 10
 
-		self.pipeline = gst.Pipeline("my-pipeline")
-		self.createPhotoBin()
-		self.createAudioBin()
-		self.createVideoBin()
-		self.createPipeline()
 
 		self.thumbPipes = []
 		self.muxPipes = []
+		self._nextPipe()
 
-		bus = self.pipeline.get_bus()
-		bus.enable_sync_message_emission()
-		bus.add_signal_watch()
-		self.SYNC_ID = bus.connect('sync-message::element', self._onSyncMessageCb)
-		self.MESSAGE_ID = bus.connect('message', self._onMessageCb)
 
-	def createPhotoBin ( self ):
-		queue = gst.element_factory_make("queue", "pbqueue")
-		queue.set_property("leaky", True)
-		queue.set_property("max-size-buffers", 1)
+	def setPipeType( self, type ):
+		self._NEXT_PIPETYPE = type
 
-		colorspace = gst.element_factory_make("ffmpegcolorspace", "pbcolorspace")
-		jpeg = gst.element_factory_make("jpegenc", "pbjpeg")
 
-		sink = gst.element_factory_make("fakesink", "pbsink")
-		self.HANDOFF_ID = sink.connect("handoff", self.copyPic)
-		sink.set_property("signal-handoffs", True)
+	def getPipeType( self ):
+		return self._PIPETYPE
 
-		self.photobin = gst.Bin("photobin")
-		self.photobin.add(queue, colorspace, jpeg, sink)
 
-		gst.element_link_many(queue, colorspace, jpeg, sink)
+	def pipe(self):
+		return self.pipes[ len(self.pipes)-1 ]
 
-		pad = queue.get_static_pad("sink")
-		self.photobin.add_pad(gst.GhostPad("sink", pad))
 
-	def createAudioBin ( self ):
-		src = gst.element_factory_make("alsasrc", "absrc")
-		srccaps = gst.Caps("audio/x-raw-int,rate=16000,channels=1,depth=16")
+	def el(self, name):
+		return self.pipe().get_by_name(name)
 
-		enc = gst.element_factory_make("wavenc", "abenc")
-
-		sink = gst.element_factory_make("filesink", "absink")
-		sink.set_property("location", os.path.join(Instance.instancePath, "output.wav"))
-
-		self.audiobin = gst.Bin("audiobin")
-		self.audiobin.add(src, enc, sink)
-
-		src.link(enc, srccaps)
-		enc.link(sink)
-
-	def createVideoBin ( self ):
-		queue = gst.element_factory_make("queue", "vbqueue")
-
-		rate = gst.element_factory_make("videorate", "vbrate")
-		ratecaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
-
-		scale = gst.element_factory_make("videoscale", "vbscale")
-		scalecaps = gst.Caps('video/x-raw-yuv,width='+str(self.VIDEO_WIDTH_SMALL)+',height='+str(self.VIDEO_HEIGHT_SMALL))
-
-		colorspace = gst.element_factory_make("ffmpegcolorspace", "vbcolorspace")
-
-		enc = gst.element_factory_make("theoraenc", "vbenc")
-		enc.set_property("quality", 16)
-
-		mux = gst.element_factory_make("oggmux", "vbmux")
-
-		sink = gst.element_factory_make("filesink", "vbfile")
-		sink.set_property("location", os.path.join(Instance.instancePath, "output.ogg"))
-
-		self.videobin = gst.Bin("videobin")
-		self.videobin.add(queue, rate, scale, colorspace, enc, mux, sink)
-
-		queue.link(rate)
-		rate.link(scale, ratecaps)
-		scale.link(colorspace, scalecaps)
-		gst.element_link_many(colorspace, enc, mux, sink)
-
-		pad = queue.get_static_pad("sink")
-		self.videobin.add_pad(gst.GhostPad("sink", pad))
-
-	def createPipeline ( self ):
-		src = gst.element_factory_make("v4l2src", "camsrc")
-		try:
-			# old gst-plugins-good does not have this property
-			src.set_property("queue-size", 2)
-		except:
-			pass
-
-		tee = gst.element_factory_make("tee", "tee")
-		queue = gst.element_factory_make("queue", "dispqueue")
-		xvsink = gst.element_factory_make("xvimagesink", "xvsink")
-		self.pipeline.add(src, tee, queue, xvsink)
-		gst.element_link_many(src, tee, queue, xvsink)
 
 	def thumbPipe(self):
 		return self.thumbPipes[ len(self.thumbPipes)-1 ]
@@ -176,28 +109,134 @@ class Glive:
 
 
 	def play(self):
-		self.pipeline.set_state(gst.STATE_PLAYING)
+		self.pipe().set_state(gst.STATE_PLAYING)
 		self.playing = True
 
+
 	def pause(self):
-		self.pipeline.set_state(gst.STATE_PAUSED)
+		self.pipe().set_state(gst.STATE_PAUSED)
 		self.playing = False
 
 
 	def stop(self):
-		self.pipeline.set_state(gst.STATE_NULL)
+		self.pipe().set_state(gst.STATE_NULL)
 		self.playing = False
+
+		self._LAST_PIPETYPE = self._PIPETYPE
+		if (self._NEXT_PIPETYPE != -1):
+			self._PIPETYPE = self._NEXT_PIPETYPE
+		self._nextPipe()
+		self._NEXT_PIPETYPE = -1
+
 
 	def is_playing(self):
 		return self.playing
+
 
 	def idlePlayElement(self, element):
 		element.set_state(gst.STATE_PLAYING)
 		return False
 
+	def _nextPipe(self):
+		if ( len(self.pipes) > 0 ):
+
+			pipe = self.pipe()
+			bus = pipe.get_bus()
+			n = len(self.pipes)-1
+			n = str(n)
+
+			#only disconnect what was connected based on the last pipetype
+			if ((self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD)
+			or (self._LAST_PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)
+			or (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD) ):
+				bus.disconnect(self.SYNC_ID)
+				bus.remove_signal_watch()
+				bus.disable_sync_message_emission()
+				if (self._LAST_PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
+					pipe.get_by_name("picFakesink").disconnect(self.HANDOFF_ID)
+				if (self._LAST_PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+					pipe.get_by_name("picFakesink").disconnect(self.HANDOFF_ID)
+
+		v4l2 = False
+		if (self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD):
+			pipeline = gst.parse_launch("v4l2src name=v4l2src ! tee name=videoTee ! queue name=movieQueue ! videorate name=movieVideorate ! video/x-raw-yuv,framerate="+str(self.VIDEO_FRAMERATE_SMALL)+"/1 ! videoscale name=movieVideoscale ! video/x-raw-yuv,width="+str(self.VIDEO_WIDTH_SMALL)+",height="+str(self.VIDEO_HEIGHT_SMALL)+" ! ffmpegcolorspace name=movieFfmpegcolorspace ! theoraenc quality=16 name=movieTheoraenc ! oggmux name=movieOggmux ! filesink name=movieFilesink videoTee. ! xvimagesink name=xvimagesink videoTee. ! queue name=picQueue ! ffmpegcolorspace name=picFfmpegcolorspace ! jpegenc name=picJPegenc ! fakesink name=picFakesink alsasrc name=audioAlsasrc ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! tee name=audioTee ! wavenc name=audioWavenc ! filesink name=audioFilesink audioTee. ! fakesink name=audioFakesink" )
+			v4l2 = True
+
+			videoTee = pipeline.get_by_name('videoTee')
+
+			picQueue = pipeline.get_by_name('picQueue')
+			picQueue.set_property("leaky", True)
+			picQueue.set_property("max-size-buffers", 1)
+			picFakesink = pipeline.get_by_name("picFakesink")
+			self.HANDOFF_ID = picFakesink.connect("handoff", self.copyPic)
+			picFakesink.set_property("signal-handoffs", True)
+			self.picExposureOpen = False
+
+			movieQueue = pipeline.get_by_name("movieQueue")
+			movieFilesink = pipeline.get_by_name("movieFilesink")
+			movieFilepath = os.path.join(Instance.instancePath, "output.ogg" ) #ogv
+			movieFilesink.set_property("location", movieFilepath )
+
+			audioFilesink = pipeline.get_by_name('audioFilesink')
+			audioFilepath = os.path.join(Instance.instancePath, "output.wav")
+			audioFilesink.set_property("location", audioFilepath )
+			audioTee = pipeline.get_by_name('audioTee')
+			audioWavenc = pipeline.get_by_name('audioWavenc')
+
+			audioTee.unlink(audioWavenc)
+			videoTee.unlink(movieQueue)
+			videoTee.unlink(picQueue)
+
+		elif (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY ):
+			pipeline = gst.parse_launch("v4l2src name=v4l2src ! queue name=xQueue ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width="+str(ui.UI.dim_PIPW)+",height="+str(ui.UI.dim_PIPH)+" ! ffmpegcolorspace ! ximagesink name=ximagesink")
+			v4l2 = True
+
+		elif (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
+			pipeline = gst.parse_launch("v4l2src name=v4l2src ! tee name=videoTee ! xvimagesink name=xvimagesink videoTee. ! queue name=picQueue ! ffmpegcolorspace name=picFfmpegcolorspace ! jpegenc name=picJPegenc ! fakesink name=picFakesink alsasrc name=audioAlsasrc ! audio/x-raw-int,rate=16000,channels=1,depth=16 ! queue name=audioQueue ! audioconvert name=audioAudioconvert ! wavenc name=audioWavenc ! filesink name=audioFilesink" )
+			v4l2 = True
+
+			audioQueue = pipeline.get_by_name('audioQueue')
+			audioAudioconvert = pipeline.get_by_name('audioAudioconvert')
+			audioQueue.unlink(audioAudioconvert)
+
+			videoTee = pipeline.get_by_name('videoTee')
+			picQueue = pipeline.get_by_name('picQueue')
+			picQueue.set_property("leaky", True)
+			picQueue.set_property("max-size-buffers", 1)
+			picFakesink = pipeline.get_by_name('picFakesink')
+			self.HANDOFF_ID = picFakesink.connect("handoff", self.copyPic)
+			picFakesink.set_property("signal-handoffs", True)
+			self.picExposureOpen = False
+			videoTee.unlink(picQueue)
+
+			audioFilesink = pipeline.get_by_name('audioFilesink')
+			audioFilepath = os.path.join(Instance.instancePath, "output.wav")
+			audioFilesink.set_property("location", audioFilepath )
+
+		elif (self._PIPETYPE == self.PIPETYPE_SUGAR_JHBUILD):
+			pipeline = gst.parse_launch("fakesrc ! queue name=xQueue ! videorate ! video/x-raw-yuv,framerate=2/1 ! videoscale ! video/x-raw-yuv,width=160,height=120 ! ffmpegcolorspace ! ximagesink name=ximagesink")
+
+		if (v4l2):
+			v4l2src = pipeline.get_by_name('v4l2src')
+			try:
+				v4l2src.set_property("queue-size", 2)
+			except:
+				pass
+
+		if ((self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD)
+		or (self._PIPETYPE == self.PIPETYPE_X_VIDEO_DISPLAY)
+		or (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD)):
+			bus = pipeline.get_bus()
+			bus.enable_sync_message_emission()
+			bus.add_signal_watch()
+			self.SYNC_ID = bus.connect('sync-message::element', self._onSyncMessageCb)
+			self.MESSAGE_ID = bus.connect('message', self._onMessageCb)
+
+		self.pipes.append(pipeline)
+
+
 	def stopRecordingAudio( self ):
-		self.audiobin.set_state(gst.STATE_NULL)
-		self.pipeline.remove(self.audiobin)
+		self.stop()
 		gobject.idle_add( self.stoppedRecordingAudio )
 
 
@@ -286,91 +325,63 @@ class Glive:
 		tl[gst.TAG_TITLE] = Constants.istrBy % {"1":stringType, "2":str(Instance.nickName)}
 		return tl
 
-	def blockedCb(self, x, y, z):
-		pass
-
-	def _takePhoto(self):
-		if self.picExposureOpen:
-			return
-
-		self.picExposureOpen = True
-		pad = self.photobin.get_static_pad("sink")
-		pad.set_blocked_async(True, self.blockedCb, None)
-		self.pipeline.add(self.photobin)
-		self.photobin.set_state(gst.STATE_PLAYING)
-		self.pipeline.get_by_name("tee").link(self.photobin)
-		pad.set_blocked_async(False, self.blockedCb, None)
 
 	def takePhoto(self):
-		self.photoMode = self.PHOTO_MODE_PHOTO
-		self._takePhoto()
+		if not(self.picExposureOpen):
+			self.picExposureOpen = True
+			self.el("videoTee").link(self.el("picQueue"))
+
 
 	def copyPic(self, fsink, buffer, pad, user_data=None):
-		if not self.picExposureOpen:
-			return
+		if (self.picExposureOpen):
 
-		pad = self.photobin.get_static_pad("sink")
-		pad.set_blocked_async(True, self.blockedCb, None)
-		self.pipeline.get_by_name("tee").unlink(self.photobin)
-		self.pipeline.remove(self.photobin)
-		pad.set_blocked_async(False, self.blockedCb, None)
+			self.picExposureOpen = False
+			pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
+			pic.write( buffer )
+			pic.close()
+			pixBuf = pic.get_pixbuf()
+			del pic
 
-		self.picExposureOpen = False
-		pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
-		pic.write( buffer )
-		pic.close()
-		pixBuf = pic.get_pixbuf()
-		del pic
-
-		self.savePhoto( pixBuf )
+			self.el("videoTee").unlink(self.el("picQueue"))
+			self.savePhoto( pixBuf )
 
 
 	def savePhoto(self, pixbuf):
-		if self.photoMode == self.PHOTO_MODE_AUDIO:
+		if (self._PIPETYPE == self.PIPETYPE_AUDIO_RECORD):
 			self.audioPixbuf = pixbuf
 		else:
 			self.ca.m.savePhoto(pixbuf)
 
 
 	def startRecordingVideo(self):
+		self.pipe().set_state(gst.STATE_READY)
+
 		self.record = True
 		self.audio = True
+		if (self.record):
+			self.el("videoTee").link(self.el("movieQueue"))
 
-		# It would be nicer to connect the video/audio-recording elements
-		# without stopping the pipeline. However, that seems to cause a
-		# very long delay at the start of the video recording where the first
-		# frame is 'frozen' for several seconds. MikeS from #gstreamer
-		# suggested that the videorate element might not be receiving a
-		# "new segment" signal soon enough.
-		#
-		# Stopping the pipeline while we reshuffle neatly works around this
-		# with minimal user experience impact.
-		self.pipeline.set_state(gst.STATE_NULL)
-		self.pipeline.add(self.videobin)
-		self.pipeline.get_by_name("tee").link(self.videobin)
-		self.pipeline.add(self.audiobin)
-		self.pipeline.set_state(gst.STATE_PLAYING)
+			if (self.audio):
+				self.el("audioTee").link(self.el("audioWavenc"))
+
+		self.pipe().set_state(gst.STATE_PLAYING)
+
 
 	def startRecordingAudio(self):
 		self.audioPixbuf = None
+		self.pipe().set_state(gst.STATE_READY)
 
-		self.photoMode = self.PHOTO_MODE_AUDIO
-		self._takePhoto()
+		self.takePhoto()
 
 		self.record = True
-		self.pipeline.add(self.audiobin)
-		self.audiobin.set_state(gst.STATE_PLAYING)
+		if (self.record):
+			self.el("audioQueue").link(self.el("audioAudioconvert"))
+
+		self.pipe().set_state(gst.STATE_PLAYING)
+
 
 	def stopRecordingVideo(self):
-		# Similarly to as when we start recording, we also stop the pipeline
-		# while we are adjusting the pipeline to stop recording. If we do
-		# it on-the-fly, the following video live feed to the screen becomes
-		# several seconds delayed. Weird!
-		self.pipeline.set_state(gst.STATE_NULL)
-		self.pipeline.get_by_name("tee").unlink(self.videobin)
-		self.pipeline.remove(self.videobin)
-		self.pipeline.remove(self.audiobin)
-		self.pipeline.set_state(gst.STATE_PLAYING)
+		self.stop()
 		gobject.idle_add( self.stoppedRecordingVideo )
 
 
@@ -499,6 +510,11 @@ class Glive:
 			#todo: handle "No space left on the resource.gstfilesink.c"
 			#err, debug = message.parse_error()
 			pass
+
+
+	def isXv(self):
+		return self._PIPETYPE == self.PIPETYPE_XV_VIDEO_DISPLAY_RECORD
+
 
 	def abandonMedia(self):
 		self.stop()

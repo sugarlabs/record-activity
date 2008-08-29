@@ -297,6 +297,7 @@ class Model:
 		#resume live video from the camera (if the activity is active)
 		if (self.ca.ui.ACTIVE):
 			self.ca.ui.updateVideoComponents()
+			self.ca.glive.play()
 
 		self.ca.ui.progressWindow.updateProgress( 0, "" )
 		self.setRecording( False )
