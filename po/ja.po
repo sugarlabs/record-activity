@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-20 09:20-0500\n"
-"PO-Revision-Date: 2008-07-19 10:10-0400\n"
+"POT-Creation-Date: 2008-08-19 17:10-0400\n"
+"PO-Revision-Date: 2008-08-28 21:47-0400\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,317 +15,321 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: activity/activity.info:2 constants.py:90
-#, fuzzy
+#: activity/activity.info:2 constants.py:112
 msgid "Record"
-msgstr "録音・録画"
+msgstr "Record"
 
-#: constants.py:91
+#: constants.py:113
 msgid "Photo"
 msgstr "写真"
 
-#: constants.py:92
+#: constants.py:114
 msgid "Video"
 msgstr "ビデオ"
 
-#: constants.py:93
+#: constants.py:115
 msgid "Audio"
 msgstr "音声"
 
-#: constants.py:94
+#: constants.py:116
 msgid "Time Lapse"
 msgstr "時間経過"
 
-#: constants.py:95
+#: constants.py:117
 msgid "Animation"
 msgstr "アニメーション"
 
-#: constants.py:96
+#: constants.py:118
 msgid "Panorama"
 msgstr "パノラマ"
 
-#: constants.py:97
+#: constants.py:119
 msgid "Interview"
 msgstr "インタビュー"
 
 # TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:99
+#: constants.py:121
 #, python-format
 msgid "%(1)s by %(2)s"
 msgstr "%(1)s　(記録: %(2)s)"
 
-#: constants.py:100
+#: constants.py:122
 msgid "Title:"
 msgstr "タイトル:"
 
-#: constants.py:101
+#: constants.py:123
 msgid "Recorder:"
 msgstr "記録者:"
 
-#: constants.py:102
+#: constants.py:124
 msgid "Date:"
 msgstr "日時:"
 
-#: constants.py:103
+#: constants.py:125
 msgid "Tags:"
 msgstr "タグ:"
 
-#: constants.py:104
+#: constants.py:126
 msgid "Saving"
 msgstr "保存しています"
 
-#: constants.py:105
+#: constants.py:127
 msgid "Finished recording"
 msgstr "記録を終了しました"
 
-#: constants.py:106
+#: constants.py:128
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "残り %(1)s 時間, %(2)s 分, %(1)s 秒"
+msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+msgstr "残り %(1)s 時間, %(2)s 分, %(3)s 秒"
 
-#: constants.py:107
+#: constants.py:129
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "残り %(1)s分, %(1)s秒"
+msgstr "残り %(1)s分, %(2)s秒"
 
-#: constants.py:108
+#: constants.py:130
 #, python-format
 msgid "%(1)s hours remaining"
 msgstr "残り %(1)s 時間"
 
-#: constants.py:109
+#: constants.py:131
 #, python-format
 msgid "%(1)s minutes remaining"
 msgstr "残り %(1)s 分"
 
-#: constants.py:110
+#: constants.py:132
 #, python-format
 msgid "%(1)s seconds remaining"
 msgstr "残り %(1)s秒"
 
 # TRANS: 7 photos
-#: constants.py:111
+#: constants.py:133
 #, python-format
 msgid "%(1)s hours"
 msgstr "%(1)s 時間"
 
-#: constants.py:112 constants.py:121
+#: constants.py:134
 #, python-format
 msgid "%(1)s minutes"
 msgstr "%(1)s 分"
 
-#: constants.py:113 constants.py:120
+#: constants.py:135
 #, python-format
 msgid "%(1)s seconds"
 msgstr "%(1)s 秒"
 
-#: constants.py:114
+#: constants.py:136
 msgid "Remove"
 msgstr "削除"
 
-#: constants.py:115
+#: constants.py:137
 msgid "Stopped recording"
 msgstr "記録を中止しました"
 
-#: constants.py:116
+#: constants.py:138
 msgid "Copy to clipboard"
 msgstr "クリップボードにコピー"
 
-#: constants.py:117
+#: constants.py:139
 msgid "Timer:"
 msgstr "タイマー:"
 
-#: constants.py:118
+#: constants.py:140
 msgid "Duration:"
 msgstr "収録時間:"
 
-#: constants.py:119
+#: constants.py:141
 msgid "Immediate"
 msgstr "今すぐ"
 
-#: constants.py:122
+#: constants.py:142
 msgid "Play"
 msgstr "再生"
 
-#: constants.py:123
+#: constants.py:143
 msgid "Pause"
 msgstr "一時停止"
 
-#: constants.py:124
+#: constants.py:144
 msgid "Add frame"
 msgstr "フレームを追加"
 
-#: constants.py:125
+#: constants.py:145
 msgid "Remove frame"
 msgstr "フレームを削除"
 
-#: constants.py:126
+#: constants.py:146
 #, python-format
 msgid "%(1)s frames per second"
 msgstr "%(1)s フレーム/秒"
 
-#: constants.py:127
+#: constants.py:147
 msgid "Quality"
 msgstr "品質:"
 
-#: constants.py:128
+#: constants.py:148
 msgid "Default"
 msgstr "デフォルト"
 
-#: constants.py:129
+#: constants.py:149
 msgid "Best"
 msgstr "最高"
 
-#: constants.py:130
+#: constants.py:150
 msgid "High"
 msgstr "高"
 
-#: constants.py:131
+#: constants.py:151
 msgid "Low"
 msgstr "低"
 
-#: constants.py:132
+#: constants.py:152
 msgid "Large file"
 msgstr "大きなファイル"
 
-#: constants.py:133
+#: constants.py:153
 msgid "Small file"
 msgstr "小さなファイル"
 
-#: constants.py:134
+#: constants.py:154
 msgid "Silent"
 msgstr "無音"
 
-#: constants.py:135
+#: constants.py:155
 msgid "Rotate"
 msgstr "回転"
 
-#: constants.py:136
+#: constants.py:156
 msgid "Width"
 msgstr "幅"
 
-#: constants.py:137
+#: constants.py:157
 msgid "Height"
 msgstr "高さ"
 
-#: constants.py:138
+#: constants.py:158
 msgid "Click to take picture"
 msgstr "写真を撮るにはクリックしてください"
 
-#: constants.py:139
+#: constants.py:159
 msgid "Click to add picture"
 msgstr "写真を追加するにはクリックしてください"
 
+# TRANS: Downloading Photo from Mary
 #. TRANS: Downloading Photo from Mary
-#: constants.py:141
+#: constants.py:161
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
 msgstr "%(2)s から %(1)s をダウンロードしています"
 
+# TRANS: Cannot download this Photo
 #. TRANS: Cannot download this Photo
-#: constants.py:143
+#: constants.py:163
 #, python-format
 msgid "Cannot download this %(1)s"
 msgstr "%(1)s をダウンロードできません"
 
+# TRANS: Save Photo to:
 #. TRANS: Save Photo to:
-#: constants.py:145
-msgid "Save %(1) to:"
+#: constants.py:165
+#, python-format
+msgid "Save %(1)s to:"
 msgstr "%(1)s の保存先:"
 
-#: constants.py:146
+#: constants.py:166
 #, python-format
 msgid "Your %(1)s is full"
 msgstr "あなたの%(1)s が満杯です"
 
-#: constants.py:147
+#: constants.py:167
 msgid "Journal"
 msgstr "ジャーナル"
 
-#: constants.py:148
+#: constants.py:168
 msgid "USB"
 msgstr "USB"
 
-#: constants.py:149
+#: constants.py:169
 msgid "SD Card"
 msgstr "SDカード"
 
-#: constants.py:150
+#: constants.py:170
 msgid "Preferences"
 msgstr "設定"
 
-#: constants.py:151
+#: constants.py:171
 msgid "Free space:"
 msgstr "空き容量:"
 
+# TRANS: 7 photos
 #. TRANS: 7 photos
-#: constants.py:153
+#: constants.py:173
 #, python-format
 msgid "%(1)s photos"
 msgstr "%(1)s 枚の写真"
 
-#: constants.py:154
+#: constants.py:174
 msgid "Bitrate"
 msgstr "ビットレート"
 
-#: constants.py:155
+#: constants.py:175
 msgid "Maximum Bitrate"
 msgstr "最大ビットレート"
 
-#: constants.py:156
+#: constants.py:176
 msgid "Minumum Bitrate"
 msgstr "最小ビットレート"
 
-#: constants.py:157
+#: constants.py:177
 msgid "Manage Bitrate"
 msgstr "ビットレートの管理"
 
-#: constants.py:158
+#: constants.py:178
 msgid "Border"
 msgstr "境界線"
 
-#: constants.py:159
+#: constants.py:179
 msgid "Center"
 msgstr "中央"
 
-#: constants.py:160
+#: constants.py:180
 msgid "Frames"
 msgstr "フレーム"
 
-#: constants.py:161
+#: constants.py:181
 msgid "Automatic keyframe detection"
 msgstr "キーフレームの自動感知"
 
-#: constants.py:162
+#: constants.py:182
 msgid "Force keyframe"
 msgstr "キーフレームの強制"
 
-#: constants.py:163
+#: constants.py:183
 msgid "Keyframe frequency"
 msgstr "キーフレームの頻度"
 
-#: constants.py:164
+#: constants.py:184
 msgid "Keyframe minimum distance"
 msgstr "キーフレームの最小間隔"
 
-#: constants.py:165
+#: constants.py:185
 msgid "Keyframe threshold"
 msgstr "キーフレームのしきい値"
 
-#: constants.py:166
+#: constants.py:186
 msgid "Noise Sensitivity"
 msgstr "ノイズ感度"
 
-#: constants.py:167
+#: constants.py:187
 msgid "Quick"
 msgstr "高速"
 
-#: constants.py:168
+#: constants.py:188
 msgid "Sharpness"
 msgstr "シャープネス"
 
-#: constants.py:169
+#: constants.py:189
 msgid "Capacity"
 msgstr "容量"
 
