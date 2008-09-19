@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:10-0400\n"
-"PO-Revision-Date: 2008-03-17 06:23-0400\n"
-"Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
+"PO-Revision-Date: 2008-09-19 09:20-0400\n"
+"Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +81,6 @@ msgstr "Beendete Aufnahme"
 
 #: constants.py:128
 #, python-format
-#, fuzzy
 msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
 msgstr "%(1)s Stunden, %(2)s Minuten, %(1)s Sekunden verbleibend"
 
@@ -212,25 +211,30 @@ msgstr "Höhe"
 
 #: constants.py:158
 msgid "Click to take picture"
-msgstr "Klicken für Aufnahme eines Bildes"
+msgstr "Klicken, um ein Bild aufzunehmen"
 
 #: constants.py:159
 msgid "Click to add picture"
-msgstr "Klicken zum Hinzufügen eines Bildes"
+msgstr "Klicken, um ein Bild hinzuzufügen"
 
 # TRANS: Downloading Photo from Mary
+# (Markus S.) war 'Herunterladen %(1)s von %(2)s'
 #. TRANS: Downloading Photo from Mary
 #: constants.py:161
 #, python-format
+#, fuzzy
 msgid "Downloading %(1)s from %(2)s"
-msgstr "Herunterladen %(1)s von %(2)s"
+msgstr "Lade %(1)s von %(2)s herunter"
 
 # TRANS: Cannot download this Photo
+# 
+# (Markus S.) war 'Herunterladen unmöglich von %(1)s'
 #. TRANS: Cannot download this Photo
 #: constants.py:163
 #, python-format
+#, fuzzy
 msgid "Cannot download this %(1)s"
-msgstr "Herunterladen unmöglich von %(1)s"
+msgstr "Herunterladen von %(1)s fehlgeschlagen"
 
 # TRANS: Save Photo to:
 #. TRANS: Save Photo to:
@@ -238,7 +242,7 @@ msgstr "Herunterladen unmöglich von %(1)s"
 #, python-format
 #, fuzzy
 msgid "Save %(1)s to:"
-msgstr "%(1) speichern nach:"
+msgstr "%(1)s speichern nach:"
 
 #: constants.py:166
 #, python-format
