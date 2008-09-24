@@ -24,10 +24,12 @@ LDFLAGS=-shared -nostdlib -Wl,--export-dynamic -pthread
 
 all: build link
 
-build: 
+build: _camera.o
+_camera.o: _camera.c
 	gcc ${INCLUDES} ${ARCHFLAGS} ${OPTFLAGS} ${CFLAGS} -c _camera.c -o _camera.o
 
-link:
+link: _camera.so
+_camera.so: _camera.o
 	g++ ${LDFLAGS} _camera.o ${GLIB_LIBS} ${PYGTK_LIBS} ${CAIRO_LIBS} ${PYCAIRO_LIBS} ${GTK_LIBS} -Wl,-soname -Wl,_camera.so -o _camera.so
 
 clean: 
