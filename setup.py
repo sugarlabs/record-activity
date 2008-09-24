@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/python
 
 # Copyright (C) 2006, Red Hat, Inc.
 #
@@ -21,5 +21,5 @@ import os
 
 os.system("make")
 
-bundlebuilder.start("Record")
+bundlebuilder.start()
 
