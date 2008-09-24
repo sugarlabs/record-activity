@@ -52,7 +52,7 @@ msgstr "röportaj"
 #: constants.py:121
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr "%(2)den %(1)"
+msgstr "%(2)s den %(1)s"
 
 #: constants.py:122
 msgid "Title:"
@@ -81,12 +81,12 @@ msgstr "kayıt tamamlanmıştır."
 #: constants.py:128
 #, python-format
 msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1) saat, %(2) dakika, %(1) saniye kaldı."
+msgstr "%(1)s saat, %(2)s dakika, %(3)s saniye kaldı."
 
 #: constants.py:129
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1) dakika, %(2) saniye kaldı."
+msgstr "%(1)s dakika, %(2)s saniye kaldı."
 
 #: constants.py:130
 #, python-format
@@ -96,27 +96,27 @@ msgstr "%(1) saat kaldı."
 #: constants.py:131
 #, python-format
 msgid "%(1)s minutes remaining"
-msgstr "%(1) dakika kaldı."
+msgstr "%(1)s dakika kaldı."
 
 #: constants.py:132
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr "%(1) saniye kaldı."
+msgstr "%(1)s saniye kaldı."
 
 #: constants.py:133
 #, python-format
 msgid "%(1)s hours"
-msgstr "%(1) saat"
+msgstr "%(1)s saat"
 
 #: constants.py:134
 #, python-format
 msgid "%(1)s minutes"
-msgstr "%(1) dakika"
+msgstr "%(1)s dakika"
 
 #: constants.py:135
 #, python-format
 msgid "%(1)s seconds"
-msgstr "%(1) saniye"
+msgstr "%(1)s saniye"
 
 #: constants.py:136
 msgid "Remove"
@@ -161,7 +161,7 @@ msgstr "çerçeveyi kaldırınız."
 #: constants.py:146
 #, python-format
 msgid "%(1)s frames per second"
-msgstr "saniyede %(1) çerçeve "
+msgstr "saniyede %(1)s çerçeve "
 
 #: constants.py:147
 msgid "Quality"
@@ -220,26 +220,26 @@ msgstr "resmi kaydetmek için tıklayınız."
 #: constants.py:161
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr "%(2)'nin %(1)'i yüklendi."
+msgstr "%(2)s nin %(1)s yüklendi."
 
 # TRANS: Cannot download this Photo
 #. TRANS: Cannot download this Photo
 #: constants.py:163
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr "%(1) yüklenemiyor."
+msgstr "%(1)s yüklenemiyor."
 
 # TRANS: Save Photo to:
 #. TRANS: Save Photo to:
 #: constants.py:165
 #, python-format
 msgid "Save %(1)s to:"
-msgstr "%(1) _'e kaydedildi."
+msgstr "%(1)s _'e kaydedildi."
 
 #: constants.py:166
 #, python-format
 msgid "Your %(1)s is full"
-msgstr "%(1) dolu"
+msgstr "%(1)s dolu"
 
 #: constants.py:167
 msgid "Journal"
