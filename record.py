@@ -141,8 +141,6 @@ class Record(activity.Activity):
 
 	def close( self ):
 		self.I_AM_CLOSING = True
-		#quicker we look like we're gone, the better
-		self.hide()
 
 		self.m.UPDATING = False
 		if (self.ui != None):
@@ -160,9 +158,6 @@ class Record(activity.Activity):
 
 
 	def destroy( self ):
-		if self.I_AM_CLOSING:
-			self.hide()
-
 		if self.I_AM_SAVED:
 			activity.Activity.destroy( self )
 
