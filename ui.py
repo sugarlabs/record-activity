@@ -1410,7 +1410,6 @@ class UI:
 
 	def showWidgets( self ):
 		pos = []
-		print "showwidgets livemode %s" % self.LIVEMODE
 		if (self.ca.m.MODE == Constants.MODE_PHOTO):
 			if (not self.LIVEMODE):
 				pos.append({"position":"pgd", "window":self.pipBgdWindow} )
