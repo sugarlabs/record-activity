@@ -37,6 +37,7 @@ from model import Model
 from ui import UI
 from recordtube import RecordTube
 from glive import Glive
+from glivex import GliveX
 from gplay import Gplay
 from greplay import Greplay
 from recorded import Recorded
@@ -74,6 +75,7 @@ class Record(activity.Activity):
 		#the main classes
 		self.m = Model(self)
 		self.glive = Glive(self)
+		self.glivex = GliveX(self)
 		self.gplay = Gplay()
 		self.ui = UI(self)
 
@@ -131,6 +133,7 @@ class Record(activity.Activity):
 			self.m.doShutter()
 		else:
 			self.glive.stop()
+			self.glivex.stop()
 
 
 	def restartPipes(self):
@@ -150,8 +153,9 @@ class Record(activity.Activity):
 		if (self.gplay != None):
 			self.gplay.stop( )
 		if (self.glive != None):
-			self.glive.setPipeType( self.glive.PIPETYPE_SUGAR_JHBUILD )
 			self.glive.stop( )
+		if (self.glivex != None):
+			self.glivex.stop( )
 
 		#this calls write_file
 		activity.Activity.close( self )
