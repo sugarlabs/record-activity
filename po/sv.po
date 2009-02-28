@@ -2,328 +2,327 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:10-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2009-01-11 14:47-0500\n"
+"Last-Translator: Nicci Manns <nicci@saunalahti.fi>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.1.1rc4\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: activity/activity.info:2 constants.py:112
 msgid "Record"
-msgstr ""
+msgstr "Spela in"
 
 #: constants.py:113
 msgid "Photo"
-msgstr ""
+msgstr "Foto"
 
 #: constants.py:114
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: constants.py:115
 msgid "Audio"
-msgstr ""
+msgstr "Ljud"
 
 #: constants.py:116
 msgid "Time Lapse"
-msgstr ""
+msgstr "Tidslängd"
 
 #: constants.py:117
 msgid "Animation"
-msgstr ""
+msgstr "Animering"
 
 #: constants.py:118
 msgid "Panorama"
-msgstr ""
+msgstr "Panoramavy"
 
 #: constants.py:119
 msgid "Interview"
-msgstr ""
+msgstr "Intervju "
 
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: constants.py:121
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr ""
+msgstr "%(1)s av %(2)s"
 
 #: constants.py:122
 msgid "Title:"
-msgstr ""
+msgstr "Titel:"
 
 #: constants.py:123
 msgid "Recorder:"
-msgstr ""
+msgstr "Inspelare:"
 
 #: constants.py:124
 msgid "Date:"
-msgstr ""
+msgstr "Datum:"
 
 #: constants.py:125
 msgid "Tags:"
-msgstr ""
+msgstr "Nyckelord:"
 
 #: constants.py:126
 msgid "Saving"
-msgstr ""
+msgstr "Sparar"
 
 #: constants.py:127
 msgid "Finished recording"
-msgstr ""
+msgstr "Inspelning klar"
 
 #: constants.py:128
 #, python-format
 msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr ""
+msgstr "%(1)s timmar, %(2)s minuter och %(3)s sekunder återstår"
 
 #: constants.py:129
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr ""
+msgstr "%(1)s minuter och %(2)s sekunder återstår"
 
 #: constants.py:130
 #, python-format
 msgid "%(1)s hours remaining"
-msgstr ""
+msgstr "%(1)s timmar återstår"
 
 #: constants.py:131
 #, python-format
 msgid "%(1)s minutes remaining"
-msgstr ""
+msgstr "%(1)s minuter återstår"
 
 #: constants.py:132
 #, python-format
 msgid "%(1)s seconds remaining"
-msgstr ""
+msgstr "%(1)s sekunder återstår"
 
 #: constants.py:133
 #, python-format
 msgid "%(1)s hours"
-msgstr ""
+msgstr "%(1)s timmar"
 
 #: constants.py:134
 #, python-format
 msgid "%(1)s minutes"
-msgstr ""
+msgstr "%(1)s minuter"
 
 #: constants.py:135
 #, python-format
 msgid "%(1)s seconds"
-msgstr ""
+msgstr "%(1)s sekunder"
 
 #: constants.py:136
 msgid "Remove"
-msgstr ""
+msgstr "Ta bort"
 
 #: constants.py:137
 msgid "Stopped recording"
-msgstr ""
+msgstr "Slutade spela in"
 
 #: constants.py:138
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Kopiera till kopieringsminne"
 
 #: constants.py:139
 msgid "Timer:"
-msgstr ""
+msgstr "Tid:"
 
 #: constants.py:140
 msgid "Duration:"
-msgstr ""
+msgstr "Varaktighet:"
 
 #: constants.py:141
 msgid "Immediate"
-msgstr ""
+msgstr "Direkt"
 
 #: constants.py:142
 msgid "Play"
-msgstr ""
+msgstr "Spela upp"
 
 #: constants.py:143
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: constants.py:144
 msgid "Add frame"
-msgstr ""
+msgstr "Lägg till bild"
 
 #: constants.py:145
 msgid "Remove frame"
-msgstr ""
+msgstr "Ta bort bild"
 
 #: constants.py:146
 #, python-format
 msgid "%(1)s frames per second"
-msgstr ""
+msgstr "%(1)s bilder per sekund"
 
 #: constants.py:147
 msgid "Quality"
-msgstr ""
+msgstr "Kvalite"
 
 #: constants.py:148
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #: constants.py:149
 msgid "Best"
-msgstr ""
+msgstr "Bästa"
 
 #: constants.py:150
 msgid "High"
-msgstr ""
+msgstr "Högsta"
 
 #: constants.py:151
 msgid "Low"
-msgstr ""
+msgstr "Lägsta"
 
 #: constants.py:152
 msgid "Large file"
-msgstr ""
+msgstr "Stor fil"
 
 #: constants.py:153
 msgid "Small file"
-msgstr ""
+msgstr "Liten fil"
 
 #: constants.py:154
 msgid "Silent"
-msgstr ""
+msgstr "Tyst"
 
 #: constants.py:155
 msgid "Rotate"
-msgstr ""
+msgstr "Vrid"
 
 #: constants.py:156
 msgid "Width"
-msgstr ""
+msgstr "Bredd"
 
 #: constants.py:157
 msgid "Height"
-msgstr ""
+msgstr "Höjd"
 
 #: constants.py:158
 msgid "Click to take picture"
-msgstr ""
+msgstr "Klicka för att ta ett foto"
 
 #: constants.py:159
 msgid "Click to add picture"
-msgstr ""
+msgstr "Klicka för att lägga till bild"
 
 #. TRANS: Downloading Photo from Mary
 #: constants.py:161
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr ""
+msgstr "Laddar ned %(1)s från %(2)s"
 
 #. TRANS: Cannot download this Photo
 #: constants.py:163
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr ""
+msgstr "Kunde inte ladda ned %(1)s"
 
 #. TRANS: Save Photo to:
 #: constants.py:165
 #, python-format
 msgid "Save %(1)s to:"
-msgstr ""
+msgstr "Sparar %(1)s till:"
 
 #: constants.py:166
 #, python-format
 msgid "Your %(1)s is full"
-msgstr ""
+msgstr "Din %(1)s är full"
 
 #: constants.py:167
 msgid "Journal"
-msgstr ""
+msgstr "Dagbok"
 
 #: constants.py:168
 msgid "USB"
-msgstr ""
+msgstr "USB-minne"
 
 #: constants.py:169
 msgid "SD Card"
-msgstr ""
+msgstr "SD-kort"
 
 #: constants.py:170
 msgid "Preferences"
-msgstr ""
+msgstr "Inställningar"
 
 #: constants.py:171
 msgid "Free space:"
-msgstr ""
+msgstr "Ledigt utrymme:"
 
 #. TRANS: 7 photos
 #: constants.py:173
 #, python-format
 msgid "%(1)s photos"
-msgstr ""
+msgstr "%(1)s foton"
 
 #: constants.py:174
 msgid "Bitrate"
-msgstr ""
+msgstr "Bitrate"
 
 #: constants.py:175
 msgid "Maximum Bitrate"
-msgstr ""
+msgstr "Maximal bitrate"
 
 #: constants.py:176
 msgid "Minumum Bitrate"
-msgstr ""
+msgstr "Minimal bitrate"
 
 #: constants.py:177
 msgid "Manage Bitrate"
-msgstr ""
+msgstr "Hantera bitrate"
 
 #: constants.py:178
 msgid "Border"
-msgstr ""
+msgstr "Kant"
 
 #: constants.py:179
 msgid "Center"
-msgstr ""
+msgstr "Centrera"
 
 #: constants.py:180
 msgid "Frames"
-msgstr ""
+msgstr "Ramar"
 
 #: constants.py:181
 msgid "Automatic keyframe detection"
-msgstr ""
+msgstr "Automatisk Nyckelbildsdetektering"
 
 #: constants.py:182
 msgid "Force keyframe"
-msgstr ""
+msgstr "Tvinga skapande av nyckelbild"
 
 #: constants.py:183
 msgid "Keyframe frequency"
-msgstr ""
+msgstr "Nyckelbildsfrekvens"
 
 #: constants.py:184
 msgid "Keyframe minimum distance"
-msgstr ""
+msgstr "Minimalt avstånd mellan nyckelbilder"
 
 #: constants.py:185
 msgid "Keyframe threshold"
-msgstr ""
+msgstr "Nyckelbildströskelvärde"
 
 #: constants.py:186
 msgid "Noise Sensitivity"
-msgstr ""
+msgstr "Bruskänslighet"
 
 #: constants.py:187
 msgid "Quick"
-msgstr ""
+msgstr "Snabb"
 
 #: constants.py:188
 msgid "Sharpness"
-msgstr ""
+msgstr "Skarphet"
 
 #: constants.py:189
 msgid "Capacity"
-msgstr ""
+msgstr "Kapacitet"
