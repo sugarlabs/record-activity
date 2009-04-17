@@ -17,20 +17,22 @@ PYCAIRO_INCLUDES=`pkg-config --cflags pycairo`
 PYCAIRO_LIBS=`pkg-config --libs pycairo`
 
 INCLUDES=-I. -I/usr/include/${PYTHON} ${GLIB_INCLUDES} ${PYGTK_INCLUDES} ${CAIRO_INCLUDES} ${PYCAIRO_INCLUDES} ${GTK_INCLUDES}
-ARCHFLAGS=-m32 -march=i386 -mtune=generic 
 OPTFLAGS=-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -fasynchronous-unwind-tables
-CFLAGS=-g -fPIC -DPIC
-LDFLAGS=-shared -nostdlib -Wl,--export-dynamic -pthread 
+CFLAGS=-g -fPIC -DPIC $(OPTFLAGS) $(INCLUDES)
+LDFLAGS=-shared -nostdlib -Wl,--export-dynamic -pthread ${GLIB_LIBS} ${PYGTK_LIBS} ${CAIRO_LIBS} ${PYCAIRO_LIBS} ${GTK_LIBS}
 
-all: build link
+ARCH = $(shell arch | grep 64 >/dev/null && echo linux64 || echo linux32)
+LIB_DIR = $(ARCH)_$(PYVER)
 
-build: _camera.o
-_camera.o: _camera.c
-	gcc ${INCLUDES} ${ARCHFLAGS} ${OPTFLAGS} ${CFLAGS} -c _camera.c -o _camera.o
+all: camera.so
+	rm -rf $(LIB_DIR)
+	mkdir $(LIB_DIR)
+	strip -s $^
+	mv $^ $(LIB_DIR)/
+	touch $(LIB_DIR)/__init__.py
 
-link: _camera.so
-_camera.so: _camera.o
-	g++ ${LDFLAGS} _camera.o ${GLIB_LIBS} ${PYGTK_LIBS} ${CAIRO_LIBS} ${PYCAIRO_LIBS} ${GTK_LIBS} -Wl,-soname -Wl,_camera.so -o _camera.so
+camera.so: camera.o
+	$(CXX) $(LDFLAGS) -o $@ $^
 
 clean: 
 	@find -name "*.o" -exec rm {} \;

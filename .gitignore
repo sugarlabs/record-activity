@@ -1,3 +1,5 @@
-_camera.o
+*.o
+*.so
+linux*
 dist
 locale

@@ -56,7 +56,7 @@ from recorded import Recorded
 from button import RecdButton
 import utils
 import record
-import _camera
+import camerac
 from tray import HTray
 from toolbarcombobox import ToolComboBox
 
@@ -739,7 +739,7 @@ class UI:
 		if (pixbuf != None):
 			#self.shownRecd = recd
 
-			img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+			img = camerac.cairo_surface_from_gdk_pixbuf(pixbuf)
 			self.livePhotoCanvas.setImage( img )
 
 			self.LIVEMODE = False
@@ -1599,7 +1599,7 @@ class UI:
 
 		#if (recd != self.shownRecd):
 		pixbuf = recd.getAudioImagePixbuf()
-		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+		img = camerac.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.livePhotoCanvas.setImage( img )
 		#self.shownRecd = recd
 		self.showRecdMeta(recd)
@@ -1708,7 +1708,7 @@ class UI:
 			pixbuf = pixbuf.scale_simple(self.__class__.dim_THUMB_WIDTH, self.__class__.dim_THUMB_HEIGHT, gtk.gdk.INTERP_NEAREST)
 
 		pixbuf = utils.grayScalePixBuf(pixbuf, True)
-		img = _camera.cairo_surface_from_gdk_pixbuf(pixbuf)
+		img = camerac.cairo_surface_from_gdk_pixbuf(pixbuf)
 		self.backgdCanvas.setImage(img)
 
 

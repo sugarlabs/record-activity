@@ -10,7 +10,7 @@ from instance import Instance
 from sugar import profile
 from color import Color
 import utils
-import _camera
+import camerac
 import cairo
 import pango
 import pangocairo
@@ -269,7 +269,7 @@ class Constants:
 
 		recCircleFile = os.path.join(self.__class__.gfxPath, 'media-circle.png')
 		recCirclePixbuf = gtk.gdk.pixbuf_new_from_file(recCircleFile)
-		self.__class__.recCircleCairo = _camera.cairo_surface_from_gdk_pixbuf(recCirclePixbuf)
+		self.__class__.recCircleCairo = camerac.cairo_surface_from_gdk_pixbuf(recCirclePixbuf)
 
 		recInsFile = os.path.join(self.__class__.gfxPath, 'media-insensitive.png')
 		recInsPixbuf = gtk.gdk.pixbuf_new_from_file(recInsFile)
