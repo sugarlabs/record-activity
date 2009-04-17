@@ -47,6 +47,12 @@ from instance import Instance
 import serialize
 import utils
 
+if os.environ.has_key('RECORD_GST_DEBUG'):
+    import gst
+    gst.debug_set_active(True)
+    gst.debug_set_colored(False)
+    gst.debug_set_default_threshold(int(os.environ['RECORD_GST_DEBUG']))
+
 class Record(activity.Activity):
 
     log = logging.getLogger('record-activity')
@@ -275,7 +281,7 @@ class Record(activity.Activity):
 
 
     def requestMeshDownload( self, recd ):
-         if (recd.meshDownloading):
+        if (recd.meshDownloading):
             return True
 
         self.m.updateXoFullStatus()

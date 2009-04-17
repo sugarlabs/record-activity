@@ -33,6 +33,9 @@ import threading
 import gobject
 gobject.threads_init()
 
+import logging
+logger = logging.getLogger('record')
+
 from instance import Instance
 from constants import Constants
 import record
@@ -155,10 +158,10 @@ class Glive:
             pass
 
         tee = gst.element_factory_make("tee", "tee")
-        queue = gst.element_factory_make("queue", "dispqueue")
+        self.queue = gst.element_factory_make("queue", "dispqueue")
         xvsink = gst.element_factory_make("xvimagesink", "xvsink")
-        self.pipeline.add(src, tee, queue, xvsink)
-        gst.element_link_many(src, tee, queue, xvsink)
+        self.pipeline.add(src, tee, self.queue, xvsink)
+        gst.element_link_many(src, tee, self.queue, xvsink)
 
     def thumbPipe(self):
         return self.thumbPipes[ len(self.thumbPipes)-1 ]
@@ -177,15 +180,21 @@ class Glive:
 
 
     def play(self):
+        logger.debug('Glive.play')
+
         self.pipeline.set_state(gst.STATE_PLAYING)
         self.playing = True
 
     def pause(self):
+        logger.debug('Glive.pause')
+
         self.pipeline.set_state(gst.STATE_PAUSED)
         self.playing = False
 
 
     def stop(self):
+        logger.debug('Glive.stop')
+
         self.pipeline.set_state(gst.STATE_NULL)
         self.playing = False
 
@@ -334,6 +343,8 @@ class Glive:
 
 
     def startRecordingVideo(self):
+        logger.debug('Glive.startRecordingVideo')
+
         self.record = True
         self.audio = True
 
@@ -363,6 +374,8 @@ class Glive:
         self.audiobin.set_state(gst.STATE_PLAYING)
 
     def stopRecordingVideo(self):
+        logger.debug('Glive.stopRecordingVideo')
+
         # Similarly to as when we start recording, we also stop the pipeline
         # while we are adjusting the pipeline to stop recording. If we do
         # it on-the-fly, the following video live feed to the screen becomes
@@ -372,6 +385,8 @@ class Glive:
         self.audiobin.get_by_name('absrc').send_event(gst.event_new_eos())
 
     def stopRecordingVideoEOS(self):
+        logger.debug('Glive.stopRecordingVideoEOS')
+
         self.pipeline.set_state(gst.STATE_NULL)
         self.pipeline.get_by_name("tee").unlink(self.videobin)
         self.pipeline.remove(self.videobin)
@@ -505,8 +520,23 @@ class Glive:
         elif t == gst.MESSAGE_ERROR:
             #todo: if we come out of suspend/resume with errors, then get us back up and running...
             #todo: handle "No space left on the resource.gstfilesink.c"
-            #err, debug = message.parse_error()
-            pass
+            err, debug = message.parse_error()
+            logger.error('GST_MESSAGE_ERROR: error=%s debug=%s' % (err, debug))
+
+            xvsink = self.pipeline.get_by_name('xvsink')
+
+            if xvsink:
+                logger.warning('fallback to ximagesink')
+
+                self.pipeline.remove(xvsink)
+                colorspace = gst.element_factory_make('ffmpegcolorspace',
+                        'colorspace')
+                xsink = gst.element_factory_make('ximagesink', 'xsink')
+                self.pipeline.add(colorspace, xsink)
+                gst.element_link_many(self.queue, colorspace, xsink)
+            
+                if self.playing:
+                    self.pipeline.set_state(gst.STATE_PLAYING)
 
     def abandonMedia(self):
         self.stop()
