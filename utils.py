@@ -6,7 +6,6 @@ import statvfs
 import cairo
 import gc
 import gtk
-from hashlib import md5
 import time
 from time import strftime
 
@@ -53,15 +52,6 @@ def getUniqueFilepath( path, i ):
         return getUniqueFilepath( pathOb, i )
     else:
         return os.path.abspath( newPath )
-
-
-def md5File( filepath ):
-    md = md5()
-    f = file( filepath, 'rb' )
-    md.update( f.read() )
-    digest = md.hexdigest()
-    hash = util.printable_hash(digest)
-    return hash
 
 
 def generateThumbnail( pixbuf, scale, thumbw, thumbh ):

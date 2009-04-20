@@ -20,6 +20,7 @@
 #THE SOFTWARE.
 
 
+import uuid
 import urllib
 import string
 import fnmatch
@@ -36,6 +37,9 @@ import time
 from time import strftime
 import gobject
 import operator
+
+import logging
+logger = logging.getLogger('record:model.py')
 
 import sugar.env
 
@@ -249,10 +253,8 @@ class Model:
     def stopRecordingVideo( self ):
         self.ca.glive.stopRecordingVideo()
         gobject.source_remove( self.ca.ui.UPDATE_DURATION_ID )
-        self.ca.ui.progressWindow.updateProgress( 0, "" )
         self.setUpdating( True )
         self.setRecording( False )
-        self.ca.ui.TRANSCODING = True
         self.ca.ui.FULLSCREEN = False
         self.ca.ui.updateVideoComponents()
 
@@ -276,9 +278,9 @@ class Model:
 
 
     def meshShareRecd( self, recd ):
-        record.Record.log.debug('meshShareRecd')
         #hey, i just took a cool video.audio.photo!  let me show you!
         if (self.ca.recTube != None):
+            logger.debug('meshShareRecd')
             recdXml = serialize.getRecdXmlMeshString(recd)
             self.ca.recTube.notifyBudsOfNewRecd( Instance.keyHashPrintable, recdXml )
 
@@ -383,15 +385,15 @@ class Model:
         recd.colorStroke = Instance.colorStroke
         recd.colorFill = Instance.colorFill
 
-        record.Record.log.debug('createNewRecorded: ' + str(recd) + ", thumbFilename:" + str(recd.thumbFilename))
+        logger.debug('createNewRecorded: ' + str(recd) + ", thumbFilename:" + str(recd.thumbFilename))
         return recd
 
 
     def createNewRecordedMd5Sums( self, recd ):
+        recd.thumbMd5 = recd.mediaMd5 = uuid.uuid4()
+
         #load the thumbfile
         thumbFile = os.path.join(Instance.instancePath, recd.thumbFilename)
-        thumbMd5 = utils.md5File( thumbFile )
-        recd.thumbMd5 = thumbMd5
         tBytes = os.stat(thumbFile)[6]
         recd.thumbBytes = tBytes
 
@@ -399,8 +401,6 @@ class Model:
 
         #load the mediafile
         mediaFile = os.path.join(Instance.instancePath, recd.mediaFilename)
-        mediaMd5 = utils.md5File( mediaFile )
-        recd.mediaMd5 = mediaMd5
         mBytes = os.stat(mediaFile)[6]
         recd.mediaBytes = mBytes
 
