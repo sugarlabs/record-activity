@@ -5,3 +5,9 @@ libgstvideorate_la_CFLAGS = $(GST_CFLAGS) $(GST_AUDIO_CFLAGS)
 libgstvideorate_la_LIBADD = $(GST_LIBS) $(GST_AUDIO_LIBS)
 libgstvideorate_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
 libgstvideorate_la_LIBTOOLFLAGS = --tag=disable-static
+
+ARCH = $(shell arch | grep 64 >/dev/null && echo linux64 || echo linux32)
+
+dist_xo: all
+	mkdir $(ARCH)
+	cp .libs/libgstvideorate.so $(ARCH)/
