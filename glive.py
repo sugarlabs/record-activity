@@ -62,7 +62,7 @@ class Glive:
 
             self.play_pipe = gst.parse_launch(
                     '%s ' \
-                    '! identity signal-handoffs=false silent=true name=valve ' \
+                    '! valve name=valve ' \
                     '! queue name=queue ' \
                     '! %s' \
                     % (self.src_str, self.play_str))
@@ -168,12 +168,12 @@ class Glive:
             def message_cb(bus, message, self):
                 if message.type == gst.MESSAGE_APPLICATION \
                         and message.structure.get_name() == 'record.photo':
-                    self.valve.props.drop_probability = 1
+                    self.valve.props.drop = True
                     self.play_pipe.remove(self.photo)
                     self.play_pipe.remove(self.photo_jpegenc)
                     self.play_pipe.remove(self.photo_sink)
                     self.valve.link(self.play_pipe.get_by_name('queue'))
-                    self.valve.props.drop_probability = 0
+                    self.valve.props.drop = False
                     self.after_photo_cb(self, message.structure['pixbuf'])
 
             bus = self.play_pipe.get_bus()
@@ -186,13 +186,13 @@ class Glive:
 
         self.after_photo_cb = after_photo_cb and after_photo_cb or process_cb
 
-        self.valve.props.drop_probability = 1
+        self.valve.props.drop = True
         self.valve.unlink(self.play_pipe.get_by_name('queue'))
         self.play_pipe.add(self.photo, self.photo_jpegenc, self.photo_sink)
         gst.element_link_many(self.valve, self.photo, self.photo_jpegenc,
                 self.photo_sink)
         self.photo_sink.props.signal_handoffs = True
-        self.valve.props.drop_probability = 0
+        self.valve.props.drop = False
 
         self._switch_pipe(self.play_pipe)
 
