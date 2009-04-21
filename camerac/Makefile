@@ -35,5 +35,5 @@ camera.so: camera.o
 	$(CXX) $(LDFLAGS) -o $@ $^
 
 clean: 
-	@find -name "*.o" -exec rm {} \;
-	@find -name "*.so" -exec rm {} \;
+	rm -f *.o
+	rm -f *.so

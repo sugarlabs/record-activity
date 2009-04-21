@@ -59,11 +59,14 @@ class Glive:
                     % (PLAYBACK_WIDTH, PLAYBACK_HEIGHT)
             self.play_str = \
                     'xvimagesink force-aspect-ratio=true name=xsink'
+
             self.play_pipe = gst.parse_launch(
                     '%s ' \
-                    '! queue ' \
+                    '! identity signal-handoffs=false silent=true name=valve ' \
+                    '! queue name=queue ' \
                     '! %s' \
                     % (self.src_str, self.play_str))
+            self.valve = self.play_pipe.get_by_name('valve')
             
             def message_cb(bus, message):
                 if message.type == gst.MESSAGE_ERROR:
@@ -78,11 +81,17 @@ class Glive:
                                 'ffmpegcolorspace ' \
                                 '! ximagesink force-aspect-ratio=true ' \
                                     ' name=xsink'
-                        self.play_pipe = gst.parse_launch(
-                                '%s ' \
-                                '! queue ' \
-                                '! %s' \
-                                % (self.src_str, self.play_str))
+
+                        self.play_pipe.remove(
+                                self.play_pipe.get_by_name('xsink'))
+
+                        c = gst.element_factory_make('ffmpegcolorspace')
+                        s = gst.element_factory_make('ximagesink', 'xsink')
+                        s.props.force_aspect_ratio = True
+
+                        self.play_pipe.add(c, s)
+                        gst.element_link_many(
+                                self.play_pipe.get_by_name('queue'), c, s)
 
                         if [i for i in self.pipeline.get_state() \
                                 if id(i) == id(gst.STATE_PLAYING)]:
@@ -137,11 +146,10 @@ class Glive:
     def takePhoto(self, after_photo_cb=None):
         logger.debug('takePhoto')
 
-        if not self.photo_pipe:
-            def valve_handoff(valve, buffer):
-                valve.props.drop_probability = 1
+        if not self.photo:
+            def sink_handoff(sink, buffer, pad, self):
+                sink.props.signal_handoffs = False
 
-            def sink_handoff(sink, buffer, pad, pipeline):
                 pixbuf = gtk.gdk.pixbuf_loader_new_with_mime_type('image/jpeg')
                 pixbuf.write(buffer)
                 pixbuf.close()
@@ -150,34 +158,25 @@ class Glive:
                 structure['pixbuf'] = pixbuf.get_pixbuf()
                 msg = gst.message_new_custom(gst.MESSAGE_APPLICATION, sink,
                         structure)
-                pipeline.get_bus().post(msg)
+                self.play_pipe.get_bus().post(msg)
+
+            self.photo = gst.element_factory_make('ffmpegcolorspace')
+            self.photo_jpegenc = gst.element_factory_make('jpegenc')
+            self.photo_sink = gst.element_factory_make('fakesink')
+            self.photo_sink.connect('handoff', sink_handoff, self)
 
             def message_cb(bus, message, self):
-                if message.type == gst.MESSAGE_ERROR:
-                    err, debug = message.parse_error()
-                    logger.error('photo_pipe: %s %s' % (err, debug))
+                if message.type == gst.MESSAGE_APPLICATION \
+                        and message.structure.get_name() == 'record.photo':
+                    self.valve.props.drop_probability = 1
+                    self.play_pipe.remove(self.photo)
+                    self.play_pipe.remove(self.photo_jpegenc)
+                    self.play_pipe.remove(self.photo_sink)
+                    self.valve.link(self.play_pipe.get_by_name('queue'))
+                    self.valve.props.drop_probability = 0
+                    self.after_photo_cb(self, message.structure['pixbuf'])
 
-                elif message.type == gst.MESSAGE_APPLICATION:
-                    name = message.structure.get_name()
-                    logger.debug('photo_pipe: name=%s' % name)
-
-                    if name == 'record.photo':
-                        self.after_photo_cb(self, message.structure['pixbuf'])
-
-            self.photo_pipe = gst.parse_launch(
-                    '%s ' \
-                    '! ffmpegcolorspace ' \
-                    '! jpegenc ' \
-                    '! identity signal-handoffs=true silent=true name=valve ' \
-                    '! fakesink signal-handoffs=true name=sink ' \
-                    % self.src_str)
-
-            self.photo_pipe.get_by_name('valve').connect('handoff',
-                    valve_handoff)
-            self.photo_pipe.get_by_name('sink').connect('handoff',
-                    sink_handoff, self.photo_pipe)
-
-            bus = self.photo_pipe.get_bus()
+            bus = self.play_pipe.get_bus()
             bus.add_signal_watch()
             bus.connect('message', message_cb, self)
 
@@ -186,8 +185,16 @@ class Glive:
             self._switch_pipe(self.play_pipe)
 
         self.after_photo_cb = after_photo_cb and after_photo_cb or process_cb
-        self._switch_pipe(self.photo_pipe)
-        self.photo_pipe.get_by_name('valve').props.drop_probability = 0
+
+        self.valve.props.drop_probability = 1
+        self.valve.unlink(self.play_pipe.get_by_name('queue'))
+        self.play_pipe.add(self.photo, self.photo_jpegenc, self.photo_sink)
+        gst.element_link_many(self.valve, self.photo, self.photo_jpegenc,
+                self.photo_sink)
+        self.photo_sink.props.signal_handoffs = True
+        self.valve.props.drop_probability = 0
+
+        self._switch_pipe(self.play_pipe)
 
     def startRecordingVideo(self):
         logger.debug('startRecordingVideo')
@@ -339,7 +346,7 @@ class Glive:
         self.pipeline = None
         self.play_pipe = None
         self.fallback_pipe = None
-        self.photo_pipe = None
+        self.photo = None
         self.video_pipe = None
         self.audio_pipe = None
 
