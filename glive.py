@@ -359,6 +359,18 @@ class Glive:
 
         self.fallback = False
 
+        # XXX since sugar doesn't control capture volumes (see #800)
+        # we have to do it by ourselves
+        alsasrc = gst.element_factory_make('alsasrc')
+        alsasrc.set_state(gst.STATE_PAUSED)
+        for i in alsasrc.list_tracks():
+            if i.props.flags & gst.interfaces.MIXER_TRACK_INPUT:
+                alsasrc.set_record(i, True)
+                alsasrc.set_volume(i, \
+                        tuple([i.props.max_volume] * i.props.num_channels))
+        alsasrc.set_state(gst.STATE_NULL)
+        del alsasrc
+
     def _switch_pipe(self, new_pipe):
         if self.pipeline != new_pipe:
             if self.pipeline:
