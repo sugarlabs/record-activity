@@ -45,8 +45,10 @@ TMP_OGG = os.path.join(get_activity_root(), 'instance', 'output.ogg')
 PLAYBACK_WIDTH  = 640
 PLAYBACK_HEIGHT = 480
 
-OGG_WIDTH  = 160
-OGG_HEIGHT = 120
+OGG_TRAITS = {
+        0: { 'width': 160, 'height': 120, 'quality': 16 },
+        1: { 'width': 400, 'height': 300, 'quality': 16 },
+        2: { 'width': 640, 'height': 480, 'quality': 16 } }
 
 class Glive:
     def play(self):
@@ -196,8 +198,8 @@ class Glive:
 
         self._switch_pipe(self.play_pipe)
 
-    def startRecordingVideo(self):
-        logger.debug('startRecordingVideo')
+    def startRecordingVideo(self, quality):
+        logger.debug('startRecordingVideo quality=%s' % quality)
 
         if True:
             # XXX re-create pipe every time 
@@ -215,7 +217,7 @@ class Glive:
                     '! video/x-raw-yuv,framerate=10/1 ' \
                     '! videoscale ' \
                     '! video/x-raw-yuv,width=%s,height=%s ' \
-                    '! theoraenc quality=16 ' \
+                    '! theoraenc quality=%s ' \
                     '! oggmux name=mux ' \
                     '! filesink location=%s ' \
                     'alsasrc ' \
@@ -224,7 +226,9 @@ class Glive:
                     '! vorbisenc name=vorbisenc ' \
                     '! mux.' \
                     % (self.src_str, self.play_str,
-                        OGG_WIDTH, OGG_HEIGHT, TMP_OGG))
+                        OGG_TRAITS[quality]['width'],
+                        OGG_TRAITS[quality]['height'],
+                        OGG_TRAITS[quality]['quality'], TMP_OGG))
 
             def message_cb(bus, message, self):
                 if message.type == gst.MESSAGE_ERROR:
@@ -243,6 +247,7 @@ class Glive:
             self.pixbuf = pixbuf
             self._switch_pipe(self.video_pipe)
 
+        self.ogg_quality = quality
         # take photo first
         self.takePhoto(process_cb)
 
@@ -261,10 +266,12 @@ class Glive:
             self.ca.m.stoppedRecordingVideo()
             return
 
-        thumb = self.pixbuf.scale_simple(OGG_WIDTH, OGG_HEIGHT,
-                gtk.gdk.INTERP_HYPER)
+        ogg_w = OGG_TRAITS[self.ogg_quality]['width']
+        ogg_h = OGG_TRAITS[self.ogg_quality]['height']
+
+        thumb = self.pixbuf.scale_simple(ogg_w, ogg_h, gtk.gdk.INTERP_HYPER)
         self.ca.ui.setPostProcessPixBuf(thumb)
-        self.ca.m.saveVideo(thumb, TMP_OGG, OGG_WIDTH, OGG_HEIGHT)
+        self.ca.m.saveVideo(thumb, TMP_OGG, ogg_w, ogg_h)
         self.ca.m.stoppedRecordingVideo()
         self.ca.ui.updateVideoComponents()
 

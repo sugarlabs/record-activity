@@ -867,7 +867,7 @@ class UI:
 
 
     def recordVideo( self ):
-        self.ca.glive.startRecordingVideo( )
+        self.ca.glive.startRecordingVideo(self.videoToolbar.getQuality())
         self.beginRecordingTimer( )
 
 
@@ -2274,6 +2274,15 @@ class VideoToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
+        combo = gtk.combo_box_new_text()
+        self.quality = ToolComboBox(combo=combo,
+                label_text=Constants.istrQuality+':')
+        self.quality.combo.append_text(Constants.istrLowQuality)
+        self.quality.combo.append_text(Constants.istrHighQuality)
+        self.quality.combo.append_text(Constants.istrBestQuality)
+        self.quality.combo.set_active(0)
+        self.insert(self.quality, -1 )
+
         timerCbb = gtk.combo_box_new_text()
         self.timerCb = ToolComboBox(combo=timerCbb, label_text=Constants.istrTimer)
         for i in range (0, len(Constants.TIMERS)):
@@ -2310,6 +2319,9 @@ class VideoToolbar(gtk.Toolbar):
     def getDuration(self):
         return 60 * Constants.DURATIONS[self.durCb.combo.get_active()]
 
+
+    def getQuality(self):
+        return self.quality.combo.get_active()
 
 class AudioToolbar(gtk.Toolbar):
     def __init__(self):
