@@ -40,7 +40,9 @@ from constants import Constants
 import utils
 import ui
 
+TMP_OGV = os.path.join(get_activity_root(), 'instance', 'output.ogv')
 TMP_OGG = os.path.join(get_activity_root(), 'instance', 'output.ogg')
+TMP_WAV = os.path.join(get_activity_root(), 'instance', 'output.wav')
 
 PLAYBACK_WIDTH  = 640
 PLAYBACK_HEIGHT = 480
@@ -218,17 +220,18 @@ class Glive:
                     '! videoscale ' \
                     '! video/x-raw-yuv,width=%s,height=%s ' \
                     '! theoraenc quality=%s ' \
-                    '! oggmux name=mux ' \
+                    '! oggmux ' \
                     '! filesink location=%s ' \
                     'alsasrc ' \
                     '! queue ' \
-                    '! audioconvert ' \
-                    '! vorbisenc name=vorbisenc ' \
-                    '! mux.' \
+                    '! audio/x-raw-int,rate=16000,channels=1,depth=16 ' \
+                    '! wavenc ' \
+                    '! filesink location=%s ' \
                     % (self.src_str, self.play_str,
                         OGG_TRAITS[quality]['width'],
                         OGG_TRAITS[quality]['height'],
-                        OGG_TRAITS[quality]['quality'], TMP_OGG))
+                        OGG_TRAITS[quality]['quality'],
+                        TMP_OGV, TMP_WAV))
 
             def message_cb(bus, message, self):
                 if message.type == gst.MESSAGE_ERROR:
@@ -240,10 +243,6 @@ class Glive:
             bus.connect('message', message_cb, self)
 
         def process_cb(self, pixbuf):
-            taglist = self.getTags(Constants.TYPE_VIDEO)
-            vorbisenc = self.video_pipe.get_by_name('vorbisenc')
-            vorbisenc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
-
             self.pixbuf = pixbuf
             self._switch_pipe(self.video_pipe)
 
@@ -256,24 +255,69 @@ class Glive:
 
         self._switch_pipe(self.play_pipe)
 
-        if (not os.path.exists(TMP_OGG)):
+        if not os.path.exists(TMP_OGV) \
+                or not os.path.exists(TMP_WAV):
             self.ca.m.cannotSaveVideo()
             self.ca.m.stoppedRecordingVideo()
             return
 
-        if (os.path.getsize(TMP_OGG) <= 0):
+        if os.path.getsize(TMP_OGV) <= 0 \
+                or os.path.getsize(TMP_WAV) <= 0:
             self.ca.m.cannotSaveVideo()
             self.ca.m.stoppedRecordingVideo()
             return
 
-        ogg_w = OGG_TRAITS[self.ogg_quality]['width']
-        ogg_h = OGG_TRAITS[self.ogg_quality]['height']
+        if self.mux_pipe:
+            self.mux_pipe.set_state(gst.STATE_NULL)
+            del self.mux_pipe
 
-        thumb = self.pixbuf.scale_simple(ogg_w, ogg_h, gtk.gdk.INTERP_HYPER)
-        self.ca.ui.setPostProcessPixBuf(thumb)
-        self.ca.m.saveVideo(thumb, TMP_OGG, ogg_w, ogg_h)
-        self.ca.m.stoppedRecordingVideo()
-        self.ca.ui.updateVideoComponents()
+        self.mux_pipe = gst.parse_launch( \
+                'filesrc location=%s ' \
+                '! oggdemux ' \
+                '! theoraparse ' \
+                '! oggmux name=mux ' \
+                '! filesink location=%s ' \
+                'filesrc location=%s ' \
+                '! wavparse ' \
+                '! audioconvert ' \
+                '! vorbisenc name=vorbisenc ' \
+                '! mux.' \
+                % (TMP_OGV, TMP_OGG, TMP_WAV))
+
+        taglist = self.getTags(Constants.TYPE_VIDEO)
+        vorbisenc = self.mux_pipe.get_by_name('vorbisenc')
+        vorbisenc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
+
+        def done(bus, message, self):
+            if message.type == gst.MESSAGE_ERROR:
+                err, debug = message.parse_error()
+                logger.error('audio_pipe: %s %s' % (err, debug))
+                return
+            elif message.type != gst.MESSAGE_EOS:
+                return
+
+            logger.debug('stopRecordingVideo.done')
+            self.mux_pipe.set_state(gst.STATE_NULL)
+
+            os.remove(TMP_OGV)
+            os.remove(TMP_WAV)
+
+            ogg_w = OGG_TRAITS[self.ogg_quality]['width']
+            ogg_h = OGG_TRAITS[self.ogg_quality]['height']
+
+            thumb = self.pixbuf.scale_simple(ogg_w, ogg_h,
+                    gtk.gdk.INTERP_HYPER)
+
+            self.ca.ui.setPostProcessPixBuf(thumb)
+            self.ca.m.saveVideo(thumb, TMP_OGG, ogg_w, ogg_h)
+            self.ca.m.stoppedRecordingVideo()
+            self.ca.ui.updateVideoComponents()
+
+        bus = self.mux_pipe.get_bus()
+        bus.add_signal_watch()
+        bus.connect('message', done, self)
+
+        self.mux_pipe.set_state(gst.STATE_PLAYING)
 
     def startRecordingAudio(self):
         logger.debug('startRecordingAudio')
@@ -355,6 +399,7 @@ class Glive:
         self.fallback_pipe = None
         self.photo = None
         self.video_pipe = None
+        self.mux_pipe = None
         self.audio_pipe = None
 
         self.fallback = False

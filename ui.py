@@ -2204,6 +2204,8 @@ class ProgressWindow(gtk.Window):
 
 
     def updateProgress( self, amt, update, color='white' ):
+        logging.debug('updateProgress %s' % amt)
+
         self.progBar.set_fraction( amt )
         if (update != None and update != self.update):
             self.update = update
