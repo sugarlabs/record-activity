@@ -59,6 +59,7 @@ from button import RecdButton
 import utils
 import record
 import camerac
+import aplay
 from tray import HTray
 from toolbarcombobox import ToolComboBox
 
@@ -1289,12 +1290,12 @@ class UI:
 
     def clickShutter( self ):
         if (not self.ca.m.RECORDING):
-            os.system( "aplay -t wav " + str(Constants.soundClick) )
+            aplay.play(Constants.soundClick)
 
         wasRec = self.ca.m.RECORDING
         self.ca.m.doShutter()
         if (wasRec):
-            os.system( "aplay -t wav " + str(Constants.soundClick) )
+            aplay.play(Constants.soundClick)
 
 
     def updateVideoComponents( self ):
