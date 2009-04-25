@@ -65,6 +65,10 @@ struct _GstVideoRate
   gboolean silent;
   gdouble new_pref;
   gboolean skip_to_first;
+
+  // XXX let downstream theoraenc treat first buffer
+  // as a buffer with keyframe
+  gboolean first_pass_buffer;
 };
 
 struct _GstVideoRateClass

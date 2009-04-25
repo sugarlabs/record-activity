@@ -396,6 +396,8 @@ gst_video_rate_init (GstVideoRate * videorate, GstVideoRateClass * klass)
   videorate->from_rate_denominator = 0;
   videorate->to_rate_numerator = 0;
   videorate->to_rate_denominator = 0;
+
+  videorate->first_pass_buffer = TRUE;
 }
 
 /* flush the oldest buffer */
@@ -714,6 +716,13 @@ gst_video_rate_chain (GstPad * pad, GstBuffer * buffer)
           gst_buffer_unref (buffer);
           goto done;
         }
+
+        // XXX let downstream theoraenc treat first buffer
+        // as a buffer with keyframe
+        if (videorate->first_pass_buffer == TRUE) {
+            videorate->first_pass_buffer = FALSE;
+            break;
+        }
       }
       /* continue while the first one was the best */
     }
@@ -842,6 +851,8 @@ gst_video_rate_change_state (GstElement * element, GstStateChange transition)
     case GST_STATE_CHANGE_PAUSED_TO_READY:
       gst_video_rate_reset (videorate);
       break;
+    case GST_STATE_CHANGE_PAUSED_TO_PLAYING: 
+        videorate->first_pass_buffer = TRUE;
     default:
       break;
   }
