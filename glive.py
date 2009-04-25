@@ -50,7 +50,7 @@ PLAYBACK_HEIGHT = 480
 OGG_TRAITS = {
         0: { 'width': 160, 'height': 120, 'quality': 16 },
         1: { 'width': 400, 'height': 300, 'quality': 16 },
-        2: { 'width': 640, 'height': 480, 'quality': 16 } }
+        2: { 'width': 640, 'height': 480, 'quality': 32 } }
 
 class Glive:
     def play(self):
@@ -203,12 +203,7 @@ class Glive:
     def startRecordingVideo(self, quality):
         logger.debug('startRecordingVideo quality=%s' % quality)
 
-        if True:
-            # XXX re-create pipe every time 
-            # to supress gst glitches during the second invoking
-            if self.video_pipe:
-                del self.video_pipe
-
+        if not self.video_pipe or quality != self.ogg_quality:
             self.video_pipe = gst.parse_launch( \
                     '%s ' \
                     '! tee name=tee ' \
@@ -322,7 +317,9 @@ class Glive:
     def startRecordingAudio(self):
         logger.debug('startRecordingAudio')
 
-        if not self.audio_pipe:
+        # XXX re-create pipe every time 
+        # to supress gst glitches during the second invoking
+        if True:
             self.audio_pipe = gst.parse_launch( \
                     '%s ' \
                     '! queue ' \
