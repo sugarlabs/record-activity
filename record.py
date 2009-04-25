@@ -27,11 +27,16 @@ import telepathy.client
 import logging
 import xml.dom.minidom
 import time
+from xml.dom.minidom import parse
+
+import logging
+logger = logging.getLogger('record:record.py')
 
 from sugar.activity import activity
 from sugar.presence import presenceservice
 from sugar.presence.tubeconn import TubeConnection
 from sugar import util
+import port.json
 
 from model import Model
 from ui import UI
@@ -45,12 +50,6 @@ import instance
 from instance import Instance
 import serialize
 import utils
-
-if os.environ.has_key('RECORD_GST_DEBUG'):
-    import gst
-    gst.debug_set_active(True)
-    gst.debug_set_colored(False)
-    gst.debug_set_default_threshold(int(os.environ['RECORD_GST_DEBUG']))
 
 class Record(activity.Activity):
 
@@ -95,19 +94,37 @@ class Record(activity.Activity):
 
 
     def read_file(self, file):
-        serialize.fillMediaHash(file, self.m.mediaHashs)
+        try:
+            dom = parse(file)
+        except Exception, e:
+            logger.error('read_file: %s' % e)
+            return
+
+        serialize.fillMediaHash(dom, self.m.mediaHashs)
+
+        for i in dom.documentElement.getElementsByTagName('ui'):
+            for ui_el in i.childNodes:
+                self.ui.deserialize(port.json.loads(ui_el.data))
 
 
     def write_file(self, file):
         self.I_AM_SAVED = False
 
+        self.m.mediaHashs['ui'] = self.ui.serialize()
+
         dom = serialize.saveMediaHash(self.m.mediaHashs)
+
+        ui_data = port.json.dumps(self.ui.serialize())
+        ui_el = dom.createElement('ui')
+        ui_el.appendChild(dom.createTextNode(ui_data))
+        dom.documentElement.appendChild(ui_el)
+
         xmlFile = open( file, "w" )
         dom.writexml(xmlFile)
         xmlFile.close()
 
         allDone = True
-        for h in range (0, len(self.m.mediaHashs)):
+        for h in range (0, len(self.m.mediaHashs)-1):
             mhash = self.m.mediaHashs[h]
             for i in range (0, len(mhash)):
                 recd = mhash[i]

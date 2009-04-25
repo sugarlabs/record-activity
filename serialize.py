@@ -14,16 +14,7 @@ import record
 import utils
 import recorded
 
-def fillMediaHash( index, mediaHashs ):
-    doc = None
-    if (os.path.exists(index)):
-        try:
-            doc = parse( os.path.abspath(index) )
-        except:
-            doc = None
-    if (doc == None):
-        return
-
+def fillMediaHash( doc, mediaHashs ):
     for key,value in Constants.mediaTypes.items():
         recdElements = doc.documentElement.getElementsByTagName(value[Constants.keyName])
         for el in recdElements:

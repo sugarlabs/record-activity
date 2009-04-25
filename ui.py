@@ -162,6 +162,23 @@ class UI:
         self.toolbox.connect("current-toolbar-changed", self._toolbarChangeCb)
         self.toolbox.show_all()
 
+    def serialize(self):
+        data =  {}
+        data['photo_timer'] = self.photoToolbar.timerCb.combo.get_active()
+        data['video_timer'] = self.videoToolbar.timerCb.combo.get_active()
+        data['video_duration'] = self.videoToolbar.durCb.combo.get_active()
+        data['video_quality'] = self.videoToolbar.quality.combo.get_active()
+        data['audio_timer'] = self.audioToolbar.timerCb.combo.get_active()
+        data['audio_duration'] = self.audioToolbar.durCb.combo.get_active()
+        return data
+
+    def deserialize(self, data):
+        self.photoToolbar.timerCb.combo.set_active(data.get('photo_timer', 0))
+        self.videoToolbar.timerCb.combo.set_active(data.get('video_timer', 0))
+        self.videoToolbar.durCb.combo.set_active(data.get('video_duration', 0))
+        self.videoToolbar.quality.combo.set_active(data.get('video_quality', 0))
+        self.audioToolbar.timerCb.combo.set_active(data.get('audio_timer', 0))
+        self.audioToolbar.durCb.combo.set_active(data.get('audio_duration'))
 
     def _toolboxSizeAllocateCb( self, widget, event ):
         self.toolbox.disconnect( self.TOOLBOX_SIZE_ALLOCATE_ID)
