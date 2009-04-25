@@ -18,7 +18,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-
+import re
 import os
 import gtk
 import pygtk
@@ -406,7 +406,8 @@ class Glive:
         alsasrc = gst.element_factory_make('alsasrc')
         alsasrc.set_state(gst.STATE_PAUSED)
         for i in alsasrc.list_tracks():
-            if i.props.flags & gst.interfaces.MIXER_TRACK_INPUT:
+            if i.props.flags & gst.interfaces.MIXER_TRACK_INPUT \
+                    and not re.search('boost', i.label, flags=re.IGNORECASE):
                 alsasrc.set_record(i, True)
                 alsasrc.set_volume(i, \
                         tuple([i.props.max_volume] * i.props.num_channels))
