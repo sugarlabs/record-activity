@@ -1678,6 +1678,7 @@ class UI:
 
     def deleteThumbSelection( self, recd ):
         self.ca.m.deleteRecorded( recd )
+        self.ca.glive.play()
         self.removeThumb( recd )
         self.removeIfSelectedRecorded( recd )
 
@@ -1693,6 +1694,7 @@ class UI:
                 self.livePhotoCanvas.setImage( None )
                 self.startLiveAudio()
 
+            self.RECD_INFO_ON = False
             self.LIVEMODE = True
             self.updateVideoComponents()
 
