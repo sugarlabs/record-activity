@@ -369,7 +369,7 @@ class UI:
             self.audioToolbar.set_sensitive( True )
 
             #initialize the app with the default thumbs
-            self.ca.m.setupMode( self.ca.m.MODE, False )
+            self.ca.m.setupMode( self.ca.m.MODE, True )
 
             gobject.idle_add( self.finalSetUp )
 
@@ -526,6 +526,7 @@ class UI:
         win.set_decorated( False )
         win.set_focus_on_map( False )
         win.set_property("accept-focus", False)
+        win.props.destroy_with_parent = True
 
 
     def resetWidgetFadeTimer( self ):
