@@ -188,7 +188,6 @@ class Model:
         self.ca.ui.progressWindow.updateProgress( 0, "" )
         self.setUpdating( True )
         self.setRecording( False )
-        self.ca.ui.TRANSCODING = True
         self.ca.ui.FULLSCREEN = False
         self.ca.ui.updateVideoComponents()
 
