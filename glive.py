@@ -407,10 +407,13 @@ class Glive:
         alsasrc.set_state(gst.STATE_PAUSED)
         for i in alsasrc.list_tracks():
             if i.props.flags & gst.interfaces.MIXER_TRACK_INPUT \
-                    and not re.search('boost', i.label, flags=re.IGNORECASE):
+                    and re.search('capture', i.label, flags=re.IGNORECASE):
                 alsasrc.set_record(i, True)
-                alsasrc.set_volume(i, \
-                        tuple([i.props.max_volume] * i.props.num_channels))
+                volume = i.props.min_volume \
+                        + int((i.props.max_volume - i.props.min_volume) \
+                        / 100. * 90.)
+                alsasrc.set_volume(i, tuple([volume] * i.props.num_channels))
+                logger.debug('Set volume %s to %s' % (volume, i.label))
         alsasrc.set_state(gst.STATE_NULL)
         del alsasrc
 
