@@ -211,7 +211,7 @@ class Constants:
 
     dim_CONTROLBAR_HT = 55
 
-    keepFreeKbOnXo = 200000
+    keepFreeKbOnXo = 100000
 
     def __init__( self, ca ):
         self.__class__.activityId = ca._activity_id
