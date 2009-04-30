@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:10-0400\n"
-"PO-Revision-Date: 2008-08-25 08:58-0400\n"
+"PO-Revision-Date: 2009-04-30 12:43-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: activity/activity.info:2 constants.py:112
 msgid "Record"
@@ -82,12 +83,12 @@ msgstr "Registrazione terminata"
 #: constants.py:128
 #, python-format
 msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1)s ore, %(2)s minuti, %(1)s secondi rimanenti"
+msgstr "%(1)s ore, %(2)s minuti, %(3)s secondi rimanenti"
 
 #: constants.py:129
 #, python-format
 msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s minuti, %(1)s secondi rimanenti"
+msgstr "%(1)s minuti, %(2)s secondi rimanenti"
 
 #: constants.py:130
 #, python-format
