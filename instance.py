@@ -9,41 +9,41 @@ from color import Color
 import record
 
 class Instance:
-	key = profile.get_pubkey()
-	if hasattr(util, '_sha_data'):
-		# sugar-0.82 and previous
-		keyHash = util._sha_data(key)
-	else:
-		keyHash = util.sha_data(key)
+    key = profile.get_pubkey()
+    if hasattr(util, '_sha_data'):
+        # sugar-0.82 and previous
+        keyHash = util._sha_data(key)
+    else:
+        keyHash = util.sha_data(key)
 
-	keyHashPrintable = util.printable_hash(keyHash)
-	nickName = profile.get_nick_name()
+    keyHashPrintable = util.printable_hash(keyHash)
+    nickName = profile.get_nick_name()
 
-	colorFill = Color()
-	colorFill.init_hex( profile.get_color().get_fill_color() )
-	colorStroke = Color()
-	colorStroke.init_hex( profile.get_color().get_stroke_color() )
+    colorFill = Color()
+    colorFill.init_hex( profile.get_color().get_fill_color() )
+    colorStroke = Color()
+    colorStroke.init_hex( profile.get_color().get_stroke_color() )
 
-	instanceId = None
-	instancePath = None
-	dataPath = None
+    instanceId = None
+    instancePath = None
+    dataPath = None
 
-	def __init__(self, ca):
-		self.__class__.instanceId = ca._activity_id
+    def __init__(self, ca):
+        self.__class__.instanceId = ca._activity_id
 
-		self.__class__.instancePath = os.path.join(ca.get_activity_root(), "instance")
-		recreateTmp()
+        self.__class__.instancePath = os.path.join(ca.get_activity_root(), "instance")
+        recreateTmp()
 
-		self.__class__.dataPath = os.path.join(ca.get_activity_root(), "data")
-		recreateData()
+        self.__class__.dataPath = os.path.join(ca.get_activity_root(), "data")
+        recreateData()
 
 
 def recreateTmp():
-	if (not os.path.exists(Instance.instancePath)):
-		os.makedirs(Instance.instancePath)
+    if (not os.path.exists(Instance.instancePath)):
+        os.makedirs(Instance.instancePath)
 
 
 def recreateData():
-	if (not os.path.exists(Instance.dataPath)):
-		os.makedirs(Instance.dataPath)
+    if (not os.path.exists(Instance.dataPath)):
+        os.makedirs(Instance.dataPath)
 

@@ -1,7 +1,3 @@
-#!/usr/bin/python
-
-# Copyright (C) 2006, Red Hat, Inc.
-#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -16,7 +12,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.activity import bundlebuilder
+"""
+Unify usage of simplejson in Python 2.5/2.6
 
-bundlebuilder.start()
+In Python 2.5 it imports simplejson module, in 2.6 native json module.
 
+Usage:
+
+    import port.json as json
+
+    # and using regular simplejson interface with module json
+    json.dumps([])
+
+"""
+
+try:
+    from json import *
+    dumps
+except (ImportError, NameError):
+    from simplejson import *

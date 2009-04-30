@@ -1,3 +1,22 @@
+63
+
+* Change only volumes for "Capture" channels and let user change others
+* Record controls only appear on second launch #762
+
+62
+
+* Select quality for enconding video
+* Unmute/set-to-max capture channels
+  workaround code until sugar controls capture volumes in the shell
+* Revert two pass video encoding to support limited hardware
+* Save GUI state in Journal objects
+
+61
+
+* Use uuid and do not md5 video files
+* Fallback to ximagesink if xvimagesink is unaccessible
+* Use one pass for encodings
+
 60
 
 * pipeline rework; makes the activity work with new gstreamer

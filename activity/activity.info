@@ -1,9 +1,9 @@
 [Activity]
 name = Record
-service_name = org.laptop.RecordActivity
-class = record.Record
+bundle_id = org.laptop.RecordActivity
+exec = Record.sh
 icon = activity-record
-activity_version = 60
+activity_version = 63
 show_launcher = yes
 license = MIT
-update_url = http://wiki.laptop.org/go/Activities/G1G1
+update_url = http://activities.sugarlabs.org/en-US/sugar/addon/4081

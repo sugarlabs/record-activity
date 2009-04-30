@@ -260,17 +260,17 @@ py_camera_register_classes(PyObject *d)
 }
 
 DL_EXPORT(void)
-init_camera(void)
+initcamera(void)
 {
     PyObject *m, *d;
 
     Pycairo_IMPORT;
 
-    m = Py_InitModule ("_camera", py_camera_functions);
+    m = Py_InitModule ("camera", py_camera_functions);
     d = PyModule_GetDict (m);
 
     py_camera_register_classes (d);
     if (PyErr_Occurred ()) {
-        Py_FatalError ("can't initialise module _camera");
+        Py_FatalError ("can't initialise module camera");
     }
 }
