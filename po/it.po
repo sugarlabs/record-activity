@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:10-0400\n"
-"PO-Revision-Date: 2009-04-30 12:43-0400\n"
+"PO-Revision-Date: 2009-04-30 12:49-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -237,7 +237,7 @@ msgstr "Impossibile scaricare questa %(1)s"
 #: constants.py:165
 #, python-format
 msgid "Save %(1)s to:"
-msgstr "Salva %(1) in:"
+msgstr "Salva %(1)s in:"
 
 #: constants.py:166
 #, python-format
