@@ -546,10 +546,10 @@ class UI:
             if (mode[0] == Constants.MODE_PHOTO) and \
                     (self.ca.m.MODE != Constants.MODE_PHOTO):
                 self.ca.m.doPhotoMode()
-            elif(mode == Constants.MODE_VIDEO) and \
+            elif(mode[0] == Constants.MODE_VIDEO) and \
                     (self.ca.m.MODE != Constants.MODE_VIDEO):
                 self.ca.m.doVideoMode()
-            elif(mode == Constants.MODE_AUDIO) and \
+            elif(mode[0] == Constants.MODE_AUDIO) and \
                     (self.ca.m.MODE != Constants.MODE_AUDIO):
                 self.ca.m.doAudioMode()
 
