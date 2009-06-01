@@ -1,5 +1,6 @@
 PYVER=`python -c "import sys; print '%s.%s' % (sys.version_info[0], sys.version_info[1])"`
 PYTHON=python$(PYVER)
+PYTHON_LIBS=`python-config --libs`
 
 GLIB_INCLUDES=`pkg-config --cflags glib-2.0`
 GLIB_LIBS=`pkg-config --libs glib-2.0`
@@ -19,7 +20,7 @@ PYCAIRO_LIBS=`pkg-config --libs pycairo`
 INCLUDES=-I. -I/usr/include/${PYTHON} ${GLIB_INCLUDES} ${PYGTK_INCLUDES} ${CAIRO_INCLUDES} ${PYCAIRO_INCLUDES} ${GTK_INCLUDES}
 OPTFLAGS=-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -fasynchronous-unwind-tables
 CFLAGS=-g -fPIC -DPIC $(OPTFLAGS) $(INCLUDES)
-LDFLAGS=-shared -nostdlib -Wl,--export-dynamic -pthread ${GLIB_LIBS} ${PYGTK_LIBS} ${CAIRO_LIBS} ${PYCAIRO_LIBS} ${GTK_LIBS}
+LDFLAGS=-shared -nostdlib -Wl,--export-dynamic -pthread ${GLIB_LIBS} ${PYGTK_LIBS} ${CAIRO_LIBS} ${PYCAIRO_LIBS} ${GTK_LIBS} $(PYTHON_LIBS)
 
 ARCH = $(shell arch | grep 64 >/dev/null && echo linux64 || echo linux32)
 LIB_DIR = $(ARCH)_$(PYVER)
