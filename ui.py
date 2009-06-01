@@ -52,6 +52,7 @@ from p5 import P5
 from p5_button import P5Button
 from p5_button import Polygon
 from p5_button import Button
+import glive
 from glive import LiveVideoWindow
 from gplay import PlayVideoWindow
 from recorded import Recorded
@@ -133,17 +134,30 @@ class UI:
         #this includes the default sharing tab
         self.toolbox = activity.ActivityToolbox(self.ca)
         self.ca.set_toolbox(self.toolbox)
-        self.photoToolbar = PhotoToolbar()
-        self.photoToolbar.set_sensitive( False )
-        self.toolbox.add_toolbar( Constants.istrPhoto, self.photoToolbar )
-        self.videoToolbar = VideoToolbar()
-        self.videoToolbar.set_sensitive( False )
-        self.toolbox.add_toolbar( Constants.istrVideo, self.videoToolbar )
+
+        if glive.camera_presents:
+            self.photoToolbar = PhotoToolbar()
+            self.photoToolbar.set_sensitive( False )
+            self.toolbox.add_toolbar( Constants.istrPhoto, self.photoToolbar )
+
+            self.videoToolbar = VideoToolbar()
+            self.videoToolbar.set_sensitive( False )
+            self.toolbox.add_toolbar( Constants.istrVideo, self.videoToolbar )
+
+            self.tbars = { Constants.MODE_PHOTO: 1,
+                           Constants.MODE_VIDEO: 2,
+                           Constants.MODE_AUDIO: 3 }
+        else:
+            self.photoToolbar = None
+            self.videoToolbar = None
+            self.tbars = { Constants.MODE_AUDIO: 1 }
+            self.ca.m.MODE = Constants.MODE_AUDIO
+
         self.audioToolbar = AudioToolbar()
         self.audioToolbar.set_sensitive( False )
         self.toolbox.add_toolbar( Constants.istrAudio, self.audioToolbar )
-        self.tbars = {Constants.MODE_PHOTO:self.photoToolbar,Constants.MODE_VIDEO:self.videoToolbar,Constants.MODE_AUDIO:self.audioToolbar}
-        self.toolbox.set_current_toolbar(self.ca.m.MODE+1)
+
+        self.toolbox.set_current_toolbar(self.tbars[self.ca.m.MODE])
 
         self.toolbox.remove(self.toolbox._separator)
         #taken directly from toolbox.py b/c I don't know how to mod the hongry hippo
@@ -164,19 +178,33 @@ class UI:
 
     def serialize(self):
         data =  {}
-        data['photo_timer'] = self.photoToolbar.timerCb.combo.get_active()
-        data['video_timer'] = self.videoToolbar.timerCb.combo.get_active()
-        data['video_duration'] = self.videoToolbar.durCb.combo.get_active()
-        data['video_quality'] = self.videoToolbar.quality.combo.get_active()
+
+        if self.photoToolbar:
+            data['photo_timer'] = self.photoToolbar.timerCb.combo.get_active()
+
+        if self.videoToolbar:
+            data['video_timer'] = self.videoToolbar.timerCb.combo.get_active()
+            data['video_duration'] = self.videoToolbar.durCb.combo.get_active()
+            data['video_quality'] = self.videoToolbar.quality.combo.get_active()
+
         data['audio_timer'] = self.audioToolbar.timerCb.combo.get_active()
         data['audio_duration'] = self.audioToolbar.durCb.combo.get_active()
+
         return data
 
     def deserialize(self, data):
-        self.photoToolbar.timerCb.combo.set_active(data.get('photo_timer', 0))
-        self.videoToolbar.timerCb.combo.set_active(data.get('video_timer', 0))
-        self.videoToolbar.durCb.combo.set_active(data.get('video_duration', 0))
-        self.videoToolbar.quality.combo.set_active(data.get('video_quality', 0))
+        if self.photoToolbar:
+            self.photoToolbar.timerCb.combo.set_active(
+                    data.get('photo_timer', 0))
+
+        if self.videoToolbar:
+            self.videoToolbar.timerCb.combo.set_active(
+                    data.get('video_timer', 0))
+            self.videoToolbar.durCb.combo.set_active(
+                    data.get('video_duration', 0))
+            self.videoToolbar.quality.combo.set_active(
+                    data.get('video_quality', 0))
+
         self.audioToolbar.timerCb.combo.set_active(data.get('audio_timer', 0))
         self.audioToolbar.durCb.combo.set_active(data.get('audio_duration'))
 
@@ -364,8 +392,10 @@ class UI:
             self.resetWidgetFadeTimer()
             self.showLiveVideoTags()
 
-            self.photoToolbar.set_sensitive( True )
-            self.videoToolbar.set_sensitive( True )
+            if self.photoToolbar:
+                self.photoToolbar.set_sensitive( True )
+            if self.videoToolbar:
+                self.videoToolbar.set_sensitive( True )
             self.audioToolbar.set_sensitive( True )
 
             #initialize the app with the default thumbs
@@ -508,14 +538,19 @@ class UI:
 
     def _toolbarChangeCb( self, tbox, num ):
         if (num != 0) and (self.ca.m.RECORDING or self.ca.m.UPDATING):
-            self.toolbox.set_current_toolbar( self.ca.m.MODE+1 )
+            self.toolbox.set_current_toolbar(self.tbars[self.ca.m.MODE])
         else:
-            num = num - 1 #offset the default activity tab
-            if (num == Constants.MODE_PHOTO) and (self.ca.m.MODE != Constants.MODE_PHOTO):
+            mode = [mode for mode, i in self.tbars.items() if i == num]
+            if not mode:
+                return
+            if (mode[0] == Constants.MODE_PHOTO) and \
+                    (self.ca.m.MODE != Constants.MODE_PHOTO):
                 self.ca.m.doPhotoMode()
-            elif(num == Constants.MODE_VIDEO) and (self.ca.m.MODE != Constants.MODE_VIDEO):
+            elif(mode == Constants.MODE_VIDEO) and \
+                    (self.ca.m.MODE != Constants.MODE_VIDEO):
                 self.ca.m.doVideoMode()
-            elif(num == Constants.MODE_AUDIO) and (self.ca.m.MODE != Constants.MODE_AUDIO):
+            elif(mode == Constants.MODE_AUDIO) and \
+                    (self.ca.m.MODE != Constants.MODE_AUDIO):
                 self.ca.m.doAudioMode()
 
 
@@ -798,8 +833,11 @@ class UI:
 
     def updateButtonSensitivities( self ):
         switchStuff = ((not self.ca.m.UPDATING) and (not self.ca.m.RECORDING))
-        self.photoToolbar.set_sensitive( switchStuff )
-        self.videoToolbar.set_sensitive( switchStuff )
+
+        if self.photoToolbar:
+            self.photoToolbar.set_sensitive( switchStuff )
+        if self.videoToolbar:
+            self.videoToolbar.set_sensitive( switchStuff )
         self.audioToolbar.set_sensitive( switchStuff )
 
         if (not self.COUNTINGDOWN):

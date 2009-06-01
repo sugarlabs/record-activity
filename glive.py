@@ -33,7 +33,7 @@ gobject.threads_init()
 import logging
 logger = logging.getLogger('record:glive.py')
 
-from sugar.activity.activity import get_activity_root
+from sugar.activity.activity import get_activity_root, get_bundle_path
 
 from instance import Instance
 from constants import Constants
@@ -52,8 +52,20 @@ OGG_TRAITS = {
         1: { 'width': 400, 'height': 300, 'quality': 16 },
         2: { 'width': 640, 'height': 480, 'quality': 32 } }
 
+THUMB_STUB = gtk.gdk.pixbuf_new_from_file(
+        os.path.join(get_bundle_path(), 'gfx', 'stub.png'))
+
+def _does_camera_present():
+    v4l2src = gst.element_factory_make('v4l2src')
+    return v4l2src.props.device_name is not None
+
+camera_presents = _does_camera_present()
+
 class Glive:
     def play(self):
+        if not camera_presents:
+            return
+
         logger.debug('play')
 
         if not self.play_pipe:
@@ -71,7 +83,7 @@ class Glive:
                     '! %s' \
                     % (self.src_str, self.play_str))
             self.valve = self.play_pipe.get_by_name('valve')
-            
+
             def message_cb(bus, message):
                 if message.type == gst.MESSAGE_ERROR:
                     err, debug = message.parse_error()
@@ -109,6 +121,9 @@ class Glive:
         self._switch_pipe(self.play_pipe)
 
     def thumb_play(self, use_fallback=False):
+        if not camera_presents:
+            return
+
         if not self.fallback and not use_fallback:
             # use xv to scale video
             self.play()
@@ -148,6 +163,9 @@ class Glive:
             self.pipeline.set_state(gst.STATE_NULL)
 
     def takePhoto(self, after_photo_cb=None):
+        if not camera_presents:
+            return
+
         logger.debug('takePhoto')
 
         if not self.photo:
@@ -201,6 +219,9 @@ class Glive:
         self._switch_pipe(self.play_pipe)
 
     def startRecordingVideo(self, quality):
+        if not camera_presents:
+            return
+
         logger.debug('startRecordingVideo quality=%s' % quality)
 
         if not self.video_pipe or quality != self.ogg_quality:
@@ -246,6 +267,9 @@ class Glive:
         self.takePhoto(process_cb)
 
     def stopRecordingVideo(self):
+        if not camera_presents:
+            return
+
         logger.debug('stopRecordingVideo')
 
         self._switch_pipe(self.play_pipe)
@@ -317,20 +341,27 @@ class Glive:
     def startRecordingAudio(self):
         logger.debug('startRecordingAudio')
 
-        # XXX re-create pipe every time 
+        # XXX re-create pipe every time
         # to supress gst glitches during the second invoking
         if True:
-            self.audio_pipe = gst.parse_launch( \
-                    '%s ' \
-                    '! queue ' \
-                    '! %s ' \
+            audio_pipe = \
                     'alsasrc ' \
                     '! queue ' \
                     '! audioconvert ' \
                     '! vorbisenc name=vorbisenc ' \
                     '! oggmux ' \
                     '! filesink location=%s ' \
-                    % (self.src_str, self.play_str, TMP_OGG))
+                    % TMP_OGG
+
+            if camera_presents:
+                self.audio_pipe = gst.parse_launch( \
+                        '%s ' \
+                        '! queue ' \
+                        '! %s ' \
+                        '%s ' \
+                        % (self.src_str, self.play_str, audio_pipe))
+            else:
+                self.audio_pipe = gst.parse_launch(audio_pipe)
 
             def message_cb(bus, message, self):
                 if message.type == gst.MESSAGE_ERROR:
@@ -352,8 +383,11 @@ class Glive:
             self.pixbuf = pixbuf
             self._switch_pipe(self.audio_pipe)
 
-        # take photo first
-        self.takePhoto(process_cb)
+        if camera_presents:
+            # take photo first
+            self.takePhoto(process_cb)
+        else:
+            process_cb(self, THUMB_STUB)
 
     def stopRecordingAudio( self ):
         logger.debug('stopRecordingAudio')
@@ -398,6 +432,9 @@ class Glive:
         self.video_pipe = None
         self.mux_pipe = None
         self.audio_pipe = None
+
+        self.src_str = 'fakesrc'
+        self.play_str = 'fakesink'
 
         self.fallback = False
 
