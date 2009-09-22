@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:10-0400\n"
-"PO-Revision-Date: 2008-09-25 12:25-0400\n"
-"Last-Translator: Alexander Dupuy <alex.dupuy@mac.com>\n"
+"PO-Revision-Date: 2009-07-29 02:01-0400\n"
+"Last-Translator: Victor Alfonso Parada Suarez <deathvaps@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: activity/activity.info:2 constants.py:112
 msgid "Record"
@@ -200,9 +201,8 @@ msgstr "Archivo pequeño"
 
 # context? -- xavi
 #: constants.py:154
-#, fuzzy
 msgid "Silent"
-msgstr "Silencioso"
+msgstr "Mudo"
 
 #: constants.py:155
 msgid "Rotate"
@@ -244,9 +244,8 @@ msgstr "Imposible descargar este %(1)s"
 #. TRANS: Save Photo to:
 #: constants.py:165
 #, python-format
-#, fuzzy
 msgid "Save %(1)s to:"
-msgstr "Guardar %(1) en:"
+msgstr "Guardar %(1)s en:"
 
 #: constants.py:166
 #, python-format
