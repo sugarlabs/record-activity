@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:10-0400\n"
-"PO-Revision-Date: 2008-07-30 02:36-0400\n"
+"PO-Revision-Date: 2008-09-08 12:41-0400\n"
 "Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -80,9 +80,8 @@ msgstr "Бичлэг хийж дууслаа"
 
 #: constants.py:128
 #, python-format
-#, fuzzy
 msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1)s цаг, %(2)s минут, %(1)s секунд үлдлээ"
+msgstr "%(1)s цаг, %(2)s минут, %(3)s секунд үлдлээ"
 
 #: constants.py:129
 #, python-format
@@ -235,9 +234,8 @@ msgstr "Энэ %(1)s-г татаж чадахгүй байна"
 #. TRANS: Save Photo to:
 #: constants.py:165
 #, python-format
-#, fuzzy
 msgid "Save %(1)s to:"
-msgstr "%(1)s-ийг хадгалах хавцас:"
+msgstr "%(1)s-ийг хадгалах хавтас:"
 
 #: constants.py:166
 #, python-format
