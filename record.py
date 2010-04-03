@@ -28,6 +28,9 @@ import logging
 import xml.dom.minidom
 import time
 from xml.dom.minidom import parse
+import pygst
+pygst.require('0.10')
+import gst
 
 import logging
 logger = logging.getLogger('record:record.py')
@@ -50,6 +53,15 @@ import instance
 from instance import Instance
 import serialize
 import utils
+
+
+gst.debug_set_active(True)
+gst.debug_set_colored(False)
+if logging.getLogger().level <= logging.DEBUG:
+    gst.debug_set_default_threshold(gst.LEVEL_WARNING)
+else:
+    gst.debug_set_default_threshold(gst.LEVEL_ERROR)
+
 
 class Record(activity.Activity):
 
