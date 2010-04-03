@@ -59,7 +59,6 @@ from recorded import Recorded
 from button import RecdButton
 import utils
 import record
-import camerac
 import aplay
 from tray import HTray
 from toolbarcombobox import ToolComboBox
@@ -786,7 +785,7 @@ class UI:
         if (pixbuf != None):
             #self.shownRecd = recd
 
-            img = camerac.cairo_surface_from_gdk_pixbuf(pixbuf)
+            img = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
             self.livePhotoCanvas.setImage( img )
 
             self.ca.glive.thumb_play()
@@ -1655,7 +1654,7 @@ class UI:
 
         #if (recd != self.shownRecd):
         pixbuf = recd.getAudioImagePixbuf()
-        img = camerac.cairo_surface_from_gdk_pixbuf(pixbuf)
+        img = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
         self.livePhotoCanvas.setImage( img )
         #self.shownRecd = recd
         self.showRecdMeta(recd)
@@ -1768,7 +1767,7 @@ class UI:
             pixbuf = pixbuf.scale_simple(self.__class__.dim_THUMB_WIDTH, self.__class__.dim_THUMB_HEIGHT, gtk.gdk.INTERP_NEAREST)
 
         pixbuf = utils.grayScalePixBuf(pixbuf, True)
-        img = camerac.cairo_surface_from_gdk_pixbuf(pixbuf)
+        img = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
         self.backgdCanvas.setImage(img)
 
 

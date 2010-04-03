@@ -2,6 +2,7 @@
 import os
 import gtk
 from gettext import gettext as gt
+import hippo
 
 import sugar.graphics.style
 from sugar.activity import activity
@@ -10,7 +11,6 @@ from instance import Instance
 from sugar import profile
 from color import Color
 import utils
-import camerac
 import cairo
 import pango
 import pangocairo
@@ -269,7 +269,7 @@ class Constants:
 
         recCircleFile = os.path.join(self.__class__.gfxPath, 'media-circle.png')
         recCirclePixbuf = gtk.gdk.pixbuf_new_from_file(recCircleFile)
-        self.__class__.recCircleCairo = camerac.cairo_surface_from_gdk_pixbuf(recCirclePixbuf)
+        self.__class__.recCircleCairo = hippo.cairo_surface_from_gdk_pixbuf(recCirclePixbuf)
 
         recInsFile = os.path.join(self.__class__.gfxPath, 'media-insensitive.png')
         recInsPixbuf = gtk.gdk.pixbuf_new_from_file(recInsFile)
