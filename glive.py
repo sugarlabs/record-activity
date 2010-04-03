@@ -341,47 +341,30 @@ class Glive:
     def startRecordingAudio(self):
         logger.debug('startRecordingAudio')
 
-        # XXX re-create pipe every time
-        # to supress gst glitches during the second invoking
-        if True:
-            audio_pipe = \
-                    'alsasrc ' \
-                    '! queue ' \
-                    '! audioconvert ' \
-                    '! vorbisenc name=vorbisenc ' \
-                    '! oggmux ' \
-                    '! filesink location=%s ' \
-                    % TMP_OGG
+        audio_pipe = \
+                'alsasrc ' \
+                '! audioconvert ' \
+                '! audio/x-raw-int,rate=16000,channels=1,depth=16 ' \
+                '! queue ' \
+                '! speexenc quality=2 name=vorbisenc ' \
+                '! oggmux ' \
+                '! filesink location=%s ' \
+                % TMP_OGG
 
-            if camera_presents:
-                self.audio_pipe = gst.parse_launch( \
-                        '%s ' \
-                        '! queue ' \
-                        '! %s ' \
-                        '%s ' \
-                        % (self.src_str, self.play_str, audio_pipe))
-            else:
-                self.audio_pipe = gst.parse_launch(audio_pipe)
-
-            def message_cb(bus, message, self):
-                if message.type == gst.MESSAGE_ERROR:
-                    err, debug = message.parse_error()
-                    logger.error('audio_pipe: %s %s' % (err, debug))
-
-            bus = self.audio_pipe.get_bus()
-            bus.add_signal_watch()
-            bus.connect('message', message_cb, self)
+        self.audio_pipe = gst.parse_launch(audio_pipe)
 
         def process_cb(self, pixbuf):
-            taglist = self.getTags(Constants.TYPE_AUDIO)
-            cover = utils.getStringFromPixbuf(pixbuf)
-            taglist[gst.TAG_EXTENDED_COMMENT] = 'coverart=%s' % cover
-
-            vorbisenc = self.audio_pipe.get_by_name('vorbisenc')
-            vorbisenc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
+            # XXX setting tags on fc9 crashes Record
+            #taglist = self.getTags(Constants.TYPE_AUDIO)
+            #cover = utils.getStringFromPixbuf(pixbuf)
+            #taglist[gst.TAG_EXTENDED_COMMENT] = 'coverart=%s' % cover
+            #vorbisenc = self.audio_pipe.get_by_name('vorbisenc')
+            #orbisenc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
 
             self.pixbuf = pixbuf
-            self._switch_pipe(self.audio_pipe)
+            if camera_presents:
+                self._switch_pipe(self.play_pipe)
+            self.audio_pipe.set_state(gst.STATE_PLAYING)
 
         if camera_presents:
             # take photo first
@@ -392,7 +375,7 @@ class Glive:
     def stopRecordingAudio( self ):
         logger.debug('stopRecordingAudio')
 
-        self._switch_pipe(self.play_pipe)
+        self.audio_pipe.set_state(gst.STATE_NULL)
 
         if (not os.path.exists(TMP_OGG)):
             self.ca.m.cannotSaveVideo()
