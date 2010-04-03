@@ -1345,13 +1345,11 @@ class UI:
 
 
     def clickShutter( self ):
-        if (not self.ca.m.RECORDING):
+        if self.ca.m.RECORDING:
+            self.ca.m.doShutter()
             aplay.play(Constants.soundClick)
-
-        wasRec = self.ca.m.RECORDING
-        self.ca.m.doShutter()
-        if (wasRec):
-            aplay.play(Constants.soundClick)
+        else:
+            aplay.play(Constants.soundClick, self.ca.m.doShutter)
 
 
     def updateVideoComponents( self ):

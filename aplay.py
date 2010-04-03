@@ -17,23 +17,31 @@ import gst
 import logging
 logger = logging.getLogger('record:aplay.py')
 
-def play(file):
+def play(file, done_cb=None):
     player.set_state(gst.STATE_NULL)
-    player.props.uri = 'file://' + file
-    player.set_state(gst.STATE_PLAYING)
 
-def _gstmessage_cb(bus, message):
-    if message.type == gst.MESSAGE_EOS:
+    def eos_cb(bus, message):
+        bus.disconnect_by_func(eos_cb)
         player.set_state(gst.STATE_NULL)
-    elif message.type == gst.MESSAGE_ERROR:
+        if done_cb is not None:
+            done_cb()
+
+    def error_cb(bus, message):
         err, debug = message.parse_error()
         logger.error('play_pipe: %s %s' % (err, debug))
         player.set_state(gst.STATE_NULL)
+        if done_cb is not None:
+            done_cb()
+
+    bus = player.get_bus()
+    bus.connect('message::eos', eos_cb)
+    bus.connect('message::error', error_cb)
+
+    player.props.uri = 'file://' + file
+    player.set_state(gst.STATE_PLAYING)
+
 
 player = gst.element_factory_make('playbin')
 fakesink = gst.element_factory_make('fakesink')
 player.set_property("video-sink", fakesink)
-
-bus = player.get_bus()
-bus.add_signal_watch()
-bus.connect('message', _gstmessage_cb)
+player.get_bus().add_signal_watch()
