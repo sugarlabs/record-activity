@@ -1,9 +1,9 @@
 [Activity]
 name = Record
 bundle_id = org.laptop.RecordActivity
-exec = Record.sh
+exec = bin/Record.sh
 icon = activity-record
-activity_version = 64
+activity_version = 65
 show_launcher = yes
 license = MIT
 update_url = http://activities.sugarlabs.org/en-US/sugar/addon/4081

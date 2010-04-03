@@ -1,3 +1,9 @@
+65
+
+* Use hippo.cairo_surface_from_gdk_pixbuf instead of bundling blobs
+* Add gst logging
+* Record 64 does not record sound #1244
+
 64
 
 * #848 Hide photo/video tabs if camera doesn't exist 
