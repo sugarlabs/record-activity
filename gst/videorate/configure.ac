@@ -1,4 +1,4 @@
-AC_INIT([gst-plugins-espeak], [0.3])
+AC_INIT
 
 dnl versions of gstreamer and plugins-base
 GST_MAJORMINOR=0.10
@@ -11,7 +11,7 @@ dnl and 2... for a prerelease
 
 dnl when going to/from release please set the nano correctly !
 dnl releases only do Wall, cvs and prerelease does Werror too
-AS_VERSION(gst-plugin, GST_PLUGIN_VERSION, 0, 10, 0, 1,
+AS_VERSION(gst-plugins-base, GST_PLUGIN_VERSION, 0, 10, 25,,
     GST_PLUGIN_CVS="no", GST_PLUGIN_CVS="yes")
 
 dnl AM_MAINTAINER_MODE provides the option to enable maintainer mode

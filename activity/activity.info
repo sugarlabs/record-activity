@@ -1,9 +1,9 @@
 [Activity]
 name = Record
 bundle_id = org.laptop.RecordActivity
-exec = bin/Record.sh
+exec = .0sugar/launch sugar-activity record.Record
 icon = activity-record
 activity_version = 65
 show_launcher = yes
 license = MIT
-update_url = http://activities.sugarlabs.org/en-US/sugar/addon/4081
+requires = record-valve, record-videorate

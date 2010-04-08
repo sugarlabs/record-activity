@@ -26,3 +26,5 @@ missing
 .libs
 *.lo
 
+
+.0sugar

@@ -1,0 +1,26 @@
+[DEFAULT]
+uid = record-valve
+summary = record gst deps
+license = LGPLv2+
+homepage = http://gstreamer.sourceforge.net
+
+[Service]
+packaged = rpm gstreamer-plugins-bad
+           suse gstreamer-0_10-plugins-bad
+           debian gstreamer0.10-plugins-bad
+           mandriva gstreamer0.10-plugins-bad
+           gentoo media-libs/gst-plugins-bad
+binding  = GST_PLUGIN_PATH lib/gstreamer-0.10
+include  = libgstvalve.so
+machine  = build
+
+[Build]
+exec = "$SRCDIR"/configure
+            CFLAGS="%(cflags)s"
+            --prefix="$DISTDIR"
+            --disable-static
+        && make
+        && make install-strip
+
+[Maintain]
+exec = ./autogen.sh && ./configure && make dist-bzip2
