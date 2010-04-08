@@ -1,3 +1,8 @@
+66
+
+* Increase audio volume on XO
+* 0sugarize Record blobs to let use native gst on recent systems
+
 65
 
 * Use hippo.cairo_surface_from_gdk_pixbuf instead of bundling blobs
