@@ -55,6 +55,11 @@ OGG_TRAITS = {
 THUMB_STUB = gtk.gdk.pixbuf_new_from_file(
         os.path.join(get_bundle_path(), 'gfx', 'stub.png'))
 
+if os.path.isdir('/ofw'):
+    AUDIO_FILTER = '! volume volume=10'
+else:
+    AUDIO_FILTER = ''
+
 def _does_camera_present():
     v4l2src = gst.element_factory_make('v4l2src')
     return v4l2src.props.device_name is not None
@@ -299,9 +304,10 @@ class Glive:
                 'filesrc location=%s ' \
                 '! wavparse ' \
                 '! audioconvert ' \
+                '%s ' \
                 '! vorbisenc name=vorbisenc ' \
                 '! mux.' \
-                % (TMP_OGV, TMP_OGG, TMP_WAV))
+                % (TMP_OGV, TMP_OGG, TMP_WAV, AUDIO_FILTER))
 
         taglist = self.getTags(Constants.TYPE_VIDEO)
         vorbisenc = self.mux_pipe.get_by_name('vorbisenc')
@@ -346,10 +352,11 @@ class Glive:
                 '! audioconvert ' \
                 '! audio/x-raw-int,rate=16000,channels=1,depth=16 ' \
                 '! queue ' \
+                '%s ' \
                 '! speexenc quality=2 name=vorbisenc ' \
                 '! oggmux ' \
                 '! filesink location=%s ' \
-                % TMP_OGG
+                % (AUDIO_FILTER, TMP_OGG)
 
         self.audio_pipe = gst.parse_launch(audio_pipe)
 
