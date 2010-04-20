@@ -46,7 +46,7 @@ from sugar.activity import activity
 from sugar.graphics import style
 
 from instance import Instance
-from constants import Constants
+from constants import Constants, istrMinutes, istrSeconds
 from color import Color
 from p5 import P5
 from p5_button import P5Button
@@ -955,13 +955,15 @@ class UI:
             return False
         else:
             secsRemaining = duration - passedTime
-            timeRemainStr = Constants.istrSecondsRemaining % {"1":str(int(secsRemaining))}
             if (secsRemaining >= 60):
                 mins = int( secsRemaining/60 )
                 secs = int( secsRemaining%60 )
-                timeRemainStr = Constants.istrMinutesSecondsRemaining % {"1":str(int(mins)), "2":str(int(secs))}
+                timeRemainStr = istrMinutes(mins) + ', ' + istrSeconds(secs)
+            else:
+                timeRemainStr = istrSeconds(secsRemaining)
 
-            self.progressWindow.updateProgress( passedTime/duration, Constants.istrDuration + " " + timeRemainStr )
+            self.progressWindow.updateProgress( passedTime/duration,
+                    Constants.istrRemaining + " " + timeRemainStr )
             return True
 
 
@@ -1338,7 +1340,9 @@ class UI:
             return False
         else:
             secsRemaining = timerTime-passedTime
-            self.progressWindow.updateProgress( passedTime/timerTime, Constants.istrTimer + " " + Constants.istrSecondsRemaining % {"1":str(int(secsRemaining))} )
+            timeRemainStr = istrSeconds(secsRemaining)
+            self.progressWindow.updateProgress( passedTime/timerTime,
+                    Constants.istrRemaining + " " + timeRemainStr)
             self.recordWindow.updateCountdown( int(secsRemaining) )
             return True
 
@@ -2300,7 +2304,7 @@ class PhotoToolbar(gtk.Toolbar):
             if (i == 0):
                 self.timerCb.combo.append_text( Constants.istrNow )
             else:
-                self.timerCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.TIMERS[i]))} )
+                self.timerCb.combo.append_text(istrSeconds(Constants.TIMERS[i]))
         self.timerCb.combo.set_active(0)
         self.insert( self.timerCb, -1 )
 
@@ -2347,7 +2351,7 @@ class VideoToolbar(gtk.Toolbar):
             if (i == 0):
                 self.timerCb.combo.append_text( Constants.istrNow )
             else:
-                self.timerCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.TIMERS[i]))} )
+                self.timerCb.combo.append_text(istrSeconds(Constants.TIMERS[i]))
         self.timerCb.combo.set_active(0)
         self.insert( self.timerCb, -1 )
 
@@ -2360,7 +2364,7 @@ class VideoToolbar(gtk.Toolbar):
         durCbb = gtk.combo_box_new_text()
         self.durCb = ToolComboBox(combo=durCbb, label_text=Constants.istrDuration)
         for i in range (0, len(Constants.DURATIONS)):
-            self.durCb.combo.append_text( Constants.istrMinutes % {"1":(str(Constants.DURATIONS[i]))} )
+            self.durCb.combo.append_text(istrMinutes(Constants.DURATIONS[i]))
         self.durCb.combo.set_active(0)
         self.insert(self.durCb, -1 )
 
@@ -2405,7 +2409,7 @@ class AudioToolbar(gtk.Toolbar):
             if (i == 0):
                 self.timerCb.combo.append_text( Constants.istrNow )
             else:
-                self.timerCb.combo.append_text( Constants.istrSeconds % {"1":(str(Constants.TIMERS[i]))} )
+                self.timerCb.combo.append_text(istrSeconds(Constants.TIMERS[i]))
         self.timerCb.combo.set_active(0)
         self.insert( self.timerCb, -1 )
 
@@ -2418,7 +2422,7 @@ class AudioToolbar(gtk.Toolbar):
         durCbb = gtk.combo_box_new_text()
         self.durCb = ToolComboBox(combo=durCbb, label_text=Constants.istrDuration)
         for i in range (0, len(Constants.DURATIONS)):
-            self.durCb.combo.append_text( Constants.istrMinutes % {"1":(str(Constants.DURATIONS[i]))} )
+            self.durCb.combo.append_text(istrMinutes(Constants.DURATIONS[i]))
         self.durCb.combo.set_active(0)
         self.insert(self.durCb, -1 )
 

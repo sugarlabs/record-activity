@@ -2,6 +2,7 @@
 import os
 import gtk
 from gettext import gettext as gt
+from gettext import ngettext
 import hippo
 
 import sugar.graphics.style
@@ -14,6 +15,15 @@ import utils
 import cairo
 import pango
 import pangocairo
+
+
+def istrMinutes(x):
+    return ngettext('%(1)s minute', '%(1)s minutes', int(x)) % {'1': int(x)}
+
+
+def istrSeconds(x):
+    return ngettext('%(1)s second', '%(1)s seconds', int(x)) % {'1': int(x)}
+
 
 class Constants:
 
@@ -125,19 +135,12 @@ class Constants:
     istrTags = _('Tags:')
     istrSaving = _('Saving')
     istrFinishedRecording = _("Finished recording")
-    istrHoursMinutesSecondsRemaining = _("%(1)s hours, %(2)s minutes, %(3)s seconds remaining")
-    istrMinutesSecondsRemaining = _("%(1)s minutes, %(2)s seconds remaining")
-    istrHoursRemaining = _("%(1)s hours remaining")
-    istrMinutesRemaining = _("%(1)s minutes remaining")
-    istrSecondsRemaining = _("%(1)s seconds remaining")
-    istrHours = _("%(1)s hours")
-    istrMinutes = _("%(1)s minutes")
-    istrSeconds = _("%(1)s seconds")
     istrRemove = _("Remove")
     istrStoppedRecording = _("Stopped recording")
     istrCopyToClipboard = _("Copy to clipboard")
     istrTimer = _("Timer:")
     istrDuration = _("Duration:")
+    istrRemaining = _("Remaining:")
     istrNow = _("Immediate")
     istrPlay = _("Play")
     istrPause = _("Pause")
