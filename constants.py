@@ -2,7 +2,6 @@
 import os
 import gtk
 from gettext import gettext as gt
-from gettext import ngettext
 import hippo
 
 import sugar.graphics.style
@@ -171,7 +170,6 @@ class Constants:
     istrPreferences = _("Preferences")
     istrFreeSpace = _("Free space:")
     #TRANS: 7 photos
-    istrNumPhotos = ngettext("%(1)s photo", "%(1)s photos")
     istrBitrate = _("Bitrate")
     istrMaxBitrate = _("Maximum Bitrate")
     istrMinBitrate = _("Minumum Bitrate")
