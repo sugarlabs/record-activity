@@ -34,7 +34,6 @@ pygtk.require('2.0')
 import gc
 import math
 import time
-from time import strftime
 import gobject
 import operator
 

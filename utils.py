@@ -78,7 +78,7 @@ def scaleSvgToDim( handle, dim ):
 
 
 def getDateString( when ):
-    return strftime( "%a, %b %d, %I:%M:%S %p", time.localtime(when) )
+    return strftime( "%c", time.localtime(when) )
 
 
 def grayScalePixBuf2( pb, copy ):
