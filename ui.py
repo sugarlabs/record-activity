@@ -54,6 +54,7 @@ from p5_button import Polygon
 from p5_button import Button
 import glive
 from glive import LiveVideoWindow
+from glivex import SlowLiveVideoWindow
 from gplay import PlayVideoWindow
 from recorded import Recorded
 from button import RecdButton
@@ -451,6 +452,14 @@ class UI:
         self.liveVideoWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
         self.liveVideoWindow.connect("visibility-notify-event", self._visibleNotifyCb)
 
+        self.slowLiveVideoWindow = SlowLiveVideoWindow(Constants.colorBlack.gColor)
+        self.addToWindowStack( self.slowLiveVideoWindow, self.windowStack[len(self.windowStack)-1] )
+        self.slowLiveVideoWindow.set_glivex(self.ca.glivex)
+        self.slowLiveVideoWindow.set_events(gtk.gdk.BUTTON_RELEASE_MASK)
+        self.slowLiveVideoWindow.connect("button_release_event", self._liveButtonReleaseCb)
+        self.slowLiveVideoWindow.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+        self.slowLiveVideoWindow.connect("visibility-notify-event", self._visibleNotifyCb)
+
         self.recordWindow = RecordWindow(self)
         self.addToWindowStack( self.recordWindow, self.windowStack[len(self.windowStack)-1] )
 
@@ -593,6 +602,7 @@ class UI:
         self.moveWinOffscreen( self.maxWindow )
         self.moveWinOffscreen( self.pipBgdWindow )
         self.moveWinOffscreen( self.infWindow )
+        self.moveWinOffscreen( self.slowLiveVideoWindow )
 
         if (self.FULLSCREEN):
             self.moveWinOffscreen( self.recordWindow )
@@ -788,7 +798,6 @@ class UI:
             img = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
             self.livePhotoCanvas.setImage( img )
 
-            self.ca.glive.thumb_play()
             self.LIVEMODE = False
             self.updateVideoComponents()
 
@@ -882,6 +891,7 @@ class UI:
 
     def _liveButtonReleaseCb(self, widget, event):
         self.ca.gplay.stop()
+        self.ca.glivex.stop()
         self.ca.glive.play()
         self.resumeLiveVideo()
 
@@ -1007,6 +1017,7 @@ class UI:
             return
 
         self.liveVideoWindow.set_glive(self.ca.glive)
+        self.ca.glivex.stop()
         self.ca.glive.play()
 
 
@@ -1388,7 +1399,7 @@ class UI:
                 pos.append({"position":"inf", "window":self.infWindow} )
             elif (self.ca.m.MODE == Constants.MODE_VIDEO):
                 pos.append({"position":"pgd", "window":self.pipBgdWindow} )
-                pos.append({"position":"pip", "window":self.liveVideoWindow} )
+                pos.append({"position":"pip", "window":self.slowLiveVideoWindow} )
                 pos.append({"position":"inb", "window":self.playOggWindow} )
                 pos.append({"position":"inf", "window":self.infWindow} )
             elif (self.ca.m.MODE == Constants.MODE_AUDIO):
@@ -1420,7 +1431,7 @@ class UI:
                 else:
                     pos.append({"position":"img", "window":self.playOggWindow} )
                     pos.append({"position":"pgd", "window":self.pipBgdWindow} )
-                    pos.append({"position":"pip", "window":self.liveVideoWindow} )
+                    pos.append({"position":"pip", "window":self.slowLiveVideoWindow} )
                     if (not self.MESHING):
                         pos.append({"position":"max", "window":self.maxWindow} )
                         pos.append({"position":"scr", "window":self.scrubWindow} )
@@ -1481,7 +1492,7 @@ class UI:
         elif (self.ca.m.MODE == Constants.MODE_VIDEO):
             if (not self.LIVEMODE):
                 pos.append({"position":"pgd", "window":self.pipBgdWindow} )
-                pos.append({"position":"pip", "window":self.liveVideoWindow} )
+                pos.append({"position":"pip", "window":self.slowLiveVideoWindow} )
                 if (not self.MESHING):
                     pos.append({"position":"max", "window":self.maxWindow} )
                     pos.append({"position":"scr", "window":self.scrubWindow} )
@@ -1653,7 +1664,6 @@ class UI:
 
 
     def showAudio( self, recd ):
-        self.ca.glive.thumb_play()
         self.LIVEMODE = False
 
         #if (recd != self.shownRecd):
@@ -1700,16 +1710,18 @@ class UI:
         if (not downloading):
             mediaFilepath = recd.getMediaFilepath()
             if (mediaFilepath != None):
-                self.ca.glive.thumb_play(use_fallback=True)
                 logger.debug('showVideo2 file=%s' % mediaFilepath)
+                self.ca.glive.stop()
+                self.ca.glivex.play()
                 videoUrl = "file://" + str( mediaFilepath )
                 self.ca.gplay.setLocation(videoUrl)
                 self.scrubWindow.doPlay()
                 ableToShowVideo = True
 
         if (not ableToShowVideo):
-            self.ca.glive.thumb_play(use_fallback=True)
             # FIXME is this correct?
+            self.ca.glive.stop()
+            self.ca.glivex.play()
             thumbFilepath = recd.getThumbFilepath( )
             logger.debug('showVideo3 file=%s' % thumbFilepath)
             thumbUrl = "file://" + str( thumbFilepath )

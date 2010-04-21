@@ -99,10 +99,7 @@ class Gplay:
 
     def play(self):
         if not self.player.props.video_sink:
-            if self.ca.glive.fallback:
-                sink = gst.element_factory_make('ximagesink')
-            else:
-                sink = gst.element_factory_make('xvimagesink')
+            sink = gst.element_factory_make('xvimagesink')
             sink.props.force_aspect_ratio = True
             self.player.props.video_sink = sink
 
