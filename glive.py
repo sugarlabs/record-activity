@@ -121,20 +121,25 @@ class Glive:
         src = gst.element_factory_make("alsasrc", "absrc")
         srccaps = gst.Caps("audio/x-raw-int,rate=16000,channels=1,depth=16")
 
+        # without a buffer here, gstreamer struggles at the start of the
+        # recording and then the A/V sync is bad for the whole video
+        # (possibly a gstreamer/ALSA bug -- even if it gets caught up, it
+        # should be able to resync without problem)
+        queue = gst.element_factory_make("queue")
+        queue.set_property("leaky", True) # prefer fresh data
+
         enc = gst.element_factory_make("wavenc", "abenc")
 
         sink = gst.element_factory_make("filesink", "absink")
         sink.set_property("location", os.path.join(Instance.instancePath, "output.wav"))
 
         self.audiobin = gst.Bin("audiobin")
-        self.audiobin.add(src, enc, sink)
+        self.audiobin.add(src, queue, enc, sink)
 
-        src.link(enc, srccaps)
-        enc.link(sink)
+        src.link(queue, srccaps)
+        gst.element_link_many(queue, enc, sink)
 
     def createVideoBin ( self ):
-        queue = gst.element_factory_make("queue", "vbqueue")
-
         scale = gst.element_factory_make("videoscale", "vbscale")
 
         scalecapsfilter = gst.element_factory_make("capsfilter", "scalecaps")
@@ -153,14 +158,13 @@ class Glive:
         sink.set_property("location", os.path.join(Instance.instancePath, "output.ogg"))
 
         self.videobin = gst.Bin("videobin")
-        self.videobin.add(queue, scale, scalecapsfilter, colorspace, enc, mux, sink)
+        self.videobin.add(scale, scalecapsfilter, colorspace, enc, mux, sink)
 
-        queue.link(scale)
         scale.link_pads(None, scalecapsfilter, "sink")
         scalecapsfilter.link_pads("src", colorspace, None)
         gst.element_link_many(colorspace, enc, mux, sink)
 
-        pad = queue.get_static_pad("sink")
+        pad = scale.get_static_pad("sink")
         self.videobin.add_pad(gst.GhostPad("sink", pad))
 
     def cfgVideoBin (self, quality, width, height):
@@ -182,6 +186,11 @@ class Glive:
 
         tee = gst.element_factory_make("tee", "tee")
         queue = gst.element_factory_make("queue", "dispqueue")
+
+        # prefer fresh frames
+        queue.set_property("leaky", True)
+        queue.set_property("max-size-buffers", 2)
+
         self.pipeline.add(src, rate, tee, queue)
         src.link(rate)
         rate.link(tee, ratecaps)
