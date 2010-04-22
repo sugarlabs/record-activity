@@ -182,11 +182,23 @@ class Glive:
 
         tee = gst.element_factory_make("tee", "tee")
         queue = gst.element_factory_make("queue", "dispqueue")
-        xvsink = gst.element_factory_make("xvimagesink", "xvsink")
-        self.pipeline.add(src, rate, tee, queue, xvsink)
+        self.pipeline.add(src, rate, tee, queue)
         src.link(rate)
         rate.link(tee, ratecaps)
-        gst.element_link_many(tee, queue, xvsink)
+        gst.element_link_many(tee, queue)
+
+        xvsink = gst.element_factory_make("xvimagesink", "xvsink")
+        xv_available = xvsink.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
+        xvsink.set_state(gst.STATE_NULL)
+
+        if xv_available:
+            self.pipeline.add(xvsink)
+            queue.link(xvsink)
+        else:
+            cspace = gst.element_factory_make("ffmpegcolorspace")
+            xsink = gst.element_factory_make("ximagesink")
+            self.pipeline.add(cspace, xsink)
+            gst.element_link_many(queue, cspace, xsink)
 
     def thumbPipe(self):
         return self.thumbPipes[ len(self.thumbPipes)-1 ]
