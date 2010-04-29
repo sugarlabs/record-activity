@@ -406,14 +406,16 @@ class Glive:
             OGG_TRAITS[quality]['width'],
             OGG_TRAITS[quality]['height'])
 
-        pad = self.videobin.get_static_pad("sink")
-        pad.set_blocked_async(True, self.blockedCb, None)
+        # If we use pad blocking and adjust the pipeline on-the-fly, the
+        # resultant video has bad A/V sync :(
+        # If we pause the pipeline while adjusting it, the A/V sync is better
+        # but not perfect :(
+        # so we stop the whole thing while reconfiguring to get the best results
+        self.pipeline.set_state(gst.STATE_NULL)
         self.pipeline.add(self.videobin)
-        self.videobin.set_state(gst.STATE_PLAYING)
         self.pipeline.get_by_name("tee").link(self.videobin)
-        pad.set_blocked_async(False, self.blockedCb, None)
         self.pipeline.add(self.audiobin)
-        self.audiobin.set_state(gst.STATE_PLAYING)
+        self.pipeline.set_state(gst.STATE_PLAYING)
 
     def startRecordingAudio(self):
         self.audioPixbuf = None
