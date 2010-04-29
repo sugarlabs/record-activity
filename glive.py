@@ -181,7 +181,14 @@ class Glive:
         except:
             pass
 
-        rate = gst.element_factory_make("videorate", "vbrate")
+        # important to place the framerate limit directly on the v4l2src
+        # so that it gets communicated all the way down to the camera level
+        srccaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
+
+        # the XO-1.5 camera framerate limit increases image quality but
+        # still delivers way too many frames. add a gstreamer-level filter
+        # to keep the frame rate sensible.
+        rate = gst.element_factory_make("videorate")
         ratecaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
 
         tee = gst.element_factory_make("tee", "tee")
@@ -192,9 +199,9 @@ class Glive:
         queue.set_property("max-size-buffers", 2)
 
         self.pipeline.add(src, rate, tee, queue)
-        src.link(rate)
+        src.link(rate, srccaps)
         rate.link(tee, ratecaps)
-        gst.element_link_many(tee, queue)
+        tee.link(queue)
 
         xvsink = gst.element_factory_make("xvimagesink", "xvsink")
         xv_available = xvsink.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE

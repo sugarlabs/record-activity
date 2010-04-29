@@ -72,6 +72,13 @@ class GliveX:
         except:
             pass
 
+        # important to place the framerate limit directly on the v4l2src
+        # so that it gets communicated all the way down to the camera level
+        srccaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
+
+        # the XO-1.5 camera framerate limit increases image quality but
+        # still delivers way too many frames. add a gstreamer-level filter
+        # to keep the frame rate sensible.
         rate = gst.element_factory_make("videorate", "vbrate")
         ratecaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
 
@@ -84,7 +91,7 @@ class GliveX:
         colorspace = gst.element_factory_make("ffmpegcolorspace", "colorspace")
         xsink = gst.element_factory_make("ximagesink", "xsink")
         self.pipeline.add(src, rate, queue, scale, colorspace, xsink)
-        src.link(rate)
+        src.link(rate, srccaps)
         rate.link(queue, ratecaps)
         queue.link(scale)
         scale.link(colorspace, scalecaps)
