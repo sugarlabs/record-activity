@@ -119,6 +119,15 @@ class Glive:
 
     def createAudioBin ( self ):
         src = gst.element_factory_make("alsasrc", "absrc")
+
+        # attempt to use direct access to the 0,0 device, solving some A/V
+        # sync issues
+        src.set_property("device", "plughw:0,0")
+        hwdev_available = src.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
+        src.set_state(gst.STATE_NULL)
+        if not hwdev_available:
+            src.set_property("device", "default")
+
         srccaps = gst.Caps("audio/x-raw-int,rate=16000,channels=1,depth=16")
 
         # without a buffer here, gstreamer struggles at the start of the
