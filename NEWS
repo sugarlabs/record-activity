@@ -1,3 +1,15 @@
+76
+
+* Switch to Daniel Drake's branch
+  Restore the v60 rewrite to use a single pipeline, tweaking at runtime
+  when necessary. This improves responsivity of the application, and results
+  in the activity behaving reliably again.
+* This version requires gstreamer-0.10.20
+
+68..75
+
+* Range was preserved for possible sucrose-0.82 branch updates
+
 67
 
 * Fix 0sugar "Cannot find cached 0sugar-launch implementation." isuue
