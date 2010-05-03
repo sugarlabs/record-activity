@@ -130,6 +130,9 @@ class Glive:
 
         srccaps = gst.Caps("audio/x-raw-int,rate=16000,channels=1,depth=16")
 
+        # guarantee perfect stream, important for A/V sync
+        rate = gst.element_factory_make("audiorate")
+
         # without a buffer here, gstreamer struggles at the start of the
         # recording and then the A/V sync is bad for the whole video
         # (possibly a gstreamer/ALSA bug -- even if it gets caught up, it
@@ -143,10 +146,10 @@ class Glive:
         sink.set_property("location", os.path.join(Instance.instancePath, "output.wav"))
 
         self.audiobin = gst.Bin("audiobin")
-        self.audiobin.add(src, queue, enc, sink)
+        self.audiobin.add(src, rate, queue, enc, sink)
 
-        src.link(queue, srccaps)
-        gst.element_link_many(queue, enc, sink)
+        src.link(rate, srccaps)
+        gst.element_link_many(rate, queue, enc, sink)
 
     def createVideoBin ( self ):
         scale = gst.element_factory_make("videoscale", "vbscale")
@@ -194,9 +197,12 @@ class Glive:
         # so that it gets communicated all the way down to the camera level
         srccaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
 
-        # the XO-1.5 camera framerate limit increases image quality but
-        # still delivers way too many frames. add a gstreamer-level filter
-        # to keep the frame rate sensible.
+        # we attempt to limit the framerate on the v4l2src directly, but we
+        # can't trust this: perhaps we are falling behind in our capture,
+        # or maybe the kernel driver doesn't provide the exact framerate.
+        # the videorate element guarantees a perfect framerate and is important
+        # for A/V sync because OGG does not store timestamps, it just stores
+        # the FPS value.
         rate = gst.element_factory_make("videorate")
         ratecaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
 
