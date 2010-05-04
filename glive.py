@@ -413,6 +413,7 @@ class Glive:
             return
 
         self.record = True
+        self.ogg_quality = quality
         self.cfgVideoBin (OGG_TRAITS[quality]['quality'],
             OGG_TRAITS[quality]['width'],
             OGG_TRAITS[quality]['height'])
@@ -530,7 +531,9 @@ class Glive:
             muxFilepath = os.path.join(Instance.instancePath, "mux.ogg") #ogv
             os.remove( wavFilepath )
             os.remove( oggFilepath )
-            self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath), self.VIDEO_WIDTH_SMALL, self.VIDEO_HEIGHT_SMALL)
+            ogg_w = OGG_TRAITS[self.ogg_quality]['width']
+            ogg_h = OGG_TRAITS[self.ogg_quality]['height']
+            self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath), ogg_w, ogg_h)
             self.ca.m.stoppedRecordingVideo()
             return False
         else:
