@@ -478,7 +478,7 @@ class Glive:
         wavFilepath = os.path.join(Instance.instancePath, "output.wav")
         muxFilepath = os.path.join(Instance.instancePath, "mux.ogg") #ogv
 
-        muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc ! oggdemux name=muxOggdemux ! theoradec name=muxTheoradec ! theoraenc name=muxTheoraenc ! oggmux name=muxOggmux ! filesink location=' + str(muxFilepath) + ' name=muxFilesink filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc ! wavparse name=muxWavparse ! audioconvert name=muxAudioconvert ! vorbisenc name=muxVorbisenc ! muxOggmux.')
+        muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc ! oggdemux name=muxOggdemux ! theoraparse ! oggmux name=muxOggmux ! filesink location=' + str(muxFilepath) + ' name=muxFilesink filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc ! wavparse name=muxWavparse ! audioconvert name=muxAudioconvert ! vorbisenc name=muxVorbisenc ! muxOggmux.')
         taglist = self.getTags(Constants.TYPE_VIDEO)
         vorbisEnc = muxline.get_by_name('muxVorbisenc')
         vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
