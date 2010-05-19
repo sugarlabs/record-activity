@@ -152,6 +152,8 @@ class Glive:
         gst.element_link_many(rate, queue, enc, sink)
 
     def createVideoBin ( self ):
+        queue = gst.element_factory_make("queue")
+
         scale = gst.element_factory_make("videoscale", "vbscale")
 
         scalecapsfilter = gst.element_factory_make("capsfilter", "scalecaps")
@@ -170,13 +172,14 @@ class Glive:
         sink.set_property("location", os.path.join(Instance.instancePath, "output.ogg"))
 
         self.videobin = gst.Bin("videobin")
-        self.videobin.add(scale, scalecapsfilter, colorspace, enc, mux, sink)
+        self.videobin.add(queue, scale, scalecapsfilter, colorspace, enc, mux, sink)
 
+        queue.link(scale)
         scale.link_pads(None, scalecapsfilter, "sink")
         scalecapsfilter.link_pads("src", colorspace, None)
         gst.element_link_many(colorspace, enc, mux, sink)
 
-        pad = scale.get_static_pad("sink")
+        pad = queue.get_static_pad("sink")
         self.videobin.add_pad(gst.GhostPad("sink", pad))
 
     def cfgVideoBin (self, quality, width, height):
