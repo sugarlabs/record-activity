@@ -90,6 +90,10 @@ class GliveX:
         scalecaps = gst.Caps('video/x-raw-yuv,width='+str(ui.UI.dim_PIPW)+',height='+str(ui.UI.dim_PIPH))
         colorspace = gst.element_factory_make("ffmpegcolorspace", "colorspace")
         xsink = gst.element_factory_make("ximagesink", "xsink")
+
+        # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
+        xsink.set_property("sync", False)
+
         self.pipeline.add(src, rate, queue, scale, colorspace, xsink)
         src.link(rate, srccaps)
         rate.link(queue, ratecaps)

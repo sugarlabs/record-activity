@@ -223,11 +223,18 @@ class Glive:
         xvsink.set_state(gst.STATE_NULL)
 
         if xv_available:
+            # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
+            xvsink.set_property("sync", False)
+
             self.pipeline.add(xvsink)
             queue.link(xvsink)
         else:
             cspace = gst.element_factory_make("ffmpegcolorspace")
             xsink = gst.element_factory_make("ximagesink")
+
+            # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
+            xsink.set_property("sync", False)
+
             self.pipeline.add(cspace, xsink)
             gst.element_link_many(queue, cspace, xsink)
 
