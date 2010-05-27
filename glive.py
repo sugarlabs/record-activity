@@ -51,9 +51,24 @@ THUMB_STUB = gtk.gdk.pixbuf_new_from_file(
 
 def _does_camera_present():
     v4l2src = gst.element_factory_make('v4l2src')
-    return v4l2src.props.device_name is not None
+    if v4l2src.props.device_name is None:
+        return False, False
 
-camera_presents = _does_camera_present()
+    # Figure out if we can place a framerate limit on the v4l2 element, which
+    # in theory will make it all the way down to the hardware.
+    # ideally, we should be able to do this by checking caps. However, I can't
+    # find a way to do this (at this time, XO-1 cafe camera driver doesn't
+    # support framerate changes, but gstreamer caps suggest otherwise)
+    pipeline = gst.Pipeline()
+    caps = gst.Caps("video/x-raw-yuv,framerate=10/1")
+    fsink = gst.element_factory_make("fakesink")
+    pipeline.add(v4l2src, fsink)
+    v4l2src.link(fsink, caps)
+    can_limit_framerate = pipeline.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
+    pipeline.set_state(gst.STATE_NULL)
+    return True, can_limit_framerate
+
+camera_presents, can_limit_framerate = _does_camera_present()
 
 class Glive:
     def __init__(self, pca):
@@ -196,9 +211,13 @@ class Glive:
         except:
             pass
 
-        # important to place the framerate limit directly on the v4l2src
-        # so that it gets communicated all the way down to the camera level
-        srccaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
+        # if possible, it is important to place the framerate limit directly
+        # on the v4l2src so that it gets communicated all the way down to the
+        # camera level
+        if can_limit_framerate:
+            srccaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
+        else:
+            srccaps = gst.Caps('video/x-raw-yuv')
 
         # we attempt to limit the framerate on the v4l2src directly, but we
         # can't trust this: perhaps we are falling behind in our capture,

@@ -46,6 +46,7 @@ from constants import Constants
 import record
 import utils
 import ui
+import glive
 
 class GliveX:
     def __init__(self, pca):
@@ -72,9 +73,13 @@ class GliveX:
         except:
             pass
 
-        # important to place the framerate limit directly on the v4l2src
-        # so that it gets communicated all the way down to the camera level
-        srccaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
+        # if possible, important to place the framerate limit directly on the
+        # v4l2src so that it gets communicated all the way down to the camera
+        # level
+        if glive.can_limit_framerate:
+            srccaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
+        else:
+            srccaps = gst.Caps('video/x-raw-yuv')
 
         # the XO-1.5 camera framerate limit increases image quality but
         # still delivers way too many frames. add a gstreamer-level filter
