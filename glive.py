@@ -34,12 +34,15 @@ import gobject
 gobject.threads_init()
 
 from sugar.activity.activity import get_bundle_path
+import logging
 
 from instance import Instance
 from constants import Constants
 import record
 import utils
 import ui
+
+logger = logging.getLogger('record:glive.py')
 
 OGG_TRAITS = {
         0: { 'width': 160, 'height': 120, 'quality': 16 },
@@ -152,8 +155,11 @@ class Glive:
         # recording and then the A/V sync is bad for the whole video
         # (possibly a gstreamer/ALSA bug -- even if it gets caught up, it
         # should be able to resync without problem)
-        queue = gst.element_factory_make("queue")
+        queue = gst.element_factory_make("queue", "audioqueue")
         queue.set_property("leaky", True) # prefer fresh data
+        queue.set_property("max-size-time", 5000000000) # 5 seconds
+        queue.set_property("max-size-buffers", 500)
+        queue.connect("overrun", self.log_queue_overrun)
 
         enc = gst.element_factory_make("wavenc", "abenc")
 
@@ -167,7 +173,10 @@ class Glive:
         gst.element_link_many(rate, queue, enc, sink)
 
     def createVideoBin ( self ):
-        queue = gst.element_factory_make("queue")
+        queue = gst.element_factory_make("queue", "videoqueue")
+        queue.set_property("max-size-time", 5000000000) # 5 seconds
+        queue.set_property("max-size-bytes", 33554432) # 32mb
+        queue.connect("overrun", self.log_queue_overrun)
 
         scale = gst.element_factory_make("videoscale", "vbscale")
 
@@ -260,6 +269,13 @@ class Glive:
             self.pipeline.add(cspace, xsink)
             gst.element_link_many(queue, cspace, xsink)
 
+    def log_queue_overrun(self, queue):
+        cbuffers = queue.get_property("current-level-buffers")
+        cbytes = queue.get_property("current-level-bytes")
+        ctime = queue.get_property("current-level-time")
+        logger.error("Buffer overrun in %s (%d buffers, %d bytes, %d time)"
+            % (queue.get_name(), cbuffers, cbytes, ctime))
+ 
     def thumbPipe(self):
         return self.thumbPipes[ len(self.thumbPipes)-1 ]
 
