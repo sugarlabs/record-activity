@@ -149,7 +149,6 @@ class Constants:
     istrFramesPerSecond = _("%(1)s frames per second")
     istrQuality = _("Quality")
     istrDefault = _("Default")
-    istrBestQuality = _("Best")
     istrHighQuality = _("High")
     istrLowQuality = _("Low")
     istrLargeFile = _("Large file")

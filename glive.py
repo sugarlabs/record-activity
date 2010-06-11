@@ -46,8 +46,7 @@ logger = logging.getLogger('record:glive.py')
 
 OGG_TRAITS = {
         0: { 'width': 160, 'height': 120, 'quality': 16 },
-        1: { 'width': 400, 'height': 300, 'quality': 16 },
-        2: { 'width': 640, 'height': 480, 'quality': 32 } }
+        1: { 'width': 400, 'height': 300, 'quality': 16 } }
 
 THUMB_STUB = gtk.gdk.pixbuf_new_from_file(
     os.path.join(get_bundle_path(), 'gfx', 'stub.png'))

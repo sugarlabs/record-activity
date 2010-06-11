@@ -2353,7 +2353,6 @@ class VideoToolbar(gtk.Toolbar):
                 label_text=Constants.istrQuality+':')
         self.quality.combo.append_text(Constants.istrLowQuality)
         self.quality.combo.append_text(Constants.istrHighQuality)
-        self.quality.combo.append_text(Constants.istrBestQuality)
         self.quality.combo.set_active(0)
         self.insert(self.quality, -1 )
 
