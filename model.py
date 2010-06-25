@@ -388,7 +388,7 @@ class Model:
 
 
     def createNewRecordedMd5Sums( self, recd ):
-        recd.thumbMd5 = recd.mediaMd5 = uuid.uuid4()
+        recd.thumbMd5 = recd.mediaMd5 = str(uuid.uuid4())
 
         #load the thumbfile
         thumbFile = os.path.join(Instance.instancePath, recd.thumbFilename)
