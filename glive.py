@@ -480,8 +480,14 @@ class Glive:
         self._takePhoto()
 
         self.record = True
+
+        # we should be able to add the audiobin on the fly, but unfortunately
+        # this results in several seconds of silence being added at the start
+        # of the recording. So we stop the whole pipeline while adjusting it.
+        # SL#2040
+        self.pipeline.set_state(gst.STATE_NULL)
         self.pipeline.add(self.audiobin)
-        self.audiobin.set_state(gst.STATE_PLAYING)
+        self.pipeline.set_state(gst.STATE_PLAYING)
 
     def stopRecordingVideo(self):
         if not camera_presents:
