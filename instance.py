@@ -10,11 +10,7 @@ import record
 
 class Instance:
     key = profile.get_pubkey()
-    if hasattr(util, '_sha_data'):
-        # sugar-0.82 and previous
-        keyHash = util._sha_data(key)
-    else:
-        keyHash = util.sha_data(key)
+    keyHash = util.sha_data(key)
 
     keyHashPrintable = util.printable_hash(keyHash)
     nickName = profile.get_nick_name()

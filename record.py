@@ -357,7 +357,7 @@ class Record(activity.Activity):
         buds = self._shared_activity.get_joined_buddies()
         for i in range (0, len(buds)):
             nextBudObj = buds[i]
-            nextBud = util._sha_data(nextBudObj.props.key)
+            nextBud = util.sha_data(nextBudObj.props.key)
             nextBud = util.printable_hash(nextBud)
             if (recd.triedMeshBuddies.count(nextBud) > 0):
                 self.__class__.log.debug('mnrrb: weve already tried bud ' + str(nextBudObj.props.nick))
@@ -368,7 +368,7 @@ class Record(activity.Activity):
 
         if (goodBudObj != None):
             goodNick = goodBudObj.props.nick
-            goodBud = util._sha_data(goodBudObj.props.key)
+            goodBud = util.sha_data(goodBudObj.props.key)
             goodBud = util.printable_hash(goodBud)
             self.meshReqRecFromBuddy(recd, goodBud, goodNick)
         else:
