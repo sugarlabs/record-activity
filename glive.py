@@ -315,8 +315,13 @@ class Glive:
         return False
 
     def stopRecordingAudio( self ):
-        self.audiobin.set_state(gst.STATE_NULL)
+        # We should be able to simply pause and remove the audiobin, but
+        # this seems to cause a gstreamer segfault. So we stop the whole
+        # pipeline while manipulating it.
+        # http://dev.laptop.org/ticket/10183
+        self.pipeline.set_state(gst.STATE_NULL)
         self.pipeline.remove(self.audiobin)
+        self.pipeline.set_state(gst.STATE_PLAYING)
         gobject.idle_add( self.stoppedRecordingAudio )
 
 
