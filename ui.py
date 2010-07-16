@@ -928,7 +928,7 @@ class UI:
 
         self.showLiveVideoTags()
         self.LIVEMODE = True
-        self.startLiveVideo( False )
+        self.startLiveVideo()
         self.updateVideoComponents()
 
 
@@ -994,7 +994,7 @@ class UI:
 
         #set up the x & xv x-ition (if need be)
         self.ca.gplay.stop()
-        self.startLiveVideo( True )
+        self.startLiveVideo()
 
         bottomKid = self.bottomCenter.get_child()
         if (bottomKid != None):
@@ -1007,16 +1007,7 @@ class UI:
         self.resetWidgetFadeTimer()
 
 
-    def startLiveVideo(self, force):
-        #We need to know which window and which pipe here
-
-        #if returning from another activity, active won't be false and needs to be to get started
-        if (self.ca.glive.window == self.liveVideoWindow
-            and self.ca.props.active
-            and not force):
-            return
-
-        self.liveVideoWindow.set_glive(self.ca.glive)
+    def startLiveVideo(self):
         self.ca.glivex.stop()
         self.ca.glive.play()
 
@@ -1741,7 +1732,7 @@ class UI:
                 self.livePhotoCanvas.setImage( None )
             elif (recd.type == Constants.TYPE_VIDEO):
                 self.ca.gplay.stop()
-                self.startLiveVideo( False )
+                self.startLiveVideo()
             elif (recd.type == Constants.TYPE_AUDIO):
                 self.livePhotoCanvas.setImage( None )
                 self.startLiveAudio()
@@ -1756,8 +1747,6 @@ class UI:
     def startLiveAudio( self ):
         self.ca.m.setUpdating(True)
         self.ca.gplay.stop()
-
-        self.liveVideoWindow.set_glive(self.ca.glive)
 
         self.showLiveVideoTags()
         self.LIVEMODE = True
