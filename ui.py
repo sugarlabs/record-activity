@@ -63,6 +63,7 @@ import record
 import aplay
 from tray import HTray
 from toolbarcombobox import ToolComboBox
+import hw
 
 class UI:
 
@@ -2341,7 +2342,10 @@ class VideoToolbar(gtk.Toolbar):
         self.quality = ToolComboBox(combo=combo,
                 label_text=Constants.istrQuality+':')
         self.quality.combo.append_text(Constants.istrLowQuality)
-        self.quality.combo.append_text(Constants.istrHighQuality)
+        if hw.get_xo_version() != 1:
+            # Disable High quality on XO-1. The system simply isn't beefy
+            # enough for recording to work well.
+            self.quality.combo.append_text(Constants.istrHighQuality)
         self.quality.combo.set_active(0)
         self.insert(self.quality, -1 )
 
