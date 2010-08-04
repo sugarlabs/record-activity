@@ -2,232 +2,254 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 17:10-0400\n"
-"PO-Revision-Date: 2009-07-29 02:01-0400\n"
-"Last-Translator: Victor Alfonso Parada Suarez <deathvaps@gmail.com>\n"
+"POT-Creation-Date: 2010-04-20 17:58+0000\n"
+"PO-Revision-Date: 2010-08-04 21:00+0200\n"
+"Last-Translator: Daniel Drake <dsd@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.3\n"
 
-#: activity/activity.info:2 constants.py:112
+#: activity/activity.info:2
+#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "Grabar"
 
-#: constants.py:113
+#: /home/sugar/src/activities/record.activity/constants.py:21
+#, python-format
+msgid "%(1)s minute"
+msgid_plural "%(1)s minutes"
+msgstr[0] "%(1)s minuto"
+msgstr[1] "%(1)s minutos"
+
+#: /home/sugar/src/activities/record.activity/constants.py:25
+#, python-format
+msgid "%(1)s second"
+msgid_plural "%(1)s seconds"
+msgstr[0] "%(1)s segundo"
+msgstr[1] "%(1)s segundos"
+
+#: /home/sugar/src/activities/record.activity/constants.py:123
 msgid "Photo"
 msgstr "Foto"
 
-#: constants.py:114
+#: /home/sugar/src/activities/record.activity/constants.py:124
 msgid "Video"
 msgstr "Video"
 
-#: constants.py:115
+#: /home/sugar/src/activities/record.activity/constants.py:125
 msgid "Audio"
 msgstr "Audio"
 
-#: constants.py:116
+#: /home/sugar/src/activities/record.activity/constants.py:126
 msgid "Time Lapse"
 msgstr "Lapso de tiempo"
 
-#: constants.py:117
+#: /home/sugar/src/activities/record.activity/constants.py:127
 msgid "Animation"
 msgstr "Animación"
 
-#: constants.py:118
+#: /home/sugar/src/activities/record.activity/constants.py:128
 msgid "Panorama"
 msgstr "Panorama"
 
-#: constants.py:119
+#: /home/sugar/src/activities/record.activity/constants.py:129
 msgid "Interview"
 msgstr "Entrevista"
 
 # TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:121
+#: /home/sugar/src/activities/record.activity/constants.py:131
 #, python-format
 msgid "%(1)s by %(2)s"
 msgstr "%(1)s por %(2)s"
 
-#: constants.py:122
+#: /home/sugar/src/activities/record.activity/constants.py:132
 msgid "Title:"
 msgstr "Título:"
 
 # Recorder seria el que hizo la grabacion...? En que difiere de "Author".
 # Respuesta: No hay diferencia válida para una traducción. Es más, en una cámara de video VHS se sustituye Recorder por Autor.
-#: constants.py:123
+#: /home/sugar/src/activities/record.activity/constants.py:133
 msgid "Recorder:"
 msgstr "Autor:"
 
-#: constants.py:124
+#: /home/sugar/src/activities/record.activity/constants.py:134
 msgid "Date:"
 msgstr "Fecha:"
 
-#: constants.py:125
+#: /home/sugar/src/activities/record.activity/constants.py:135
 msgid "Tags:"
 msgstr "Etiquetas:"
 
-#: constants.py:126
+#: /home/sugar/src/activities/record.activity/constants.py:136
 msgid "Saving"
 msgstr "Guardando"
 
-#: constants.py:127
+#: /home/sugar/src/activities/record.activity/constants.py:137
 msgid "Finished recording"
 msgstr "Grabación terminada"
 
-#: constants.py:128
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1)s horas, %(2)s minutos, %(3)s segundos restantes"
-
-#: constants.py:129
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s minutos, %(2)s segundos restantes"
-
-#: constants.py:130
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "%(1)s horas restantes"
-
-#: constants.py:131
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "%(1)s minutos restantes"
-
-#: constants.py:132
-#, python-format
-msgid "%(1)s seconds remaining"
-msgstr "%(1)s segundos restantes"
-
-# TRANS: 7 photos
-#: constants.py:133
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s horas"
-
-#: constants.py:134
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s minutos"
-
-#: constants.py:135
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s segundos"
-
-#: constants.py:136
+#: /home/sugar/src/activities/record.activity/constants.py:138
 msgid "Remove"
 msgstr "Eliminar"
 
-#: constants.py:137
+#: /home/sugar/src/activities/record.activity/constants.py:139
 msgid "Stopped recording"
 msgstr "Grabación detenida"
 
-#: constants.py:138
+#: /home/sugar/src/activities/record.activity/constants.py:140
 msgid "Copy to clipboard"
 msgstr "Copiar al portapapel"
 
 # Cronometro is more readily understood as a timing device.
-#: constants.py:139
+#: /home/sugar/src/activities/record.activity/constants.py:141
 msgid "Timer:"
-msgstr "Cronometro"
+msgstr "Cronómetro:"
 
 # duracion o largo / longitud? ie: largometraje
-#: constants.py:140
+#: /home/sugar/src/activities/record.activity/constants.py:142
 msgid "Duration:"
 msgstr "Duración:"
 
+#: /home/sugar/src/activities/record.activity/constants.py:143
+msgid "Remaining:"
+msgstr "Restante:"
+
 # contexto? -- xavi
-#: constants.py:141
+#: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
 msgstr "Inmediato"
 
-#: constants.py:142
+#: /home/sugar/src/activities/record.activity/constants.py:145
 msgid "Play"
 msgstr "Reproducir"
 
-#: constants.py:143
+#: /home/sugar/src/activities/record.activity/constants.py:146
 msgid "Pause"
 msgstr "Pausa"
 
-#: constants.py:144
+#: /home/sugar/src/activities/record.activity/constants.py:147
 msgid "Add frame"
 msgstr "Agregar cuadro"
 
-#: constants.py:145
+#: /home/sugar/src/activities/record.activity/constants.py:148
 msgid "Remove frame"
 msgstr "Eliminar cuadro"
 
-#: constants.py:146
+#: /home/sugar/src/activities/record.activity/constants.py:149
 #, python-format
 msgid "%(1)s frames per second"
 msgstr "%(1)s cuadros por segundo"
 
-#: constants.py:147
+#: /home/sugar/src/activities/record.activity/constants.py:150
 msgid "Quality"
 msgstr "Calidad"
 
-#: constants.py:148
+#: /home/sugar/src/activities/record.activity/constants.py:151
 msgid "Default"
 msgstr "Predeterminada"
 
-#: constants.py:149
+#: /home/sugar/src/activities/record.activity/constants.py:152
 msgid "Best"
 msgstr "Óptima"
 
-#: constants.py:150
+#: /home/sugar/src/activities/record.activity/constants.py:153
 msgid "High"
 msgstr "Alta"
 
-#: constants.py:151
+#: /home/sugar/src/activities/record.activity/constants.py:154
 msgid "Low"
 msgstr "Baja"
 
-#: constants.py:152
+#: /home/sugar/src/activities/record.activity/constants.py:155
 msgid "Large file"
 msgstr "Archivo grande"
 
-#: constants.py:153
+#: /home/sugar/src/activities/record.activity/constants.py:156
 msgid "Small file"
 msgstr "Archivo pequeño"
 
 # context? -- xavi
-#: constants.py:154
+#: /home/sugar/src/activities/record.activity/constants.py:157
 msgid "Silent"
 msgstr "Mudo"
 
-#: constants.py:155
+#: /home/sugar/src/activities/record.activity/constants.py:158
 msgid "Rotate"
 msgstr "Rotar"
 
-#: constants.py:156
+#: /home/sugar/src/activities/record.activity/constants.py:159
 msgid "Width"
 msgstr "Ancho"
 
-#: constants.py:157
+#: /home/sugar/src/activities/record.activity/constants.py:160
 msgid "Height"
 msgstr "Altura"
 
-#: constants.py:158
+#: /home/sugar/src/activities/record.activity/constants.py:161
 msgid "Click to take picture"
 msgstr "Clic para tomar foto"
 
 # se agrega la foto (siguiendo "click to take picture") o se agrega una "imagen"?
-#: constants.py:159
+#: /home/sugar/src/activities/record.activity/constants.py:162
 msgid "Click to add picture"
 msgstr "Clic para agregar una foto"
 
 # TRANS: Downloading Photo from Mary
 #. TRANS: Downloading Photo from Mary
-#: constants.py:161
+#: /home/sugar/src/activities/record.activity/constants.py:164
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
 msgstr "Descargando %(1)s desde %(2)s"
@@ -235,119 +257,143 @@ msgstr "Descargando %(1)s desde %(2)s"
 # gender issues: la foto? el archivo? lo coso? -- xavi
 # TRANS: Cannot download this Photo
 #. TRANS: Cannot download this Photo
-#: constants.py:163
+#: /home/sugar/src/activities/record.activity/constants.py:166
 #, python-format
 msgid "Cannot download this %(1)s"
 msgstr "Imposible descargar este %(1)s"
 
 # TRANS: Save Photo to:
 #. TRANS: Save Photo to:
-#: constants.py:165
+#: /home/sugar/src/activities/record.activity/constants.py:168
 #, python-format
 msgid "Save %(1)s to:"
 msgstr "Guardar %(1)s en:"
 
-#: constants.py:166
+#: /home/sugar/src/activities/record.activity/constants.py:169
 #, python-format
 msgid "Your %(1)s is full"
 msgstr "Su %(1)s está lleno"
 
-#: constants.py:167
+#: /home/sugar/src/activities/record.activity/constants.py:170
 msgid "Journal"
 msgstr "Diario"
 
-#: constants.py:168
+#: /home/sugar/src/activities/record.activity/constants.py:171
 msgid "USB"
 msgstr "USB"
 
-#: constants.py:169
+#: /home/sugar/src/activities/record.activity/constants.py:172
 msgid "SD Card"
 msgstr "Tarjeta SD"
 
-#: constants.py:170
+#: /home/sugar/src/activities/record.activity/constants.py:173
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: constants.py:171
+#: /home/sugar/src/activities/record.activity/constants.py:174
 msgid "Free space:"
 msgstr "Espacio libre:"
 
-# TRANS: 7 photos
 #. TRANS: 7 photos
-#: constants.py:173
-#, python-format
-msgid "%(1)s photos"
-msgstr "%(1)s fotos"
-
-#: constants.py:174
+#: /home/sugar/src/activities/record.activity/constants.py:176
 msgid "Bitrate"
 msgstr "Tasa de bits"
 
-#: constants.py:175
+#: /home/sugar/src/activities/record.activity/constants.py:177
 msgid "Maximum Bitrate"
 msgstr "Tasa máxima de bits"
 
-#: constants.py:176
+#: /home/sugar/src/activities/record.activity/constants.py:178
 msgid "Minumum Bitrate"
 msgstr "Tasa mínima de bits"
 
-#: constants.py:177
+#: /home/sugar/src/activities/record.activity/constants.py:179
 msgid "Manage Bitrate"
 msgstr "Manejar tasa de bits"
 
-#: constants.py:178
+#: /home/sugar/src/activities/record.activity/constants.py:180
 msgid "Border"
 msgstr "Borde"
 
-#: constants.py:179
+#: /home/sugar/src/activities/record.activity/constants.py:181
 msgid "Center"
 msgstr "Centro"
 
 # segun wikipedia esa seria la traduccion http://es.wikipedia.org/wiki/Fotograma
 # DjToXiC: Verdad, pero debería ser sustituido por Cuadros porque está en plural, en demás traducciones está como cuadros, es una palabra más larga que frame por lo tanto se puede ir de la pantalla y además es una laptop para niños, no?
-#: constants.py:180
+#: /home/sugar/src/activities/record.activity/constants.py:182
 msgid "Frames"
 msgstr "Cuadros"
 
 # "fotograma clave" is used for keyframe, but this needs to be consistent with other uses of frame.
 # DjToXiC: I agree, but "cuadros clave" is present in others translations, and it is used in Video Editors.
-#: constants.py:181
+#: /home/sugar/src/activities/record.activity/constants.py:183
 msgid "Automatic keyframe detection"
 msgstr "Detección automática de cuadros clave"
 
-#: constants.py:182
+#: /home/sugar/src/activities/record.activity/constants.py:184
 msgid "Force keyframe"
 msgstr "Forzar cuadro clave"
 
-#: constants.py:183
+#: /home/sugar/src/activities/record.activity/constants.py:185
 msgid "Keyframe frequency"
-msgstr "frecuencia de cuadros clave"
+msgstr "Frecuencia de cuadros clave"
 
-#: constants.py:184
+#: /home/sugar/src/activities/record.activity/constants.py:186
 msgid "Keyframe minimum distance"
 msgstr "Distancia mínima entre cuadros clave"
 
 # DjToXiC: La palabra "keyframe" permanecía en la traducción anterior.
-#: constants.py:185
+#: /home/sugar/src/activities/record.activity/constants.py:187
 msgid "Keyframe threshold"
 msgstr "Umbral del cuadro clave"
 
-#: constants.py:186
+#: /home/sugar/src/activities/record.activity/constants.py:188
 msgid "Noise Sensitivity"
 msgstr "Sensibilidad de ruido"
 
-#: constants.py:187
+#: /home/sugar/src/activities/record.activity/constants.py:189
 msgid "Quick"
 msgstr "Rápido"
 
 # Video sharpness is not the same as definitiion (or resolution) - Nitidez is a more accurate term here
-#: constants.py:188
+#: /home/sugar/src/activities/record.activity/constants.py:190
 msgid "Sharpness"
 msgstr "Nitidez"
 
-#: constants.py:189
+#: /home/sugar/src/activities/record.activity/constants.py:191
 msgid "Capacity"
 msgstr "Capacidad"
+
+#, python-format
+#~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+#~ msgstr "%(1)s horas, %(2)s minutos, %(3)s segundos restantes"
+
+#, python-format
+#~ msgid "%(1)s minutes, %(2)s seconds remaining"
+#~ msgstr "%(1)s minutos, %(2)s segundos restantes"
+
+#, python-format
+#~ msgid "%(1)s hours remaining"
+#~ msgstr "%(1)s horas restantes"
+
+#, python-format
+#~ msgid "%(1)s minutes remaining"
+#~ msgstr "%(1)s minutos restantes"
+
+#, python-format
+#~ msgid "%(1)s seconds remaining"
+#~ msgstr "%(1)s segundos restantes"
+
+# TRANS: 7 photos
+#, python-format
+#~ msgid "%(1)s hours"
+#~ msgstr "%(1)s horas"
+
+# TRANS: 7 photos
+#, python-format
+#~ msgid "%(1)s photos"
+#~ msgstr "%(1)s fotos"
 
 #~ msgid "Best quality"
 #~ msgstr "Máxima calidad"
