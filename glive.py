@@ -18,18 +18,14 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-
 import os
+from gettext import gettext as _
+import time
+
 import gtk
-import pygtk
-pygtk.require('2.0')
-import sys
 import gst
-import gst.interfaces
 import pygst
 pygst.require('0.10')
-import time
-import threading
 import gobject
 gobject.threads_init()
 
@@ -37,12 +33,10 @@ from sugar.activity.activity import get_bundle_path
 import logging
 
 from instance import Instance
-from constants import Constants
-import record
+import constants
 import utils
-import ui
 
-logger = logging.getLogger('record:glive.py')
+logger = logging.getLogger('glive')
 
 OGG_TRAITS = {
         0: { 'width': 160, 'height': 120, 'quality': 16 },
@@ -51,70 +45,70 @@ OGG_TRAITS = {
 THUMB_STUB = gtk.gdk.pixbuf_new_from_file(
     os.path.join(get_bundle_path(), 'gfx', 'stub.png'))
 
-def _does_camera_present():
-    v4l2src = gst.element_factory_make('v4l2src')
-    if v4l2src.props.device_name is None:
-        return False, False
-
-    # Figure out if we can place a framerate limit on the v4l2 element, which
-    # in theory will make it all the way down to the hardware.
-    # ideally, we should be able to do this by checking caps. However, I can't
-    # find a way to do this (at this time, XO-1 cafe camera driver doesn't
-    # support framerate changes, but gstreamer caps suggest otherwise)
-    pipeline = gst.Pipeline()
-    caps = gst.Caps("video/x-raw-yuv,framerate=10/1")
-    fsink = gst.element_factory_make("fakesink")
-    pipeline.add(v4l2src, fsink)
-    v4l2src.link(fsink, caps)
-    can_limit_framerate = pipeline.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
-    pipeline.set_state(gst.STATE_NULL)
-    return True, can_limit_framerate
-
-camera_presents, can_limit_framerate = _does_camera_present()
-
 class Glive:
-    def __init__(self, pca):
-        self.window = None
-        self.ca = pca
+    PHOTO_MODE_PHOTO = 0
+    PHOTO_MODE_AUDIO = 1
+
+    def __init__(self, activity_obj, model):
+        self.activity = activity_obj
+        self.model = model
         self._eos_cb = None
 
-        self.playing = False
-        self.picExposureOpen = False
+        self._has_camera = False
+        self._can_limit_framerate = False
+        self._playing = False
+        self._pic_exposure_open = False
+        self._thumb_exposure_open = False
+        self._photo_mode = self.PHOTO_MODE_PHOTO
 
-        self.AUDIO_TRANSCODE_ID = 0
-        self.TRANSCODE_ID = 0
-        self.VIDEO_TRANSCODE_ID = 0
+        self._audio_transcode_handler = None
+        self._transcode_id = None
+        self._video_transcode_handler = None
+        self._thumb_handoff_handler = None
 
-        self.PHOTO_MODE_PHOTO = 0
-        self.PHOTO_MODE_AUDIO = 1
+        self._audio_pixbuf = None
 
-        self.TRANSCODE_UPDATE_INTERVAL = 200
+        self._detect_camera()
 
+        self._pipeline = gst.Pipeline("Record")
+        self._create_photobin()
+        self._create_audiobin()
+        self._create_videobin()
+        self._create_xbin()
+        self._create_pipeline()
 
-        self.VIDEO_WIDTH_SMALL = 160
-        self.VIDEO_HEIGHT_SMALL = 120
-        self.VIDEO_FRAMERATE_SMALL = 10
+        self._thumb_pipes = []
+        self._mux_pipes = []
 
-        self.VIDEO_WIDTH_LARGE = 200
-        self.VIDEO_HEIGHT_LARGE = 150
-        self.VIDEO_FRAMERATE_SMALL = 10
-
-        self.pipeline = gst.Pipeline("my-pipeline")
-        self.createPhotoBin()
-        self.createAudioBin()
-        self.createVideoBin()
-        self.createPipeline()
-
-        self.thumbPipes = []
-        self.muxPipes = []
-
-        bus = self.pipeline.get_bus()
-        bus.enable_sync_message_emission()
+        bus = self._pipeline.get_bus()
         bus.add_signal_watch()
-        self.SYNC_ID = bus.connect('sync-message::element', self._onSyncMessageCb)
-        self.MESSAGE_ID = bus.connect('message', self._onMessageCb)
+        bus.connect('message', self._bus_message_handler)
 
-    def createPhotoBin ( self ):
+    def _detect_camera(self):
+        v4l2src = gst.element_factory_make('v4l2src')
+        if v4l2src.props.device_name is None:
+            return
+
+        self._has_camera = True
+
+        # Figure out if we can place a framerate limit on the v4l2 element,
+        # which in theory will make it all the way down to the hardware.
+        # ideally, we should be able to do this by checking caps. However, I
+        # can't find a way to do this (at this time, XO-1 cafe camera driver
+        # doesn't support framerate changes, but gstreamer caps suggest
+        # otherwise)
+        pipeline = gst.Pipeline()
+        caps = gst.Caps('video/x-raw-yuv,framerate=10/1')
+        fsink = gst.element_factory_make('fakesink')
+        pipeline.add(v4l2src, fsink)
+        v4l2src.link(fsink, caps)
+        self._can_limit_framerate = pipeline.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
+        pipeline.set_state(gst.STATE_NULL)
+
+    def get_has_camera(self):
+        return self._has_camera
+
+    def _create_photobin(self):
         queue = gst.element_factory_make("queue", "pbqueue")
         queue.set_property("leaky", True)
         queue.set_property("max-size-buffers", 1)
@@ -123,18 +117,18 @@ class Glive:
         jpeg = gst.element_factory_make("jpegenc", "pbjpeg")
 
         sink = gst.element_factory_make("fakesink", "pbsink")
-        self.HANDOFF_ID = sink.connect("handoff", self.copyPic)
+        sink.connect("handoff", self._photo_handoff)
         sink.set_property("signal-handoffs", True)
 
-        self.photobin = gst.Bin("photobin")
-        self.photobin.add(queue, colorspace, jpeg, sink)
+        self._photobin = gst.Bin("photobin")
+        self._photobin.add(queue, colorspace, jpeg, sink)
 
         gst.element_link_many(queue, colorspace, jpeg, sink)
 
         pad = queue.get_static_pad("sink")
-        self.photobin.add_pad(gst.GhostPad("sink", pad))
+        self._photobin.add_pad(gst.GhostPad("sink", pad))
 
-    def createAudioBin ( self ):
+    def _create_audiobin(self):
         src = gst.element_factory_make("alsasrc", "absrc")
 
         # attempt to use direct access to the 0,0 device, solving some A/V
@@ -158,30 +152,30 @@ class Glive:
         queue.set_property("leaky", True) # prefer fresh data
         queue.set_property("max-size-time", 5000000000) # 5 seconds
         queue.set_property("max-size-buffers", 500)
-        queue.connect("overrun", self.log_queue_overrun)
+        queue.connect("overrun", self._log_queue_overrun)
 
         enc = gst.element_factory_make("wavenc", "abenc")
 
         sink = gst.element_factory_make("filesink", "absink")
         sink.set_property("location", os.path.join(Instance.instancePath, "output.wav"))
 
-        self.audiobin = gst.Bin("audiobin")
-        self.audiobin.add(src, rate, queue, enc, sink)
+        self._audiobin = gst.Bin("audiobin")
+        self._audiobin.add(src, rate, queue, enc, sink)
 
         src.link(rate, srccaps)
         gst.element_link_many(rate, queue, enc, sink)
 
-    def createVideoBin ( self ):
+    def _create_videobin(self):
         queue = gst.element_factory_make("queue", "videoqueue")
         queue.set_property("max-size-time", 5000000000) # 5 seconds
         queue.set_property("max-size-bytes", 33554432) # 32mb
-        queue.connect("overrun", self.log_queue_overrun)
+        queue.connect("overrun", self._log_queue_overrun)
 
         scale = gst.element_factory_make("videoscale", "vbscale")
 
         scalecapsfilter = gst.element_factory_make("capsfilter", "scalecaps")
 
-        scalecaps = gst.Caps('video/x-raw-yuv,width='+str(self.VIDEO_WIDTH_SMALL)+',height='+str(self.VIDEO_HEIGHT_SMALL))
+        scalecaps = gst.Caps('video/x-raw-yuv,width=160,height=120')
         scalecapsfilter.set_property("caps", scalecaps)
 
         colorspace = gst.element_factory_make("ffmpegcolorspace", "vbcolorspace")
@@ -194,8 +188,8 @@ class Glive:
         sink = gst.element_factory_make("filesink", "vbfile")
         sink.set_property("location", os.path.join(Instance.instancePath, "output.ogg"))
 
-        self.videobin = gst.Bin("videobin")
-        self.videobin.add(queue, scale, scalecapsfilter, colorspace, enc, mux, sink)
+        self._videobin = gst.Bin("videobin")
+        self._videobin.add(queue, scale, scalecapsfilter, colorspace, enc, mux, sink)
 
         queue.link(scale)
         scale.link_pads(None, scalecapsfilter, "sink")
@@ -203,15 +197,31 @@ class Glive:
         gst.element_link_many(colorspace, enc, mux, sink)
 
         pad = queue.get_static_pad("sink")
-        self.videobin.add_pad(gst.GhostPad("sink", pad))
+        self._videobin.add_pad(gst.GhostPad("sink", pad))
 
-    def cfgVideoBin (self, quality, width, height):
-        vbenc = self.videobin.get_by_name("vbenc")
+    def _create_xbin(self):
+        scale = gst.element_factory_make("videoscale")
+        cspace = gst.element_factory_make("ffmpegcolorspace")
+        xsink = gst.element_factory_make("ximagesink", "xsink")
+        xsink.set_property("force-aspect-ratio", True)
+
+        # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
+        xsink.set_property("sync", False)
+
+        self._xbin = gst.Bin("xbin")
+        self._xbin.add(scale, cspace, xsink)
+        gst.element_link_many(scale, cspace, xsink)
+
+        pad = scale.get_static_pad("sink")
+        self._xbin.add_pad(gst.GhostPad("sink", pad))
+
+    def _config_videobin(self, quality, width, height):
+        vbenc = self._videobin.get_by_name("vbenc")
         vbenc.set_property("quality", 16)
-        scaps = self.videobin.get_by_name("scalecaps")
+        scaps = self._videobin.get_by_name("scalecaps")
         scaps.set_property("caps", gst.Caps("video/x-raw-yuv,width=%d,height=%d" % (width, height)))
 
-    def createPipeline ( self ):
+    def _create_pipeline(self):
         src = gst.element_factory_make("v4l2src", "camsrc")
         try:
             # old gst-plugins-good does not have this property
@@ -222,8 +232,8 @@ class Glive:
         # if possible, it is important to place the framerate limit directly
         # on the v4l2src so that it gets communicated all the way down to the
         # camera level
-        if can_limit_framerate:
-            srccaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
+        if self._can_limit_framerate:
+            srccaps = gst.Caps('video/x-raw-yuv,framerate=10/1')
         else:
             srccaps = gst.Caps('video/x-raw-yuv')
 
@@ -234,7 +244,7 @@ class Glive:
         # for A/V sync because OGG does not store timestamps, it just stores
         # the FPS value.
         rate = gst.element_factory_make("videorate")
-        ratecaps = gst.Caps('video/x-raw-yuv,framerate='+str(self.VIDEO_FRAMERATE_SMALL)+'/1')
+        ratecaps = gst.Caps('video/x-raw-yuv,framerate=10/1')
 
         tee = gst.element_factory_make("tee", "tee")
         queue = gst.element_factory_make("queue", "dispqueue")
@@ -243,227 +253,200 @@ class Glive:
         queue.set_property("leaky", True)
         queue.set_property("max-size-buffers", 2)
 
-        self.pipeline.add(src, rate, tee, queue)
+        self._pipeline.add(src, rate, tee, queue)
         src.link(rate, srccaps)
         rate.link(tee, ratecaps)
         tee.link(queue)
 
-        xvsink = gst.element_factory_make("xvimagesink", "xvsink")
-        xv_available = xvsink.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
-        xvsink.set_state(gst.STATE_NULL)
+        self._xvsink = gst.element_factory_make("xvimagesink", "xsink")
+        self._xv_available = self._xvsink.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
+        self._xvsink.set_state(gst.STATE_NULL)
 
-        if xv_available:
-            # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
-            xvsink.set_property("sync", False)
+        # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
+        self._xvsink.set_property("sync", False)
 
-            self.pipeline.add(xvsink)
-            queue.link(xvsink)
-        else:
-            cspace = gst.element_factory_make("ffmpegcolorspace")
-            xsink = gst.element_factory_make("ximagesink")
+        self._xvsink.set_property("force-aspect-ratio", True)
 
-            # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
-            xsink.set_property("sync", False)
-
-            self.pipeline.add(cspace, xsink)
-            gst.element_link_many(queue, cspace, xsink)
-
-    def log_queue_overrun(self, queue):
+    def _log_queue_overrun(self, queue):
         cbuffers = queue.get_property("current-level-buffers")
         cbytes = queue.get_property("current-level-bytes")
         ctime = queue.get_property("current-level-time")
         logger.error("Buffer overrun in %s (%d buffers, %d bytes, %d time)"
             % (queue.get_name(), cbuffers, cbytes, ctime))
  
-    def thumbPipe(self):
-        return self.thumbPipes[ len(self.thumbPipes)-1 ]
+    def _thumb_element(self, name):
+        return self._thumb_pipes[-1].get_by_name(name)
 
+    def _configure_xv(self):
+        if self._pipeline.get_by_name("xsink") == self._xvsink:
+            # nothing to do, Xv already configured
+            return self._xvsink
 
-    def thumbEl(self, name):
-        return self.thumbPipe().get_by_name(name)
+        queue = self._pipeline.get_by_name("dispqueue")
+        if self._pipeline.get_by_name("xbin"):
+            # X sink is configured, so remove it
+            queue.unlink(self._xbin)
+            self._pipeline.remove(self._xbin)
 
+        self._pipeline.add(self._xvsink)
+        queue.link(self._xvsink)
+        return self._xvsink
 
-    def muxPipe(self):
-        return self.muxPipes[ len(self.muxPipes)-1 ]
+    def _configure_x(self):
+        if self._pipeline.get_by_name("xbin") == self._xbin:
+            # nothing to do, X already configured
+            return self._xbin.get_by_name("xsink")
 
+        queue = self._pipeline.get_by_name("dispqueue")
+        xvsink = self._pipeline.get_by_name("xsink")
 
-    def muxEl(self, name):
-        return self.muxPipe().get_by_name(name)
+        if xvsink:
+            # Xv sink is configured, so remove it
+            queue.unlink(xvsink)
+            self._pipeline.remove(xvsink)
 
+        self._pipeline.add(self._xbin)
+        queue.link(self._xbin)
+        return self._xbin.get_by_name("xsink")
 
-    def play(self):
-        if not camera_presents:
+    def play(self, use_xv=True):
+        if not self._has_camera:
             return
 
-        self.pipeline.set_state(gst.STATE_PLAYING)
-        self.playing = True
+        if self._get_state() == gst.STATE_PLAYING:
+            return
+
+        if use_xv and self._xv_available:
+            xsink = self._configure_xv()
+        else:
+            xsink = self._configure_x()
+
+        # X overlay must be set every time, it seems to forget when you stop
+        # the pipeline.
+        self.activity.set_glive_sink(xsink)
+
+        self._pipeline.set_state(gst.STATE_PLAYING)
+        self._playing = True
 
     def pause(self):
-        self.pipeline.set_state(gst.STATE_PAUSED)
-        self.playing = False
-
+        self._pipeline.set_state(gst.STATE_PAUSED)
+        self._playing = False
 
     def stop(self):
-        self.pipeline.set_state(gst.STATE_NULL)
-        self.playing = False
+        self._pipeline.set_state(gst.STATE_NULL)
+        self._playing = False
 
     def is_playing(self):
-        return self.playing
+        return self._playing
 
-    def idlePlayElement(self, element):
-        element.set_state(gst.STATE_PLAYING)
-        return False
+    def _get_state(self):
+        return self._pipeline.get_state()[1]
 
-    def stopRecordingAudio( self ):
+    def stop_recording_audio(self):
         # We should be able to simply pause and remove the audiobin, but
         # this seems to cause a gstreamer segfault. So we stop the whole
         # pipeline while manipulating it.
         # http://dev.laptop.org/ticket/10183
-        self.pipeline.set_state(gst.STATE_NULL)
-        self.pipeline.remove(self.audiobin)
-        self.pipeline.set_state(gst.STATE_PLAYING)
-        gobject.idle_add( self.stoppedRecordingAudio )
+        self._pipeline.set_state(gst.STATE_NULL)
+        self.model.shutter_sound()
+        self._pipeline.remove(self._audiobin)
+        self.play()
 
-
-    def stoppedRecordingVideo(self):
-        if ( len(self.thumbPipes) > 0 ):
-            thumbline = self.thumbPipes[len(self.thumbPipes)-1]
-            thumbline.get_by_name('thumbFakesink').disconnect(self.THUMB_HANDOFF_ID)
-
-        oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
-        if (not os.path.exists(oggFilepath)):
-            self.record = False
-            self.ca.m.cannotSaveVideo()
-            self.ca.m.stoppedRecordingVideo()
-            return
-        oggSize = os.path.getsize(oggFilepath)
-        if (oggSize <= 0):
-            self.record = False
-            self.ca.m.cannotSaveVideo()
-            self.ca.m.stoppedRecordingVideo()
+        if not self._audio_pixbuf:
+            # FIXME: inform model of failure?
             return
 
-        line = 'filesrc location=' + str(oggFilepath) + ' name=thumbFilesrc ! oggdemux name=thumbOggdemux ! theoradec name=thumbTheoradec ! tee name=thumbTee ! queue name=thumbQueue ! ffmpegcolorspace name=thumbFfmpegcolorspace ! jpegenc name=thumbJPegenc ! fakesink name=thumbFakesink'
-        thumbline = gst.parse_launch(line)
-        thumbQueue = thumbline.get_by_name('thumbQueue')
-        thumbQueue.set_property("leaky", True)
-        thumbQueue.set_property("max-size-buffers", 1)
-        thumbTee = thumbline.get_by_name('thumbTee')
-        thumbFakesink = thumbline.get_by_name('thumbFakesink')
-        self.THUMB_HANDOFF_ID = thumbFakesink.connect("handoff", self.copyThumbPic)
-        thumbFakesink.set_property("signal-handoffs", True)
-        self.thumbPipes.append(thumbline)
-        self.thumbExposureOpen = True
-        gobject.idle_add( self.idlePlayElement, thumbline )
+        audio_path = os.path.join(Instance.instancePath, "output.wav")
+        if not os.path.exists(audio_path) or os.path.getsize(audio_path) <= 0:
+            # FIXME: inform model of failure?
+            return
 
+        self.model.still_ready(self._audio_pixbuf)
 
-    def stoppedRecordingAudio( self ):
-        record.Record.log.debug("stoppedRecordingAudio")
-        if (self.audioPixbuf != None):
-            audioFilepath = os.path.join(Instance.instancePath, "output.wav")#self.el("audioFilesink").get_property("location")
-            if (not os.path.exists(audioFilepath)):
-                self.record = False
-                self.ca.m.cannotSaveVideo()
-                return
-            wavSize = os.path.getsize(audioFilepath)
-            if (wavSize <= 0):
-                self.record = False
-                self.ca.m.cannotSaveVideo()
-                return
+        line = 'filesrc location=' + audio_path + ' name=audioFilesrc ! wavparse name=audioWavparse ! audioconvert name=audioAudioconvert ! vorbisenc name=audioVorbisenc ! oggmux name=audioOggmux ! filesink name=audioFilesink'
+        audioline = gst.parse_launch(line)
 
-            self.ca.ui.setPostProcessPixBuf(self.audioPixbuf)
+        taglist = self._get_tags(constants.TYPE_AUDIO)
+        pixbuf_b64 = utils.getStringFromPixbuf(self._audio_pixbuf)
+        taglist[gst.TAG_EXTENDED_COMMENT] = "coverart=" + pixbuf_b64
+        vorbis_enc = audioline.get_by_name('audioVorbisenc')
+        vorbis_enc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
 
-            line = 'filesrc location=' + str(audioFilepath) + ' name=audioFilesrc ! wavparse name=audioWavparse ! audioconvert name=audioAudioconvert ! vorbisenc name=audioVorbisenc ! oggmux name=audioOggmux ! filesink name=audioFilesink'
-            audioline = gst.parse_launch(line)
+        audioFilesink = audioline.get_by_name('audioFilesink')
+        audioOggFilepath = os.path.join(Instance.instancePath, "output.ogg")
+        audioFilesink.set_property("location", audioOggFilepath)
 
-            taglist = self.getTags(Constants.TYPE_AUDIO)
-            base64AudioSnapshot = utils.getStringFromPixbuf(self.audioPixbuf)
-            taglist[gst.TAG_EXTENDED_COMMENT] = "coverart="+str(base64AudioSnapshot)
-            vorbisEnc = audioline.get_by_name('audioVorbisenc')
-            vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
+        audioBus = audioline.get_bus()
+        audioBus.add_signal_watch()
+        self._audio_transcode_handler = audioBus.connect('message', self._onMuxedAudioMessageCb, audioline)
+        self._transcode_id = gobject.timeout_add(200, self._transcodeUpdateCb, audioline)
+        audioline.set_state(gst.STATE_PLAYING)
 
-            audioFilesink = audioline.get_by_name('audioFilesink')
-            audioOggFilepath = os.path.join(Instance.instancePath, "output.ogg")
-            audioFilesink.set_property("location", audioOggFilepath )
-
-            audioBus = audioline.get_bus()
-            audioBus.add_signal_watch()
-            self.AUDIO_TRANSCODE_ID = audioBus.connect('message', self._onMuxedAudioMessageCb, audioline)
-            self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, audioline)
-            gobject.idle_add( self.idlePlayElement, audioline )
-        else:
-            self.record = False
-            self.ca.m.cannotSaveVideo()
-
-
-    def getTags( self, type ):
+    def _get_tags(self, type):
         tl = gst.TagList()
-        tl[gst.TAG_ARTIST] = str(Instance.nickName)
+        tl[gst.TAG_ARTIST] = self.model.get_nickname()
         tl[gst.TAG_COMMENT] = "olpc"
         #this is unfortunately, unreliable
         #record.Record.log.debug("self.ca.metadata['title']->" + str(self.ca.metadata['title']) )
         tl[gst.TAG_ALBUM] = "olpc" #self.ca.metadata['title']
         tl[gst.TAG_DATE] = utils.getDateString(int(time.time()))
-        stringType = Constants.mediaTypes[type][Constants.keyIstr]
-        tl[gst.TAG_TITLE] = Constants.istrBy % {"1":stringType, "2":str(Instance.nickName)}
+        stringType = constants.MEDIA_INFO[type]['istr']
+        
+        # Translators: photo by photographer, e.g. "Photo by Mary"
+        tl[gst.TAG_TITLE] = _('%s by %s') % (stringType, self.model.get_nickname())
         return tl
 
     def blockedCb(self, x, y, z):
         pass
 
-    def _takePhoto(self):
-        if self.picExposureOpen:
+    def _take_photo(self, photo_mode):
+        if self._pic_exposure_open:
             return
 
-        self.picExposureOpen = True
-        pad = self.photobin.get_static_pad("sink")
+        self._photo_mode = photo_mode
+        self._pic_exposure_open = True
+        pad = self._photobin.get_static_pad("sink")
         pad.set_blocked_async(True, self.blockedCb, None)
-        self.pipeline.add(self.photobin)
-        self.photobin.set_state(gst.STATE_PLAYING)
-        self.pipeline.get_by_name("tee").link(self.photobin)
+        self._pipeline.add(self._photobin)
+        self._photobin.set_state(gst.STATE_PLAYING)
+        self._pipeline.get_by_name("tee").link(self._photobin)
         pad.set_blocked_async(False, self.blockedCb, None)
 
-    def takePhoto(self):
-        if not camera_presents:
+    def take_photo(self):
+        if self._has_camera:
+            self._take_photo(self.PHOTO_MODE_PHOTO)
+
+    def _photo_handoff(self, fsink, buffer, pad, user_data=None):
+        if not self._pic_exposure_open:
             return
 
-        self.photoMode = self.PHOTO_MODE_PHOTO
-        self._takePhoto()
-
-    def copyPic(self, fsink, buffer, pad, user_data=None):
-        if not self.picExposureOpen:
-            return
-
-        pad = self.photobin.get_static_pad("sink")
+        pad = self._photobin.get_static_pad("sink")
         pad.set_blocked_async(True, self.blockedCb, None)
-        self.pipeline.get_by_name("tee").unlink(self.photobin)
-        self.pipeline.remove(self.photobin)
+        self._pipeline.get_by_name("tee").unlink(self._photobin)
+        self._pipeline.remove(self._photobin)
         pad.set_blocked_async(False, self.blockedCb, None)
 
-        self.picExposureOpen = False
+        self._pic_exposure_open = False
         pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
         pic.write( buffer )
         pic.close()
         pixBuf = pic.get_pixbuf()
         del pic
 
-        self.savePhoto( pixBuf )
+        self.save_photo(pixBuf)
 
-
-    def savePhoto(self, pixbuf):
-        if self.photoMode == self.PHOTO_MODE_AUDIO:
-            self.audioPixbuf = pixbuf
+    def save_photo(self, pixbuf):
+        if self._photo_mode == self.PHOTO_MODE_AUDIO:
+            self._audio_pixbuf = pixbuf
         else:
-            self.ca.m.savePhoto(pixbuf)
+            self.model.save_photo(pixbuf)
 
-
-    def startRecordingVideo(self, quality):
-        if not camera_presents:
+    def record_video(self, quality):
+        if not self._has_camera:
             return
 
-        self.record = True
-        self.ogg_quality = quality
-        self.cfgVideoBin (OGG_TRAITS[quality]['quality'],
+        self._ogg_quality = quality
+        self._config_videobin(OGG_TRAITS[quality]['quality'],
             OGG_TRAITS[quality]['width'],
             OGG_TRAITS[quality]['height'])
 
@@ -472,90 +455,106 @@ class Glive:
         # If we pause the pipeline while adjusting it, the A/V sync is better
         # but not perfect :(
         # so we stop the whole thing while reconfiguring to get the best results
-        self.pipeline.set_state(gst.STATE_NULL)
-        self.pipeline.add(self.videobin)
-        self.pipeline.get_by_name("tee").link(self.videobin)
-        self.pipeline.add(self.audiobin)
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        self._pipeline.set_state(gst.STATE_NULL)
+        self._pipeline.add(self._videobin)
+        self._pipeline.get_by_name("tee").link(self._videobin)
+        self._pipeline.add(self._audiobin)
+        self.play()
 
-    def startRecordingAudio(self):
-        self.audioPixbuf = None
-
-        self.photoMode = self.PHOTO_MODE_AUDIO
-        self._takePhoto()
-
-        self.record = True
+    def record_audio(self):
+        self._audio_pixbuf = None
+        self._take_photo(self.PHOTO_MODE_AUDIO)
 
         # we should be able to add the audiobin on the fly, but unfortunately
         # this results in several seconds of silence being added at the start
         # of the recording. So we stop the whole pipeline while adjusting it.
         # SL#2040
-        self.pipeline.set_state(gst.STATE_NULL)
-        self.pipeline.add(self.audiobin)
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        self._pipeline.set_state(gst.STATE_NULL)
+        self._pipeline.add(self._audiobin)
+        self.play()
 
-    def stopRecordingVideo(self):
-        if not camera_presents:
+    def stop_recording_video(self):
+        if not self._has_camera:
             return
 
         # We stop the pipeline while we are adjusting the pipeline to stop
         # recording because if we do it on-the-fly, the following video live
         # feed to the screen becomes several seconds delayed. Weird!
         # FIXME: retest on F11
-        self._eos_cb = self.stopRecordingVideoEOS
-        self.pipeline.get_by_name('camsrc').send_event(gst.event_new_eos())
-        self.audiobin.get_by_name('absrc').send_event(gst.event_new_eos())
+        # FIXME: could this be the result of audio shortening problems?
+        self._eos_cb = self._video_eos
+        self._pipeline.get_by_name('camsrc').send_event(gst.event_new_eos())
+        self._audiobin.get_by_name('absrc').send_event(gst.event_new_eos())
 
-    def stopRecordingVideoEOS(self):
-        self.pipeline.set_state(gst.STATE_NULL)
-        self.pipeline.get_by_name("tee").unlink(self.videobin)
-        self.pipeline.remove(self.videobin)
-        self.pipeline.remove(self.audiobin)
-        self.pipeline.set_state(gst.STATE_PLAYING)
-        gobject.idle_add( self.stoppedRecordingVideo )
+    def _video_eos(self):
+        self._pipeline.set_state(gst.STATE_NULL)
+        self._pipeline.get_by_name("tee").unlink(self._videobin)
+        self._pipeline.remove(self._videobin)
+        self._pipeline.remove(self._audiobin)
 
+        self.model.shutter_sound()
 
-    def copyThumbPic(self, fsink, buffer, pad, user_data=None):
-        if not self.thumbExposureOpen:
+        if len(self._thumb_pipes) > 0:
+            thumbline = self._thumb_pipes[-1]
+            thumbline.get_by_name('thumb_fakesink').disconnect(self._thumb_handoff_handler)
+
+        ogg_path = os.path.join(Instance.instancePath, "output.ogg") #ogv
+        if not os.path.exists(ogg_path) or os.path.getsize(ogg_path) <= 0:
+            # FIXME: inform model of failure?
             return
 
-        self.thumbExposureOpen = False
-        pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
-        pic.write(buffer)
-        pic.close()
-        self.thumbBuf = pic.get_pixbuf()
-        del pic
-        self.thumbEl('thumbTee').unlink(self.thumbEl('thumbQueue'))
+        line = 'filesrc location=' + ogg_path + ' name=thumbFilesrc ! oggdemux name=thumbOggdemux ! theoradec name=thumbTheoradec ! tee name=thumb_tee ! queue name=thumb_queue ! ffmpegcolorspace name=thumbFfmpegcolorspace ! jpegenc name=thumbJPegenc ! fakesink name=thumb_fakesink'
+        thumbline = gst.parse_launch(line)
+        thumb_queue = thumbline.get_by_name('thumb_queue')
+        thumb_queue.set_property("leaky", True)
+        thumb_queue.set_property("max-size-buffers", 1)
+        thumb_tee = thumbline.get_by_name('thumb_tee')
+        thumb_fakesink = thumbline.get_by_name('thumb_fakesink')
+        self._thumb_handoff_handler = thumb_fakesink.connect("handoff", self.copyThumbPic)
+        thumb_fakesink.set_property("signal-handoffs", True)
+        self._thumb_pipes.append(thumbline)
+        self._thumb_exposure_open = True
+        thumbline.set_state(gst.STATE_PLAYING)
+
+    def copyThumbPic(self, fsink, buffer, pad, user_data=None):
+        if not self._thumb_exposure_open:
+            return
+
+        self._thumb_exposure_open = False
+        loader = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
+        loader.write(buffer)
+        loader.close()
+        self.thumbBuf = loader.get_pixbuf()
+        self.model.still_ready(self.thumbBuf)
+
+        self._thumb_element('thumb_tee').unlink(self._thumb_element('thumb_queue'))
 
         oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
-        self.ca.ui.setPostProcessPixBuf(self.thumbBuf)
-
         wavFilepath = os.path.join(Instance.instancePath, "output.wav")
         muxFilepath = os.path.join(Instance.instancePath, "mux.ogg") #ogv
 
         muxline = gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc ! oggdemux name=muxOggdemux ! theoraparse ! oggmux name=muxOggmux ! filesink location=' + str(muxFilepath) + ' name=muxFilesink filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc ! wavparse name=muxWavparse ! audioconvert name=muxAudioconvert ! vorbisenc name=muxVorbisenc ! muxOggmux.')
-        taglist = self.getTags(Constants.TYPE_VIDEO)
-        vorbisEnc = muxline.get_by_name('muxVorbisenc')
-        vorbisEnc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
+        taglist = self._get_tags(constants.TYPE_VIDEO)
+        vorbis_enc = muxline.get_by_name('muxVorbisenc')
+        vorbis_enc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
 
         muxBus = muxline.get_bus()
         muxBus.add_signal_watch()
-        self.VIDEO_TRANSCODE_ID = muxBus.connect('message', self._onMuxedVideoMessageCb, muxline)
-        self.muxPipes.append(muxline)
+        self._video_transcode_handler = muxBus.connect('message', self._onMuxedVideoMessageCb, muxline)
+        self._mux_pipes.append(muxline)
         #add a listener here to monitor % of transcoding...
-        self.TRANSCODE_ID = gobject.timeout_add(self.TRANSCODE_UPDATE_INTERVAL, self._transcodeUpdateCb, muxline)
+        self._transcode_id = gobject.timeout_add(200, self._transcodeUpdateCb, muxline)
         muxline.set_state(gst.STATE_PLAYING)
 
     def _transcodeUpdateCb( self, pipe ):
-        position, duration = self.queryPosition( pipe )
+        position, duration = self._query_position( pipe )
         if position != gst.CLOCK_TIME_NONE:
             value = position * 100.0 / duration
             value = value/100.0
-            self.ca.ui.progressWindow.updateProgress(value, Constants.istrSaving)
+            self.model.set_progress(value, _('Saving...'))
         return True
 
-
-    def queryPosition( self, pipe ):
+    def _query_position(self, pipe):
         try:
             position, format = pipe.query_position(gst.FORMAT_TIME)
         except:
@@ -568,64 +567,45 @@ class Glive:
 
         return (position, duration)
 
-
     def _onMuxedVideoMessageCb(self, bus, message, pipe):
-        t = message.type
-        if (t == gst.MESSAGE_EOS):
-            self.record = False
-            gobject.source_remove(self.VIDEO_TRANSCODE_ID)
-            self.VIDEO_TRANSCODE_ID = 0
-            gobject.source_remove(self.TRANSCODE_ID)
-            self.TRANSCODE_ID = 0
-            pipe.set_state(gst.STATE_NULL)
-            pipe.get_bus().remove_signal_watch()
-            pipe.get_bus().disable_sync_message_emission()
-
-            wavFilepath = os.path.join(Instance.instancePath, "output.wav")
-            oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
-            muxFilepath = os.path.join(Instance.instancePath, "mux.ogg") #ogv
-            os.remove( wavFilepath )
-            os.remove( oggFilepath )
-            ogg_w = OGG_TRAITS[self.ogg_quality]['width']
-            ogg_h = OGG_TRAITS[self.ogg_quality]['height']
-            self.ca.m.saveVideo(self.thumbBuf, str(muxFilepath), ogg_w, ogg_h)
-            self.ca.m.stoppedRecordingVideo()
-            return False
-        else:
+        if message.type != gst.MESSAGE_EOS:
             return True
 
+        gobject.source_remove(self._video_transcode_handler)
+        self._video_transcode_handler = None
+        gobject.source_remove(self._transcode_id)
+        self._transcode_id = None
+        pipe.set_state(gst.STATE_NULL)
+        pipe.get_bus().remove_signal_watch()
+        pipe.get_bus().disable_sync_message_emission()
+
+        wavFilepath = os.path.join(Instance.instancePath, "output.wav")
+        oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
+        muxFilepath = os.path.join(Instance.instancePath, "mux.ogg") #ogv
+        os.remove( wavFilepath )
+        os.remove( oggFilepath )
+        self.model.save_video(muxFilepath, self.thumbBuf)
+        return False
 
     def _onMuxedAudioMessageCb(self, bus, message, pipe):
-        t = message.type
-        if (t == gst.MESSAGE_EOS):
-            record.Record.log.debug("audio gst.MESSAGE_EOS")
-            self.record = False
-            gobject.source_remove(self.AUDIO_TRANSCODE_ID)
-            self.AUDIO_TRANSCODE_ID = 0
-            gobject.source_remove(self.TRANSCODE_ID)
-            self.TRANSCODE_ID = 0
-            pipe.set_state(gst.STATE_NULL)
-            pipe.get_bus().remove_signal_watch()
-            pipe.get_bus().disable_sync_message_emission()
-
-            wavFilepath = os.path.join(Instance.instancePath, "output.wav")
-            oggFilepath = os.path.join(Instance.instancePath, "output.ogg")
-            os.remove( wavFilepath )
-            self.ca.m.saveAudio(oggFilepath, self.audioPixbuf)
-            return False
-        else:
+        if message.type != gst.MESSAGE_EOS:
             return True
 
+        gobject.source_remove(self._audio_transcode_handler)
+        self._audio_transcode_handler = None
+        gobject.source_remove(self._transcode_id)
+        self._transcode_id = None
+        pipe.set_state(gst.STATE_NULL)
+        pipe.get_bus().remove_signal_watch()
+        pipe.get_bus().disable_sync_message_emission()
 
-    def _onSyncMessageCb(self, bus, message):
-        if message.structure is None:
-            return
-        if message.structure.get_name() == 'prepare-xwindow-id':
-            self.window.set_sink(message.src)
-            message.src.set_property('force-aspect-ratio', True)
+        wavFilepath = os.path.join(Instance.instancePath, "output.wav")
+        oggFilepath = os.path.join(Instance.instancePath, "output.ogg")
+        os.remove( wavFilepath )
+        self.model.save_audio(oggFilepath, self._audio_pixbuf)
+        return False
 
-
-    def _onMessageCb(self, bus, message):
+    def _bus_message_handler(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
             if self._eos_cb:
@@ -641,48 +621,23 @@ class Glive:
     def abandonMedia(self):
         self.stop()
 
-        if (self.AUDIO_TRANSCODE_ID != 0):
-            gobject.source_remove(self.AUDIO_TRANSCODE_ID)
-            self.AUDIO_TRANSCODE_ID = 0
-        if (self.TRANSCODE_ID != 0):
-            gobject.source_remove(self.TRANSCODE_ID)
-            self.TRANSCODE_ID = 0
-        if (self.VIDEO_TRANSCODE_ID != 0):
-            gobject.source_remove(self.VIDEO_TRANSCODE_ID)
-            self.VIDEO_TRANSCODE_ID = 0
+        if self._audio_transcode_handler:
+            gobject.source_remove(self._audio_transcode_handler)
+            self._audio_transcode_handler = None
+        if self._transcode_id:
+            gobject.source_remove(self._transcode_id)
+            self._transcode_id = None
+        if self._video_transcode_handler:
+            gobject.source_remove(self._video_transcode_handler)
+            self._video_transcode_handler = None
 
-        wavFilepath = os.path.join(Instance.instancePath, "output.wav")
-        if (os.path.exists(wavFilepath)):
-            os.remove(wavFilepath)
-        oggFilepath = os.path.join(Instance.instancePath, "output.ogg") #ogv
-        if (os.path.exists(oggFilepath)):
-            os.remove(oggFilepath)
-        muxFilepath = os.path.join(Instance.instancePath, "mux.ogg") #ogv
-        if (os.path.exists(muxFilepath)):
-            os.remove(muxFilepath)
+        wav_path = os.path.join(Instance.instancePath, "output.wav")
+        if os.path.exists(wav_path):
+            os.remove(wav_path)
+        ogg_path = os.path.join(Instance.instancePath, "output.ogg") #ogv
+        if os.path.exists(ogg_path):
+            os.remove(ogg_path)
+        mux_path = os.path.join(Instance.instancePath, "mux.ogg") #ogv
+        if os.path.exists(mux_path):
+            os.remove(mux_path)
 
-
-class LiveVideoWindow(gtk.Window):
-    def __init__(self, bgd ):
-        gtk.Window.__init__(self)
-
-        self.imagesink = None
-        self.glive = None
-
-        self.modify_bg( gtk.STATE_NORMAL, bgd )
-        self.modify_bg( gtk.STATE_INSENSITIVE, bgd )
-        self.unset_flags(gtk.DOUBLE_BUFFERED)
-        self.set_flags(gtk.APP_PAINTABLE)
-
-    def set_glive(self, pglive):
-        self.glive = pglive
-        self.glive.window = self
-
-    def set_sink(self, sink):
-        if (self.imagesink != None):
-            assert self.window.xid
-            self.imagesink = None
-            del self.imagesink
-
-        self.imagesink = sink
-        self.imagesink.set_xwindow_id(self.window.xid)

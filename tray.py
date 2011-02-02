@@ -21,11 +21,7 @@ import hippo
 
 import sugar
 from sugar.graphics import style
-from sugar.graphics.palette import Palette, ToolInvoker
-from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon
-
-from constants import Constants
 
 _PREVIOUS_PAGE = 0
 _NEXT_PAGE = 1
@@ -148,8 +144,8 @@ class HTray(gtk.VBox):
 
         separator = hippo.Canvas()
         box = hippo.CanvasBox(
-                    border_color=Constants.colorWhite.get_int(),
-                    background_color=Constants.colorWhite.get_int(),
+                    border_color=0xffffffff,
+                    background_color=0xffffffff,
                     box_height=1,
                     border_bottom=1)
         separator.set_root(box)

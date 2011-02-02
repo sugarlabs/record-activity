@@ -18,114 +18,99 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-#look at jukeboxactivity.py
-
-import gtk
-import pygtk
-pygtk.require('2.0')
-import sys
+import gobject
+gobject.threads_init()
 import pygst
 pygst.require('0.10')
 import gst
-import gst.interfaces
-import gobject
-import time
-gobject.threads_init()
 
 import logging
 logger = logging.getLogger('record:gplay.py')
 
-import record
+class Gplay(gobject.GObject):
+    __gsignals__ = {
+        'playback-status-changed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_FLOAT)),
+    }
 
-class Gplay:
+    def __init__(self, activity_obj):
+        super(Gplay, self).__init__()
+        self.activity = activity_obj
+        self._playback_monitor_handler = None
+        self._player = gst.element_factory_make('playbin')
 
-    def __init__(self, ca):
-        self.ca = ca
-        self.window = None
-        self.players = []
-        self.playing = False
-
-        self.player = gst.element_factory_make('playbin')
-
-        bus = self.player.get_bus()
-        bus.enable_sync_message_emission()
+        bus = self._player.get_bus()
         bus.add_signal_watch()
-        bus.connect('message', self._onMessageCb)
+        bus.connect('message::error', self._bus_error)
+        bus.connect('message::eos', self._bus_eos)
 
-    def _onMessageCb(self, bus, message):
-        if message.type == gst.MESSAGE_ERROR:
-            err, debug = message.parse_error()
-            logger.error('_onMessageCb: error=%s debug=%s' % (err, debug))
+    def _bus_error(self, bus, message):
+        err, debug = message.parse_error()
+        logger.error('bus error=%s debug=%s' % (err, debug))
 
-    def setLocation(self, location):
-        if (self.player.get_property('uri') == location):
-            self.seek(gst.SECOND*0)
+    def _bus_eos(self, bus, message):
+        self.stop()
+
+    def set_location(self, location):
+        if self._player.get_property('uri') == location:
+            self.seek(0)
             return
 
-        self.player.set_state(gst.STATE_READY)
-        self.player.set_property('uri', location)
-        ext = location[len(location)-3:]
-        record.Record.log.debug("setLocation: ext->"+str(ext))
-        if (ext == "jpg"):
-            self.pause()
+        self._player.set_state(gst.STATE_READY)
+        self._player.set_property('uri', location)
 
+    def seek(self, position):
+        if position == 0:
+            location = 0
+        else:
+            duration = self._player.query_duration(gst.FORMAT_TIME, None)[0]
+            location = duration * (position / 100)
 
-    def queryPosition(self):
-        "Returns a (position, duration) tuple"
-        try:
-            position, format = self.player.query_position(gst.FORMAT_TIME)
-        except:
-            position = gst.CLOCK_TIME_NONE
-
-        try:
-            duration, format = self.player.query_duration(gst.FORMAT_TIME)
-        except:
-            duration = gst.CLOCK_TIME_NONE
-
-        return (position, duration)
-
-
-    def seek(self, location):
         event = gst.event_new_seek(1.0, gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE, gst.SEEK_TYPE_SET, location, gst.SEEK_TYPE_NONE, 0)
-        res = self.player.send_event(event)
+        res = self._player.send_event(event)
         if res:
-            self.player.set_new_stream_time(0L)
-
+            self._player.set_new_stream_time(0L)
 
     def pause(self):
-        self.playing = False
-        self.player.set_state(gst.STATE_PAUSED)
-
+        self._player.set_state(gst.STATE_PAUSED)
 
     def play(self):
-        if not self.player.props.video_sink:
+        if self.get_state() == gst.STATE_PLAYING:
+            return
+
+        if not self._player.props.video_sink:
             sink = gst.element_factory_make('xvimagesink')
             sink.props.force_aspect_ratio = True
-            self.player.props.video_sink = sink
+            self._player.props.video_sink = sink
 
-        self.player.props.video_sink.set_xwindow_id(self.window.window.xid)
-        self.playing = True
-        self.player.set_state(gst.STATE_PLAYING)
+        self.activity.set_gplay_sink(self._player.props.video_sink)
+        self._player.set_state(gst.STATE_PLAYING)
+        self._emit_playback_status(0)
 
+        self._playback_monitor_handler = gobject.timeout_add(500, self._playback_monitor)
+
+    def _playback_monitor(self):
+        try:
+            position = self._player.query_position(gst.FORMAT_TIME)[0]
+            duration = self._player.query_duration(gst.FORMAT_TIME)[0]
+        except gst.QueryError:
+            return True
+
+        value = (float(position) / float(duration)) * 100.0
+        self._emit_playback_status(value)
+        return True
+
+    def _emit_playback_status(self, position):
+        state = self._player.get_state()[1]
+        self.emit('playback-status-changed', state, position)
+
+    def get_state(self):
+        return self._player.get_state()[1]
 
     def stop(self):
-        self.playing = False
-        self.player.set_state(gst.STATE_NULL)
+        if self._playback_monitor_handler:
+            gobject.source_remove(self._playback_monitor_handler)
+            self._playback_monitor_handler = None
 
+        self._player.set_state(gst.STATE_NULL)
+        self._emit_playback_status(0)
 
-    def get_state(self, timeout=1):
-        return self.player.get_state(timeout=timeout)
-
-
-    def is_playing(self):
-        return self.playing
-
-
-class PlayVideoWindow(gtk.Window):
-    def __init__(self, bgd):
-        gtk.Window.__init__(self)
-
-        self.modify_bg( gtk.STATE_NORMAL, bgd )
-        self.modify_bg( gtk.STATE_INSENSITIVE, bgd )
-        self.unset_flags(gtk.DOUBLE_BUFFERED)
-        self.set_flags(gtk.APP_PAINTABLE)

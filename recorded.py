@@ -20,16 +20,13 @@
 
 import os
 import gtk
-from gtk import gdk
 
-from constants import Constants
+import constants
 from instance import Instance
 import utils
 import serialize
-import record
 
 class Recorded:
-
     def __init__( self ):
         self.type = -1
         self.time = None
@@ -78,6 +75,8 @@ class Recorded:
 
 
     def setTitle( self, newTitle ):
+        if self.title == newTitle:
+            return
         self.title = newTitle
         self.metaChange = True
 
@@ -106,11 +105,11 @@ class Recorded:
     #relaunch, their old media -- datastoreObject->file (hold onto the datastore object, delete if deleted) | ([request->]) Journal/session/buddy
 
     def getThumbPixbuf( self ):
-        thumbPixbuf = None
         thumbFilepath = self.getThumbFilepath()
-        if ( os.path.isfile(thumbFilepath) ):
-            thumbPixbuf = gtk.gdk.pixbuf_new_from_file(thumbFilepath)
-        return thumbPixbuf
+        if os.path.isfile(thumbFilepath):
+            return gtk.gdk.pixbuf_new_from_file(thumbFilepath)
+        else:
+            return None
 
 
     def getThumbFilepath( self ):
@@ -152,7 +151,7 @@ class Recorded:
                 else:
                     if self.mediaFilename == None:
                         #creating a new filepath, probably just got here from the mesh
-                        ext = Constants.mediaTypes[self.type][Constants.keyExt]
+                        ext = constants.MEDIA_INFO[self.type]['ext']
                         recdPath = os.path.join(Instance.instancePath, "recdFile_"+self.mediaMd5+"."+ext)
                         recdPath = utils.getUniqueFilepath(recdPath, 0)
                         self.mediaFilename = os.path.basename(recdPath)

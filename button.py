@@ -1,108 +1,70 @@
-import gtk
-import os
 import gobject
-import rsvg
-import gc
+import gtk
+from gettext import gettext as _
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.tray import TrayButton
-from sugar.graphics.icon import Icon
-from sugar.graphics import style
-from constants import Constants
+import constants
 import utils
 
-class RecdButton(TrayButton, gobject.GObject):
-    def __init__(self, ui, recd):
-        TrayButton.__init__(self)
-        self.ui = ui
-        self.recd = recd
+class RecdButton(TrayButton):
+    __gsignals__ = {
+        'remove-requested': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        'copy-clipboard-requested': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+    }
 
-        img = self.getImg( )
-        self.set_icon_widget( img )
+    def __init__(self, recd):
+        super(RecdButton, self).__init__()
+        self._recd = recd
 
-        self.ACTIVATE_COPY_ID = 0
-        self.ACTIVATE_REMOVE_ID = 0
-        self.setup_rollover_options( recd.title )
+        self.set_icon_widget(self.get_image())
+        self._copy_menu_item_handler = None
 
-
-    def getImg( self ):
-        img = gtk.Image()
-        ipb = self.recd.getThumbPixbuf()
-        xoff = 8
-        yoff = 8
-        pb = None
-        if (self.recd.type == Constants.TYPE_PHOTO):
-            if (self.recd.buddy):
-                thumbPhotoSvg = utils.loadSvg(Constants.thumbPhotoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
-                pb = thumbPhotoSvg.get_pixbuf()
-            else:
-                pb = Constants.thumbPhotoSvg.get_pixbuf()
-
-        elif (self.recd.type == Constants.TYPE_VIDEO):
-            if (self.recd.buddy):
-                thumbVideoSvg = utils.loadSvg(Constants.thumbVideoSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
-                pb = thumbVideoSvg.get_pixbuf()
-            else:
-                pb = Constants.thumbVideoSvg.get_pixbuf()
-
-        elif (self.recd.type == Constants.TYPE_AUDIO):
-            if (self.recd.buddy):
-                thumbAudioSvg = utils.loadSvg(Constants.thumbAudioSvgData, self.recd.colorStroke.hex, self.recd.colorFill.hex)
-                pb = thumbAudioSvg.get_pixbuf()
-            else:
-                pb = Constants.thumbAudioSvg.get_pixbuf()
-
-        img.set_from_pixbuf(pb)
-        img.show()
-        ipb.composite(pb, xoff, yoff, ipb.get_width(), ipb.get_height(), xoff, yoff, 1, 1, gtk.gdk.INTERP_BILINEAR, 255)
-        img.set_from_pixbuf(pb)
-
-        gc.collect()
-
-        return img
-
-
-    def setButtClickedId( self, id ):
-        self.BUTT_CLICKED_ID = id
-
-
-    def getButtClickedId( self ):
-        return self.BUTT_CLICKED_ID
-
-
-    def setup_rollover_options( self, info ):
-        palette = Palette(info)
+        palette = Palette(recd.title)
         self.set_palette(palette)
 
-        self.rem_menu_item = gtk.MenuItem( Constants.istrRemove )
-        self.ACTIVATE_REMOVE_ID = self.rem_menu_item.connect('activate', self._itemRemoveCb)
-        palette.menu.append(self.rem_menu_item)
-        self.rem_menu_item.show()
+        self._rem_menu_item = gtk.MenuItem(_('Remove'))
+        self._rem_menu_item_handler = self._rem_menu_item.connect('activate', self._remove_clicked)
+        palette.menu.append(self._rem_menu_item)
+        self._rem_menu_item.show()
 
-        self.addCopyMenuItem()
+        self._add_copy_menu_item()
 
-
-    def addCopyMenuItem( self ):
-        if (self.recd.buddy and not self.recd.downloadedFromBuddy):
-            return
-        if (self.ACTIVATE_COPY_ID != 0):
+    def _add_copy_menu_item( self ):
+        if self._recd.buddy and not self._recd.downloadedFromBuddy:
             return
 
-        self.copy_menu_item = gtk.MenuItem( Constants.istrCopyToClipboard )
-        self.ACTIVATE_COPY_ID = self.copy_menu_item.connect('activate', self._itemCopyToClipboardCb)
-        self.get_palette().menu.append(self.copy_menu_item)
-        self.copy_menu_item.show()
+        self._copy_menu_item = gtk.MenuItem(_('Copy to clipboard'))
+        self._copy_menu_item_handler = self._copy_menu_item.connect('activate', self._copy_clipboard_clicked)
+        self.get_palette().menu.append(self._copy_menu_item)
+        self._copy_menu_item.show()
+ 
+    def get_recd(self):
+        return self._recd
 
+    def get_image(self):
+        img = gtk.Image()
+        ipb = self._recd.getThumbPixbuf()
+        if self._recd.type == constants.TYPE_PHOTO:
+            path = 'object-photo.svg'
+        elif self._recd.type == constants.TYPE_VIDEO:
+            path = 'object-video.svg'
+        elif self._recd.type == constants.TYPE_AUDIO:
+            path = 'object-audio.svg'
 
-    def cleanUp( self ):
-        self.rem_menu_item.disconnect( self.ACTIVATE_REMOVE_ID )
-        if (self.ACTIVATE_COPY_ID != 0):
-            self.copy_menu_item.disconnect( self.ACTIVATE_COPY_ID )
+        pixbuf = utils.load_colored_svg(path, self._recd.colorStroke, self._recd.colorFill)
+        ipb.composite(pixbuf, 8, 8, ipb.get_width(), ipb.get_height(), 8, 8, 1, 1, gtk.gdk.INTERP_BILINEAR, 255)
+        img.set_from_pixbuf(pixbuf)
+        img.show()
+        return img
 
+    def cleanup(self):
+        self._rem_menu_item.disconnect(self._rem_menu_item_handler)
+        if self._copy_menu_item_handler != None:
+            self._copy_menu_item.disconnect(self._copy_menu_item_handler)
 
-    def _itemRemoveCb(self, widget):
-        self.ui.deleteThumbSelection( self.recd )
+    def _remove_clicked(self, widget):
+        self.emit('remove-requested')
 
-
-    def _itemCopyToClipboardCb(self, widget):
-        self.ui.copyToClipboard( self.recd )
+    def _copy_clipboard_clicked(self, widget):
+        self.emit('copy-clipboard-requested')

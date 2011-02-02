@@ -2,15 +2,11 @@ import base64
 import rsvg
 import re
 import os
-import statvfs
-import cairo
-import gc
 import gtk
 import time
 from time import strftime
-import hippo
 
-from sugar import util
+import constants
 
 def getStringFromPixbuf(pixbuf):
     data = [""]
@@ -31,9 +27,9 @@ def getPixbufFromString(str):
     return pbl.get_pixbuf()
 
 
-def loadSvg( data, stroke, fill ):
-    if ((stroke == None) or (fill == None)):
-        return rsvg.Handle( data=data )
+def load_colored_svg(filename, stroke, fill):
+    path = os.path.join(constants.GFX_PATH, filename)
+    data = open(path, 'r').read()
 
     entity = '<!ENTITY fill_color "%s">' % fill
     data = re.sub('<!ENTITY fill_color .*>', entity, data)
@@ -41,8 +37,7 @@ def loadSvg( data, stroke, fill ):
     entity = '<!ENTITY stroke_color "%s">' % stroke
     data = re.sub('<!ENTITY stroke_color .*>', entity, data)
 
-    return rsvg.Handle( data=data )
-
+    return rsvg.Handle(data=data).get_pixbuf()
 
 def getUniqueFilepath( path, i ):
     pathOb = os.path.abspath( path )
@@ -53,56 +48,9 @@ def getUniqueFilepath( path, i ):
     else:
         return os.path.abspath( newPath )
 
-
-def generateThumbnail( pixbuf, scale, thumbw, thumbh ):
-    #need to generate thumbnail version here
-    thumbImg = cairo.ImageSurface(cairo.FORMAT_ARGB32, thumbw, thumbh)
-    tctx = cairo.Context(thumbImg)
-    img = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
-    tctx.scale(scale, scale)
-    tctx.set_source_surface(img, 0, 0)
-    tctx.paint()
-    gc.collect()
-    return thumbImg
-
-
-def scaleSvgToDim( handle, dim ):
-    #todo...
-    scale = 1.0
-
-    svgDim = handle.get_dimension_data()
-    if (svgDim[0] > dim[0]):
-        pass
-
-    return scale
-
+def generate_thumbnail(pixbuf):
+    return pixbuf.scale_simple(108, 81, gtk.gdk.INTERP_BILINEAR)
 
 def getDateString( when ):
     return strftime( "%c", time.localtime(when) )
-
-
-def grayScalePixBuf2( pb, copy ):
-    arr = pb.get_pixels_array()
-    if (copy):
-        arr = arr.copy()
-    for row in arr:
-        for pxl in row:
-            y = 0.3*pxl[0][0]+0.59*pxl[1][0]+0.11*pxl[2][0]
-            pxl[0][0] = y
-            pxl[1][0] = y
-            pxl[2][0] = y
-    return gtk.gdk.pixbuf_new_from_array(arr, pb.get_colorspace(), pb.get_bits_per_sample())
-
-
-def grayScalePixBuf( pb, copy ):
-    pb2 = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, pb.get_width(), pb.get_height())
-    pb.saturate_and_pixelate(pb2, 0, 0)
-    return pb2
-
-
-def getFreespaceKb( ):
-    stat = os.statvfs("/home")
-    freebytes  = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
-    freekb = freebytes / 1024
-    return freekb
 

@@ -13,8 +13,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gst
-
+import os
 import logging
+import constants
+
 logger = logging.getLogger('record:aplay.py')
 
 def play(file, done_cb=None):
@@ -37,7 +39,7 @@ def play(file, done_cb=None):
     bus.connect('message::eos', eos_cb)
     bus.connect('message::error', error_cb)
 
-    player.props.uri = 'file://' + file
+    player.props.uri = 'file://' + os.path.join(constants.GFX_PATH, file)
     player.set_state(gst.STATE_PLAYING)
 
 

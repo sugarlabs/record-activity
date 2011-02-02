@@ -19,345 +19,316 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-
-import uuid
-import urllib
-import string
-import fnmatch
-import os
-import random
-import cairo
-import gtk
-import gtk.gdk
-import pygtk
-pygtk.require('2.0')
-import gc
-import math
-import time
-import gobject
-import operator
-
+from gettext import gettext as _
+from xml.dom.minidom import parse
 import logging
-logger = logging.getLogger('record:model.py')
+import uuid
+import os
+import time
+import json
 
+import gobject
+import gst
+
+import sugar.profile
 import sugar.env
 
-from constants import Constants
+import aplay
+import constants
 from instance import Instance
 from recorded import Recorded
-from color import Color
-from ui import UI
 import utils
-import record
 import serialize
+from collab import RecordCollab
+from glive import Glive
+from gplay import Gplay
 
+logger = logging.getLogger('model')
 
 class Model:
-    def __init__( self, pca ):
-        self.ca = pca
-        self.MODE = Constants.MODE_PHOTO
-        self.UPDATING = True
-        self.RECORDING = False
-        self.FULL = self._isXoFull()
+    def __init__(self, activity_obj):
+        self.activity = activity_obj
+
+        self.collab = RecordCollab(self.activity, self)
+        self.glive = Glive(self.activity, self)
+        self.gplay = Gplay(self.activity)
+        self.gplay.connect('playback-status-changed', self._playback_status_changed)
+
+        self._mode = None
+        self._state = constants.STATE_READY
+        self._countdown_value = 0
+        self._countdown_handle = None
+        self._timer_value = 0
+        self._timer_duration = 0
+        self._timer_handle = None
 
         self.mediaHashs = {}
-        for key,value in Constants.mediaTypes.items():
+        for key, value in constants.MEDIA_INFO.items():
             self.mediaHashs[key] = []
 
+    def write_file(self, path):
+        ui_serialized = self.activity.serialize()
+        self.mediaHashs['ui'] = ui_serialized
+        dom = serialize.saveMediaHash(self.mediaHashs, self.activity)
+        ui_data = json.dumps(ui_serialized)
+        ui_el = dom.createElement('ui')
+        ui_el.appendChild(dom.createTextNode(ui_data))
+        dom.documentElement.appendChild(ui_el)
 
-    def updateXoFullStatus( self ):
-        self.FULL = self._isXoFull()
+        fd = open(path, "w")
+        dom.writexml(fd)
+        fd.close()
 
+    def read_file(self, path):
+        try:
+            dom = parse(path)
+        except Exception, e:
+            logger.error('read_file: %s' % e)
+            return
 
-    def _isXoFull( self ):
-        full = False
-        if (utils.getFreespaceKb() <= Constants.keepFreeKbOnXo):
-            full = True
+        serialize.fillMediaHash(dom, self.mediaHashs)
+        for i in dom.documentElement.getElementsByTagName('ui'):
+            for ui_el in i.childNodes:
+                self.activity.deserialize(json.loads(ui_el.data))
 
-        return full
+        for recd in self.mediaHashs[self._mode]:
+            self.activity.add_thumbnail(recd, True)
 
+    def get_has_camera(self):
+        return self.glive.get_has_camera()
 
-    def getRecdByMd5( self, md5 ):
-        for mh in range (0, len(self.mediaHashs)):
-            for r in range (0, len(self.mediaHashs[mh])):
-                recd = self.mediaHashs[mh][r]
-                if (recd.thumbMd5 == md5):
-                    return recd
-                elif (recd.mediaMd5 == md5):
+    def get_nickname(self):
+        return sugar.profile.get_nick_name()
+
+    def get_mode(self):
+        return self._mode
+
+    def change_mode(self, mode):
+        if mode == self._mode:
+            return
+
+        self._mode = mode
+
+        self.activity.remove_all_thumbnails()
+        for recd in self.mediaHashs[mode]:
+            self.activity.add_thumbnail(recd, True)
+
+        self.set_state(constants.STATE_READY)
+
+        if mode == constants.MODE_PHOTO:
+            self.glive.play()
+
+    def ui_frozen(self):
+        return not self._state == constants.STATE_READY 
+
+    def set_state(self, state):
+        self._state = state
+
+        if state == constants.STATE_READY:
+            self.gplay.stop()
+            self.glive.play()
+
+        self.activity.set_state(state)
+
+    def get_state(self):
+        return self._state
+
+    def set_progress(self, value, text):
+        self.activity.set_progress(value, text)
+
+    def _timer_tick(self):
+        self._timer_value = self._timer_value - 1
+        value = self._timer_value
+        progress_value = 1 - (float(value) / float(self._timer_duration))
+
+        mins = value / 60
+        secs = value % 60
+        text = _('%d:%02d remaining') % (mins, secs)
+
+        self.set_progress(progress_value, text)
+
+        if self._timer_value <= 0:
+            self._timer_handle = None
+            self._timer_value = 0
+            self._stop_media_capture()
+            return False
+
+        return True
+
+    def _start_media_capture(self):
+        if self._mode == constants.MODE_PHOTO:
+            self.activity.set_shutter_sensitive(False)
+            self.glive.take_photo()
+            return
+
+        self._timer_value = self.activity.get_selected_duration()
+        self._timer_duration = self._timer_value
+        self._timer_handle = gobject.timeout_add(1000, self._timer_tick)
+
+        self.activity.set_shutter_sensitive(True)
+        self.set_state(constants.STATE_RECORDING)
+
+        if self._mode == constants.MODE_VIDEO:
+            quality = self.activity.get_selected_quality()
+            self.glive.record_video(quality)
+        elif self._mode == constants.MODE_AUDIO:
+            self.glive.record_audio()
+
+    def _stop_media_capture(self):
+        if self._timer_handle:
+            gobject.source_remove(self._timer_handle)
+            self._timer_handle = None
+            self._timer_value = 0
+
+        self.set_progress(0, '')
+
+        if self._mode == constants.MODE_VIDEO:
+            self.glive.stop_recording_video()
+        elif self._mode == constants.MODE_AUDIO:
+            self.glive.stop_recording_audio()
+
+        self.set_state(constants.STATE_PROCESSING)
+
+    def shutter_sound(self, done_cb=None):
+        aplay.play('photoShutter.wav', done_cb)
+
+    def _countdown_tick(self):
+        self._countdown_value = self._countdown_value - 1
+        value = self._countdown_value
+        self.activity.set_countdown(value)
+
+        if value <= 0:
+            self._countdown_handle = None
+            self._countdown_value = 0
+            self.shutter_sound(self._start_media_capture)
+            return False
+
+        return True
+
+    def do_shutter(self):
+        # if recording, stop
+        if self._state == constants.STATE_RECORDING:
+            self._stop_media_capture()
+            return
+
+        # if timer is selected, start countdown
+        timer = self.activity.get_selected_timer()
+        if timer > 0:
+            self.activity.set_shutter_sensitive(False)
+            self._countdown_value = self.activity.get_selected_timer()
+            self._countdown_handle = gobject.timeout_add(1000, self._countdown_tick)
+            return
+
+        # otherwise, capture normally
+        self.shutter_sound(self._start_media_capture)
+
+    # called from gstreamer thread
+    def still_ready(self, pixbuf):
+        gobject.idle_add(self.activity.show_still, pixbuf)
+
+    def add_recd(self, recd):
+        self.mediaHashs[recd.type].append(recd)
+        if self._mode == recd.type:
+            self.activity.add_thumbnail(recd, True)
+
+        if not recd.buddy:
+            self.collab.share_recd(recd)
+
+    # called from gstreamer thread
+    def save_photo(self, pixbuf):
+        recd = self.createNewRecorded(constants.TYPE_PHOTO)
+
+        imgpath = os.path.join(Instance.instancePath, recd.mediaFilename)
+        pixbuf.save(imgpath, "jpeg")
+
+        thumbpath = os.path.join(Instance.instancePath, recd.thumbFilename)
+        pixbuf = utils.generate_thumbnail(pixbuf)
+        pixbuf.save(thumbpath, "png")
+
+        #now that we've saved both the image and its pixbuf, we get their md5s
+        self.createNewRecordedMd5Sums( recd )
+
+        gobject.idle_add(self.add_recd, recd, priority=gobject.PRIORITY_HIGH)
+        gobject.idle_add(self.activity.set_shutter_sensitive, True, priority=gobject.PRIORITY_HIGH)
+
+    # called from gstreamer thread
+    def save_video(self, path, still):
+        recd = self.createNewRecorded(constants.TYPE_VIDEO)
+        os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
+
+        thumb_path = os.path.join(Instance.instancePath, recd.thumbFilename)
+        still = utils.generate_thumbnail(still)
+        still.save(thumb_path, "png")
+
+        self.createNewRecordedMd5Sums( recd )
+
+        gobject.idle_add(self.add_recd, recd, priority=gobject.PRIORITY_HIGH)
+        gobject.idle_add(self.set_state, constants.STATE_READY)
+
+    def save_audio(self, path, still):
+        recd = self.createNewRecorded(constants.TYPE_AUDIO)
+        os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
+
+        image_path = os.path.join(Instance.instancePath, "audioPicture.png")
+        image_path = utils.getUniqueFilepath(image_path, 0)
+        still.save(image_path, "png")
+        recd.audioImageFilename = os.path.basename(image_path)
+
+        thumb_path = os.path.join(Instance.instancePath, recd.thumbFilename)
+        still = utils.generate_thumbnail(still)
+        still.save(thumb_path, "png")
+
+        self.createNewRecordedMd5Sums( recd )
+
+        gobject.idle_add(self.add_recd, recd, priority=gobject.PRIORITY_HIGH)
+        gobject.idle_add(self.set_state, constants.STATE_READY)
+
+    def _playback_status_changed(self, widget, status, value):
+        self.activity.set_playback_scale(value)
+        if status == gst.STATE_NULL:
+            self.activity.set_paused(True)
+
+    def play_audio(self, recd):
+        self.gplay.set_location("file://" + recd.getMediaFilepath())
+        self.gplay.play()
+        self.activity.set_paused(False)
+
+    def play_video(self, recd):
+        self.gplay.set_location("file://" + recd.getMediaFilepath())
+        self.glive.stop()
+        self.gplay.play()
+        self.glive.play(use_xv=False)
+        self.activity.set_paused(False)
+
+    def play_pause(self):
+        if self.gplay.get_state() == gst.STATE_PLAYING:
+            self.gplay.pause()
+            self.activity.set_paused(True)
+        else:
+            self.gplay.play()
+            self.activity.set_paused(False)
+
+    def start_seek(self):
+        self.gplay.pause()
+
+    def do_seek(self, position):
+        self.gplay.seek(position)
+
+    def end_seek(self):
+        self.gplay.play()
+
+    def get_recd_by_md5(self, md5):
+        for mh in self.mediaHashs.values():
+            for recd in mh:
+                if recd.thumbMd5 == md5 or recd.mediaMd5 == md5:
                     return recd
 
         return None
 
+    def createNewRecorded(self, type):
+        recd = Recorded()
 
-    def isVideoMode( self ):
-        return self.MODE == Constants.MODE_VIDEO
-
-
-    def isPhotoMode( self ):
-        return self.MODE == Constants.MODE_PHOTO
-
-
-    def displayThumb( self, recd, forceUpdating ):
-        #to avoid Xlib: unexpected async reply error when taking a picture on a gst callback, always call with idle_add
-        #this happens b/c this might get called from a gstreamer callback
-        if (not recd.type == self.MODE):
-            return
-
-        if (forceUpdating):
-            self.setUpdating( True )
-        hash = self.mediaHashs[recd.type]
-        if (len(hash) > 0):
-            self.ca.ui.addThumb(recd, forceUpdating)
-        if (forceUpdating):
-            self.setUpdating( False )
-
-
-    def setupMode( self, type, update ):
-        if (not type == self.MODE):
-            return
-
-        self.setUpdating( True )
-        self.ca.ui.removeThumbs()
-        hash = self.mediaHashs[type]
-        for i in range (0, len(hash)):
-            self.ca.ui.addThumb( hash[i], True )
-        if (update):
-            self.ca.ui.updateModeChange()
-        self.setUpdating(False)
-
-
-    def showNextThumb( self, shownRecd ):
-        if (shownRecd == None):
-            self.showLastThumb()
-        else:
-            hash = self.mediaHashs[self.MODE]
-            if (len(hash) > 0):
-                hash = self.mediaHashs[self.MODE]
-                i = operator.indexOf( hash, shownRecd )
-                i = i+1
-                if (i>=len(hash)):
-                    i = 0
-                self.ca.ui.showThumbSelection( hash[i] )
-
-
-    def showPrevThumb( self, shownRecd ):
-        if (shownRecd == None):
-            self.showLastThumb()
-        else:
-            hash = self.mediaHashs[self.MODE]
-            if (len(hash) > 0):
-                hash = self.mediaHashs[self.MODE]
-                i = operator.indexOf( hash, shownRecd )
-                i = i-1
-                if (i<0):
-                    i = len(hash)-1
-                self.ca.ui.showThumbSelection( hash[i] )
-
-
-    def showLastThumb( self ):
-        hash = self.mediaHashs[self.MODE]
-        if (len(hash) > 0):
-            self.ca.ui.showThumbSelection( hash[len(hash)-1] )
-
-
-    def doShutter( self ):
-        if (self.UPDATING):
-            return
-
-        if (self.MODE == Constants.MODE_PHOTO):
-            self.startTakingPhoto()
-        elif (self.MODE == Constants.MODE_VIDEO):
-            if (not self.RECORDING):
-                self.startRecordingVideo()
-            else:
-                #post-processing begins now, so queue up this gfx
-                self.ca.ui.showPostProcessGfx(True)
-                self.stopRecordingVideo()
-        elif (self.MODE == Constants.MODE_AUDIO):
-            if (not self.RECORDING):
-                self.startRecordingAudio()
-            else:
-                #post-processing begins now, so queue up this gfx
-                self.ca.ui.showPostProcessGfx(True)
-                self.stopRecordingAudio()
-
-
-    def stopRecordingAudio( self ):
-        gobject.source_remove( self.ca.ui.UPDATE_DURATION_ID )
-        self.ca.ui.progressWindow.updateProgress( 0, "" )
-        self.setUpdating( True )
-        self.setRecording( False )
-        self.ca.ui.FULLSCREEN = False
-        self.ca.ui.updateVideoComponents()
-
-        self.ca.glive.stopRecordingAudio( )
-
-
-    def saveAudio( self, tmpPath, pixbuf ):
-        self.setUpdating( True )
-
-        recd = self.createNewRecorded( Constants.TYPE_AUDIO )
-        os.rename( tmpPath, os.path.join(Instance.instancePath,recd.mediaFilename))
-
-        thumbPath = os.path.join(Instance.instancePath, recd.thumbFilename)
-        scale = float((UI.dim_THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
-        thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
-        thumbImg.write_to_png(thumbPath)
-
-        imagePath = os.path.join(Instance.instancePath, "audioPicture.png")
-        imagePath = utils.getUniqueFilepath( imagePath, 0 )
-        pixbuf.save( imagePath, "png", {} )
-        recd.audioImageFilename = os.path.basename(imagePath)
-
-        #at this point, we have both audio and thumb sapath, so we can save the recd
-        self.createNewRecordedMd5Sums( recd )
-
-        audioHash = self.mediaHashs[Constants.TYPE_AUDIO]
-        audioHash.append( recd )
-        gobject.idle_add(self.displayThumb, recd, True)
-        self.doPostSaveVideo()
-        self.meshShareRecd( recd )
-
-
-    def startRecordingVideo( self ):
-        self.setUpdating( True )
-        self.setRecording( True )
-        #let the red eye kick in before we start the video underway
-        gobject.idle_add( self.beginRecordingVideo )
-
-
-    def beginRecordingVideo( self ):
-        self.ca.ui.recordVideo()
-        self.setUpdating( False )
-
-
-    def startRecordingAudio( self ):
-        self.setUpdating( True )
-        self.setRecording( True )
-        self.ca.ui.recordAudio()
-        self.setUpdating( False )
-
-
-    def setUpdating( self, upd ):
-        self.UPDATING = upd
-        self.ca.ui.updateButtonSensitivities()
-
-
-    def setRecording( self, rec ):
-        self.RECORDING = rec
-        self.ca.ui.updateButtonSensitivities()
-
-
-    def stopRecordingVideo( self ):
-        self.ca.glive.stopRecordingVideo()
-        gobject.source_remove( self.ca.ui.UPDATE_DURATION_ID )
-        self.setUpdating( True )
-        self.setRecording( False )
-        self.ca.ui.FULLSCREEN = False
-        self.ca.ui.updateVideoComponents()
-
-
-    def saveVideo( self, pixbuf, tmpPath, wid, hit ):
-        recd = self.createNewRecorded( Constants.TYPE_VIDEO )
-        os.rename( tmpPath, os.path.join(Instance.instancePath,recd.mediaFilename))
-
-        thumbPath = os.path.join(Instance.instancePath, recd.thumbFilename)
-        scale = float((UI.dim_THUMB_WIDTH+0.0)/(wid+0.0))
-        thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
-        thumbImg.write_to_png(thumbPath)
-
-        self.createNewRecordedMd5Sums( recd )
-
-        videoHash = self.mediaHashs[Constants.TYPE_VIDEO]
-        videoHash.append( recd )
-        self.doPostSaveVideo()
-        gobject.idle_add(self.displayThumb, recd, True)
-        self.meshShareRecd( recd )
-
-
-    def meshShareRecd( self, recd ):
-        #hey, i just took a cool video.audio.photo!  let me show you!
-        if (self.ca.recTube != None):
-            logger.debug('meshShareRecd')
-            recdXml = serialize.getRecdXmlMeshString(recd)
-            self.ca.recTube.notifyBudsOfNewRecd( Instance.keyHashPrintable, recdXml )
-
-
-    def cannotSaveVideo( self ):
-        self.doPostSaveVideo()
-
-
-    def doPostSaveVideo( self ):
-        self.ca.ui.showPostProcessGfx(False)
-
-        #prep the ui for your return
-        self.ca.ui.LAST_MODE = -1
-        self.ca.ui.TRANSCODING = False
-
-        #resume live video from the camera (if the activity is active)
-        if (self.ca.ui.ACTIVE):
-            self.ca.ui.updateVideoComponents()
-
-        self.ca.ui.progressWindow.updateProgress( 0, "" )
-        self.setRecording( False )
-        self.setUpdating( False )
-
-
-    def abandonRecording( self ):
-
-        self.ca.ui.LAST_MODE = -1
-        self.ca.ui.TRANSCODING = False
-        self.ca.ui.completeTimer()
-        self.ca.ui.completeCountdown()
-        self.setRecording(False)
-
-        self.ca.ui.progressWindow.updateProgress( 0, "" )
-
-        self.ca.glive.abandonMedia()
-
-
-    def stoppedRecordingVideo( self ):
-        self.setUpdating( False )
-
-
-    def startTakingPhoto( self ):
-        self.setUpdating( True )
-        self.ca.glive.takePhoto()
-
-
-    def savePhoto( self, pixbuf ):
-        recd = self.createNewRecorded( Constants.TYPE_PHOTO )
-
-        imgpath = os.path.join(Instance.instancePath, recd.mediaFilename)
-        pixbuf.save( imgpath, "jpeg" )
-
-        thumbpath = os.path.join(Instance.instancePath, recd.thumbFilename)
-        scale = float((UI.dim_THUMB_WIDTH+0.0)/(pixbuf.get_width()+0.0))
-        thumbImg = utils.generateThumbnail(pixbuf, scale, UI.dim_THUMB_WIDTH, UI.dim_THUMB_HEIGHT)
-        thumbImg.write_to_png(thumbpath)
-        gc.collect()
-        #now that we've saved both the image and its pixbuf, we get their md5s
-        self.createNewRecordedMd5Sums( recd )
-
-        photoHash = self.mediaHashs[Constants.TYPE_PHOTO]
-        photoHash.append( recd )
-        gobject.idle_add(self.displayThumb, recd, True)
-
-        self.meshShareRecd( recd )
-
-
-    def addMeshRecd( self, recd ):
-        #todo: sort on time-taken, not on their arrival time over the mesh (?)
-        self.mediaHashs[recd.type].append( recd )
-
-        #updateUi, but don't lock up the buttons if they're recording or whatever
-        gobject.idle_add(self.displayThumb, recd, False)
-
-
-    def createNewRecorded( self, type ):
-        recd = Recorded( )
-
-        recd.recorderName = Instance.nickName
+        recd.recorderName = self.get_nickname()
         recd.recorderHash = Instance.keyHashPrintable
 
         #to create a file, use the hardware_id+time *and* check if available or not
@@ -367,7 +338,7 @@ class Model:
 
         mediaThumbFilename = str(recd.recorderHash) + "_" + str(recd.time)
         mediaFilename = mediaThumbFilename
-        mediaFilename = mediaFilename + "." + Constants.mediaTypes[type][Constants.keyExt]
+        mediaFilename = mediaFilename + "." + constants.MEDIA_INFO[type]['ext']
         mediaFilepath = os.path.join( Instance.instancePath, mediaFilename )
         mediaFilepath = utils.getUniqueFilepath( mediaFilepath, 0 )
         recd.mediaFilename = os.path.basename( mediaFilepath )
@@ -377,15 +348,17 @@ class Model:
         thumbFilepath = utils.getUniqueFilepath( thumbFilepath, 0 )
         recd.thumbFilename = os.path.basename( thumbFilepath )
 
-        stringType = Constants.mediaTypes[type][Constants.keyIstr]
-        recd.title = Constants.istrBy % {"1":stringType, "2":str(recd.recorderName)}
+        stringType = constants.MEDIA_INFO[type]['istr']
 
-        recd.colorStroke = Instance.colorStroke
-        recd.colorFill = Instance.colorFill
+        # Translators: photo by photographer, e.g. "Photo by Mary"
+        recd.title = _('%s by %s') % (stringType, recd.recorderName)
+
+        color = sugar.profile.get_color()
+        recd.colorStroke = color.get_stroke_color()
+        recd.colorFill = color.get_fill_color()
 
         logger.debug('createNewRecorded: ' + str(recd) + ", thumbFilename:" + str(recd.thumbFilename))
         return recd
-
 
     def createNewRecordedMd5Sums( self, recd ):
         recd.thumbMd5 = recd.mediaMd5 = str(uuid.uuid4())
@@ -402,56 +375,29 @@ class Model:
         mBytes = os.stat(mediaFile)[6]
         recd.mediaBytes = mBytes
 
-
-    def deleteRecorded( self, recd ):
+    def delete_recd(self, recd):
         recd.deleted = True
+        self.mediaHashs[recd.type].remove(recd)
 
-        #clear the index
-        hash = self.mediaHashs[recd.type]
-        index = hash.index(recd)
-        hash.remove( recd )
+        if recd.meshUploading:
+            return
 
-        if (not recd.meshUploading):
-            self.doDeleteRecorded( recd )
-
-
-    def doDeleteRecorded( self, recd ):
         #remove files from the filesystem if not on the datastore
-        if (recd.datastoreId == None):
+        if recd.datastoreId == None:
             mediaFile = recd.getMediaFilepath()
-            if (os.path.exists(mediaFile)):
+            if os.path.exists(mediaFile):
                 os.remove(mediaFile)
 
-            thumbFile = recd.getThumbFilepath( )
-            if (os.path.exists(thumbFile)):
+            thumbFile = recd.getThumbFilepath()
+            if os.path.exists(thumbFile):
                 os.remove(thumbFile)
         else:
             #remove from the datastore here, since once gone, it is gone...
-            serialize.removeMediaFromDatastore( recd )
+            serialize.removeMediaFromDatastore(recd)
 
+    def request_download(self, recd):
+        self.activity.show_still(recd.getThumbPixbuf())
+        self.set_state(constants.STATE_DOWNLOADING)
+        self.collab.request_download(recd)
+        self.activity.update_download_progress(recd)
 
-    def doVideoMode( self ):
-        if (self.MODE == Constants.MODE_VIDEO):
-            return
-
-        self.MODE = Constants.MODE_VIDEO
-        self.setUpdating(True)
-        gobject.idle_add( self.setupMode, self.MODE, True )
-
-
-    def doPhotoMode( self ):
-        if (self.MODE == Constants.MODE_PHOTO):
-            return
-
-        self.MODE = Constants.MODE_PHOTO
-        self.setUpdating(True)
-        gobject.idle_add( self.setupMode, self.MODE, True )
-
-
-    def doAudioMode( self ):
-        if (self.MODE == Constants.MODE_AUDIO):
-            return
-
-        self.MODE = Constants.MODE_AUDIO
-        self.setUpdating(True)
-        gobject.idle_add( self.setupMode, self.MODE, True )
