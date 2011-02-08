@@ -1,0 +1,310 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-07-28 00:30-0400\n"
+"PO-Revision-Date: 2010-07-23 11:30+0200\n"
+"Last-Translator: Tabitha <tabitha.roder@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: sm\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 2.0.3\n"
+
+#: activity/activity.info:2 constants.py:122
+msgid "Record"
+msgstr "pu'ele"
+
+#: constants.py:21
+#, python-format
+msgid "%(1)s minute"
+msgid_plural "%(1)s minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: constants.py:25
+#, python-format
+msgid "%(1)s second"
+msgid_plural "%(1)s seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: constants.py:123
+msgid "Photo"
+msgstr ""
+
+#: constants.py:124
+msgid "Video"
+msgstr ""
+
+#: constants.py:125
+msgid "Audio"
+msgstr "leo"
+
+#: constants.py:126
+msgid "Time Lapse"
+msgstr ""
+
+#: constants.py:127
+msgid "Animation"
+msgstr ""
+
+#: constants.py:128
+msgid "Panorama"
+msgstr ""
+
+#: constants.py:129
+msgid "Interview"
+msgstr ""
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: constants.py:131
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr ""
+
+#: constants.py:132
+msgid "Title:"
+msgstr ""
+
+#: constants.py:133
+msgid "Recorder:"
+msgstr ""
+
+#: constants.py:134
+msgid "Date:"
+msgstr ""
+
+#: constants.py:135
+msgid "Tags:"
+msgstr ""
+
+#: constants.py:136
+msgid "Saving"
+msgstr ""
+
+#: constants.py:137
+msgid "Finished recording"
+msgstr ""
+
+#: constants.py:138
+msgid "Remove"
+msgstr ""
+
+#: constants.py:139
+msgid "Stopped recording"
+msgstr ""
+
+#: constants.py:140
+msgid "Copy to clipboard"
+msgstr ""
+
+#: constants.py:141
+msgid "Timer:"
+msgstr ""
+
+#: constants.py:142
+msgid "Duration:"
+msgstr ""
+
+#: constants.py:143
+msgid "Remaining:"
+msgstr ""
+
+#: constants.py:144
+msgid "Immediate"
+msgstr ""
+
+#: constants.py:145
+msgid "Play"
+msgstr "ta'alo"
+
+#: constants.py:146
+msgid "Pause"
+msgstr ""
+
+#: constants.py:147
+msgid "Add frame"
+msgstr ""
+
+#: constants.py:148
+msgid "Remove frame"
+msgstr ""
+
+#: constants.py:149
+#, python-format
+msgid "%(1)s frames per second"
+msgstr ""
+
+#: constants.py:150
+msgid "Quality"
+msgstr ""
+
+#: constants.py:151
+msgid "Default"
+msgstr ""
+
+#: constants.py:152
+msgid "High"
+msgstr ""
+
+#: constants.py:153
+msgid "Low"
+msgstr ""
+
+#: constants.py:154
+msgid "Large file"
+msgstr ""
+
+#: constants.py:155
+msgid "Small file"
+msgstr ""
+
+#: constants.py:156
+msgid "Silent"
+msgstr ""
+
+#: constants.py:157
+msgid "Rotate"
+msgstr ""
+
+#: constants.py:158
+msgid "Width"
+msgstr ""
+
+#: constants.py:159
+msgid "Height"
+msgstr ""
+
+#: constants.py:160
+msgid "Click to take picture"
+msgstr ""
+
+#: constants.py:161
+msgid "Click to add picture"
+msgstr ""
+
+#. TRANS: Downloading Photo from Mary
+#: constants.py:163
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr ""
+
+#. TRANS: Cannot download this Photo
+#: constants.py:165
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr ""
+
+#. TRANS: Save Photo to:
+#: constants.py:167
+#, python-format
+msgid "Save %(1)s to:"
+msgstr ""
+
+#: constants.py:168
+#, python-format
+msgid "Your %(1)s is full"
+msgstr ""
+
+#: constants.py:169
+msgid "Journal"
+msgstr ""
+
+#: constants.py:170
+msgid "USB"
+msgstr ""
+
+#: constants.py:171
+msgid "SD Card"
+msgstr ""
+
+#: constants.py:172
+msgid "Preferences"
+msgstr ""
+
+#: constants.py:173
+msgid "Free space:"
+msgstr ""
+
+#. TRANS: 7 photos
+#: constants.py:175
+msgid "Bitrate"
+msgstr ""
+
+#: constants.py:176
+msgid "Maximum Bitrate"
+msgstr ""
+
+#: constants.py:177
+msgid "Minumum Bitrate"
+msgstr ""
+
+#: constants.py:178
+msgid "Manage Bitrate"
+msgstr ""
+
+#: constants.py:179
+msgid "Border"
+msgstr ""
+
+#: constants.py:180
+msgid "Center"
+msgstr ""
+
+#: constants.py:181
+msgid "Frames"
+msgstr ""
+
+#: constants.py:182
+msgid "Automatic keyframe detection"
+msgstr ""
+
+#: constants.py:183
+msgid "Force keyframe"
+msgstr ""
+
+#: constants.py:184
+msgid "Keyframe frequency"
+msgstr ""
+
+#: constants.py:185
+msgid "Keyframe minimum distance"
+msgstr ""
+
+#: constants.py:186
+msgid "Keyframe threshold"
+msgstr ""
+
+#: constants.py:187
+msgid "Noise Sensitivity"
+msgstr ""
+
+#: constants.py:188
+msgid "Quick"
+msgstr ""
+
+#: constants.py:189
+msgid "Sharpness"
+msgstr ""
+
+#: constants.py:190
+msgid "Capacity"
+msgstr ""
