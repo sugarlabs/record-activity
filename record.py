@@ -27,6 +27,7 @@ from gettext import ngettext
 import gtk
 from gtk import gdk
 import cairo
+import pango
 import pangocairo
 import pygst
 pygst.require('0.10')
