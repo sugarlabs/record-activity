@@ -277,8 +277,11 @@ class Glive:
     def _thumb_element(self, name):
         return self._thumb_pipes[-1].get_by_name(name)
 
+    def is_using_xv(self):
+        return self._pipeline.get_by_name("xsink") == self._xvsink
+
     def _configure_xv(self):
-        if self._pipeline.get_by_name("xsink") == self._xvsink:
+        if self.is_using_xv():
             # nothing to do, Xv already configured
             return self._xvsink
 

@@ -126,6 +126,13 @@ class Model:
 
         if state == constants.STATE_READY:
             self.gplay.stop()
+
+            # if we aren't using Xv (e.g. glive is playing as PIP in video
+            # mode), then stop the pipeline so that we switch back to Xv
+            # in the call that follows.
+            if not self.glive.is_using_xv():
+                self.glive.stop()
+
             self.glive.play()
 
         self.activity.set_state(state)
