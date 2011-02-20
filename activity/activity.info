@@ -3,6 +3,6 @@ name = Record
 bundle_id = org.laptop.RecordActivity
 class = record.Record
 icon = activity-record
-activity_version = 87
+activity_version = 88
 show_launcher = yes
 license = MIT
