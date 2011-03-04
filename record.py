@@ -108,7 +108,7 @@ class Record(activity.Activity):
         # have to track which recd is active
         self._active_recd = None
 
-        self.connect('key-press-event', self._key_pressed)
+        self.connect_after('key-press-event', self._key_pressed)
 
         self._active_toolbar_idx = 0
         self._toolbox = activity.ActivityToolbox(self)
