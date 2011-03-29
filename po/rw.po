@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 17:10-0400\n"
+"POT-Creation-Date: 2010-04-20 17:58+0000\n"
 "PO-Revision-Date: 2008-07-31 12:18+0200\n"
 "Last-Translator: GASHAYIJA Guillaume <gashayija2002@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,321 +15,323 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: activity/activity.info:2 constants.py:112
+#: activity/activity.info:2
+#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "Gufatamajwi"
 
-#: constants.py:113
+#: /home/sugar/src/activities/record.activity/constants.py:21
+#, python-format
+#, python-format, fuzzy
+msgid "%(1)s minute"
+msgid_plural "%(1)s minutes"
+msgstr[0] "%(1)s iminota"
+
+#: /home/sugar/src/activities/record.activity/constants.py:25
+#, python-format
+#, python-format, fuzzy
+msgid "%(1)s second"
+msgid_plural "%(1)s seconds"
+msgstr[0] "%(1)s amasegonda"
+
+#: /home/sugar/src/activities/record.activity/constants.py:123
 msgid "Photo"
 msgstr "ifoto"
 
-#: constants.py:114
+#: /home/sugar/src/activities/record.activity/constants.py:124
 msgid "Video"
 msgstr "Isohora mashusho"
 
-#: constants.py:115
+#: /home/sugar/src/activities/record.activity/constants.py:125
 msgid "Audio"
 msgstr "Isohora majwi"
 
-#: constants.py:116
+#: /home/sugar/src/activities/record.activity/constants.py:126
 msgid "Time Lapse"
 msgstr "igihe cyarangiye"
 
-#: constants.py:117
+#: /home/sugar/src/activities/record.activity/constants.py:127
 msgid "Animation"
 msgstr "kwerekana amashusho muburyo bunyuranamo"
 
-#: constants.py:118
+#: /home/sugar/src/activities/record.activity/constants.py:128
 msgid "Panorama"
 msgstr "panorama"
 
-#: constants.py:119
+#: /home/sugar/src/activities/record.activity/constants.py:129
 msgid "Interview"
 msgstr "isuzumabumenyi"
 
 # TRANS: photo by photographer, e.g., "Photo by Mary"
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:121
+#: /home/sugar/src/activities/record.activity/constants.py:131
 #, python-format
 msgid "%(1)s by %(2)s"
 msgstr "%(1)s na %(2)s"
 
-#: constants.py:122
+#: /home/sugar/src/activities/record.activity/constants.py:132
 msgid "Title:"
 msgstr "umutwe w`amagambo"
 
-#: constants.py:123
+#: /home/sugar/src/activities/record.activity/constants.py:133
 msgid "Recorder:"
 msgstr "Igifata amajwi"
 
-#: constants.py:124
+#: /home/sugar/src/activities/record.activity/constants.py:134
 msgid "Date:"
 msgstr "Itariki"
 
-#: constants.py:125
+#: /home/sugar/src/activities/record.activity/constants.py:135
 msgid "Tags:"
 msgstr "Tags:"
 
-#: constants.py:126
+#: /home/sugar/src/activities/record.activity/constants.py:136
 msgid "Saving"
 msgstr "kubika"
 
-#: constants.py:127
+#: /home/sugar/src/activities/record.activity/constants.py:137
 msgid "Finished recording"
 msgstr "kurangiza gufata amajwi"
 
-#: constants.py:128
-#, python-format
-#, fuzzy
-msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-msgstr "%(1)s amasaha, %(2)s iminota, %(1)s amasegonda asigaye"
-
-#: constants.py:129
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(1)s iminota, %(2)s amasegonda asigaye"
-
-#: constants.py:130
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "%(1)s amasaha asigaye"
-
-#: constants.py:131
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "%(1)s iminota isigaye"
-
-#: constants.py:132
-#, python-format
-msgid "%(1)s seconds remaining"
-msgstr "%(1)s amasegonda asigaye"
-
-#: constants.py:133
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s amasaha"
-
-#: constants.py:134
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s iminota"
-
-#: constants.py:135
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s amasegonda"
-
-#: constants.py:136
+#: /home/sugar/src/activities/record.activity/constants.py:138
 msgid "Remove"
 msgstr "Kuraho"
 
-#: constants.py:137
+#: /home/sugar/src/activities/record.activity/constants.py:139
 msgid "Stopped recording"
 msgstr "guhagarika gufata amajwi"
 
-#: constants.py:138
+#: /home/sugar/src/activities/record.activity/constants.py:140
 msgid "Copy to clipboard"
 msgstr "Koporora ushyire ku kibaho"
 
-#: constants.py:139
+#: /home/sugar/src/activities/record.activity/constants.py:141
 msgid "Timer:"
 msgstr "ikintu kigendera kugihe"
 
-#: constants.py:140
+#: /home/sugar/src/activities/record.activity/constants.py:142
 msgid "Duration:"
 msgstr "igihe"
 
-#: constants.py:141
+#: /home/sugar/src/activities/record.activity/constants.py:143
+msgid "Remaining:"
+msgstr ""
+
+#: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
 msgstr "akokanya"
 
-#: constants.py:142
+#: /home/sugar/src/activities/record.activity/constants.py:145
 msgid "Play"
 msgstr "gukina"
 
-#: constants.py:143
+#: /home/sugar/src/activities/record.activity/constants.py:146
 msgid "Pause"
 msgstr "Guhagarika by`akanya gato"
 
-#: constants.py:144
+#: /home/sugar/src/activities/record.activity/constants.py:147
 msgid "Add frame"
 msgstr "Ongeraho frame"
 
-#: constants.py:145
+#: /home/sugar/src/activities/record.activity/constants.py:148
 msgid "Remove frame"
 msgstr "Kuraho frame"
 
-#: constants.py:146
+#: /home/sugar/src/activities/record.activity/constants.py:149
 #, python-format
 msgid "%(1)s frames per second"
 msgstr "%(1)s frames ku isegonda"
 
-#: constants.py:147
+#: /home/sugar/src/activities/record.activity/constants.py:150
 msgid "Quality"
 msgstr "Imimerere y`ikintu"
 
-#: constants.py:148
+#: /home/sugar/src/activities/record.activity/constants.py:151
 msgid "Default"
 msgstr "ikintu kiri muburyo butemewe"
 
-#: constants.py:149
+#: /home/sugar/src/activities/record.activity/constants.py:152
 msgid "Best"
 msgstr "ikiza"
 
-#: constants.py:150
+#: /home/sugar/src/activities/record.activity/constants.py:153
 msgid "High"
 msgstr "Hejuru"
 
-#: constants.py:151
+#: /home/sugar/src/activities/record.activity/constants.py:154
 msgid "Low"
 msgstr "Hasi"
 
-#: constants.py:152
+#: /home/sugar/src/activities/record.activity/constants.py:155
 msgid "Large file"
 msgstr "Ububiko bunini"
 
-#: constants.py:153
+#: /home/sugar/src/activities/record.activity/constants.py:156
 msgid "Small file"
 msgstr "Ububiko buto"
 
-#: constants.py:154
+#: /home/sugar/src/activities/record.activity/constants.py:157
 msgid "Silent"
 msgstr "Guceceka"
 
-#: constants.py:155
+#: /home/sugar/src/activities/record.activity/constants.py:158
 msgid "Rotate"
 msgstr "kuzengurutsa"
 
-#: constants.py:156
+#: /home/sugar/src/activities/record.activity/constants.py:159
 msgid "Width"
 msgstr "ubugari"
 
-#: constants.py:157
+#: /home/sugar/src/activities/record.activity/constants.py:160
 msgid "Height"
 msgstr "Ubuhagarike"
 
-#: constants.py:158
+#: /home/sugar/src/activities/record.activity/constants.py:161
 msgid "Click to take picture"
 msgstr "Kanda ufate ifoto"
 
-#: constants.py:159
+#: /home/sugar/src/activities/record.activity/constants.py:162
 msgid "Click to add picture"
 msgstr "Kanda wongereho ifoto"
 
 # TRANS: Downloading Photo from Mary
 #. TRANS: Downloading Photo from Mary
-#: constants.py:161
+#: /home/sugar/src/activities/record.activity/constants.py:164
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
 msgstr "Kura kuri mudasobwa %(1)s kuva %(2)s"
 
 # TRANS: Cannot download this Photo
 #. TRANS: Cannot download this Photo
-#: constants.py:163
+#: /home/sugar/src/activities/record.activity/constants.py:166
 #, python-format
 msgid "Cannot download this %(1)s"
 msgstr "Ntibishoboka kuva kuri mudasobwa %(1)s"
 
 # TRANS: Save Photo to:
 #. TRANS: Save Photo to:
-#: constants.py:165
+#: /home/sugar/src/activities/record.activity/constants.py:168
 #, python-format
 #, fuzzy
 msgid "Save %(1)s to:"
 msgstr "Bika %(1) to:"
 
-#: constants.py:166
+#: /home/sugar/src/activities/record.activity/constants.py:169
 #, python-format
 msgid "Your %(1)s is full"
 msgstr "Iicyawer %(1)s kiruzuye"
 
-#: constants.py:167
+#: /home/sugar/src/activities/record.activity/constants.py:170
 msgid "Journal"
 msgstr "Ikinyamakuru"
 
-#: constants.py:168
+#: /home/sugar/src/activities/record.activity/constants.py:171
 msgid "USB"
 msgstr "USB"
 
-#: constants.py:169
+#: /home/sugar/src/activities/record.activity/constants.py:172
 msgid "SD Card"
 msgstr "iIkarita ya SD"
 
-#: constants.py:170
+#: /home/sugar/src/activities/record.activity/constants.py:173
 msgid "Preferences"
 msgstr "Ibyo wifuza"
 
-#: constants.py:171
+#: /home/sugar/src/activities/record.activity/constants.py:174
 msgid "Free space:"
 msgstr "Umwanya urimo ubusa"
 
-# TRANS: 7 photos
 #. TRANS: 7 photos
-#: constants.py:173
-#, python-format
-msgid "%(1)s photos"
-msgstr "%(1)s  Ifoto"
-
-#: constants.py:174
+#: /home/sugar/src/activities/record.activity/constants.py:176
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: constants.py:175
+#: /home/sugar/src/activities/record.activity/constants.py:177
 msgid "Maximum Bitrate"
 msgstr " Bitrate nini"
 
-#: constants.py:176
+#: /home/sugar/src/activities/record.activity/constants.py:178
 msgid "Minumum Bitrate"
 msgstr " Bitrate ntoya"
 
-#: constants.py:177
+#: /home/sugar/src/activities/record.activity/constants.py:179
 msgid "Manage Bitrate"
 msgstr "Manage Bitrate"
 
-#: constants.py:178
+#: /home/sugar/src/activities/record.activity/constants.py:180
 msgid "Border"
 msgstr "Umupaka"
 
-#: constants.py:179
+#: /home/sugar/src/activities/record.activity/constants.py:181
 msgid "Center"
 msgstr "Ihuriro"
 
-#: constants.py:180
+#: /home/sugar/src/activities/record.activity/constants.py:182
 msgid "Frames"
 msgstr "Frames"
 
-#: constants.py:181
+#: /home/sugar/src/activities/record.activity/constants.py:183
 msgid "Automatic keyframe detection"
 msgstr "Automatic Keyframe detection"
 
-#: constants.py:182
+#: /home/sugar/src/activities/record.activity/constants.py:184
 msgid "Force keyframe"
 msgstr "Force Keyframe"
 
-#: constants.py:183
+#: /home/sugar/src/activities/record.activity/constants.py:185
 msgid "Keyframe frequency"
 msgstr "Keyframe frequency"
 
-#: constants.py:184
+#: /home/sugar/src/activities/record.activity/constants.py:186
 msgid "Keyframe minimum distance"
 msgstr "Keyframe intera ntoya"
 
-#: constants.py:185
+#: /home/sugar/src/activities/record.activity/constants.py:187
 msgid "Keyframe threshold"
 msgstr "Keyframe trreshold"
 
-#: constants.py:186
+#: /home/sugar/src/activities/record.activity/constants.py:188
 msgid "Noise Sensitivity"
 msgstr "Urusakur rwumvikana"
 
-#: constants.py:187
+#: /home/sugar/src/activities/record.activity/constants.py:189
 msgid "Quick"
 msgstr "Vuba"
 
-#: constants.py:188
+#: /home/sugar/src/activities/record.activity/constants.py:190
 msgid "Sharpness"
 msgstr "Gutyara"
 
-#: constants.py:189
+#: /home/sugar/src/activities/record.activity/constants.py:191
 msgid "Capacity"
 msgstr "ubushobozi"
+
+#, python-format
+#, fuzzy
+#~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
+#~ msgstr "%(1)s amasaha, %(2)s iminota, %(1)s amasegonda asigaye"
+
+#, python-format
+#~ msgid "%(1)s minutes, %(2)s seconds remaining"
+#~ msgstr "%(1)s iminota, %(2)s amasegonda asigaye"
+
+#, python-format
+#~ msgid "%(1)s hours remaining"
+#~ msgstr "%(1)s amasaha asigaye"
+
+#, python-format
+#~ msgid "%(1)s minutes remaining"
+#~ msgstr "%(1)s iminota isigaye"
+
+#, python-format
+#~ msgid "%(1)s seconds remaining"
+#~ msgstr "%(1)s amasegonda asigaye"
+
+#, python-format
+#~ msgid "%(1)s hours"
+#~ msgstr "%(1)s amasaha"
+
+# TRANS: 7 photos
+#, python-format
+#~ msgid "%(1)s photos"
+#~ msgstr "%(1)s  Ifoto"

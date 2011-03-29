@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"POT-Creation-Date: 2011-03-26 16:45+0200\n"
 "PO-Revision-Date: 2008-03-30 13:33-0400\n"
 "Last-Translator: Prabhas Pokharel <motudai@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,315 +15,244 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: activity/activity.info:2 constants.py:90
+#: activity/activity.info:2
 msgid "Record"
 msgstr "खिच"
 
-#: constants.py:91
-msgid "Photo"
-msgstr "तस्बिर"
-
-#: constants.py:92
-msgid "Video"
-msgstr "भिडियो"
-
-#: constants.py:93
-msgid "Audio"
-msgstr "आवाज"
-
-#: constants.py:94
-msgid "Time Lapse"
-msgstr "गएको समय "
-
-#: constants.py:95
-msgid "Animation"
-msgstr "सजिबता"
-
-#: constants.py:96
-msgid "Panorama"
-msgstr "सर्वतोव्यापी दृश्य"
-
-#: constants.py:97
-msgid "Interview"
-msgstr "अन्तर्वार्ता"
-
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:99
 #, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(2)s ले खिचेको %1(s)"
+#, python-format, fuzzy
+#~ msgid "%(1)s minute"
+#~ msgid_plural "%(1)s minutes"
+#~ msgstr[0] "%(१) मिनेट"
 
-#: constants.py:100
-msgid "Title:"
-msgstr "शिर्षक:"
-
-#: constants.py:101
-msgid "Recorder:"
-msgstr "रिर्कडर:"
-
-#: constants.py:102
-msgid "Date:"
-msgstr "मिति:"
-
-#: constants.py:103
-msgid "Tags:"
-msgstr "चिन्ह:"
-
-#: constants.py:104
-msgid "Saving"
-msgstr "बचत गर्दै"
-
-#: constants.py:105
-msgid "Finished recording"
-msgstr "खिचेर सकियो"
-
-#: constants.py:106
 #, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "%(१) घन्टा,%(२) मिनेट,%(१) सेकेन्ड बाँकी"
+#, python-format, fuzzy
+#~ msgid "%(1)s second"
+#~ msgid_plural "%(1)s seconds"
+#~ msgstr[0] "%(१) सेकेन्ड"
 
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "%(१) मिनेट,%(२) सेकेन्ड बाँकी"
+#~ msgid "Photo"
+#~ msgstr "तस्बिर"
 
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "%(१) घन्टा बाँकी"
+#~ msgid "Video"
+#~ msgstr "भिडियो"
 
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "%(१) मिनेट बाँकी"
+#~ msgid "Audio"
+#~ msgstr "आवाज"
 
-#: constants.py:110
-#, python-format
-msgid "%(1)s seconds remaining"
-msgstr "%(१) सेकेन्ड बाँकी"
+#~ msgid "Time Lapse"
+#~ msgstr "गएको समय "
 
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(१) घन्टा"
+#~ msgid "Animation"
+#~ msgstr "सजिबता"
 
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(१) मिनेट"
+#~ msgid "Panorama"
+#~ msgstr "सर्वतोव्यापी दृश्य"
 
-#: constants.py:113 constants.py:120
+#~ msgid "Interview"
+#~ msgstr "अन्तर्वार्ता"
+
 #, python-format
-msgid "%(1)s seconds"
-msgstr "%(१) सेकेन्ड"
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(2)s ले खिचेको %1(s)"
+
+#~ msgid "Title:"
+#~ msgstr "शिर्षक:"
+
+#~ msgid "Recorder:"
+#~ msgstr "रिर्कडर:"
+
+#~ msgid "Date:"
+#~ msgstr "मिति:"
+
+#~ msgid "Tags:"
+#~ msgstr "चिन्ह:"
+
+#~ msgid "Saving"
+#~ msgstr "बचत गर्दै"
+
+#~ msgid "Finished recording"
+#~ msgstr "खिचेर सकियो"
 
 # हटाउ is a really better translation and slightly less rude (than निकाल) (agreed).
-#: constants.py:114
-msgid "Remove"
-msgstr "हटाउ"
+#~ msgid "Remove"
+#~ msgstr "हटाउ"
 
-#: constants.py:115
-msgid "Stopped recording"
-msgstr "खिच्न रोकियो"
+#~ msgid "Stopped recording"
+#~ msgstr "खिच्न रोकियो"
 
-#: constants.py:116
-msgid "Copy to clipboard"
-msgstr "क्लिपबोर्डमा सार"
+#~ msgid "Copy to clipboard"
+#~ msgstr "क्लिपबोर्डमा सार"
 
-#: constants.py:117
-msgid "Timer:"
-msgstr "समय सुचक:"
+#~ msgid "Timer:"
+#~ msgstr "समय सुचक:"
 
-#: constants.py:118
-msgid "Duration:"
-msgstr "अवधि:"
+#~ msgid "Duration:"
+#~ msgstr "अवधि:"
 
-#: constants.py:119
-msgid "Immediate"
-msgstr "तुरून्त"
+#~ msgid "Immediate"
+#~ msgstr "तुरून्त"
 
-#: constants.py:122
-msgid "Play"
-msgstr "खेल"
+#~ msgid "Play"
+#~ msgstr "खेल"
 
-#: constants.py:123
-msgid "Pause"
-msgstr "रोक"
+#~ msgid "Pause"
+#~ msgstr "रोक"
 
-#: constants.py:124
-msgid "Add frame"
-msgstr "फ्रेम जोड"
+#~ msgid "Add frame"
+#~ msgstr "फ्रेम जोड"
 
-#: constants.py:125
-msgid "Remove frame"
-msgstr "फ्रेम हटाउ"
+#~ msgid "Remove frame"
+#~ msgstr "फ्रेम हटाउ"
 
-#: constants.py:126
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "%(1)s फ्रेम प्रति सेकेण्ड"
+#~ msgid "%(1)s frames per second"
+#~ msgstr "%(1)s फ्रेम प्रति सेकेण्ड"
 
 # this is referring to quality of videos / audios. is गुण appropriate?
-#: constants.py:127
-msgid "Quality"
-msgstr "गुणस्तर"
+#~ msgid "Quality"
+#~ msgstr "गुणस्तर"
 
-#: constants.py:128
-msgid "Default"
-msgstr "डिफल्ट"
+#~ msgid "Default"
+#~ msgstr "डिफल्ट"
 
-#: constants.py:129
-msgid "Best"
-msgstr "सर्वोत्तम"
+#~ msgid "Best"
+#~ msgstr "सर्वोत्तम"
 
-#: constants.py:130
-msgid "High"
-msgstr "ठुलो"
+#~ msgid "High"
+#~ msgstr "ठुलो"
 
-#: constants.py:131
-msgid "Low"
-msgstr "सानो"
+#~ msgid "Low"
+#~ msgstr "सानो"
 
-#: constants.py:132
-msgid "Large file"
-msgstr "ठूलो फाइल"
+#~ msgid "Large file"
+#~ msgstr "ठूलो फाइल"
 
-#: constants.py:133
-msgid "Small file"
-msgstr "सानो फाइल"
+#~ msgid "Small file"
+#~ msgstr "सानो फाइल"
 
-#: constants.py:134
-msgid "Silent"
-msgstr "मौन"
+#~ msgid "Silent"
+#~ msgstr "मौन"
 
-#: constants.py:135
-msgid "Rotate"
-msgstr "घुमाउ"
+#~ msgid "Rotate"
+#~ msgstr "घुमाउ"
 
-#: constants.py:136
-msgid "Width"
-msgstr "चौडाई"
+#~ msgid "Width"
+#~ msgstr "चौडाई"
 
-#: constants.py:137
-msgid "Height"
-msgstr "उचाई"
+#~ msgid "Height"
+#~ msgstr "उचाई"
 
-#: constants.py:138
-msgid "Click to take picture"
-msgstr "तस्बिर लिन क्लिक गर"
+#~ msgid "Click to take picture"
+#~ msgstr "तस्बिर लिन क्लिक गर"
 
-#: constants.py:139
-msgid "Click to add picture"
-msgstr "तस्बिर थप्न क्लिक गर"
+#~ msgid "Click to add picture"
+#~ msgstr "तस्बिर थप्न क्लिक गर"
 
-#. TRANS: Downloading Photo from Mary
-#: constants.py:141
 #, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "%(१) बाट %(२) दाउनलोड गर्दै"
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "%(१) बाट %(२) दाउनलोड गर्दै"
 
-#. TRANS: Cannot download this Photo
-#: constants.py:143
 #, python-format
-msgid "Cannot download this %(1)s"
-msgstr "%(१) दाउनलोड गर्न सकेन"
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "%(१) दाउनलोड गर्न सकेन"
 
-#. TRANS: Save Photo to:
-#: constants.py:145
-msgid "Save %(1) to:"
-msgstr "%(१)मा बचाऊ"
-
-#: constants.py:146
 #, python-format
-msgid "Your %(1)s is full"
-msgstr "तिम्रो %(1) मा ठाउँ पुगेन"
+#, python-format, fuzzy
+#~ msgid "Save %(1)s to:"
+#~ msgstr "%(१)मा बचाऊ"
 
-#: constants.py:147
-msgid "Journal"
-msgstr "खाता"
-
-#: constants.py:148
-msgid "USB"
-msgstr "युएसबी"
-
-#: constants.py:149
-msgid "SD Card"
-msgstr "एसडी कार्ड"
-
-#: constants.py:150
-msgid "Preferences"
-msgstr "प्राथमिकता"
-
-#: constants.py:151
-msgid "Free space:"
-msgstr "खाली ठाउँ:"
-
-#. TRANS: 7 photos
-#: constants.py:153
 #, python-format
-msgid "%(1)s photos"
-msgstr "%(1)का तस्विरहरु"
+#~ msgid "Your %(1)s is full"
+#~ msgstr "तिम्रो %(1) मा ठाउँ पुगेन"
 
-#: constants.py:154
-msgid "Bitrate"
-msgstr "बिटरेट"
+#~ msgid "Journal"
+#~ msgstr "खाता"
 
-#: constants.py:155
-msgid "Maximum Bitrate"
-msgstr "सबभन्दा धेरै बिटरेट"
+#~ msgid "USB"
+#~ msgstr "युएसबी"
 
-#: constants.py:156
-msgid "Minumum Bitrate"
-msgstr "सबभन्दा थोरै बिटरेट"
+#~ msgid "SD Card"
+#~ msgstr "एसडी कार्ड"
 
-#: constants.py:157
-msgid "Manage Bitrate"
-msgstr "बिटरेट मिलाउ"
+#~ msgid "Preferences"
+#~ msgstr "प्राथमिकता"
 
-#: constants.py:158
-msgid "Border"
-msgstr "घेरा"
+#~ msgid "Free space:"
+#~ msgstr "खाली ठाउँ:"
 
-#: constants.py:159
-msgid "Center"
-msgstr "बीच"
+#~ msgid "Bitrate"
+#~ msgstr "बिटरेट"
 
-#: constants.py:160
-msgid "Frames"
-msgstr "फ्रेमहरु"
+#~ msgid "Maximum Bitrate"
+#~ msgstr "सबभन्दा धेरै बिटरेट"
 
-#: constants.py:161
-msgid "Automatic keyframe detection"
-msgstr "अटोमेटिक किफ्रेम डिटेक्सन्"
+#~ msgid "Minumum Bitrate"
+#~ msgstr "सबभन्दा थोरै बिटरेट"
 
-#: constants.py:162
-msgid "Force keyframe"
-msgstr "फोर्स किफ्रेम"
+#~ msgid "Manage Bitrate"
+#~ msgstr "बिटरेट मिलाउ"
 
-#: constants.py:163
-msgid "Keyframe frequency"
-msgstr "किफ्रेम फ्रिकोयन्सी"
+#~ msgid "Border"
+#~ msgstr "घेरा"
 
-#: constants.py:164
-msgid "Keyframe minimum distance"
-msgstr "िकफ्रेम नियुन दुरी "
+#~ msgid "Center"
+#~ msgstr "बीच"
 
-#: constants.py:165
-msgid "Keyframe threshold"
-msgstr "किफ्रम थ्रेसहोल्ड"
+#~ msgid "Frames"
+#~ msgstr "फ्रेमहरु"
 
-#: constants.py:166
-msgid "Noise Sensitivity"
-msgstr "नोइज सेन्सिटिभिटि"
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "अटोमेटिक किफ्रेम डिटेक्सन्"
 
-#: constants.py:167
-msgid "Quick"
-msgstr "छिटो"
+#~ msgid "Force keyframe"
+#~ msgstr "फोर्स किफ्रेम"
 
-#: constants.py:168
-msgid "Sharpness"
-msgstr "कडापन"
+#~ msgid "Keyframe frequency"
+#~ msgstr "किफ्रेम फ्रिकोयन्सी"
 
-#: constants.py:169
-msgid "Capacity"
-msgstr "क्षमता"
+#~ msgid "Keyframe minimum distance"
+#~ msgstr "िकफ्रेम नियुन दुरी "
+
+#~ msgid "Keyframe threshold"
+#~ msgstr "किफ्रम थ्रेसहोल्ड"
+
+#~ msgid "Noise Sensitivity"
+#~ msgstr "नोइज सेन्सिटिभिटि"
+
+#~ msgid "Quick"
+#~ msgstr "छिटो"
+
+#~ msgid "Sharpness"
+#~ msgstr "कडापन"
+
+#~ msgid "Capacity"
+#~ msgstr "क्षमता"
+
+#, python-format
+#~ msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+#~ msgstr "%(१) घन्टा,%(२) मिनेट,%(१) सेकेन्ड बाँकी"
+
+#, python-format
+#~ msgid "%(1)s minutes, %(2)s seconds remaining"
+#~ msgstr "%(१) मिनेट,%(२) सेकेन्ड बाँकी"
+
+#, python-format
+#~ msgid "%(1)s hours remaining"
+#~ msgstr "%(१) घन्टा बाँकी"
+
+#, python-format
+#~ msgid "%(1)s minutes remaining"
+#~ msgstr "%(१) मिनेट बाँकी"
+
+#, python-format
+#~ msgid "%(1)s seconds remaining"
+#~ msgstr "%(१) सेकेन्ड बाँकी"
+
+#, python-format
+#~ msgid "%(1)s hours"
+#~ msgstr "%(१) घन्टा"
+
+#, python-format
+#~ msgid "%(1)s photos"
+#~ msgstr "%(1)का तस्विरहरु"

@@ -58,7 +58,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
+"POT-Creation-Date: 2011-03-29 18:45+0200\n"
 "PO-Revision-Date: 2010-08-04 21:00+0200\n"
 "Last-Translator: Daniel Drake <dsd@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,308 +70,236 @@ msgstr ""
 "X-Generator: Pootle 2.0.3\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "Grabar"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s minuto"
-msgstr[1] "%(1)s minutos"
+#~ msgid "%(1)s minute"
+#~ msgid_plural "%(1)s minutes"
+#~ msgstr[0] "%(1)s minuto"
+#~ msgstr[1] "%(1)s minutos"
 
-#: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)s segundo"
-msgstr[1] "%(1)s segundos"
+#~ msgid "%(1)s second"
+#~ msgid_plural "%(1)s seconds"
+#~ msgstr[0] "%(1)s segundo"
+#~ msgstr[1] "%(1)s segundos"
 
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "Foto"
+#~ msgid "Photo"
+#~ msgstr "Foto"
 
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "Video"
+#~ msgid "Video"
+#~ msgstr "Video"
 
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "Audio"
+#~ msgid "Audio"
+#~ msgstr "Audio"
 
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "Lapso de tiempo"
+#~ msgid "Time Lapse"
+#~ msgstr "Lapso de tiempo"
 
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "Animación"
+#~ msgid "Animation"
+#~ msgstr "Animación"
 
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "Panorama"
+#~ msgid "Panorama"
+#~ msgstr "Panorama"
 
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "Entrevista"
+#~ msgid "Interview"
+#~ msgstr "Entrevista"
 
 # TRANS: photo by photographer, e.g., "Photo by Mary"
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
 #, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(1)s por %(2)s"
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(1)s por %(2)s"
 
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "Título:"
+#~ msgid "Title:"
+#~ msgstr "Título:"
 
 # Recorder seria el que hizo la grabacion...? En que difiere de "Author".
 # Respuesta: No hay diferencia válida para una traducción. Es más, en una cámara de video VHS se sustituye Recorder por Autor.
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "Autor:"
+#~ msgid "Recorder:"
+#~ msgstr "Autor:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "Fecha:"
+#~ msgid "Date:"
+#~ msgstr "Fecha:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "Etiquetas:"
+#~ msgid "Tags:"
+#~ msgstr "Etiquetas:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "Guardando"
+#~ msgid "Saving"
+#~ msgstr "Guardando"
 
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "Grabación terminada"
+#~ msgid "Finished recording"
+#~ msgstr "Grabación terminada"
 
-#: /home/sugar/src/activities/record.activity/constants.py:138
-msgid "Remove"
-msgstr "Eliminar"
+#~ msgid "Remove"
+#~ msgstr "Eliminar"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "Grabación detenida"
+#~ msgid "Stopped recording"
+#~ msgstr "Grabación detenida"
 
-#: /home/sugar/src/activities/record.activity/constants.py:140
-msgid "Copy to clipboard"
-msgstr "Copiar al portapapel"
+#~ msgid "Copy to clipboard"
+#~ msgstr "Copiar al portapapel"
 
 # Cronometro is more readily understood as a timing device.
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "Cronómetro:"
+#~ msgid "Timer:"
+#~ msgstr "Cronómetro:"
 
 # duracion o largo / longitud? ie: largometraje
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "Duración:"
+#~ msgid "Duration:"
+#~ msgstr "Duración:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
-msgstr "Restante:"
+#~ msgid "Remaining:"
+#~ msgstr "Restante:"
 
 # contexto? -- xavi
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "Inmediato"
+#~ msgid "Immediate"
+#~ msgstr "Inmediato"
 
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "Reproducir"
+#~ msgid "Play"
+#~ msgstr "Reproducir"
 
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "Pausa"
+#~ msgid "Pause"
+#~ msgstr "Pausa"
 
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "Agregar cuadro"
+#~ msgid "Add frame"
+#~ msgstr "Agregar cuadro"
 
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "Eliminar cuadro"
+#~ msgid "Remove frame"
+#~ msgstr "Eliminar cuadro"
 
-#: /home/sugar/src/activities/record.activity/constants.py:149
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "%(1)s cuadros por segundo"
+#~ msgid "%(1)s frames per second"
+#~ msgstr "%(1)s cuadros por segundo"
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
-msgid "Quality"
-msgstr "Calidad"
+#~ msgid "Quality"
+#~ msgstr "Calidad"
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "Predeterminada"
+#~ msgid "Default"
+#~ msgstr "Predeterminada"
 
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "Óptima"
+#~ msgid "Best"
+#~ msgstr "Óptima"
 
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "Alta"
+#~ msgid "High"
+#~ msgstr "Alta"
 
-#: /home/sugar/src/activities/record.activity/constants.py:154
-msgid "Low"
-msgstr "Baja"
+#~ msgid "Low"
+#~ msgstr "Baja"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "Archivo grande"
+#~ msgid "Large file"
+#~ msgstr "Archivo grande"
 
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "Archivo pequeño"
+#~ msgid "Small file"
+#~ msgstr "Archivo pequeño"
 
 # context? -- xavi
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "Mudo"
+#~ msgid "Silent"
+#~ msgstr "Mudo"
 
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "Rotar"
+#~ msgid "Rotate"
+#~ msgstr "Rotar"
 
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "Ancho"
+#~ msgid "Width"
+#~ msgstr "Ancho"
 
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
-msgstr "Altura"
+#~ msgid "Height"
+#~ msgstr "Altura"
 
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "Clic para tomar foto"
+#~ msgid "Click to take picture"
+#~ msgstr "Clic para tomar foto"
 
 # se agrega la foto (siguiendo "click to take picture") o se agrega una "imagen"?
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "Clic para agregar una foto"
+#~ msgid "Click to add picture"
+#~ msgstr "Clic para agregar una foto"
 
 # TRANS: Downloading Photo from Mary
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
 #, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "Descargando %(1)s desde %(2)s"
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "Descargando %(1)s desde %(2)s"
 
 # gender issues: la foto? el archivo? lo coso? -- xavi
 # TRANS: Cannot download this Photo
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
 #, python-format
-msgid "Cannot download this %(1)s"
-msgstr "Imposible descargar este %(1)s"
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "Imposible descargar este %(1)s"
 
 # TRANS: Save Photo to:
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
 #, python-format
-msgid "Save %(1)s to:"
-msgstr "Guardar %(1)s en:"
+#~ msgid "Save %(1)s to:"
+#~ msgstr "Guardar %(1)s en:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:169
 #, python-format
-msgid "Your %(1)s is full"
-msgstr "Su %(1)s está lleno"
+#~ msgid "Your %(1)s is full"
+#~ msgstr "Su %(1)s está lleno"
 
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "Diario"
+#~ msgid "Journal"
+#~ msgstr "Diario"
 
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "USB"
+#~ msgid "USB"
+#~ msgstr "USB"
 
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "Tarjeta SD"
+#~ msgid "SD Card"
+#~ msgstr "Tarjeta SD"
 
-#: /home/sugar/src/activities/record.activity/constants.py:173
-msgid "Preferences"
-msgstr "Preferencias"
+#~ msgid "Preferences"
+#~ msgstr "Preferencias"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "Espacio libre:"
+#~ msgid "Free space:"
+#~ msgstr "Espacio libre:"
 
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr "Tasa de bits"
+#~ msgid "Bitrate"
+#~ msgstr "Tasa de bits"
 
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "Tasa máxima de bits"
+#~ msgid "Maximum Bitrate"
+#~ msgstr "Tasa máxima de bits"
 
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "Tasa mínima de bits"
+#~ msgid "Minumum Bitrate"
+#~ msgstr "Tasa mínima de bits"
 
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr "Manejar tasa de bits"
+#~ msgid "Manage Bitrate"
+#~ msgstr "Manejar tasa de bits"
 
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "Borde"
+#~ msgid "Border"
+#~ msgstr "Borde"
 
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "Centro"
+#~ msgid "Center"
+#~ msgstr "Centro"
 
 # segun wikipedia esa seria la traduccion http://es.wikipedia.org/wiki/Fotograma
 # DjToXiC: Verdad, pero debería ser sustituido por Cuadros porque está en plural, en demás traducciones está como cuadros, es una palabra más larga que frame por lo tanto se puede ir de la pantalla y además es una laptop para niños, no?
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "Cuadros"
+#~ msgid "Frames"
+#~ msgstr "Cuadros"
 
 # "fotograma clave" is used for keyframe, but this needs to be consistent with other uses of frame.
 # DjToXiC: I agree, but "cuadros clave" is present in others translations, and it is used in Video Editors.
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "Detección automática de cuadros clave"
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "Detección automática de cuadros clave"
 
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "Forzar cuadro clave"
+#~ msgid "Force keyframe"
+#~ msgstr "Forzar cuadro clave"
 
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "Frecuencia de cuadros clave"
+#~ msgid "Keyframe frequency"
+#~ msgstr "Frecuencia de cuadros clave"
 
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr "Distancia mínima entre cuadros clave"
+#~ msgid "Keyframe minimum distance"
+#~ msgstr "Distancia mínima entre cuadros clave"
 
 # DjToXiC: La palabra "keyframe" permanecía en la traducción anterior.
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "Umbral del cuadro clave"
+#~ msgid "Keyframe threshold"
+#~ msgstr "Umbral del cuadro clave"
 
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "Sensibilidad de ruido"
+#~ msgid "Noise Sensitivity"
+#~ msgstr "Sensibilidad de ruido"
 
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
-msgstr "Rápido"
+#~ msgid "Quick"
+#~ msgstr "Rápido"
 
 # Video sharpness is not the same as definitiion (or resolution) - Nitidez is a more accurate term here
-#: /home/sugar/src/activities/record.activity/constants.py:190
-msgid "Sharpness"
-msgstr "Nitidez"
+#~ msgid "Sharpness"
+#~ msgstr "Nitidez"
 
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "Capacidad"
+#~ msgid "Capacity"
+#~ msgstr "Capacidad"
 
 #, python-format
 #~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"

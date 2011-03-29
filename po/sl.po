@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-20 09:20-0500\n"
+"POT-Creation-Date: 2010-04-20 17:58+0000\n"
 "PO-Revision-Date: 2008-07-09 08:52-0400\n"
 "Last-Translator: Denis Oštir <denis.ostir@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,314 +15,318 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: activity/activity.info:2 constants.py:90
+#: activity/activity.info:2
+#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "Snemalnik"
 
-#: constants.py:91
+#: /home/sugar/src/activities/record.activity/constants.py:21
+#, python-format
+#, python-format, fuzzy
+msgid "%(1)s minute"
+msgid_plural "%(1)s minutes"
+msgstr[0] "%(1)s minut"
+
+#: /home/sugar/src/activities/record.activity/constants.py:25
+#, python-format
+#, python-format, fuzzy
+msgid "%(1)s second"
+msgid_plural "%(1)s seconds"
+msgstr[0] "%(1)s sekund"
+
+#: /home/sugar/src/activities/record.activity/constants.py:123
 msgid "Photo"
 msgstr "Fotografiraj"
 
-#: constants.py:92
+#: /home/sugar/src/activities/record.activity/constants.py:124
 msgid "Video"
 msgstr "Snemaj video"
 
-#: constants.py:93
+#: /home/sugar/src/activities/record.activity/constants.py:125
 msgid "Audio"
 msgstr "Snemaj zvok"
 
-#: constants.py:94
+#: /home/sugar/src/activities/record.activity/constants.py:126
 msgid "Time Lapse"
 msgstr "Časovni zamik"
 
-#: constants.py:95
+#: /home/sugar/src/activities/record.activity/constants.py:127
 msgid "Animation"
 msgstr "Animacija"
 
-#: constants.py:96
+#: /home/sugar/src/activities/record.activity/constants.py:128
 msgid "Panorama"
 msgstr "Panorama"
 
-#: constants.py:97
+#: /home/sugar/src/activities/record.activity/constants.py:129
 msgid "Interview"
 msgstr "Intervju"
 
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:99
+#: /home/sugar/src/activities/record.activity/constants.py:131
 #, python-format
 msgid "%(1)s by %(2)s"
 msgstr "%(1)s posnel %(2)s"
 
-#: constants.py:100
+#: /home/sugar/src/activities/record.activity/constants.py:132
 msgid "Title:"
 msgstr "Naslov:"
 
-#: constants.py:101
+#: /home/sugar/src/activities/record.activity/constants.py:133
 msgid "Recorder:"
 msgstr "Snemalec:"
 
-#: constants.py:102
+#: /home/sugar/src/activities/record.activity/constants.py:134
 msgid "Date:"
 msgstr "Datum:"
 
-#: constants.py:103
+#: /home/sugar/src/activities/record.activity/constants.py:135
 msgid "Tags:"
 msgstr "Oznake:"
 
-#: constants.py:104
+#: /home/sugar/src/activities/record.activity/constants.py:136
 msgid "Saving"
 msgstr "Shranjujem"
 
-#: constants.py:105
+#: /home/sugar/src/activities/record.activity/constants.py:137
 msgid "Finished recording"
 msgstr "Končal snemanje"
 
-#: constants.py:106
-#, python-format
-msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-msgstr "Ostane še %(1)s ur, %(2)s minut, %(1)s sekund snemalnega časa"
-
-#: constants.py:107
-#, python-format
-msgid "%(1)s minutes, %(2)s seconds remaining"
-msgstr "Ostane še %(1)s minut, %(2)s sekund snemalnega časa"
-
-#: constants.py:108
-#, python-format
-msgid "%(1)s hours remaining"
-msgstr "Ostane še %(1)s ur snemalnega časa"
-
-#: constants.py:109
-#, python-format
-msgid "%(1)s minutes remaining"
-msgstr "Ostane še %(1)s minut snemalnega časa"
-
-#: constants.py:110
-#, python-format
-msgid "%(1)s seconds remaining"
-msgstr "Ostane še %(1) sekund snemalnega časa"
-
-#: constants.py:111
-#, python-format
-msgid "%(1)s hours"
-msgstr "%(1)s ur"
-
-#: constants.py:112 constants.py:121
-#, python-format
-msgid "%(1)s minutes"
-msgstr "%(1)s minut"
-
-#: constants.py:113 constants.py:120
-#, python-format
-msgid "%(1)s seconds"
-msgstr "%(1)s sekund"
-
-#: constants.py:114
+#: /home/sugar/src/activities/record.activity/constants.py:138
 msgid "Remove"
 msgstr "Odstrani"
 
-#: constants.py:115
+#: /home/sugar/src/activities/record.activity/constants.py:139
 msgid "Stopped recording"
 msgstr "Snemanje ustavljeno"
 
-#: constants.py:116
+#: /home/sugar/src/activities/record.activity/constants.py:140
 msgid "Copy to clipboard"
 msgstr "Kopiraj na namizje"
 
-#: constants.py:117
+#: /home/sugar/src/activities/record.activity/constants.py:141
 msgid "Timer:"
 msgstr "Štoparica:"
 
-#: constants.py:118
+#: /home/sugar/src/activities/record.activity/constants.py:142
 msgid "Duration:"
 msgstr "Trajanje:"
 
-#: constants.py:119
+#: /home/sugar/src/activities/record.activity/constants.py:143
+msgid "Remaining:"
+msgstr ""
+
+#: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
 msgstr "Takojšnje"
 
-#: constants.py:122
+#: /home/sugar/src/activities/record.activity/constants.py:145
 msgid "Play"
 msgstr "Predvajaj"
 
-#: constants.py:123
+#: /home/sugar/src/activities/record.activity/constants.py:146
 msgid "Pause"
 msgstr "Premor"
 
-#: constants.py:124
+#: /home/sugar/src/activities/record.activity/constants.py:147
 msgid "Add frame"
 msgstr "Dodaj sličico"
 
-#: constants.py:125
+#: /home/sugar/src/activities/record.activity/constants.py:148
 msgid "Remove frame"
 msgstr "Odstrani sličico"
 
-#: constants.py:126
+#: /home/sugar/src/activities/record.activity/constants.py:149
 #, python-format
 msgid "%(1)s frames per second"
 msgstr "%(1)s sličic na sekundo"
 
-#: constants.py:127
+#: /home/sugar/src/activities/record.activity/constants.py:150
 msgid "Quality"
 msgstr "Kakovost"
 
-#: constants.py:128
+#: /home/sugar/src/activities/record.activity/constants.py:151
 msgid "Default"
 msgstr "Prednastavljena"
 
-#: constants.py:129
+#: /home/sugar/src/activities/record.activity/constants.py:152
 msgid "Best"
 msgstr "Najboljša"
 
-#: constants.py:130
+#: /home/sugar/src/activities/record.activity/constants.py:153
 msgid "High"
 msgstr "Visoka"
 
-#: constants.py:131
+#: /home/sugar/src/activities/record.activity/constants.py:154
 msgid "Low"
 msgstr "Nizka"
 
-#: constants.py:132
+#: /home/sugar/src/activities/record.activity/constants.py:155
 msgid "Large file"
 msgstr "Velika datoteka"
 
-#: constants.py:133
+#: /home/sugar/src/activities/record.activity/constants.py:156
 msgid "Small file"
 msgstr "Majhna datoteka"
 
-#: constants.py:134
+#: /home/sugar/src/activities/record.activity/constants.py:157
 msgid "Silent"
 msgstr "Tiho"
 
-#: constants.py:135
+#: /home/sugar/src/activities/record.activity/constants.py:158
 msgid "Rotate"
 msgstr "Zasuči"
 
-#: constants.py:136
+#: /home/sugar/src/activities/record.activity/constants.py:159
 msgid "Width"
 msgstr "Širina"
 
-#: constants.py:137
+#: /home/sugar/src/activities/record.activity/constants.py:160
 msgid "Height"
 msgstr "Višina"
 
-#: constants.py:138
+#: /home/sugar/src/activities/record.activity/constants.py:161
 msgid "Click to take picture"
 msgstr "Pritisni za fotografiranje"
 
-#: constants.py:139
+#: /home/sugar/src/activities/record.activity/constants.py:162
 msgid "Click to add picture"
 msgstr "Pritisni za dodajanje slike"
 
 #. TRANS: Downloading Photo from Mary
-#: constants.py:141
+#: /home/sugar/src/activities/record.activity/constants.py:164
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
 msgstr "Prenašam %(1)s od %(2)s"
 
 #. TRANS: Cannot download this Photo
-#: constants.py:143
+#: /home/sugar/src/activities/record.activity/constants.py:166
 #, python-format
 msgid "Cannot download this %(1)s"
 msgstr "Ne morem prenesti %(1)s"
 
 #. TRANS: Save Photo to:
-#: constants.py:145
-msgid "Save %(1) to:"
+#: /home/sugar/src/activities/record.activity/constants.py:168
+#, python-format
+#, python-format, fuzzy
+msgid "Save %(1)s to:"
 msgstr "Shrani %(1) na:"
 
-#: constants.py:146
+#: /home/sugar/src/activities/record.activity/constants.py:169
 #, python-format
 msgid "Your %(1)s is full"
 msgstr "Tvoj %(1) je poln:"
 
-#: constants.py:147
+#: /home/sugar/src/activities/record.activity/constants.py:170
 msgid "Journal"
 msgstr "Beležka"
 
-#: constants.py:148
+#: /home/sugar/src/activities/record.activity/constants.py:171
 msgid "USB"
 msgstr "USB"
 
-#: constants.py:149
+#: /home/sugar/src/activities/record.activity/constants.py:172
 msgid "SD Card"
 msgstr "SD-kartica"
 
 # a obstaja kak boljši izraz?
-#: constants.py:150
+#: /home/sugar/src/activities/record.activity/constants.py:173
 msgid "Preferences"
 msgstr "Preference"
 
-#: constants.py:151
+#: /home/sugar/src/activities/record.activity/constants.py:174
 msgid "Free space:"
 msgstr "Prost pomnilnik:"
 
 #. TRANS: 7 photos
-#: constants.py:153
-#, python-format
-msgid "%(1)s photos"
-msgstr "%(1)s fotografij"
-
-#: constants.py:154
+#: /home/sugar/src/activities/record.activity/constants.py:176
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: constants.py:155
+#: /home/sugar/src/activities/record.activity/constants.py:177
 msgid "Maximum Bitrate"
 msgstr "Največji bitrate"
 
-#: constants.py:156
+#: /home/sugar/src/activities/record.activity/constants.py:178
 msgid "Minumum Bitrate"
 msgstr "Najmanjši bitrate"
 
-#: constants.py:157
+#: /home/sugar/src/activities/record.activity/constants.py:179
 msgid "Manage Bitrate"
 msgstr "Upravljaj z bitrate"
 
-#: constants.py:158
+#: /home/sugar/src/activities/record.activity/constants.py:180
 msgid "Border"
 msgstr "Rob"
 
-#: constants.py:159
+#: /home/sugar/src/activities/record.activity/constants.py:181
 msgid "Center"
 msgstr "Sredina"
 
-#: constants.py:160
+#: /home/sugar/src/activities/record.activity/constants.py:182
 msgid "Frames"
 msgstr "Slike"
 
-#: constants.py:161
+#: /home/sugar/src/activities/record.activity/constants.py:183
 msgid "Automatic keyframe detection"
 msgstr "Samodejno zaznavanje ključnih slik"
 
-#: constants.py:162
+#: /home/sugar/src/activities/record.activity/constants.py:184
 msgid "Force keyframe"
 msgstr "Nastavi ključno sliko"
 
-#: constants.py:163
+#: /home/sugar/src/activities/record.activity/constants.py:185
 msgid "Keyframe frequency"
 msgstr "Pogostost ključnih slik"
 
-#: constants.py:164
+#: /home/sugar/src/activities/record.activity/constants.py:186
 msgid "Keyframe minimum distance"
 msgstr "Najmanjša oddaljenost ključnih slik"
 
-#: constants.py:165
+#: /home/sugar/src/activities/record.activity/constants.py:187
 msgid "Keyframe threshold"
 msgstr "Nivo ključnih slik"
 
-#: constants.py:166
+#: /home/sugar/src/activities/record.activity/constants.py:188
 msgid "Noise Sensitivity"
 msgstr "Občutljivost na šum"
 
-#: constants.py:167
+#: /home/sugar/src/activities/record.activity/constants.py:189
 msgid "Quick"
 msgstr "Hitro"
 
-#: constants.py:168
+#: /home/sugar/src/activities/record.activity/constants.py:190
 msgid "Sharpness"
 msgstr "Ostrina"
 
-#: constants.py:169
+#: /home/sugar/src/activities/record.activity/constants.py:191
 msgid "Capacity"
 msgstr "Kapaciteta"
+
+#, python-format
+#~ msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
+#~ msgstr "Ostane še %(1)s ur, %(2)s minut, %(1)s sekund snemalnega časa"
+
+#, python-format
+#~ msgid "%(1)s minutes, %(2)s seconds remaining"
+#~ msgstr "Ostane še %(1)s minut, %(2)s sekund snemalnega časa"
+
+#, python-format
+#~ msgid "%(1)s hours remaining"
+#~ msgstr "Ostane še %(1)s ur snemalnega časa"
+
+#, python-format
+#~ msgid "%(1)s minutes remaining"
+#~ msgstr "Ostane še %(1)s minut snemalnega časa"
+
+#, python-format
+#~ msgid "%(1)s seconds remaining"
+#~ msgstr "Ostane še %(1) sekund snemalnega časa"
+
+#, python-format
+#~ msgid "%(1)s hours"
+#~ msgstr "%(1)s ur"
+
+#, python-format
+#~ msgid "%(1)s photos"
+#~ msgstr "%(1)s fotografij"

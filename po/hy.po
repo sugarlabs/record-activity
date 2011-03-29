@@ -18,297 +18,301 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-28 00:30-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-04-20 17:58+0000\n"
+"PO-Revision-Date: 2011-03-21 22:08+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: hy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.0.1\n"
 
-#: activity/activity.info:2 constants.py:122
+#: activity/activity.info:2
+#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
-msgstr ""
+msgstr "Գրանցում"
 
-#: constants.py:21
+#: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
 msgstr[0] ""
-msgstr[1] ""
 
-#: constants.py:25
+#: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
 msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
 msgstr[0] ""
-msgstr[1] ""
 
-#: constants.py:123
+#: /home/sugar/src/activities/record.activity/constants.py:123
 msgid "Photo"
-msgstr ""
+msgstr "Լուսանկար"
 
-#: constants.py:124
+#: /home/sugar/src/activities/record.activity/constants.py:124
 msgid "Video"
-msgstr ""
+msgstr "Վիդեո"
 
-#: constants.py:125
+#: /home/sugar/src/activities/record.activity/constants.py:125
 msgid "Audio"
-msgstr ""
+msgstr "Աուդիո"
 
-#: constants.py:126
+#: /home/sugar/src/activities/record.activity/constants.py:126
 msgid "Time Lapse"
-msgstr ""
+msgstr "Ժամանակը սպառվեց"
 
-#: constants.py:127
+#: /home/sugar/src/activities/record.activity/constants.py:127
 msgid "Animation"
-msgstr ""
+msgstr "Անիմացիա"
 
-#: constants.py:128
+#: /home/sugar/src/activities/record.activity/constants.py:128
 msgid "Panorama"
-msgstr ""
+msgstr "Համայնապատկեր"
 
-#: constants.py:129
+#: /home/sugar/src/activities/record.activity/constants.py:129
 msgid "Interview"
-msgstr ""
+msgstr "Հարցազրույց"
 
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: constants.py:131
+#: /home/sugar/src/activities/record.activity/constants.py:131
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr ""
+msgstr "%(1)s-ը %(2)s-ի"
 
-#: constants.py:132
+#: /home/sugar/src/activities/record.activity/constants.py:132
 msgid "Title:"
-msgstr ""
+msgstr "Վերնագիր."
 
-#: constants.py:133
+#: /home/sugar/src/activities/record.activity/constants.py:133
 msgid "Recorder:"
-msgstr ""
+msgstr "Գրանցող սարք."
 
-#: constants.py:134
+#: /home/sugar/src/activities/record.activity/constants.py:134
 msgid "Date:"
-msgstr ""
+msgstr "Ամսաթիվ."
 
-#: constants.py:135
+#: /home/sugar/src/activities/record.activity/constants.py:135
 msgid "Tags:"
-msgstr ""
+msgstr "Պիտակներ."
 
-#: constants.py:136
+#: /home/sugar/src/activities/record.activity/constants.py:136
 msgid "Saving"
-msgstr ""
+msgstr "Պահում է"
 
-#: constants.py:137
+#: /home/sugar/src/activities/record.activity/constants.py:137
 msgid "Finished recording"
-msgstr ""
+msgstr "Գրանցումն ավարտեց"
 
-#: constants.py:138
+#: /home/sugar/src/activities/record.activity/constants.py:138
 msgid "Remove"
-msgstr ""
+msgstr "Դուրս հանել"
 
-#: constants.py:139
+#: /home/sugar/src/activities/record.activity/constants.py:139
 msgid "Stopped recording"
-msgstr ""
+msgstr "դադարեց գրանցել"
 
-#: constants.py:140
+#: /home/sugar/src/activities/record.activity/constants.py:140
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Կրկնօրինակել ցուցատախտակին"
 
-#: constants.py:141
+#: /home/sugar/src/activities/record.activity/constants.py:141
 msgid "Timer:"
-msgstr ""
+msgstr "Ժամանակաչափ."
 
-#: constants.py:142
+#: /home/sugar/src/activities/record.activity/constants.py:142
 msgid "Duration:"
-msgstr ""
+msgstr "Տևողություն:"
 
-#: constants.py:143
+#: /home/sugar/src/activities/record.activity/constants.py:143
 msgid "Remaining:"
-msgstr ""
+msgstr "Մնում է."
 
-#: constants.py:144
+#: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
-msgstr ""
+msgstr "Անմիջական"
 
-#: constants.py:145
+#: /home/sugar/src/activities/record.activity/constants.py:145
 msgid "Play"
-msgstr ""
+msgstr "Խաղալ"
 
-#: constants.py:146
+#: /home/sugar/src/activities/record.activity/constants.py:146
 msgid "Pause"
-msgstr ""
+msgstr "Դադար"
 
-#: constants.py:147
+#: /home/sugar/src/activities/record.activity/constants.py:147
 msgid "Add frame"
-msgstr ""
+msgstr "Ավելացնել շրջանակ"
 
-#: constants.py:148
+#: /home/sugar/src/activities/record.activity/constants.py:148
 msgid "Remove frame"
-msgstr ""
+msgstr "Հանել շրջանակը"
 
-#: constants.py:149
+#: /home/sugar/src/activities/record.activity/constants.py:149
 #, python-format
 msgid "%(1)s frames per second"
-msgstr ""
+msgstr "Վայրկյանում %(1)s շրջանակ"
 
-#: constants.py:150
+#: /home/sugar/src/activities/record.activity/constants.py:150
 msgid "Quality"
-msgstr ""
+msgstr "Որակ"
 
-#: constants.py:151
+#: /home/sugar/src/activities/record.activity/constants.py:151
 msgid "Default"
+msgstr "Ելման վիճակ"
+
+#: /home/sugar/src/activities/record.activity/constants.py:152
+msgid "Best"
 msgstr ""
 
-#: constants.py:152
+#: /home/sugar/src/activities/record.activity/constants.py:153
 msgid "High"
-msgstr ""
+msgstr "Բարձր"
 
-#: constants.py:153
+#: /home/sugar/src/activities/record.activity/constants.py:154
 msgid "Low"
-msgstr ""
+msgstr "Ցածր"
 
-#: constants.py:154
+#: /home/sugar/src/activities/record.activity/constants.py:155
 msgid "Large file"
-msgstr ""
+msgstr "Ծանր ֆայլ"
 
-#: constants.py:155
+#: /home/sugar/src/activities/record.activity/constants.py:156
 msgid "Small file"
-msgstr ""
+msgstr "Թեթեւ ֆայլ"
 
-#: constants.py:156
+#: /home/sugar/src/activities/record.activity/constants.py:157
 msgid "Silent"
-msgstr ""
+msgstr "Լուռ"
 
-#: constants.py:157
+#: /home/sugar/src/activities/record.activity/constants.py:158
 msgid "Rotate"
-msgstr ""
+msgstr "Պտտել"
 
-#: constants.py:158
+#: /home/sugar/src/activities/record.activity/constants.py:159
 msgid "Width"
-msgstr ""
+msgstr "Լայնք"
 
-#: constants.py:159
+#: /home/sugar/src/activities/record.activity/constants.py:160
 msgid "Height"
-msgstr ""
+msgstr "Բարձրություն"
 
-#: constants.py:160
+#: /home/sugar/src/activities/record.activity/constants.py:161
 msgid "Click to take picture"
-msgstr ""
+msgstr "Սեղմեք՝ նկարելու համար"
 
-#: constants.py:161
+#: /home/sugar/src/activities/record.activity/constants.py:162
 msgid "Click to add picture"
-msgstr ""
+msgstr "Սեղմեք՝ նկար ավելացնելու համար"
 
 #. TRANS: Downloading Photo from Mary
-#: constants.py:163
+#: /home/sugar/src/activities/record.activity/constants.py:164
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr ""
+msgstr "Բեռնաթափում եմ %(1)s-ը %(2)s-ից"
 
 #. TRANS: Cannot download this Photo
-#: constants.py:165
+#: /home/sugar/src/activities/record.activity/constants.py:166
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr ""
+msgstr "Այս %(1)s-ը չեմ կարող բեռնաթափել. "
 
 #. TRANS: Save Photo to:
-#: constants.py:167
+#: /home/sugar/src/activities/record.activity/constants.py:168
 #, python-format
 msgid "Save %(1)s to:"
-msgstr ""
+msgstr "Պահել %(1)s-ը."
 
-#: constants.py:168
+#: /home/sugar/src/activities/record.activity/constants.py:169
 #, python-format
 msgid "Your %(1)s is full"
-msgstr ""
+msgstr "Ձեր %(1)s-ը լեցուն է"
 
-#: constants.py:169
+#: /home/sugar/src/activities/record.activity/constants.py:170
 msgid "Journal"
-msgstr ""
+msgstr "Մատյան"
 
-#: constants.py:170
+#: /home/sugar/src/activities/record.activity/constants.py:171
 msgid "USB"
-msgstr ""
+msgstr "USB"
 
-#: constants.py:171
+#: /home/sugar/src/activities/record.activity/constants.py:172
 msgid "SD Card"
-msgstr ""
+msgstr "SD քարտ"
 
-#: constants.py:172
+#: /home/sugar/src/activities/record.activity/constants.py:173
 msgid "Preferences"
-msgstr ""
+msgstr "Նախընտրություններ"
 
-#: constants.py:173
+#: /home/sugar/src/activities/record.activity/constants.py:174
 msgid "Free space:"
-msgstr ""
+msgstr "Ազատ տարածք."
 
 #. TRANS: 7 photos
-#: constants.py:175
+#: /home/sugar/src/activities/record.activity/constants.py:176
 msgid "Bitrate"
-msgstr ""
+msgstr "Բիթային արագություն"
 
-#: constants.py:176
+#: /home/sugar/src/activities/record.activity/constants.py:177
 msgid "Maximum Bitrate"
-msgstr ""
+msgstr "Առավելագույն բիթային արագություն"
 
-#: constants.py:177
+#: /home/sugar/src/activities/record.activity/constants.py:178
 msgid "Minumum Bitrate"
-msgstr ""
+msgstr "Նվազագույն բիթային արագություն"
 
-#: constants.py:178
+#: /home/sugar/src/activities/record.activity/constants.py:179
 msgid "Manage Bitrate"
-msgstr ""
+msgstr "կառավարել բիթային արագությունը"
 
-#: constants.py:179
+#: /home/sugar/src/activities/record.activity/constants.py:180
 msgid "Border"
-msgstr ""
+msgstr "Սահման"
 
-#: constants.py:180
+#: /home/sugar/src/activities/record.activity/constants.py:181
 msgid "Center"
-msgstr ""
+msgstr "Կենտրոն"
 
-#: constants.py:181
+#: /home/sugar/src/activities/record.activity/constants.py:182
 msgid "Frames"
-msgstr ""
+msgstr "Շրջանակներ"
 
-#: constants.py:182
+#: /home/sugar/src/activities/record.activity/constants.py:183
 msgid "Automatic keyframe detection"
-msgstr ""
+msgstr "Առանցքային շրջանակի ավտոմատ հայտնաբերում"
 
-#: constants.py:183
+#: /home/sugar/src/activities/record.activity/constants.py:184
 msgid "Force keyframe"
-msgstr ""
+msgstr "Պարտադրել առանցքային շրջանակին"
 
-#: constants.py:184
+#: /home/sugar/src/activities/record.activity/constants.py:185
 msgid "Keyframe frequency"
-msgstr ""
+msgstr "Առանցքային շրջանակի հաճախականություն"
 
-#: constants.py:185
+#: /home/sugar/src/activities/record.activity/constants.py:186
 msgid "Keyframe minimum distance"
-msgstr ""
+msgstr "Առանցքային շրջանակի նվազագույն տարածություն"
 
-#: constants.py:186
+#: /home/sugar/src/activities/record.activity/constants.py:187
 msgid "Keyframe threshold"
-msgstr ""
+msgstr "Առանցքային շրջանակի շեմ"
 
-#: constants.py:187
+#: /home/sugar/src/activities/record.activity/constants.py:188
 msgid "Noise Sensitivity"
-msgstr ""
+msgstr "Աղմկային զգայնություն"
 
-#: constants.py:188
+#: /home/sugar/src/activities/record.activity/constants.py:189
 msgid "Quick"
-msgstr ""
+msgstr "Արագ"
 
-#: constants.py:189
+#: /home/sugar/src/activities/record.activity/constants.py:190
 msgid "Sharpness"
-msgstr ""
+msgstr "Սրություն"
 
-#: constants.py:190
+#: /home/sugar/src/activities/record.activity/constants.py:191
 msgid "Capacity"
-msgstr ""
+msgstr "Կարողություն"
