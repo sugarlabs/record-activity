@@ -1,0 +1,304 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-04-20 17:58+0000\n"
+"PO-Revision-Date: 2011-03-10 05:33+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.1\n"
+
+#: activity/activity.info:2
+#: /home/sugar/src/activities/record.activity/constants.py:122
+msgid "Record"
+msgstr "Record"
+
+#: /home/sugar/src/activities/record.activity/constants.py:21
+#, python-format
+msgid "%(1)s minute"
+msgid_plural "%(1)s minutes"
+msgstr[0] "%(1)s minute"
+msgstr[1] "%(1)s minutes"
+
+#: /home/sugar/src/activities/record.activity/constants.py:25
+#, python-format
+msgid "%(1)s second"
+msgid_plural "%(1)s seconds"
+msgstr[0] "%(1)s second"
+msgstr[1] "%(1)s seconds"
+
+#: /home/sugar/src/activities/record.activity/constants.py:123
+msgid "Photo"
+msgstr "Photo"
+
+#: /home/sugar/src/activities/record.activity/constants.py:124
+msgid "Video"
+msgstr "Video"
+
+#: /home/sugar/src/activities/record.activity/constants.py:125
+msgid "Audio"
+msgstr "Audio"
+
+#: /home/sugar/src/activities/record.activity/constants.py:126
+msgid "Time Lapse"
+msgstr "Time Lapse"
+
+#: /home/sugar/src/activities/record.activity/constants.py:127
+msgid "Animation"
+msgstr "Animation"
+
+#: /home/sugar/src/activities/record.activity/constants.py:128
+msgid "Panorama"
+msgstr "Panorama"
+
+#: /home/sugar/src/activities/record.activity/constants.py:129
+msgid "Interview"
+msgstr "Interview"
+
+#. TRANS: photo by photographer, e.g., "Photo by Mary"
+#: /home/sugar/src/activities/record.activity/constants.py:131
+#, python-format
+msgid "%(1)s by %(2)s"
+msgstr "%(1)s by %(2)s"
+
+#: /home/sugar/src/activities/record.activity/constants.py:132
+msgid "Title:"
+msgstr "Title:"
+
+#: /home/sugar/src/activities/record.activity/constants.py:133
+msgid "Recorder:"
+msgstr "Recorder:"
+
+#: /home/sugar/src/activities/record.activity/constants.py:134
+msgid "Date:"
+msgstr "Date:"
+
+#: /home/sugar/src/activities/record.activity/constants.py:135
+msgid "Tags:"
+msgstr "Tags:"
+
+#: /home/sugar/src/activities/record.activity/constants.py:136
+msgid "Saving"
+msgstr "Saving"
+
+#: /home/sugar/src/activities/record.activity/constants.py:137
+msgid "Finished recording"
+msgstr "Finished recording"
+
+#: /home/sugar/src/activities/record.activity/constants.py:138
+msgid "Remove"
+msgstr "Remove"
+
+#: /home/sugar/src/activities/record.activity/constants.py:139
+msgid "Stopped recording"
+msgstr "Stopped recording"
+
+#: /home/sugar/src/activities/record.activity/constants.py:140
+msgid "Copy to clipboard"
+msgstr "Copy to clipboard"
+
+#: /home/sugar/src/activities/record.activity/constants.py:141
+msgid "Timer:"
+msgstr "Timer:"
+
+#: /home/sugar/src/activities/record.activity/constants.py:142
+msgid "Duration:"
+msgstr "Duration:"
+
+#: /home/sugar/src/activities/record.activity/constants.py:143
+msgid "Remaining:"
+msgstr "Remaining:"
+
+#: /home/sugar/src/activities/record.activity/constants.py:144
+msgid "Immediate"
+msgstr "Immediate"
+
+#: /home/sugar/src/activities/record.activity/constants.py:145
+msgid "Play"
+msgstr "Play"
+
+#: /home/sugar/src/activities/record.activity/constants.py:146
+msgid "Pause"
+msgstr "Pause"
+
+#: /home/sugar/src/activities/record.activity/constants.py:147
+msgid "Add frame"
+msgstr "Add frame"
+
+#: /home/sugar/src/activities/record.activity/constants.py:148
+msgid "Remove frame"
+msgstr "Remove frame"
+
+#: /home/sugar/src/activities/record.activity/constants.py:149
+#, python-format
+msgid "%(1)s frames per second"
+msgstr "%(1)s frames per second"
+
+#: /home/sugar/src/activities/record.activity/constants.py:150
+msgid "Quality"
+msgstr "Quality"
+
+#: /home/sugar/src/activities/record.activity/constants.py:151
+msgid "Default"
+msgstr "Default"
+
+#: /home/sugar/src/activities/record.activity/constants.py:152
+msgid "Best"
+msgstr "Best"
+
+#: /home/sugar/src/activities/record.activity/constants.py:153
+msgid "High"
+msgstr "High"
+
+#: /home/sugar/src/activities/record.activity/constants.py:154
+msgid "Low"
+msgstr "Low"
+
+#: /home/sugar/src/activities/record.activity/constants.py:155
+msgid "Large file"
+msgstr "Large file"
+
+#: /home/sugar/src/activities/record.activity/constants.py:156
+msgid "Small file"
+msgstr "Small file"
+
+#: /home/sugar/src/activities/record.activity/constants.py:157
+msgid "Silent"
+msgstr "Silent"
+
+#: /home/sugar/src/activities/record.activity/constants.py:158
+msgid "Rotate"
+msgstr "Rotate"
+
+#: /home/sugar/src/activities/record.activity/constants.py:159
+msgid "Width"
+msgstr "Width"
+
+#: /home/sugar/src/activities/record.activity/constants.py:160
+msgid "Height"
+msgstr "Height"
+
+#: /home/sugar/src/activities/record.activity/constants.py:161
+msgid "Click to take picture"
+msgstr "Click to take picture"
+
+#: /home/sugar/src/activities/record.activity/constants.py:162
+msgid "Click to add picture"
+msgstr "Click to add picture"
+
+#. TRANS: Downloading Photo from Mary
+#: /home/sugar/src/activities/record.activity/constants.py:164
+#, python-format
+msgid "Downloading %(1)s from %(2)s"
+msgstr "Downloading %(1)s from %(2)s"
+
+#. TRANS: Cannot download this Photo
+#: /home/sugar/src/activities/record.activity/constants.py:166
+#, python-format
+msgid "Cannot download this %(1)s"
+msgstr "Cannot download this %(1)s"
+
+#. TRANS: Save Photo to:
+#: /home/sugar/src/activities/record.activity/constants.py:168
+#, python-format
+msgid "Save %(1)s to:"
+msgstr "Save %(1)s to:"
+
+#: /home/sugar/src/activities/record.activity/constants.py:169
+#, python-format
+msgid "Your %(1)s is full"
+msgstr "Your %(1)s is full"
+
+#: /home/sugar/src/activities/record.activity/constants.py:170
+msgid "Journal"
+msgstr "Journal"
+
+#: /home/sugar/src/activities/record.activity/constants.py:171
+msgid "USB"
+msgstr "USB"
+
+#: /home/sugar/src/activities/record.activity/constants.py:172
+msgid "SD Card"
+msgstr "SD Card"
+
+#: /home/sugar/src/activities/record.activity/constants.py:173
+msgid "Preferences"
+msgstr "Preferences"
+
+#: /home/sugar/src/activities/record.activity/constants.py:174
+msgid "Free space:"
+msgstr "Free space:"
+
+#. TRANS: 7 photos
+#: /home/sugar/src/activities/record.activity/constants.py:176
+msgid "Bitrate"
+msgstr "Bitrate"
+
+#: /home/sugar/src/activities/record.activity/constants.py:177
+msgid "Maximum Bitrate"
+msgstr "Maximum Bitrate"
+
+#: /home/sugar/src/activities/record.activity/constants.py:178
+msgid "Minumum Bitrate"
+msgstr "Minimum Bitrate"
+
+#: /home/sugar/src/activities/record.activity/constants.py:179
+msgid "Manage Bitrate"
+msgstr "Manage Bitrate"
+
+#: /home/sugar/src/activities/record.activity/constants.py:180
+msgid "Border"
+msgstr "Border"
+
+#: /home/sugar/src/activities/record.activity/constants.py:181
+msgid "Center"
+msgstr "Center"
+
+#: /home/sugar/src/activities/record.activity/constants.py:182
+msgid "Frames"
+msgstr "Frames"
+
+#: /home/sugar/src/activities/record.activity/constants.py:183
+msgid "Automatic keyframe detection"
+msgstr "Automatic keyframe detection"
+
+#: /home/sugar/src/activities/record.activity/constants.py:184
+msgid "Force keyframe"
+msgstr "Force keyframe"
+
+#: /home/sugar/src/activities/record.activity/constants.py:185
+msgid "Keyframe frequency"
+msgstr "Keyframe frequency"
+
+#: /home/sugar/src/activities/record.activity/constants.py:186
+msgid "Keyframe minimum distance"
+msgstr "Keyframe minimum distance"
+
+#: /home/sugar/src/activities/record.activity/constants.py:187
+msgid "Keyframe threshold"
+msgstr "Keyframe threshold"
+
+#: /home/sugar/src/activities/record.activity/constants.py:188
+msgid "Noise Sensitivity"
+msgstr "Noise Sensitivity"
+
+#: /home/sugar/src/activities/record.activity/constants.py:189
+msgid "Quick"
+msgstr "Quick"
+
+#: /home/sugar/src/activities/record.activity/constants.py:190
+msgid "Sharpness"
+msgstr "Sharpness"
+
+#: /home/sugar/src/activities/record.activity/constants.py:191
+msgid "Capacity"
+msgstr "Capacity"
