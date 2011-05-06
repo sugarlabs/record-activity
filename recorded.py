@@ -106,20 +106,28 @@ class Recorded:
 
     def getThumbPixbuf( self ):
         thumbFilepath = self.getThumbFilepath()
-        if os.path.isfile(thumbFilepath):
+        if thumbFilepath and os.path.isfile(thumbFilepath):
             return gtk.gdk.pixbuf_new_from_file(thumbFilepath)
         else:
             return None
 
 
     def getThumbFilepath( self ):
+        if not self.thumbFilename:
+            return None
         return os.path.join(Instance.instancePath, self.thumbFilename)
 
+    def make_thumb_path(self):
+        thumbFilename = self.mediaFilename + "_thumb.jpg"
+        thumbFilepath = os.path.join(Instance.instancePath, thumbFilename)
+        thumbFilepath = utils.getUniqueFilepath(thumbFilepath, 0)
+        self.thumbFilename = os.path.basename(thumbFilepath)
+        return self.getThumbFilepath()
 
     def getAudioImagePixbuf( self ):
         audioPixbuf = None
 
-        if (self.audioImageFilename == None):
+        if self.audioImageFilename == None:
             audioPixbuf = self.getThumbPixbuf()
         else:
             audioFilepath = self.getAudioImageFilepath()

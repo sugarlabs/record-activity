@@ -130,7 +130,7 @@ class Model:
             # if we aren't using Xv (e.g. glive is playing as PIP in video
             # mode), then stop the pipeline so that we switch back to Xv
             # in the call that follows.
-            if not self.glive.is_using_xv():
+            if self.glive.get_has_camera() and not self.glive.is_using_xv():
                 self.glive.stop()
 
             self.glive.play()
@@ -248,9 +248,8 @@ class Model:
         imgpath = os.path.join(Instance.instancePath, recd.mediaFilename)
         pixbuf.save(imgpath, "jpeg")
 
-        thumbpath = os.path.join(Instance.instancePath, recd.thumbFilename)
         pixbuf = utils.generate_thumbnail(pixbuf)
-        pixbuf.save(thumbpath, "png")
+        pixbuf.save(recd.make_thumb_path(), "png")
 
         #now that we've saved both the image and its pixbuf, we get their md5s
         self.createNewRecordedMd5Sums( recd )
@@ -263,9 +262,8 @@ class Model:
         recd = self.createNewRecorded(constants.TYPE_VIDEO)
         os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
 
-        thumb_path = os.path.join(Instance.instancePath, recd.thumbFilename)
         still = utils.generate_thumbnail(still)
-        still.save(thumb_path, "png")
+        still.save(recd.make_thumb_path(), "png")
 
         self.createNewRecordedMd5Sums( recd )
 
@@ -276,14 +274,14 @@ class Model:
         recd = self.createNewRecorded(constants.TYPE_AUDIO)
         os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
 
-        image_path = os.path.join(Instance.instancePath, "audioPicture.png")
-        image_path = utils.getUniqueFilepath(image_path, 0)
-        still.save(image_path, "png")
-        recd.audioImageFilename = os.path.basename(image_path)
+        if still:
+            image_path = os.path.join(Instance.instancePath, "audioPicture.png")
+            image_path = utils.getUniqueFilepath(image_path, 0)
+            still.save(image_path, "png")
+            recd.audioImageFilename = os.path.basename(image_path)
 
-        thumb_path = os.path.join(Instance.instancePath, recd.thumbFilename)
-        still = utils.generate_thumbnail(still)
-        still.save(thumb_path, "png")
+            still = utils.generate_thumbnail(still)
+            still.save(recd.make_thumb_path(), "png")
 
         self.createNewRecordedMd5Sums( recd )
 
@@ -350,11 +348,6 @@ class Model:
         mediaFilepath = utils.getUniqueFilepath( mediaFilepath, 0 )
         recd.mediaFilename = os.path.basename( mediaFilepath )
 
-        thumbFilename = mediaThumbFilename + "_thumb.jpg"
-        thumbFilepath = os.path.join( Instance.instancePath, thumbFilename )
-        thumbFilepath = utils.getUniqueFilepath( thumbFilepath, 0 )
-        recd.thumbFilename = os.path.basename( thumbFilepath )
-
         stringType = constants.MEDIA_INFO[type]['istr']
 
         # Translators: photo by photographer, e.g. "Photo by Mary"
@@ -364,16 +357,16 @@ class Model:
         recd.colorStroke = color.get_stroke_color()
         recd.colorFill = color.get_fill_color()
 
-        logger.debug('createNewRecorded: ' + str(recd) + ", thumbFilename:" + str(recd.thumbFilename))
+        logger.debug('createNewRecorded: ' + str(recd))
         return recd
 
     def createNewRecordedMd5Sums( self, recd ):
         recd.thumbMd5 = recd.mediaMd5 = str(uuid.uuid4())
 
         #load the thumbfile
-        thumbFile = os.path.join(Instance.instancePath, recd.thumbFilename)
-        tBytes = os.stat(thumbFile)[6]
-        recd.thumbBytes = tBytes
+        if recd.thumbFilename:
+            thumbFile = os.path.join(Instance.instancePath, recd.thumbFilename)
+            recd.thumbBytes = os.stat(thumbFile)[6]
 
         recd.tags = ""
 
@@ -396,7 +389,7 @@ class Model:
                 os.remove(mediaFile)
 
             thumbFile = recd.getThumbFilepath()
-            if os.path.exists(thumbFile):
+            if thumbFile and os.path.exists(thumbFile):
                 os.remove(thumbFile)
         else:
             #remove from the datastore here, since once gone, it is gone...

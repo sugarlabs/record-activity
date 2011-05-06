@@ -42,9 +42,6 @@ OGG_TRAITS = {
         0: { 'width': 160, 'height': 120, 'quality': 16 },
         1: { 'width': 400, 'height': 300, 'quality': 16 } }
 
-THUMB_STUB = gtk.gdk.pixbuf_new_from_file(
-    os.path.join(get_bundle_path(), 'gfx', 'stub.png'))
-
 class Glive:
     PHOTO_MODE_PHOTO = 0
     PHOTO_MODE_AUDIO = 1
@@ -222,6 +219,9 @@ class Glive:
         scaps.set_property("caps", gst.Caps("video/x-raw-yuv,width=%d,height=%d" % (width, height)))
 
     def _create_pipeline(self):
+        if not self._has_camera:
+            return
+
         src = gst.element_factory_make("v4l2src", "camsrc")
         try:
             # old gst-plugins-good does not have this property
@@ -313,20 +313,18 @@ class Glive:
         return self._xbin.get_by_name("xsink")
 
     def play(self, use_xv=True):
-        if not self._has_camera:
-            return
-
         if self._get_state() == gst.STATE_PLAYING:
             return
 
-        if use_xv and self._xv_available:
-            xsink = self._configure_xv()
-        else:
-            xsink = self._configure_x()
+        if self._has_camera:
+            if use_xv and self._xv_available:
+                xsink = self._configure_xv()
+            else:
+                xsink = self._configure_x()
 
-        # X overlay must be set every time, it seems to forget when you stop
-        # the pipeline.
-        self.activity.set_glive_sink(xsink)
+            # X overlay must be set every time, it seems to forget when you stop
+            # the pipeline.
+            self.activity.set_glive_sink(xsink)
 
         self._pipeline.set_state(gst.STATE_PLAYING)
         self._playing = True
@@ -355,23 +353,23 @@ class Glive:
         self._pipeline.remove(self._audiobin)
         self.play()
 
-        if not self._audio_pixbuf:
-            # FIXME: inform model of failure?
-            return
-
         audio_path = os.path.join(Instance.instancePath, "output.wav")
         if not os.path.exists(audio_path) or os.path.getsize(audio_path) <= 0:
             # FIXME: inform model of failure?
             return
 
-        self.model.still_ready(self._audio_pixbuf)
+        if self._audio_pixbuf:
+            self.model.still_ready(self._audio_pixbuf)
 
         line = 'filesrc location=' + audio_path + ' name=audioFilesrc ! wavparse name=audioWavparse ! audioconvert name=audioAudioconvert ! vorbisenc name=audioVorbisenc ! oggmux name=audioOggmux ! filesink name=audioFilesink'
         audioline = gst.parse_launch(line)
 
         taglist = self._get_tags(constants.TYPE_AUDIO)
-        pixbuf_b64 = utils.getStringFromPixbuf(self._audio_pixbuf)
-        taglist[gst.TAG_EXTENDED_COMMENT] = "coverart=" + pixbuf_b64
+
+        if self._audio_pixbuf:
+            pixbuf_b64 = utils.getStringFromPixbuf(self._audio_pixbuf)
+            taglist[gst.TAG_EXTENDED_COMMENT] = "coverart=" + pixbuf_b64
+
         vorbis_enc = audioline.get_by_name('audioVorbisenc')
         vorbis_enc.merge_tags(taglist, gst.TAG_MERGE_REPLACE_ALL)
 
@@ -465,8 +463,9 @@ class Glive:
         self.play()
 
     def record_audio(self):
-        self._audio_pixbuf = None
-        self._take_photo(self.PHOTO_MODE_AUDIO)
+        if self._has_camera:
+            self._audio_pixbuf = None
+            self._take_photo(self.PHOTO_MODE_AUDIO)
 
         # we should be able to add the audiobin on the fly, but unfortunately
         # this results in several seconds of silence being added at the start

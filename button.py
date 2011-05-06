@@ -53,7 +53,8 @@ class RecdButton(TrayButton):
             path = 'object-audio.svg'
 
         pixbuf = utils.load_colored_svg(path, self._recd.colorStroke, self._recd.colorFill)
-        ipb.composite(pixbuf, 8, 8, ipb.get_width(), ipb.get_height(), 8, 8, 1, 1, gtk.gdk.INTERP_BILINEAR, 255)
+        if ipb:
+            ipb.composite(pixbuf, 8, 8, ipb.get_width(), ipb.get_height(), 8, 8, 1, 1, gtk.gdk.INTERP_BILINEAR, 255)
         img.set_from_pixbuf(pixbuf)
         img.show()
         return img

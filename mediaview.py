@@ -215,12 +215,14 @@ class ImageBox(gtk.EventBox):
         self._pixbuf = pixbuf
 
     def set_size(self, width, height):
-        if width == self._pixbuf.get_width() and height == self._pixbuf.get_height():
-            pixbuf = self._pixbuf
-        else:
-            pixbuf = self._pixbuf.scale_simple(width, height, gdk.INTERP_BILINEAR)
+        if self._pixbuf:
+            if width == self._pixbuf.get_width() and height == self._pixbuf.get_height():
+                pixbuf = self._pixbuf
+            else:
+                pixbuf = self._pixbuf.scale_simple(width, height, gdk.INTERP_BILINEAR)
 
-        self._image.set_from_pixbuf(pixbuf)
+            self._image.set_from_pixbuf(pixbuf)
+
         self._image.set_size_request(width, height)
         self.set_size_request(width, height)
 
@@ -492,8 +494,9 @@ class MediaView(gtk.EventBox):
         self._switch_mode(MediaView.MODE_STILL)
 
     def show_photo(self, path):
-        pixbuf = gdk.pixbuf_new_from_file(path)
-        self._image_box.set_pixbuf(pixbuf)
+        if path:
+            pixbuf = gdk.pixbuf_new_from_file(path)
+            self._image_box.set_pixbuf(pixbuf)
         self._switch_mode(MediaView.MODE_PHOTO)
 
     def show_video(self):

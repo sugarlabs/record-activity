@@ -162,8 +162,9 @@ def _addRecdXmlAttrs(el, recd, forMeshTransmit):
 
     if (recd.type == constants.TYPE_AUDIO) and (not forMeshTransmit):
         aiPixbuf = recd.getAudioImagePixbuf()
-        aiPixbufString = str(utils.getStringFromPixbuf(aiPixbuf))
-        el.setAttribute('audioImage', aiPixbufString)
+        if aiPixbuf:
+            aiPixbufString = str(utils.getStringFromPixbuf(aiPixbuf))
+            el.setAttribute('audioImage', aiPixbufString)
 
     if (recd.datastoreId != None) and (not forMeshTransmit):
         el.setAttribute('datastoreId', str(recd.datastoreId))
@@ -178,15 +179,18 @@ def _addRecdXmlAttrs(el, recd, forMeshTransmit):
     el.setAttribute('mediaMd5', str(recd.mediaMd5))
     el.setAttribute('thumbMd5', str(recd.thumbMd5))
     el.setAttribute('mediaBytes', str(recd.mediaBytes))
-    el.setAttribute('thumbBytes', str(recd.thumbBytes))
+
+    if recd.thumbBytes:
+        el.setAttribute('thumbBytes', str(recd.thumbBytes))
 
     # FIXME: can this be removed, or at least autodetected? has not been
     # changed for ages, should not be relevant
     el.setAttribute('version', '54')
 
     pixbuf = recd.getThumbPixbuf()
-    thumb64 = str(utils.getStringFromPixbuf(pixbuf))
-    el.setAttribute('base64Thumb', thumb64)
+    if pixbuf:
+        thumb64 = str(utils.getStringFromPixbuf(pixbuf))
+        el.setAttribute('base64Thumb', thumb64)
 
 def saveMediaHash(mediaHashs, activity):
     impl = getDOMImplementation()
@@ -222,10 +226,7 @@ def _saveMedia(el, recd, activity):
         _saveMediaToDatastore(el, recd, activity)
 
 def _saveXml(el, recd):
-    if recd.thumbFilename:
-        _addRecdXmlAttrs(el, recd, False)
-    else:
-        logger.debug("WOAH, ERROR: recd has no thumbFilename?! " + str(recd) )
+    _addRecdXmlAttrs(el, recd, False)
     recd.savedXml = True
 
 def _saveMediaToDatastore(el, recd, activity):
@@ -265,13 +266,14 @@ def _saveMediaToDatastore(el, recd, activity):
             datastorePreviewFilepath = recd.getMediaFilepath()
             datastorePreviewPixbuf = gtk.gdk.pixbuf_new_from_file(datastorePreviewFilepath)
 
-        datastorePreviewWidth = 300
-        datastorePreviewHeight = 225
-        if datastorePreviewPixbuf.get_width() != datastorePreviewWidth:
-            datastorePreviewPixbuf = datastorePreviewPixbuf.scale_simple(datastorePreviewWidth, datastorePreviewHeight, gtk.gdk.INTERP_NEAREST)
+        if datastorePreviewPixbuf:
+            datastorePreviewWidth = 300
+            datastorePreviewHeight = 225
+            if datastorePreviewPixbuf.get_width() != datastorePreviewWidth:
+                datastorePreviewPixbuf = datastorePreviewPixbuf.scale_simple(datastorePreviewWidth, datastorePreviewHeight, gtk.gdk.INTERP_NEAREST)
 
-        datastorePreviewBase64 = utils.getStringFromPixbuf(datastorePreviewPixbuf)
-        mediaObject.metadata['preview'] = datastorePreviewBase64
+            datastorePreviewBase64 = utils.getStringFromPixbuf(datastorePreviewPixbuf)
+            mediaObject.metadata['preview'] = datastorePreviewBase64
 
         colors = str(recd.colorStroke) + "," + str(recd.colorFill)
         mediaObject.metadata['icon-color'] = colors
