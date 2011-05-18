@@ -113,6 +113,7 @@ class Model:
         for recd in self.mediaHashs[mode]:
             self.activity.add_thumbnail(recd, True)
 
+        self.activity.set_mode(mode)
         self.set_state(constants.STATE_READY)
 
         if mode == constants.MODE_PHOTO:

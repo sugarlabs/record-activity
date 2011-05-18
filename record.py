@@ -33,9 +33,13 @@ import pygst
 pygst.require('0.10')
 import gst
 
-import sugar.profile
 from sugar.activity import activity
-from sugar.graphics.icon import Icon
+from sugar.graphics.toolcombobox import ToolComboBox
+from sugar.graphics.toolbarbox import ToolbarBox
+from sugar.graphics.toolbarbox import ToolbarButton
+from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar.activity.widgets import StopButton
+from sugar.activity.widgets import ActivityToolbarButton
 
 from model import Model
 from button import RecdButton
@@ -43,7 +47,6 @@ import constants
 from instance import Instance
 import utils
 from tray import HTray
-from toolbarcombobox import ToolComboBox
 from mediaview import MediaView
 import hw
 
@@ -81,7 +84,10 @@ class Record(activity.Activity):
         self._media_view.realize_video()
 
         # Changing to the first toolbar kicks off the rest of the setup
-        self._toolbox.set_current_toolbar(1)
+        if self.model.get_has_camera():
+            self.model.change_mode(constants.MODE_PHOTO)
+        else:
+            self.model.change_mode(constants.MODE_AUDIO)
 
     def read_file(self, path):
         self.model.read_file(path)
@@ -111,31 +117,53 @@ class Record(activity.Activity):
         self.connect_after('key-press-event', self._key_pressed)
 
         self._active_toolbar_idx = 0
-        self._toolbox = activity.ActivityToolbox(self)
-        self.set_toolbox(self._toolbox)
-        self._toolbar_modes = [None]
 
-        # remove Toolbox's hardcoded grey separator
-        self._toolbox.remove(self._toolbox._separator)
+        self._toolbar_box = ToolbarBox()
+        activity_button = ActivityToolbarButton(self)
+        self._toolbar_box.toolbar.insert(activity_button, 0)
+        self.set_toolbar_box(self._toolbar_box)
+        self._toolbar = self.get_toolbar_box().toolbar
 
+        tool_group = None
         if self.model.get_has_camera():
-            self._photo_toolbar = PhotoToolbar()
-            self._toolbox.add_toolbar(_('Photo'), self._photo_toolbar)
-            self._toolbar_modes.append(constants.MODE_PHOTO)
+            self._photo_button = RadioToolButton()
+            self._photo_button.props.group = tool_group
+            tool_group = self._photo_button
+            self._photo_button.props.icon_name = 'camera-external'
+            self._photo_button.props.label = _('Photo')
+            self._photo_button.mode = constants.MODE_PHOTO
+            self._photo_button.connect('clicked', self._mode_button_clicked)
+            self._toolbar.insert(self._photo_button, -1)
 
-            self._video_toolbar = VideoToolbar()
-            self._toolbox.add_toolbar(_('Video'), self._video_toolbar)
-            self._toolbar_modes.append(constants.MODE_VIDEO)
+            self._video_button = RadioToolButton()
+            self._video_button.props.group = tool_group
+            self._video_button.props.icon_name = 'media-video'
+            self._video_button.props.label = _('Video')
+            self._video_button.mode = constants.MODE_VIDEO
+            self._video_button.connect('clicked', self._mode_button_clicked)
+            self._toolbar.insert(self._video_button, -1)
         else:
-            self._photo_toolbar = None
-            self._video_toolbar = None
+            self._photo_button = None
+            self._video_button = None
 
-        self._audio_toolbar = AudioToolbar()
-        self._toolbox.add_toolbar(_('Audio'), self._audio_toolbar)
-        self._toolbar_modes.append(constants.MODE_AUDIO)
+        self._audio_button = RadioToolButton()
+        self._audio_button.props.group = tool_group
+        self._audio_button.props.icon_name = 'media-audio'
+        self._audio_button.props.label = _('Audio')
+        self._audio_button.mode = constants.MODE_AUDIO
+        self._audio_button.connect('clicked', self._mode_button_clicked)
+        self._toolbar.insert(self._audio_button, -1)
 
-        self._toolbox.show_all()
-        self._toolbox.connect("current-toolbar-changed", self._toolbar_changed)
+        self._toolbar.insert(gtk.SeparatorToolItem(), -1)
+
+        self._toolbar_controls = RecordControl(self._toolbar)
+
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        separator.set_expand(True)
+        self._toolbar.insert(separator, -1)
+        self._toolbar.insert(StopButton(self), -1)
+        self.get_toolbar_box().show_all()
 
         main_box = gtk.VBox()
         self.set_canvas(main_box)
@@ -191,30 +219,16 @@ class Record(activity.Activity):
     def serialize(self):
         data = {}
 
-        if self._photo_toolbar:
-            data['photo_timer'] = self._photo_toolbar.get_timer_idx()
-
-        if self._video_toolbar:
-            data['video_timer'] = self._video_toolbar.get_timer_idx()
-            data['video_duration'] = self._video_toolbar.get_duration_idx()
-            data['video_quality'] = self._video_toolbar.get_quality()
-
-        data['audio_timer'] = self._audio_toolbar.get_timer_idx()
-        data['audio_duration'] = self._audio_toolbar.get_duration_idx()
+        data['timer'] = self._toolbar_controls.get_timer_idx()
+        data['duration'] = self._toolbar_controls.get_duration_idx()
+        data['quality'] = self._toolbar_controls.get_quality()
 
         return data
 
     def deserialize(self, data):
-        if self._photo_toolbar:
-            self._photo_toolbar.set_timer_idx(data.get('photo_timer', 0))
-
-        if self._video_toolbar:
-            self._video_toolbar.set_timer_idx(data.get('video_timer', 0))
-            self._video_toolbar.set_duration_idx(data.get('video_duration', 0))
-            self._video_toolbar.set_quality(data.get('video_quality', 0))
-
-        self._audio_toolbar.set_timer_idx(data.get('audio_timer', 0))
-        self._audio_toolbar.set_duration_idx(data.get('audio_duration'))
+        self._toolbar_controls.set_timer_idx(data.get('timer', 0))
+        self._toolbar_controls.set_duration_idx(data.get('duration', 0))
+        self._toolbar_controls.set_quality(data.get('quality', 0))
 
     def _key_pressed(self, widget, event):
         if self.model.ui_frozen():
@@ -241,6 +255,9 @@ class Record(activity.Activity):
     def _play_pause_clicked(self, widget):
         self.model.play_pause()
 
+    def set_mode(self, mode):
+        self._toolbar_controls.set_mode(mode)
+
     # can be called from gstreamer thread, so must not do any GTK+ stuff
     def set_glive_sink(self, sink):
         return self._media_view.set_video_sink(sink)
@@ -250,23 +267,13 @@ class Record(activity.Activity):
         return self._media_view.set_video2_sink(sink)
 
     def get_selected_quality(self):
-        return self._video_toolbar.get_quality()
+        return self._toolbar_controls.get_quality()
 
     def get_selected_timer(self):
-        mode = self.model.get_mode()
-        if mode == constants.MODE_PHOTO:
-            return self._photo_toolbar.get_timer()
-        elif mode == constants.MODE_VIDEO:
-            return self._video_toolbar.get_timer()
-        elif mode == constants.MODE_AUDIO:
-            return self._audio_toolbar.get_timer()
+        return self._toolbar_controls.get_timer()
 
     def get_selected_duration(self):
-        mode = self.model.get_mode()
-        if mode == constants.MODE_VIDEO:
-            return self._video_toolbar.get_duration()
-        elif mode == constants.MODE_AUDIO:
-            return self._audio_toolbar.get_duration()
+        return self._toolbar_controls.get_duration()
 
     def set_progress(self, value, text):
         self._progress.set_progress(value)
@@ -330,27 +337,17 @@ class Record(activity.Activity):
 
     def _toggle_fullscreen(self):
         if not self._fullscreen:
-            self._toolbox.hide()
+            self._toolbar_box.hide()
             self._thumb_tray.hide()
         else:
-            self._toolbox.show()
+            self._toolbar_box.show()
             self._thumb_tray.show()
 
         self._fullscreen = not self._fullscreen
         self._media_view.set_fullscreen(self._fullscreen)
 
-    def _toolbar_changed(self, toolbox, num):
-        if num == 0: # Activity tab
-            return
-
-        # Prevent mode/tab changing under certain conditions by immediately
-        # changing back to the previously-selected toolbar
-        if self.model.ui_frozen():
-            self._toolbox.set_current_toolbar(self._active_toolbar_idx)
-            return
-
-        self._active_toolbar_idx = num
-        self.model.change_mode(self._toolbar_modes[num])
+    def _mode_button_clicked(self, button):
+        self.model.change_mode(button.mode)
 
     def _shutter_clicked(self, arg):
         self.model.do_shutter()
@@ -359,6 +356,11 @@ class Record(activity.Activity):
         self._shutter_button.set_sensitive(value)
 
     def set_state(self, state):
+        radio_state = (state == constants.STATE_READY)
+        for item in (self._photo_button, self._audio_button, self._video_button):
+            if item:
+                item.set_sensitive(radio_state)
+
         self._showing_info = False
         if state == constants.STATE_READY:
             self._set_cursor_default()
@@ -812,41 +814,46 @@ class PlayButton(gtk.Button):
         self.set_image(self._pause_image)
 
 
-class RecordToolbar(gtk.Toolbar):
-    def __init__(self, icon_name, with_quality, with_timer, with_duration):
-        super(RecordToolbar, self).__init__()
+class RecordControl():
 
-        img = Icon(icon_name=icon_name)
-        color = sugar.profile.get_color()
-        img.set_property('fill-color', color.get_fill_color())
-        img.set_property('stroke-color', color.get_stroke_color())
-        toolitem = gtk.ToolItem()
-        toolitem.add(img)
-        self.insert(toolitem, -1)
+    def __init__(self, toolbar):
+        self._timer_combo = TimerCombo()
+        toolbar.insert(self._timer_combo, -1)
 
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(False)
-        separator.set_expand(True)
-        self.insert(separator, -1)
+        self._duration_combo = DurationCombo()
+        toolbar.insert(self._duration_combo, -1)
 
-        if with_quality:
-            combo = gtk.combo_box_new_text()
-            self.quality = ToolComboBox(combo=combo, label_text=_('Quality:'))
-            self.quality.combo.append_text(_('Low'))
-            if hw.get_xo_version() != 1:
-                # Disable High quality on XO-1. The system simply isn't beefy
-                # enough for recording to work well.
-                self.quality.combo.append_text(_('High'))
-            self.quality.combo.set_active(0)
-            self.insert(self.quality, -1)
+        preferences_toolbar = gtk.Toolbar()
+        combo = gtk.combo_box_new_text()
+        self.quality = ToolComboBox(combo=combo, label_text=_('Quality:'))
+        self.quality.combo.append_text(_('Low'))
+        if hw.get_xo_version() != 1:
+            # Disable High quality on XO-1. The system simply isn't beefy
+            # enough for recording to work well.
+            self.quality.combo.append_text(_('High'))
+        self.quality.combo.set_active(0)
+        self.quality.show_all()
+        preferences_toolbar.insert(self.quality, -1)
 
-        if with_timer:
-            self._timer_combo = TimerCombo()
-            self.insert(self._timer_combo, -1)
+        preferences_button = ToolbarButton()
+        preferences_button.set_page(preferences_toolbar)
+        preferences_button.props.icon_name = 'preferences-system'
+        preferences_button.props.label = _('Preferences')
+        toolbar.insert(preferences_button, -1)
 
-        if with_duration:
-            self._duration_combo = DurationCombo()
-            self.insert(self._duration_combo, -1)
+    def set_mode(self, mode):
+        if mode == constants.MODE_PHOTO:
+            self.quality.set_sensitive(True)
+            self._timer_combo.set_sensitive(True)
+            self._duration_combo.set_sensitive(False)
+        if mode == constants.MODE_VIDEO:
+            self.quality.set_sensitive(True)
+            self._timer_combo.set_sensitive(True)
+            self._duration_combo.set_sensitive(True)
+        if mode == constants.MODE_AUDIO:
+            self.quality.set_sensitive(False)
+            self._timer_combo.set_sensitive(True)
+            self._duration_combo.set_sensitive(True)
 
     def get_timer(self):
         return self._timer_combo.get_value()
@@ -871,20 +878,6 @@ class RecordToolbar(gtk.Toolbar):
 
     def set_quality(self, idx):
         self.quality.combo.set_active(idx)
-
-class PhotoToolbar(RecordToolbar):
-    def __init__(self):
-        super(PhotoToolbar, self).__init__('media-photo', with_quality=False, with_timer=True, with_duration=False)
-
-
-class VideoToolbar(RecordToolbar):
-    def __init__(self):
-        super(VideoToolbar, self).__init__('media-video', with_quality=True, with_timer=True, with_duration=True)
-
-
-class AudioToolbar(RecordToolbar):
-    def __init__(self):
-        super(AudioToolbar, self).__init__('media-audio', with_quality=False, with_timer=True, with_duration=True)
 
 
 class TimerCombo(ToolComboBox):
@@ -940,4 +933,3 @@ class DurationCombo(ToolComboBox):
     @staticmethod
     def _minutes_string(x):
         return ngettext('%s minute', '%s minutes', x) % x
-
