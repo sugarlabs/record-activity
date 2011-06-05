@@ -7,13 +7,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2008-10-01 09:39-0400\n"
+"PO-Revision-Date: 2011-06-06 00:31+0200\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -22,17 +24,15 @@ msgstr "紀錄"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
-#, python-format, fuzzy
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s分"
+msgstr[0] "%(1)分"
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
-#, python-format, fuzzy
 msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)s秒"
+msgstr[0] "%(1)秒"
 
 #: /home/sugar/src/activities/record.activity/constants.py:123
 msgid "Photo"
@@ -115,7 +115,7 @@ msgstr "長度:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:143
 msgid "Remaining:"
-msgstr ""
+msgstr "剩餘:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
@@ -144,7 +144,7 @@ msgstr "每秒%(1)s格畫面"
 
 #: /home/sugar/src/activities/record.activity/constants.py:150
 msgid "Quality"
-msgstr "品質"
+msgstr "畫質"
 
 #: /home/sugar/src/activities/record.activity/constants.py:151
 msgid "Default"
@@ -279,15 +279,15 @@ msgstr "強制指定關鍵格"
 
 #: /home/sugar/src/activities/record.activity/constants.py:185
 msgid "Keyframe frequency"
-msgstr "關鍵格頻率"
+msgstr "關鍵畫面頻率"
 
 #: /home/sugar/src/activities/record.activity/constants.py:186
 msgid "Keyframe minimum distance"
-msgstr "最短關鍵格間距"
+msgstr "最短關鍵畫面間距"
 
 #: /home/sugar/src/activities/record.activity/constants.py:187
 msgid "Keyframe threshold"
-msgstr "關鍵格臨界值"
+msgstr "關鍵畫面臨界值"
 
 #: /home/sugar/src/activities/record.activity/constants.py:188
 msgid "Noise Sensitivity"
