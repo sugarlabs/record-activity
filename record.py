@@ -287,8 +287,8 @@ class Record(activity.Activity):
             return
 
         self._shutter_button.hide()
-        self._countdown_image.set_value(value)
         self._countdown_image.show()
+        self._countdown_image.set_value(value)
 
     def _title_changed(self, widget):
         self._active_recd.setTitle(self._title_entry.get_text())
@@ -723,7 +723,7 @@ class CountdownImage(gtk.Image):
     def _generate_image(self, num):
         w = 55
         h = w
-        pixmap = gdk.Pixmap(None, w, h, 24)
+        pixmap = gdk.Pixmap(self.get_window(), w, h, -1)
         ctx = pixmap.cairo_create()
         ctx.rectangle(0, 0, w, h)
         ctx.set_source_rgb(0, 0, 0)
