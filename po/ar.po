@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Virtaal 0.5.2\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -25,14 +25,14 @@ msgstr "سجّل"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
-#, python-format, fuzzy
+#, fuzzy
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
 msgstr[0] "%(1)s دقائق"
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
-#, python-format, fuzzy
+#, fuzzy
 msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
 msgstr[0] "%(1)s ثوان"
@@ -146,6 +146,7 @@ msgid "%(1)s frames per second"
 msgstr "%(1)s إطار في الثانية"
 
 #: /home/sugar/src/activities/record.activity/constants.py:150
+#, fuzzy
 msgid "Quality"
 msgstr "الجودة"
 

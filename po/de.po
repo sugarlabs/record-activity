@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
+"POT-Creation-Date: 2011-06-04 00:30-0400\n"
 "PO-Revision-Date: 2009-05-04 18:03-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,305 +15,278 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "Aufnehmen"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
-#, python-format, fuzzy
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s Minuten"
-
-#: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
-#, python-format, fuzzy
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)s Sekunden"
-
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "Foto"
-
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "Video"
-
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "Audio"
-
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "Zeitraffer"
-
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "Animation"
-
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "Panorama"
-
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "Interview"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
-#, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(1)s von %(2)s"
-
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "Titel:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "Rekorder:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "Datum:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "Stichworte:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "Speichern"
-
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "Beendete Aufnahme"
-
-#: /home/sugar/src/activities/record.activity/constants.py:138
+#: button.py:26
 msgid "Remove"
 msgstr "Entfernen"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "Gestoppte Aufnahme"
-
-#: /home/sugar/src/activities/record.activity/constants.py:140
+#: button.py:37
 msgid "Copy to clipboard"
 msgstr "In Zwischenablage kopieren"
 
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "Timer:"
+#: constants.py:24 record.py:133
+msgid "Photo"
+msgstr "Foto"
 
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "Dauer:"
+#: constants.py:31 record.py:141
+msgid "Video"
+msgstr "Video"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
+#: constants.py:38 record.py:152
+msgid "Audio"
+msgstr "Audio"
+
+#: glive.py:397 model.py:355
+#, python-format
+msgid "%s by %s"
 msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "Augenblicklich"
+#: glive.py:556
+msgid "Saving..."
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "Wiedergabe"
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "Pause"
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "Stichworte:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "Frame hinzufügen"
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Datum:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "Frame entfernen"
-
-#: /home/sugar/src/activities/record.activity/constants.py:149
+#: model.py:154
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "%(1)s Frames pro Sekunde"
+msgid "%d:%02d remaining"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
-msgid "Quality"
+#: record.py:202
+msgid "Title:"
+msgstr "Titel:"
+
+#: record.py:527
+msgid "Download failed."
+msgstr ""
+
+#: record.py:529
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:531
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:828
+#, fuzzy
+msgid "Quality:"
 msgstr "Qualität"
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "Voreinstellung"
-
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "Am Besten"
-
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "Hoch"
-
-#: /home/sugar/src/activities/record.activity/constants.py:154
+#: record.py:829
 msgid "Low"
 msgstr "Niedrig"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "Große Datei"
+#: record.py:833
+msgid "High"
+msgstr "Hoch"
 
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "Kleine Datei"
-
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "Leise"
-
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "Drehen"
-
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "Breite"
-
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
-msgstr "Höhe"
-
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "Klicken, um ein Bild aufzunehmen"
-
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "Klicken, um ein Bild hinzuzufügen"
-
-# TRANS: Downloading Photo from Mary
-# (Markus S.) war 'Herunterladen %(1)s von %(2)s'
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "Lade %(1)s von %(2)s herunter"
-
-# TRANS: Cannot download this Photo
-# (Markus S.) war 'Herunterladen unmöglich von %(1)s'
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "Herunterladen von %(1)s fehlgeschlagen"
-
-# TRANS: Save Photo to:
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
-#, python-format
-msgid "Save %(1)s to:"
-msgstr "%(1)s speichern nach:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:169
-#, python-format
-msgid "Your %(1)s is full"
-msgstr "Dein %(1)s ist voll"
-
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "Journal"
-
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "USB"
-
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "SD-Karte"
-
-#: /home/sugar/src/activities/record.activity/constants.py:173
+#: record.py:841
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "Freier Speicher:"
+#: record.py:888
+msgid "Timer:"
+msgstr "Timer:"
 
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr "Bitrate"
+#: record.py:892
+msgid "Immediate"
+msgstr "Augenblicklich"
 
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "Maximale Bitrate"
+#: record.py:909
+#, python-format
+#, fuzzy
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%(1)s Sekunden"
 
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "Minimale Bitrate"
+#: record.py:917
+msgid "Duration:"
+msgstr "Dauer:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr "Bitrate verwalten"
+#: record.py:935
+#, python-format
+#, fuzzy
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%(1)s Minuten"
 
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "Rand"
+#~ msgid "Time Lapse"
+#~ msgstr "Zeitraffer"
 
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "Zentrum"
+#~ msgid "Animation"
+#~ msgstr "Animation"
 
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "Frames"
+#~ msgid "Panorama"
+#~ msgstr "Panorama"
+
+#~ msgid "Interview"
+#~ msgstr "Interview"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
+#, python-format
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(1)s von %(2)s"
+
+#~ msgid "Recorder:"
+#~ msgstr "Rekorder:"
+
+#~ msgid "Saving"
+#~ msgstr "Speichern"
+
+#~ msgid "Finished recording"
+#~ msgstr "Beendete Aufnahme"
+
+#~ msgid "Stopped recording"
+#~ msgstr "Gestoppte Aufnahme"
+
+#~ msgid "Play"
+#~ msgstr "Wiedergabe"
+
+#~ msgid "Pause"
+#~ msgstr "Pause"
+
+#~ msgid "Add frame"
+#~ msgstr "Frame hinzufügen"
+
+#~ msgid "Remove frame"
+#~ msgstr "Frame entfernen"
+
+#, python-format
+#~ msgid "%(1)s frames per second"
+#~ msgstr "%(1)s Frames pro Sekunde"
+
+#~ msgid "Default"
+#~ msgstr "Voreinstellung"
+
+#~ msgid "Best"
+#~ msgstr "Am Besten"
+
+#~ msgid "Large file"
+#~ msgstr "Große Datei"
+
+#~ msgid "Small file"
+#~ msgstr "Kleine Datei"
+
+#~ msgid "Silent"
+#~ msgstr "Leise"
+
+#~ msgid "Rotate"
+#~ msgstr "Drehen"
+
+#~ msgid "Width"
+#~ msgstr "Breite"
+
+#~ msgid "Height"
+#~ msgstr "Höhe"
+
+#~ msgid "Click to take picture"
+#~ msgstr "Klicken, um ein Bild aufzunehmen"
+
+#~ msgid "Click to add picture"
+#~ msgstr "Klicken, um ein Bild hinzuzufügen"
+
+# TRANS: Downloading Photo from Mary
+# (Markus S.) war 'Herunterladen %(1)s von %(2)s'
+#, python-format
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "Lade %(1)s von %(2)s herunter"
+
+# TRANS: Cannot download this Photo
+# (Markus S.) war 'Herunterladen unmöglich von %(1)s'
+#, python-format
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "Herunterladen von %(1)s fehlgeschlagen"
+
+# TRANS: Save Photo to:
+#, python-format
+#~ msgid "Save %(1)s to:"
+#~ msgstr "%(1)s speichern nach:"
+
+#, python-format
+#~ msgid "Your %(1)s is full"
+#~ msgstr "Dein %(1)s ist voll"
+
+#~ msgid "Journal"
+#~ msgstr "Journal"
+
+#~ msgid "USB"
+#~ msgstr "USB"
+
+#~ msgid "SD Card"
+#~ msgstr "SD-Karte"
+
+#~ msgid "Free space:"
+#~ msgstr "Freier Speicher:"
+
+#~ msgid "Bitrate"
+#~ msgstr "Bitrate"
+
+#~ msgid "Maximum Bitrate"
+#~ msgstr "Maximale Bitrate"
+
+#~ msgid "Minumum Bitrate"
+#~ msgstr "Minimale Bitrate"
+
+#~ msgid "Manage Bitrate"
+#~ msgstr "Bitrate verwalten"
+
+#~ msgid "Border"
+#~ msgstr "Rand"
+
+#~ msgid "Center"
+#~ msgstr "Zentrum"
+
+#~ msgid "Frames"
+#~ msgstr "Frames"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "Automatische Feststellung der Schlüsselbilder"
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "Automatische Feststellung der Schlüsselbilder"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "Schlüsselbild erzwingen"
+#~ msgid "Force keyframe"
+#~ msgstr "Schlüsselbild erzwingen"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "Schlüsselbild- Frequenz"
+#~ msgid "Keyframe frequency"
+#~ msgstr "Schlüsselbild- Frequenz"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr "Minimaler Schlüsselbildabstand"
+#~ msgid "Keyframe minimum distance"
+#~ msgstr "Minimaler Schlüsselbildabstand"
 
 # http://de.wikipedia.org/wiki/Schl%C3%BCsselbildanimation
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "Schlüsselbild-Schwelle"
+#~ msgid "Keyframe threshold"
+#~ msgstr "Schlüsselbild-Schwelle"
 
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "Rauschempfindlichkeit"
+#~ msgid "Noise Sensitivity"
+#~ msgstr "Rauschempfindlichkeit"
 
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
-msgstr "Schnell"
+#~ msgid "Quick"
+#~ msgstr "Schnell"
 
-#: /home/sugar/src/activities/record.activity/constants.py:190
-msgid "Sharpness"
-msgstr "Schärfe"
+#~ msgid "Sharpness"
+#~ msgstr "Schärfe"
 
 # ???
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "Kapazität"
+#~ msgid "Capacity"
+#~ msgstr "Kapazität"
 
 #, python-format
 #~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"

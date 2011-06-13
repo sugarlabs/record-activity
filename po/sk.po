@@ -2,19 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-04-01 21:48+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.1.1rc4\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -27,6 +28,7 @@ msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
@@ -34,6 +36,7 @@ msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:123
 msgid "Photo"
@@ -79,11 +82,11 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:134
 msgid "Date:"
-msgstr ""
+msgstr "Dátum:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:135
 msgid "Tags:"
-msgstr ""
+msgstr "Označenie:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:136
 msgid "Saving"
@@ -95,7 +98,7 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:138
 msgid "Remove"
-msgstr ""
+msgstr "Odobrať"
 
 #: /home/sugar/src/activities/record.activity/constants.py:139
 msgid "Stopped recording"
@@ -127,7 +130,7 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:146
 msgid "Pause"
-msgstr ""
+msgstr "Pauza"
 
 #: /home/sugar/src/activities/record.activity/constants.py:147
 msgid "Add frame"
@@ -180,11 +183,11 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:159
 msgid "Width"
-msgstr ""
+msgstr "Širka"
 
 #: /home/sugar/src/activities/record.activity/constants.py:160
 msgid "Height"
-msgstr ""
+msgstr "Výška"
 
 #: /home/sugar/src/activities/record.activity/constants.py:161
 msgid "Click to take picture"

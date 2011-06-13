@@ -47,7 +47,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -176,6 +176,7 @@ msgid "%(1)s frames per second"
 msgstr "%(1)s korniza për sekondë"
 
 #: /home/sugar/src/activities/record.activity/constants.py:150
+#, fuzzy
 msgid "Quality"
 msgstr "Cilësia"
 

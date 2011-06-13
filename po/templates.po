@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-24 00:17+0200\n"
+"POT-Creation-Date: 2011-04-26 00:30-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,3 +18,103 @@ msgstr ""
 #: activity/activity.info:2
 msgid "Record"
 msgstr ""
+
+#: button.py:26
+msgid "Remove"
+msgstr ""
+
+#: button.py:37
+msgid "Copy to clipboard"
+msgstr ""
+
+#: constants.py:24 record.py:123
+msgid "Photo"
+msgstr ""
+
+#: constants.py:31 record.py:127
+msgid "Video"
+msgstr ""
+
+#: constants.py:38 record.py:134
+msgid "Audio"
+msgstr ""
+
+#: glive.py:399 model.py:361
+#, python-format
+msgid "%s by %s"
+msgstr ""
+
+#: glive.py:557
+msgid "Saving..."
+msgstr ""
+
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
+
+#: mediaview.py:70
+msgid "Tags:"
+msgstr ""
+
+#: mediaview.py:118
+msgid "Date:"
+msgstr ""
+
+#: model.py:153
+#, python-format
+msgid "%d:%02d remaining"
+msgstr ""
+
+#: record.py:174
+msgid "Title:"
+msgstr ""
+
+#: record.py:525
+msgid "Download failed."
+msgstr ""
+
+#: record.py:527
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:529
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:834
+msgid "Quality:"
+msgstr ""
+
+#: record.py:835
+msgid "Low"
+msgstr ""
+
+#: record.py:839
+msgid "High"
+msgstr ""
+
+#: record.py:895
+msgid "Timer:"
+msgstr ""
+
+#: record.py:899
+msgid "Immediate"
+msgstr ""
+
+#: record.py:916
+#, python-format
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: record.py:924
+msgid "Duration:"
+msgstr ""
+
+#: record.py:942
+#, python-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] ""
+msgstr[1] ""

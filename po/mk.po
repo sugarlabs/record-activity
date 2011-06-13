@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 || n%10==1 ? 0 : 1;\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -23,14 +23,14 @@ msgstr "Снимај"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
-#, python-format, fuzzy
+#, fuzzy
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
 msgstr[0] "%(1)s минути"
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
-#, python-format, fuzzy
+#, fuzzy
 msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
 msgstr[0] "%(1)s секунди"

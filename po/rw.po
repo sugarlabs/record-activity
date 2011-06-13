@@ -7,13 +7,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2008-07-31 12:18+0200\n"
-"Last-Translator: GASHAYIJA Guillaume <gashayija2002@yahoo.com>\n"
+"PO-Revision-Date: 2011-04-05 22:25+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: rw\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1) ;\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -22,14 +24,14 @@ msgstr "Gufatamajwi"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
-#, python-format, fuzzy
+#, fuzzy
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
 msgstr[0] "%(1)s iminota"
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
-#, python-format, fuzzy
+#, fuzzy
 msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
 msgstr[0] "%(1)s amasegonda"
@@ -143,6 +145,7 @@ msgid "%(1)s frames per second"
 msgstr "%(1)s frames ku isegonda"
 
 #: /home/sugar/src/activities/record.activity/constants.py:150
+#, fuzzy
 msgid "Quality"
 msgstr "Imimerere y`ikintu"
 
@@ -214,7 +217,7 @@ msgstr "Ntibishoboka kuva kuri mudasobwa %(1)s"
 #, python-format
 #, fuzzy
 msgid "Save %(1)s to:"
-msgstr "Bika %(1) to:"
+msgstr "Bika %(1)s to:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:169
 #, python-format

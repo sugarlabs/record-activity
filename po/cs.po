@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2011-03-18 06:09+0200\n"
+"PO-Revision-Date: 2011-04-14 06:02+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -118,7 +118,7 @@ msgstr "Trvání:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:143
 msgid "Remaining:"
-msgstr ""
+msgstr "Zbývající"
 
 #: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
@@ -155,7 +155,7 @@ msgstr "Implicitní"
 
 #: /home/sugar/src/activities/record.activity/constants.py:152
 msgid "Best"
-msgstr ""
+msgstr "Nejlepší"
 
 #: /home/sugar/src/activities/record.activity/constants.py:153
 msgid "High"
@@ -179,7 +179,7 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:158
 msgid "Rotate"
-msgstr ""
+msgstr "Otočit"
 
 #: /home/sugar/src/activities/record.activity/constants.py:159
 msgid "Width"

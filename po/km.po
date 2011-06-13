@@ -2,19 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Rit Lim <rit.lim@gmail.com>, 2008.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-04-28 16:48+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: km\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.0.1\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -23,14 +24,14 @@ msgstr "កំណត់"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
-#, python-format, fuzzy
+#, fuzzy
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
 msgstr[0] "%(1)s នាទី"
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
-#, python-format, fuzzy
+#, fuzzy
 msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
 msgstr[0] "%(1)s វិនាទី"
@@ -71,19 +72,19 @@ msgstr "%(1)s ដោយ %(2)s"
 
 #: /home/sugar/src/activities/record.activity/constants.py:132
 msgid "Title:"
-msgstr "ចំណង​ជើង"
+msgstr "ចំណង​ជើង ៖"
 
 #: /home/sugar/src/activities/record.activity/constants.py:133
 msgid "Recorder:"
-msgstr "ថត​កំណត់"
+msgstr "ថត​កំណត់ ៖"
 
 #: /home/sugar/src/activities/record.activity/constants.py:134
 msgid "Date:"
-msgstr "ថ្ងៃ​ខែ: "
+msgstr "ថ្ងៃ​ខែ ៖"
 
 #: /home/sugar/src/activities/record.activity/constants.py:135
 msgid "Tags:"
-msgstr "គំនូស: "
+msgstr "គំនូស ៖"
 
 #: /home/sugar/src/activities/record.activity/constants.py:136
 msgid "Saving"
@@ -107,15 +108,15 @@ msgstr "ចំលង"
 
 #: /home/sugar/src/activities/record.activity/constants.py:141
 msgid "Timer:"
-msgstr "ម៉ោង: "
+msgstr "ម៉ោង ៖"
 
 #: /home/sugar/src/activities/record.activity/constants.py:142
 msgid "Duration:"
-msgstr "រយពេល: "
+msgstr "រយពេល ៖"
 
 #: /home/sugar/src/activities/record.activity/constants.py:143
 msgid "Remaining:"
-msgstr ""
+msgstr "នៅសល់ ៖"
 
 #: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
@@ -143,6 +144,7 @@ msgid "%(1)s frames per second"
 msgstr "%(1)s ស៊ុម​ក្នុង​មួយ​ម៉ោង"
 
 #: /home/sugar/src/activities/record.activity/constants.py:150
+#, fuzzy
 msgid "Quality"
 msgstr "គុណភាព"
 
@@ -236,7 +238,7 @@ msgstr "ចំណូល​ចិត្ត"
 
 #: /home/sugar/src/activities/record.activity/constants.py:174
 msgid "Free space:"
-msgstr "ថាស​នៅ​សល់"
+msgstr "ថាស​នៅ​សល់ ៖"
 
 #. TRANS: 7 photos
 #: /home/sugar/src/activities/record.activity/constants.py:176

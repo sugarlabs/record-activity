@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-25 13:51+0200\n"
+"POT-Creation-Date: 2011-06-02 00:31-0400\n"
 "PO-Revision-Date: 2008-07-09 08:31-0400\n"
 "Last-Translator: Juliano Bittencourt <juliano@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,26 +19,111 @@ msgstr ""
 msgid "Record"
 msgstr "Gravar"
 
+#: button.py:26
+msgid "Remove"
+msgstr "Remover"
+
+#: button.py:37
+msgid "Copy to clipboard"
+msgstr "Copiar para a prancheta"
+
+#: constants.py:24 record.py:133
+msgid "Photo"
+msgstr "Foto"
+
+#: constants.py:31 record.py:141
+msgid "Video"
+msgstr "Vídeo"
+
+#: constants.py:38 record.py:152
+msgid "Audio"
+msgstr "Som"
+
+#: glive.py:397 model.py:355
 #, python-format
-#, python-format, fuzzy
-#~ msgid "%(1)s minute"
-#~ msgid_plural "%(1)s minutes"
-#~ msgstr[0] "%(1)s minutos"
+msgid "%s by %s"
+msgstr ""
 
+#: glive.py:556
+msgid "Saving..."
+msgstr ""
+
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
+
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "Etiquetas:"
+
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Data:"
+
+#: model.py:154
 #, python-format
-#, python-format, fuzzy
-#~ msgid "%(1)s second"
-#~ msgid_plural "%(1)s seconds"
-#~ msgstr[0] "%(1)s segundos"
+msgid "%d:%02d remaining"
+msgstr ""
 
-#~ msgid "Photo"
-#~ msgstr "Foto"
+#: record.py:202
+msgid "Title:"
+msgstr "Título:"
 
-#~ msgid "Video"
-#~ msgstr "Vídeo"
+#: record.py:527
+msgid "Download failed."
+msgstr ""
 
-#~ msgid "Audio"
-#~ msgstr "Som"
+#: record.py:529
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:531
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:828
+#, fuzzy
+msgid "Quality:"
+msgstr "Qualidade:"
+
+#: record.py:829
+msgid "Low"
+msgstr "Baixa"
+
+#: record.py:833
+msgid "High"
+msgstr "Alta"
+
+#: record.py:841
+msgid "Preferences"
+msgstr "Preferências"
+
+# I think it's better not to translate this term because it's used by brazilians.
+#: record.py:888
+msgid "Timer:"
+msgstr "Timer:"
+
+#: record.py:892
+msgid "Immediate"
+msgstr "Imediato"
+
+#: record.py:909
+#, python-format
+#, fuzzy
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%(1)s segundos"
+
+#: record.py:917
+msgid "Duration:"
+msgstr "Duração:"
+
+#: record.py:935
+#, python-format
+#, fuzzy
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%(1)s minutos"
 
 #~ msgid "Time Lapse"
 #~ msgstr "Duração"
@@ -57,17 +142,8 @@ msgstr "Gravar"
 #~ msgid "%(1)s by %(2)s"
 #~ msgstr "%(1)s por %(2)s"
 
-#~ msgid "Title:"
-#~ msgstr "Título:"
-
 #~ msgid "Recorder:"
 #~ msgstr "Gravador:"
-
-#~ msgid "Date:"
-#~ msgstr "Data:"
-
-#~ msgid "Tags:"
-#~ msgstr "Etiquetas:"
 
 #~ msgid "Saving"
 #~ msgstr "Salvando"
@@ -75,24 +151,8 @@ msgstr "Gravar"
 #~ msgid "Finished recording"
 #~ msgstr "Gravação terminada"
 
-#~ msgid "Remove"
-#~ msgstr "Remover"
-
 #~ msgid "Stopped recording"
 #~ msgstr "Gravação interrompida"
-
-#~ msgid "Copy to clipboard"
-#~ msgstr "Copiar para a prancheta"
-
-# I think it's better not to translate this term because it's used by brazilians.
-#~ msgid "Timer:"
-#~ msgstr "Timer:"
-
-#~ msgid "Duration:"
-#~ msgstr "Duração:"
-
-#~ msgid "Immediate"
-#~ msgstr "Imediato"
 
 #~ msgid "Play"
 #~ msgstr "Reproduzir"
@@ -110,20 +170,11 @@ msgstr "Gravar"
 #~ msgid "%(1)s frames per second"
 #~ msgstr "%(1)s quadros por segundo"
 
-#~ msgid "Quality"
-#~ msgstr "Qualidade:"
-
 #~ msgid "Default"
 #~ msgstr "Padrão"
 
 #~ msgid "Best"
 #~ msgstr "Melhor"
-
-#~ msgid "High"
-#~ msgstr "Alta"
-
-#~ msgid "Low"
-#~ msgstr "Baixa"
 
 #~ msgid "Large file"
 #~ msgstr "Arquivo grande"
@@ -174,9 +225,6 @@ msgstr "Gravar"
 
 #~ msgid "SD Card"
 #~ msgstr "Cartão SD"
-
-#~ msgid "Preferences"
-#~ msgstr "Preferências"
 
 #~ msgid "Free space:"
 #~ msgstr "Espaço livre:"

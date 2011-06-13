@@ -2,302 +2,326 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-06-05 20:23+0200\n"
+"Last-Translator: Aputsiaq <aj@isit.gl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
-msgstr ""
+msgstr "Optag"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
+#, python-format, 
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(1)s minut"
+msgstr[1] "%(1)s minutter"
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
+#, python-format, 
 msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(1)s sekund"
+msgstr[1] "%(1)s sekunder"
 
 #: /home/sugar/src/activities/record.activity/constants.py:123
 msgid "Photo"
-msgstr ""
+msgstr "Foto"
 
 #: /home/sugar/src/activities/record.activity/constants.py:124
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: /home/sugar/src/activities/record.activity/constants.py:125
 msgid "Audio"
-msgstr ""
+msgstr "Lyd"
 
 #: /home/sugar/src/activities/record.activity/constants.py:126
 msgid "Time Lapse"
-msgstr ""
+msgstr "Tidsudløb"
 
 #: /home/sugar/src/activities/record.activity/constants.py:127
 msgid "Animation"
-msgstr ""
+msgstr "Animation"
 
 #: /home/sugar/src/activities/record.activity/constants.py:128
 msgid "Panorama"
-msgstr ""
+msgstr "Panorama"
 
 #: /home/sugar/src/activities/record.activity/constants.py:129
 msgid "Interview"
-msgstr ""
+msgstr "Interview"
 
 #. TRANS: photo by photographer, e.g., "Photo by Mary"
 #: /home/sugar/src/activities/record.activity/constants.py:131
 #, python-format
 msgid "%(1)s by %(2)s"
-msgstr ""
+msgstr "%(1)s af %(2)s"
 
 #: /home/sugar/src/activities/record.activity/constants.py:132
 msgid "Title:"
-msgstr ""
+msgstr "Titel:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:133
 msgid "Recorder:"
-msgstr ""
+msgstr "Optager:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:134
 msgid "Date:"
-msgstr ""
+msgstr "Dato:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:135
 msgid "Tags:"
-msgstr ""
+msgstr "Mærkater:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:136
 msgid "Saving"
-msgstr ""
+msgstr "Gemmer"
 
 #: /home/sugar/src/activities/record.activity/constants.py:137
 msgid "Finished recording"
-msgstr ""
+msgstr "Optagelse afsluttet"
 
 #: /home/sugar/src/activities/record.activity/constants.py:138
 msgid "Remove"
-msgstr ""
+msgstr "Fjern"
 
 #: /home/sugar/src/activities/record.activity/constants.py:139
 msgid "Stopped recording"
-msgstr ""
+msgstr "Optagelse stoppet"
 
 #: /home/sugar/src/activities/record.activity/constants.py:140
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Kopiér til udklipsholder"
 
 #: /home/sugar/src/activities/record.activity/constants.py:141
 msgid "Timer:"
-msgstr ""
+msgstr "Tidsmåler:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:142
 msgid "Duration:"
-msgstr ""
+msgstr "Varighed:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:143
 msgid "Remaining:"
-msgstr ""
+msgstr "Resterende:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
-msgstr ""
+msgstr "Øjeblikkelig"
 
 #: /home/sugar/src/activities/record.activity/constants.py:145
 msgid "Play"
-msgstr ""
+msgstr "Spil"
 
 #: /home/sugar/src/activities/record.activity/constants.py:146
 msgid "Pause"
-msgstr ""
+msgstr "Pause"
 
 #: /home/sugar/src/activities/record.activity/constants.py:147
 msgid "Add frame"
-msgstr ""
+msgstr "Tilføj billede"
 
 #: /home/sugar/src/activities/record.activity/constants.py:148
 msgid "Remove frame"
-msgstr ""
+msgstr "Fjern billede"
 
 #: /home/sugar/src/activities/record.activity/constants.py:149
 #, python-format
 msgid "%(1)s frames per second"
-msgstr ""
+msgstr "%(1)s billeder per sekund"
 
 #: /home/sugar/src/activities/record.activity/constants.py:150
 msgid "Quality"
-msgstr ""
+msgstr "Kvalitet"
 
 #: /home/sugar/src/activities/record.activity/constants.py:151
 msgid "Default"
-msgstr ""
+msgstr "Standard"
 
 #: /home/sugar/src/activities/record.activity/constants.py:152
 msgid "Best"
-msgstr ""
+msgstr "Bedst"
 
 #: /home/sugar/src/activities/record.activity/constants.py:153
 msgid "High"
-msgstr ""
+msgstr "Høj"
 
 #: /home/sugar/src/activities/record.activity/constants.py:154
 msgid "Low"
-msgstr ""
+msgstr "Lav"
 
 #: /home/sugar/src/activities/record.activity/constants.py:155
 msgid "Large file"
-msgstr ""
+msgstr "Stor fil"
 
 #: /home/sugar/src/activities/record.activity/constants.py:156
 msgid "Small file"
-msgstr ""
+msgstr "Lille fil"
 
 #: /home/sugar/src/activities/record.activity/constants.py:157
 msgid "Silent"
-msgstr ""
+msgstr "Stille"
 
 #: /home/sugar/src/activities/record.activity/constants.py:158
 msgid "Rotate"
-msgstr ""
+msgstr "Rotér"
 
 #: /home/sugar/src/activities/record.activity/constants.py:159
 msgid "Width"
-msgstr ""
+msgstr "Bredde"
 
 #: /home/sugar/src/activities/record.activity/constants.py:160
 msgid "Height"
-msgstr ""
+msgstr "Højde"
 
 #: /home/sugar/src/activities/record.activity/constants.py:161
 msgid "Click to take picture"
-msgstr ""
+msgstr "Klik for at tage billede"
 
 #: /home/sugar/src/activities/record.activity/constants.py:162
 msgid "Click to add picture"
-msgstr ""
+msgstr "Klik for at tilføje billede"
 
 #. TRANS: Downloading Photo from Mary
 #: /home/sugar/src/activities/record.activity/constants.py:164
 #, python-format
 msgid "Downloading %(1)s from %(2)s"
-msgstr ""
+msgstr "Henter %(1)s fra %(2)s"
 
 #. TRANS: Cannot download this Photo
 #: /home/sugar/src/activities/record.activity/constants.py:166
 #, python-format
 msgid "Cannot download this %(1)s"
-msgstr ""
+msgstr "Kan ikke hente %(1)s"
 
 #. TRANS: Save Photo to:
 #: /home/sugar/src/activities/record.activity/constants.py:168
 #, python-format
 msgid "Save %(1)s to:"
-msgstr ""
+msgstr "Gem %(1)s til:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:169
 #, python-format
 msgid "Your %(1)s is full"
-msgstr ""
+msgstr "Din %(1)s er fuld"
 
 #: /home/sugar/src/activities/record.activity/constants.py:170
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #: /home/sugar/src/activities/record.activity/constants.py:171
 msgid "USB"
-msgstr ""
+msgstr "USB"
 
 #: /home/sugar/src/activities/record.activity/constants.py:172
 msgid "SD Card"
-msgstr ""
+msgstr "SD-kort"
 
 #: /home/sugar/src/activities/record.activity/constants.py:173
 msgid "Preferences"
-msgstr ""
+msgstr "Præferencer"
 
 #: /home/sugar/src/activities/record.activity/constants.py:174
 msgid "Free space:"
-msgstr ""
+msgstr "Fri plads"
 
 #. TRANS: 7 photos
 #: /home/sugar/src/activities/record.activity/constants.py:176
 msgid "Bitrate"
-msgstr ""
+msgstr "Bitrate"
 
 #: /home/sugar/src/activities/record.activity/constants.py:177
 msgid "Maximum Bitrate"
-msgstr ""
+msgstr "Maksimal bitrate"
 
 #: /home/sugar/src/activities/record.activity/constants.py:178
 msgid "Minumum Bitrate"
-msgstr ""
+msgstr "Minimal bitrate"
 
 #: /home/sugar/src/activities/record.activity/constants.py:179
 msgid "Manage Bitrate"
-msgstr ""
+msgstr "Håndter bitrate"
 
 #: /home/sugar/src/activities/record.activity/constants.py:180
 msgid "Border"
-msgstr ""
+msgstr "Grænse"
 
 #: /home/sugar/src/activities/record.activity/constants.py:181
 msgid "Center"
-msgstr ""
+msgstr "Centrum"
 
 #: /home/sugar/src/activities/record.activity/constants.py:182
 msgid "Frames"
-msgstr ""
+msgstr "Billeder"
 
 #: /home/sugar/src/activities/record.activity/constants.py:183
 msgid "Automatic keyframe detection"
-msgstr ""
+msgstr "Automatisk genkendelse af klippunktkontrol"
 
 #: /home/sugar/src/activities/record.activity/constants.py:184
 msgid "Force keyframe"
-msgstr ""
+msgstr "Gennemtving klippunktkontrol"
 
 #: /home/sugar/src/activities/record.activity/constants.py:185
 msgid "Keyframe frequency"
-msgstr ""
+msgstr "Frekvens på klippunktkontrol"
 
 #: /home/sugar/src/activities/record.activity/constants.py:186
 msgid "Keyframe minimum distance"
-msgstr ""
+msgstr "Minimal distance for klippunktkontrol"
 
 #: /home/sugar/src/activities/record.activity/constants.py:187
 msgid "Keyframe threshold"
-msgstr ""
+msgstr "Tærskel for klippunktkontrol"
 
 #: /home/sugar/src/activities/record.activity/constants.py:188
 msgid "Noise Sensitivity"
-msgstr ""
+msgstr "Følsomhed for støj"
 
 #: /home/sugar/src/activities/record.activity/constants.py:189
 msgid "Quick"
-msgstr ""
+msgstr "Kvik"
 
 #: /home/sugar/src/activities/record.activity/constants.py:190
 msgid "Sharpness"
-msgstr ""
+msgstr "Skarphed"
 
 #: /home/sugar/src/activities/record.activity/constants.py:191
 msgid "Capacity"
-msgstr ""
+msgstr "Kapacitet"
+
+#, python-format
+#~ msgid "%s by %s"
+#~ msgstr "%s af %s"
+
+#~ msgid "Saving..."
+#~ msgstr "Gemmer..."
+
+#~ msgid "Author:"
+#~ msgstr "Forfatter:"
+
+#, python-format
+#~ msgid "%d:%02d remaining"
+#~ msgstr "%d:%02d resterer"
+
+#~ msgid "Download failed."
+#~ msgstr "Hentning mislykkedes."
+
+#~ msgid "Downloading..."
+#~ msgstr "Henter..."
+
+#~ msgid "Requesting..."
+#~ msgstr "Forespørger..."

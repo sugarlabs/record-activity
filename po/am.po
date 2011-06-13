@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2011-03-24 16:50+0200\n"
+"PO-Revision-Date: 2011-04-13 03:47+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: am\n"
@@ -15,12 +15,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
-msgstr ""
+msgstr "ቅረጽ"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
@@ -42,11 +42,11 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:124
 msgid "Video"
-msgstr ""
+msgstr "ፈልግ"
 
 #: /home/sugar/src/activities/record.activity/constants.py:125
 msgid "Audio"
-msgstr ""
+msgstr "ድምፅ"
 
 #: /home/sugar/src/activities/record.activity/constants.py:126
 msgid "Time Lapse"
@@ -72,7 +72,7 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:132
 msgid "Title:"
-msgstr ""
+msgstr " አርእስት፦"
 
 #: /home/sugar/src/activities/record.activity/constants.py:133
 msgid "Recorder:"
@@ -112,11 +112,11 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:142
 msgid "Duration:"
-msgstr ""
+msgstr "ተጀምሮ እስኪያልቅ:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:143
 msgid "Remaining:"
-msgstr ""
+msgstr "ቀሪ:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
@@ -124,11 +124,11 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:145
 msgid "Play"
-msgstr ""
+msgstr "አጫዉት"
 
 #: /home/sugar/src/activities/record.activity/constants.py:146
 msgid "Pause"
-msgstr ""
+msgstr "ለጊዜው አቋርጥ"
 
 #: /home/sugar/src/activities/record.activity/constants.py:147
 msgid "Add frame"
@@ -220,7 +220,7 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:170
 msgid "Journal"
-msgstr ""
+msgstr "መጽሔት"
 
 #: /home/sugar/src/activities/record.activity/constants.py:171
 msgid "USB"
@@ -232,7 +232,7 @@ msgstr ""
 
 #: /home/sugar/src/activities/record.activity/constants.py:173
 msgid "Preferences"
-msgstr ""
+msgstr "ምርጫዎች"
 
 #: /home/sugar/src/activities/record.activity/constants.py:174
 msgid "Free space:"
