@@ -1,0 +1,125 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-06-04 00:30-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
+
+#: activity/activity.info:2
+msgid "Record"
+msgstr ""
+
+#: button.py:26
+msgid "Remove"
+msgstr ""
+
+#: button.py:37
+msgid "Copy to clipboard"
+msgstr ""
+
+#: constants.py:24 record.py:133
+msgid "Photo"
+msgstr ""
+
+#: constants.py:31 record.py:141
+msgid "Video"
+msgstr ""
+
+#: constants.py:38 record.py:152
+msgid "Audio"
+msgstr ""
+
+#: glive.py:397 model.py:355
+#, python-format
+msgid "%s by %s"
+msgstr ""
+
+#: glive.py:556
+msgid "Saving..."
+msgstr ""
+
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
+
+#: mediaview.py:70
+msgid "Tags:"
+msgstr ""
+
+#: mediaview.py:118
+msgid "Date:"
+msgstr ""
+
+#: model.py:154
+#, python-format
+msgid "%d:%02d remaining"
+msgstr ""
+
+#: record.py:202
+msgid "Title:"
+msgstr ""
+
+#: record.py:527
+msgid "Download failed."
+msgstr ""
+
+#: record.py:529
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:531
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:828
+msgid "Quality:"
+msgstr ""
+
+#: record.py:829
+msgid "Low"
+msgstr ""
+
+#: record.py:833
+msgid "High"
+msgstr ""
+
+#: record.py:841
+msgid "Preferences"
+msgstr ""
+
+#: record.py:888
+msgid "Timer:"
+msgstr ""
+
+#: record.py:892
+msgid "Immediate"
+msgstr ""
+
+#: record.py:909
+#, python-format
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: record.py:917
+msgid "Duration:"
+msgstr ""
+
+#: record.py:935
+#, python-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] ""
+msgstr[1] ""
