@@ -31,7 +31,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2010-08-07 21:10+0200\n"
+"PO-Revision-Date: 2011-07-21 21:24+0200\n"
 "Last-Translator: Myckel Habets <myckel@sdf.lonestar.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -39,7 +39,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -48,7 +48,6 @@ msgstr "Opnemen"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
-#, fuzzy
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
 msgstr[0] "%(1)s minuut"
@@ -56,7 +55,6 @@ msgstr[1] "%(1)s minuten"
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
-#, fuzzy
 msgid "%(1)s second"
 msgid_plural "%(1)s seconds"
 msgstr[0] "%(1)s seconde"
@@ -143,7 +141,7 @@ msgstr "Duur:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:143
 msgid "Remaining:"
-msgstr "Resterend"
+msgstr "Resterend:"
 
 #: /home/sugar/src/activities/record.activity/constants.py:144
 msgid "Immediate"
@@ -172,7 +170,6 @@ msgid "%(1)s frames per second"
 msgstr "%(1)s beelden per seconde"
 
 #: /home/sugar/src/activities/record.activity/constants.py:150
-#, fuzzy
 msgid "Quality"
 msgstr "Kwaliteit"
 
