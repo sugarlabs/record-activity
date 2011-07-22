@@ -49,6 +49,7 @@ import utils
 from tray import HTray
 from mediaview import MediaView
 import hw
+from iconcombobox import IconComboBox
 
 logger = logging.getLogger('record.py')
 COLOR_BLACK = gdk.color_parse('#000000')
@@ -880,55 +881,53 @@ class RecordControl():
         self.quality.combo.set_active(idx)
 
 
-class TimerCombo(ToolComboBox):
+class TimerCombo(IconComboBox):
     TIMERS = (0, 5, 10)
 
     def __init__(self):
-        self._combo_box_text = gtk.combo_box_new_text()
-        super(TimerCombo, self).__init__(combo=self._combo_box_text, label_text=_('Timer:'))
+        super(TimerCombo, self).__init__('timer')
         
         for i in self.TIMERS:
             if i == 0:
-                self._combo_box_text.append_text(_('Immediate'))
+                self.append_item(i, _('Immediate'))
             else:
                 string = TimerCombo._seconds_string(i)
-                self._combo_box_text.append_text(string)
-        self._combo_box_text.set_active(0)
+                self.append_item(i, string)
+        self.combo.set_active(0)
 
     def get_value(self):
-        return TimerCombo.TIMERS[self._combo_box_text.get_active()]        
+        return TimerCombo.TIMERS[self.combo.get_active()]
 
     def get_value_idx(self):
-        return self._combo_box_text.get_active()
+        return self.combo.get_active()
 
     def set_value_idx(self, idx):
-        self._combo_box_text.set_active(idx)
+        self.combo.set_active(idx)
 
     @staticmethod
     def _seconds_string(x):
         return ngettext('%s second', '%s seconds', x) % x
 
 
-class DurationCombo(ToolComboBox):
+class DurationCombo(IconComboBox):
     DURATIONS = (2, 4, 6)
 
     def __init__(self):
-        self._combo_box_text = gtk.combo_box_new_text()
-        super(DurationCombo, self).__init__(combo=self._combo_box_text, label_text=_('Duration:'))
+        super(DurationCombo, self).__init__('duration')
 
         for i in self.DURATIONS:
             string = DurationCombo._minutes_string(i)
-            self._combo_box_text.append_text(string)
-        self._combo_box_text.set_active(0)
+            self.append_item(i, string)
+        self.combo.set_active(0)
 
     def get_value(self):
-        return 60 * self.DURATIONS[self._combo_box_text.get_active()]
+        return 60 * self.DURATIONS[self.combo.get_active()]
 
     def get_value_idx(self):
-        return self._combo_box_text.get_active()
+        return self.combo.get_active()
 
     def set_value_idx(self, idx):
-        self._combo_box_text.set_active(idx)
+        self.combo.set_active(idx)
 
     @staticmethod
     def _minutes_string(x):
