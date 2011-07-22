@@ -32,6 +32,7 @@ class IconComboBox(gtk.ToolItem):
         self.set_border_width(style.DEFAULT_PADDING)
 
         self.combo = ComboBox()
+        self.combo.set_focus_on_click(False)
         self.combo.show()
 
         self.add(self.combo)
