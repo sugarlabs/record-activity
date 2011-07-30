@@ -23,15 +23,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2011-05-16 15:50+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2011-07-29 20:01+0200\n"
+"Last-Translator:  <anush.mkrtchyan@ca1492.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
 #: /home/sugar/src/activities/record.activity/constants.py:122
@@ -40,10 +40,9 @@ msgstr "Գրանցում"
 
 #: /home/sugar/src/activities/record.activity/constants.py:21
 #, python-format
-#, fuzzy
 msgid "%(1)s minute"
 msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s րոպե"
+msgstr[0] "%(1)s րոպե%(1)s րոպեներ"
 
 #: /home/sugar/src/activities/record.activity/constants.py:25
 #, python-format
@@ -170,7 +169,7 @@ msgstr "Ելման վիճակ"
 
 #: /home/sugar/src/activities/record.activity/constants.py:152
 msgid "Best"
-msgstr ""
+msgstr "Լավագույն"
 
 #: /home/sugar/src/activities/record.activity/constants.py:153
 msgid "High"
