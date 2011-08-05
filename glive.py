@@ -351,7 +351,6 @@ class Glive:
         self._pipeline.set_state(gst.STATE_NULL)
         self.model.shutter_sound()
         self._pipeline.remove(self._audiobin)
-        self.play()
 
         audio_path = os.path.join(Instance.instancePath, "output.wav")
         if not os.path.exists(audio_path) or os.path.getsize(audio_path) <= 0:
