@@ -55,12 +55,13 @@ class Model:
         self.gplay.connect('playback-status-changed', self._playback_status_changed)
 
         self._mode = None
-        self._state = constants.STATE_READY
+        self._state = constants.STATE_INVISIBLE
         self._countdown_value = 0
         self._countdown_handle = None
         self._timer_value = 0
         self._timer_duration = 0
         self._timer_handle = None
+        self._visible = False
 
         self.mediaHashs = {}
         for key, value in constants.MEDIA_INFO.items():
@@ -116,13 +117,38 @@ class Model:
         self.activity.set_mode(mode)
         self.set_state(constants.STATE_READY)
 
-        if mode == constants.MODE_PHOTO:
-            self.glive.play()
-
     def ui_frozen(self):
         return not self._state == constants.STATE_READY 
 
+    def set_visible(self, visible):
+        if visible == self._visible:
+            return
+
+        self._visible = visible
+
+        if visible:
+            self.set_state(constants.STATE_READY)
+            return
+
+        if self._countdown_handle:
+            gobject.source_remove(self._countdown_handle)
+            self._countdown_handle = None
+            self._countdown_value = 0
+            self.activity.set_countdown(0)
+
+        # Change from visible to invisible.
+        if self._state == constants.STATE_RECORDING:
+            # If recording, stop.
+            self._stop_media_capture()
+        else:
+            self.set_state(constants.STATE_INVISIBLE)
+
     def set_state(self, state):
+        # Never go into READY mode if we aren't visible.
+        if state == constants.STATE_READY and not self._visible:
+            logging.debug("state: overriding READY to INVISIBLE")
+            state = constants.STATE_INVISIBLE
+
         self._state = state
 
         if state == constants.STATE_READY:
@@ -135,6 +161,9 @@ class Model:
                 self.glive.stop()
 
             self.glive.play()
+        elif state == constants.STATE_INVISIBLE:
+            self.gplay.stop()
+            self.glive.stop()
 
         self.activity.set_state(state)
 

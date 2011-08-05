@@ -68,6 +68,9 @@ class Record(activity.Activity):
         self.props.enable_fullscreen_mode = False
         Instance(self)
 
+        self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+        self.connect("visibility-notify-event", self._visibility_changed)
+
         #the main classes
         self.model = Model(self)
         self.ui_init()
@@ -100,6 +103,9 @@ class Record(activity.Activity):
         self.model.gplay.stop()
         self.model.glive.stop()
         super(Record, self).close()
+
+    def _visibility_changed(self, widget, event):
+        self.model.set_visible(event.state != gtk.gdk.VISIBILITY_FULLY_OBSCURED)
 
     def _shared_cb(self, activity):
         self.model.collab.set_activity_shared()
@@ -373,6 +379,7 @@ class Record(activity.Activity):
             self._progress.hide()
             self._controls_hbox.set_child_packing(self._shutter_button, expand=True, fill=False, padding=0, pack_type=gtk.PACK_START)
             self._shutter_button.set_normal()
+            self._shutter_button.set_sensitive(True)
             self._shutter_button.show()
             self._media_view.show_live()
         elif state == constants.STATE_RECORDING:
