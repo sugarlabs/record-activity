@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2011-06-06 00:31+0200\n"
-"Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
+"POT-Creation-Date: 2011-06-04 00:30-0400\n"
+"PO-Revision-Date: 2011-08-14 06:45+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -18,292 +18,269 @@ msgstr ""
 "X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "紀錄"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)分"
-
-#: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)秒"
-
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "照片"
-
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "影像"
-
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "聲音"
-
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "時間長度"
-
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "動畫"
-
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "寬景圖"
-
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "訪談"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
-#, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(2)s 拍攝的 %(1)s"
-
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "標題:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "紀錄者:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "日期:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "標籤:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "儲存中"
-
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "已完成紀錄"
-
-#: /home/sugar/src/activities/record.activity/constants.py:138
+#: button.py:26
 msgid "Remove"
 msgstr "移除"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "停止紀錄"
-
-#: /home/sugar/src/activities/record.activity/constants.py:140
+#: button.py:37
 msgid "Copy to clipboard"
 msgstr "複製到剪貼簿"
 
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "計時器:"
+#: constants.py:24 record.py:133
+msgid "Photo"
+msgstr "照片"
 
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "長度:"
+#: constants.py:31 record.py:141
+msgid "Video"
+msgstr "影像"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
-msgstr "剩餘:"
+#: constants.py:38 record.py:152
+msgid "Audio"
+msgstr "聲音"
 
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "立即"
-
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "播放"
-
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "暫停"
-
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "增加畫格"
-
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "移除畫格"
-
-#: /home/sugar/src/activities/record.activity/constants.py:149
+#: glive.py:397 model.py:355
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "每秒%(1)s格畫面"
+msgid "%s by %s"
+msgstr "%s 由 %s"
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
-msgid "Quality"
-msgstr "畫質"
+#: glive.py:556
+msgid "Saving..."
+msgstr "儲存中..."
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "預設"
+#: mediaview.py:54
+msgid "Author:"
+msgstr "作者:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "最佳"
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "標籤:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "高"
+#: mediaview.py:118
+msgid "Date:"
+msgstr "日期:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:154
+#: model.py:154
+#, python-format
+msgid "%d:%02d remaining"
+msgstr "剩餘 %d:%02d"
+
+#: record.py:202
+msgid "Title:"
+msgstr "標題:"
+
+#: record.py:527
+msgid "Download failed."
+msgstr "下載失敗"
+
+#: record.py:529
+msgid "Downloading..."
+msgstr "下載中..."
+
+#: record.py:531
+msgid "Requesting..."
+msgstr "請求中..."
+
+#: record.py:828
+msgid "Quality:"
+msgstr "畫質:"
+
+#: record.py:829
 msgid "Low"
 msgstr "低"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "大檔案"
+#: record.py:833
+msgid "High"
+msgstr "高"
 
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "小檔案"
-
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "靜音"
-
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "旋轉"
-
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "寬度"
-
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
-msgstr "高度"
-
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "點選拍攝照片"
-
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "點選增加照片"
-
-# TRANS: Downloading Photo from Mary
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "下載 %(1)s 自 (2)%s."
-
-# TRANS: Cannot download this Photo
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "無法下載 %(1)s"
-
-# TRANS: Save Photo to:
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
-#, python-format
-msgid "Save %(1)s to:"
-msgstr "將%(1)s儲存到:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:169
-#, python-format
-msgid "Your %(1)s is full"
-msgstr "%(1)s已無剩餘空間"
-
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "日誌"
-
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "USB隨身碟"
-
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "SD記憶卡"
-
-#: /home/sugar/src/activities/record.activity/constants.py:173
+#: record.py:841
 msgid "Preferences"
 msgstr "偏好設定"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "剩餘空間:"
+#: record.py:888
+msgid "Timer:"
+msgstr "計時器:"
 
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr "流量"
+#: record.py:892
+msgid "Immediate"
+msgstr "立即"
 
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "最高流量"
+#: record.py:909
+#, python-format
+#, python-format,
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%s秒"
 
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "最低流量"
+#: record.py:917
+msgid "Duration:"
+msgstr "長度:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr "調整畫質流量"
+#: record.py:935
+#, python-format
+#, python-format,
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s分"
 
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "邊緣"
+#~ msgid "Time Lapse"
+#~ msgstr "時間長度"
 
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "中央"
+#~ msgid "Animation"
+#~ msgstr "動畫"
 
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "畫格"
+#~ msgid "Panorama"
+#~ msgstr "寬景圖"
 
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "自動關鍵格偵測"
+#~ msgid "Interview"
+#~ msgstr "訪談"
 
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "強制指定關鍵格"
+# TRANS: photo by photographer, e.g., "Photo by Mary"
+#, python-format
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(2)s 拍攝的 %(1)s"
 
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "關鍵畫面頻率"
+#~ msgid "Recorder:"
+#~ msgstr "紀錄者:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr "最短關鍵畫面間距"
+#~ msgid "Saving"
+#~ msgstr "儲存中"
 
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "關鍵畫面臨界值"
+#~ msgid "Finished recording"
+#~ msgstr "已完成紀錄"
 
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "雜訊感度"
+#~ msgid "Stopped recording"
+#~ msgstr "停止紀錄"
 
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
-msgstr "快速"
+#~ msgid "Remaining:"
+#~ msgstr "剩餘:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:190
-msgid "Sharpness"
-msgstr "清晰度"
+#~ msgid "Play"
+#~ msgstr "播放"
 
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "容量"
+#~ msgid "Pause"
+#~ msgstr "暫停"
+
+#~ msgid "Add frame"
+#~ msgstr "增加畫格"
+
+#~ msgid "Remove frame"
+#~ msgstr "移除畫格"
+
+#, python-format
+#~ msgid "%(1)s frames per second"
+#~ msgstr "每秒%(1)s格畫面"
+
+#~ msgid "Default"
+#~ msgstr "預設"
+
+#~ msgid "Best"
+#~ msgstr "最佳"
+
+#~ msgid "Large file"
+#~ msgstr "大檔案"
+
+#~ msgid "Small file"
+#~ msgstr "小檔案"
+
+#~ msgid "Silent"
+#~ msgstr "靜音"
+
+#~ msgid "Rotate"
+#~ msgstr "旋轉"
+
+#~ msgid "Width"
+#~ msgstr "寬度"
+
+#~ msgid "Height"
+#~ msgstr "高度"
+
+#~ msgid "Click to take picture"
+#~ msgstr "點選拍攝照片"
+
+#~ msgid "Click to add picture"
+#~ msgstr "點選增加照片"
+
+# TRANS: Downloading Photo from Mary
+#, python-format
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "下載 %(1)s 自 (2)%s."
+
+# TRANS: Cannot download this Photo
+#, python-format
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "無法下載 %(1)s"
+
+# TRANS: Save Photo to:
+#, python-format
+#~ msgid "Save %(1)s to:"
+#~ msgstr "將%(1)s儲存到:"
+
+#, python-format
+#~ msgid "Your %(1)s is full"
+#~ msgstr "%(1)s已無剩餘空間"
+
+#~ msgid "Journal"
+#~ msgstr "日誌"
+
+#~ msgid "USB"
+#~ msgstr "USB隨身碟"
+
+#~ msgid "SD Card"
+#~ msgstr "SD記憶卡"
+
+#~ msgid "Free space:"
+#~ msgstr "剩餘空間:"
+
+#~ msgid "Bitrate"
+#~ msgstr "流量"
+
+#~ msgid "Maximum Bitrate"
+#~ msgstr "最高流量"
+
+#~ msgid "Minumum Bitrate"
+#~ msgstr "最低流量"
+
+#~ msgid "Manage Bitrate"
+#~ msgstr "調整畫質流量"
+
+#~ msgid "Border"
+#~ msgstr "邊緣"
+
+#~ msgid "Center"
+#~ msgstr "中央"
+
+#~ msgid "Frames"
+#~ msgstr "畫格"
+
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "自動關鍵格偵測"
+
+#~ msgid "Force keyframe"
+#~ msgstr "強制指定關鍵格"
+
+#~ msgid "Keyframe frequency"
+#~ msgstr "關鍵畫面頻率"
+
+#~ msgid "Keyframe minimum distance"
+#~ msgstr "最短關鍵畫面間距"
+
+#~ msgid "Keyframe threshold"
+#~ msgstr "關鍵畫面臨界值"
+
+#~ msgid "Noise Sensitivity"
+#~ msgstr "雜訊感度"
+
+#~ msgid "Quick"
+#~ msgstr "快速"
+
+#~ msgid "Sharpness"
+#~ msgstr "清晰度"
+
+#~ msgid "Capacity"
+#~ msgstr "容量"
 
 #, python-format
 #~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
