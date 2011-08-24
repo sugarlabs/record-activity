@@ -1,0 +1,126 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-06-04 00:30-0400\n"
+"PO-Revision-Date: 2011-08-23 01:42+0200\n"
+"Last-Translator: Hugo <hugo.gonzalez@upslp.edu.mx>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: hus\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.1\n"
+
+#: activity/activity.info:2
+msgid "Record"
+msgstr "Ts'at'a'"
+
+#: button.py:26
+msgid "Remove"
+msgstr "Pakuw"
+
+#: button.py:37
+msgid "Copy to clipboard"
+msgstr "k'ot'biy kitnom-úw"
+
+#: constants.py:24 record.py:133
+msgid "Photo"
+msgstr "k'ot´biláb"
+
+#: constants.py:31 record.py:141
+msgid "Video"
+msgstr "T'iplab tejwamedhomtaláb"
+
+#: constants.py:38 record.py:152
+msgid "Audio"
+msgstr "Ots’bixtaláb"
+
+#: glive.py:397 model.py:355
+#, python-format
+msgid "%s by %s"
+msgstr "%s by %s"
+
+#: glive.py:556
+msgid "Saving..."
+msgstr "Ts'at'ab"
+
+#: mediaview.py:54
+msgid "Author:"
+msgstr "Dha'bal"
+
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "úw bijlab"
+
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Ajumtal íts'"
+
+#: model.py:154
+#, python-format
+msgid "%d:%02d remaining"
+msgstr "%d:%02d jilk'on"
+
+#: record.py:202
+msgid "Title:"
+msgstr "ok' bijláb"
+
+#: record.py:527
+msgid "Download failed."
+msgstr "pa'ba'"
+
+#: record.py:529
+msgid "Downloading..."
+msgstr "Pa'bál"
+
+#: record.py:531
+msgid "Requesting..."
+msgstr "Requesting"
+
+#: record.py:828
+msgid "Quality:"
+msgstr "Alwa'"
+
+#: record.py:829
+msgid "Low"
+msgstr "tsa'at"
+
+#: record.py:833
+msgid "High"
+msgstr "Yéjnek"
+
+#: record.py:841
+msgid "Preferences"
+msgstr "Dhakatnal"
+
+#: record.py:888
+msgid "Timer:"
+msgstr "k'ij"
+
+#: record.py:892
+msgid "Immediate"
+msgstr "Dhubatk'ij"
+
+#: record.py:909
+#, python-format, , 
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "    %s second   %s seconds"
+msgstr[1] "Yanchik 0%s segundoYanchik 1%s segundos"
+
+#: record.py:917
+msgid "Duration:"
+msgstr "Owát"
+
+#: record.py:935
+#, python-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "Yanchik 0%s Tsakamk'ij"
+msgstr[1] "Yanchik 1%s Tsakamk'ij"
