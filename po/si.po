@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
+"POT-Creation-Date: 2011-09-27 00:32-0400\n"
 "PO-Revision-Date: 2008-09-15 06:28-0400\n"
 "Last-Translator: Rashan Anushka <rashan.uoc@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,291 +16,261 @@ msgstr ""
 "X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "පටිගත කරන්න"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
-#, fuzzy
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "මිනිත්තු %(1)s"
-
-#: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
-#, fuzzy
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "තත්පර %(1)s ක්"
-
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "පින්තූරය"
-
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "වීඩියෝ දසුන"
-
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "ශ්‍රව්‍ය"
-
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "කාල අපගමනය"
-
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "සජීවනය"
-
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "පරිදර්ශනය"
-
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "අබිදැක්ම"
-
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
-#, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(1)s %(2)s මඟිනි"
-
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "සිරැසිය:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "රෙකෝඩරය:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "දිනය:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "ටෑගයන්:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "සුරැකේ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "පටිගත කිරීම අවසන්"
-
-#: /home/sugar/src/activities/record.activity/constants.py:138
+#: button.py:26
 msgid "Remove"
 msgstr "ඉවත් කරන්න"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "පටිගත කිරීම නවතන ලදි"
-
-#: /home/sugar/src/activities/record.activity/constants.py:140
+#: button.py:37
 msgid "Copy to clipboard"
 msgstr "පසුරු පුවරුවට පිටපත් කරන්න"
 
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "මුහුර්තකය:"
+#: constants.py:25 record.py:140
+msgid "Photo"
+msgstr "පින්තූරය"
 
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "කාල සීමාව:"
+#: constants.py:32 record.py:148
+msgid "Video"
+msgstr "වීඩියෝ දසුන"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
+#: constants.py:39 record.py:159
+msgid "Audio"
+msgstr "ශ්‍රව්‍ය"
+
+#: glive.py:396 model.py:384
+#, python-format
+msgid "%s by %s"
 msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "එසැනින්"
+#: glive.py:555
+msgid "Saving..."
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "වයන්න"
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "විරාමයක්"
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "ටෑගයන්:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "රාමුවක් එක් කරන්න"
+#: mediaview.py:118
+msgid "Date:"
+msgstr "දිනය:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "රාමුව ඉවත් කරන්න"
-
-#: /home/sugar/src/activities/record.activity/constants.py:149
+#: model.py:183
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "තත්පරයට රාමු %(1)s ක්"
+msgid "%d:%02d remaining"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
+#: record.py:209
+msgid "Title:"
+msgstr "සිරැසිය:"
+
+#: record.py:535
+msgid "Download failed."
+msgstr ""
+
+#: record.py:537
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:539
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:836
 #, fuzzy
-msgid "Quality"
+msgid "Quality:"
 msgstr "ගුණත්වය"
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "පෙරනිමිය"
-
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "ඉස්තරම්"
-
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "උසස්"
-
-#: /home/sugar/src/activities/record.activity/constants.py:154
+#: record.py:837
 msgid "Low"
 msgstr "අඩු"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "විශාල ගොනුවක්"
+#: record.py:841
+msgid "High"
+msgstr "උසස්"
 
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "කුඩා ගොනුවක්"
-
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "නිශ්ශබ්ද"
-
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "භ්‍රමණය කරන්න"
-
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "පළල"
-
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
-msgstr "උස"
-
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "පින්තූරය ගැනීමට ක්ලික් කරන්න"
-
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "පින්තූරය එක් කිරීම සඳහා ක්ලික් කරන්න"
-
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "%(2)s න් %(1)s බාගත කෙරේ"
-
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "මෙම %(1)s බාගත කළ නොහැක"
-
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
-#, python-format
-msgid "Save %(1)s to:"
-msgstr "%(1)s සුරැකිය යුත්තේ:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:169
-#, python-format
-msgid "Your %(1)s is full"
-msgstr "ඔබගේ %(1)s පිරී ඇත"
-
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "ජර්නලය"
-
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "USB"
-
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "SD පත"
-
-#: /home/sugar/src/activities/record.activity/constants.py:173
+#: record.py:849
 msgid "Preferences"
 msgstr "අභිරුචි"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "නිදහස් ඉඩ:"
+#: record.py:899
+msgid "Immediate"
+msgstr "එසැනින්"
 
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr "බිටු ශීඝ්‍රතාව"
+#: record.py:916
+#, python-format
+#, fuzzy
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "තත්පර %(1)s ක්"
 
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "උපරිම බිටු ශීඝ්‍රතාව"
+#: record.py:941
+#, python-format
+#, fuzzy
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "මිනිත්තු %(1)s"
 
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "අවම බිටු ශීඝ්‍රතාව"
+#~ msgid "Timer:"
+#~ msgstr "මුහුර්තකය:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr "බිටු ශීඝ්‍රතාව කළමණාකරනය කරන්න"
+#~ msgid "Duration:"
+#~ msgstr "කාල සීමාව:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "දාරය"
+#~ msgid "Time Lapse"
+#~ msgstr "කාල අපගමනය"
 
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "මධ්‍යය"
+#~ msgid "Animation"
+#~ msgstr "සජීවනය"
 
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "රාමු"
+#~ msgid "Panorama"
+#~ msgstr "පරිදර්ශනය"
 
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "ස්වයංක්‍රීය මූල රාමු අභික්ෂණය"
+#~ msgid "Interview"
+#~ msgstr "අබිදැක්ම"
 
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "මූල රාමුව බල කරන්න"
+#, python-format
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(1)s %(2)s මඟිනි"
 
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "මූල රාමු සංඛ්‍යාතය"
+#~ msgid "Recorder:"
+#~ msgstr "රෙකෝඩරය:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr "මූල රාමු අවම දුර"
+#~ msgid "Saving"
+#~ msgstr "සුරැකේ"
 
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "මූල රාමු සීමකය"
+#~ msgid "Finished recording"
+#~ msgstr "පටිගත කිරීම අවසන්"
 
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "ඝෝෂා සංවේදිතාව"
+#~ msgid "Stopped recording"
+#~ msgstr "පටිගත කිරීම නවතන ලදි"
 
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
-msgstr "ක්ෂණික"
+#~ msgid "Play"
+#~ msgstr "වයන්න"
 
-#: /home/sugar/src/activities/record.activity/constants.py:190
-msgid "Sharpness"
-msgstr "තියුණු බව"
+#~ msgid "Pause"
+#~ msgstr "විරාමයක්"
 
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "ධාරිතාව"
+#~ msgid "Add frame"
+#~ msgstr "රාමුවක් එක් කරන්න"
+
+#~ msgid "Remove frame"
+#~ msgstr "රාමුව ඉවත් කරන්න"
+
+#, python-format
+#~ msgid "%(1)s frames per second"
+#~ msgstr "තත්පරයට රාමු %(1)s ක්"
+
+#~ msgid "Default"
+#~ msgstr "පෙරනිමිය"
+
+#~ msgid "Best"
+#~ msgstr "ඉස්තරම්"
+
+#~ msgid "Large file"
+#~ msgstr "විශාල ගොනුවක්"
+
+#~ msgid "Small file"
+#~ msgstr "කුඩා ගොනුවක්"
+
+#~ msgid "Silent"
+#~ msgstr "නිශ්ශබ්ද"
+
+#~ msgid "Rotate"
+#~ msgstr "භ්‍රමණය කරන්න"
+
+#~ msgid "Width"
+#~ msgstr "පළල"
+
+#~ msgid "Height"
+#~ msgstr "උස"
+
+#~ msgid "Click to take picture"
+#~ msgstr "පින්තූරය ගැනීමට ක්ලික් කරන්න"
+
+#~ msgid "Click to add picture"
+#~ msgstr "පින්තූරය එක් කිරීම සඳහා ක්ලික් කරන්න"
+
+#, python-format
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "%(2)s න් %(1)s බාගත කෙරේ"
+
+#, python-format
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "මෙම %(1)s බාගත කළ නොහැක"
+
+#, python-format
+#~ msgid "Save %(1)s to:"
+#~ msgstr "%(1)s සුරැකිය යුත්තේ:"
+
+#, python-format
+#~ msgid "Your %(1)s is full"
+#~ msgstr "ඔබගේ %(1)s පිරී ඇත"
+
+#~ msgid "Journal"
+#~ msgstr "ජර්නලය"
+
+#~ msgid "USB"
+#~ msgstr "USB"
+
+#~ msgid "SD Card"
+#~ msgstr "SD පත"
+
+#~ msgid "Free space:"
+#~ msgstr "නිදහස් ඉඩ:"
+
+#~ msgid "Bitrate"
+#~ msgstr "බිටු ශීඝ්‍රතාව"
+
+#~ msgid "Maximum Bitrate"
+#~ msgstr "උපරිම බිටු ශීඝ්‍රතාව"
+
+#~ msgid "Minumum Bitrate"
+#~ msgstr "අවම බිටු ශීඝ්‍රතාව"
+
+#~ msgid "Manage Bitrate"
+#~ msgstr "බිටු ශීඝ්‍රතාව කළමණාකරනය කරන්න"
+
+#~ msgid "Border"
+#~ msgstr "දාරය"
+
+#~ msgid "Center"
+#~ msgstr "මධ්‍යය"
+
+#~ msgid "Frames"
+#~ msgstr "රාමු"
+
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "ස්වයංක්‍රීය මූල රාමු අභික්ෂණය"
+
+#~ msgid "Force keyframe"
+#~ msgstr "මූල රාමුව බල කරන්න"
+
+#~ msgid "Keyframe frequency"
+#~ msgstr "මූල රාමු සංඛ්‍යාතය"
+
+#~ msgid "Keyframe minimum distance"
+#~ msgstr "මූල රාමු අවම දුර"
+
+#~ msgid "Keyframe threshold"
+#~ msgstr "මූල රාමු සීමකය"
+
+#~ msgid "Noise Sensitivity"
+#~ msgstr "ඝෝෂා සංවේදිතාව"
+
+#~ msgid "Quick"
+#~ msgstr "ක්ෂණික"
+
+#~ msgid "Sharpness"
+#~ msgstr "තියුණු බව"
+
+#~ msgid "Capacity"
+#~ msgstr "ධාරිතාව"
 
 #, python-format
 #~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
