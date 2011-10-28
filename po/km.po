@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2011-04-28 16:48+0200\n"
+"POT-Creation-Date: 2011-10-03 00:33-0400\n"
+"PO-Revision-Date: 2011-08-14 13:58+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: km\n"
@@ -15,320 +15,104 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "កំណត់"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
-#, fuzzy
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s នាទី"
-
-#: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
-#, fuzzy
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)s វិនាទី"
-
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "រូបថត"
-
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "វីដេអូ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "សំលេង"
-
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "រយពេល"
-
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "ចលនា"
-
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "មើល​ពី​ចំងាយ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "សម្ភាសន៏"
-
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
-#, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(1)s ដោយ %(2)s"
-
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "ចំណង​ជើង ៖"
-
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "ថត​កំណត់ ៖"
-
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "ថ្ងៃ​ខែ ៖"
-
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "គំនូស ៖"
-
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "ថត​ទុក"
-
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "ថត​រួច​ហើយ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:138
+#: button.py:26
 msgid "Remove"
 msgstr "យកចេញ"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "ឈប់​ថត"
-
-#: /home/sugar/src/activities/record.activity/constants.py:140
+#: button.py:37
 msgid "Copy to clipboard"
 msgstr "ចំលង"
 
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "ម៉ោង ៖"
+#: constants.py:25 record.py:140
+msgid "Photo"
+msgstr "រូបថត"
 
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "រយពេល ៖"
+#: constants.py:32 record.py:148
+msgid "Video"
+msgstr "វីដេអូ"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
-msgstr "នៅសល់ ៖"
+#: constants.py:39 record.py:159
+msgid "Audio"
+msgstr "សំលេង"
 
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "ភ្លាម"
-
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "លេញ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "ផ្អាក"
-
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "បន្ថែម​ស៊ុម"
-
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "ដក​ស៊ុម"
-
-#: /home/sugar/src/activities/record.activity/constants.py:149
+#: glive.py:396 model.py:384
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "%(1)s ស៊ុម​ក្នុង​មួយ​ម៉ោង"
+#, python-format, fuzzy
+msgid "%s by %s"
+msgstr "%s នៃ %s"
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
+#: glive.py:555
+msgid "Saving..."
+msgstr "កំពុង​រក្សា​ទុក..."
+
+#: mediaview.py:54
+msgid "Author:"
+msgstr "អ្នក​និពន្ធ ៖"
+
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "គំនូស ៖"
+
+#: mediaview.py:118
+msgid "Date:"
+msgstr "ថ្ងៃ​ខែ ៖"
+
+#: model.py:183
+#, python-format
+msgid "%d:%02d remaining"
+msgstr ""
+
+#: record.py:209
+msgid "Title:"
+msgstr "ចំណង​ជើង ៖"
+
+#: record.py:535
+msgid "Download failed."
+msgstr "ការ​ទាញ​យក​បាន​បរាជ័យ"
+
+#: record.py:537
+msgid "Downloading..."
+msgstr "កំពុង​ទាញយក..."
+
+#: record.py:539
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:836
 #, fuzzy
-msgid "Quality"
+msgid "Quality:"
 msgstr "គុណភាព"
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "លំនាំដើម"
-
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "ល្អ​ដាច់​គេ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "ខ្ពស់"
-
-#: /home/sugar/src/activities/record.activity/constants.py:154
+#: record.py:837
 msgid "Low"
 msgstr "ទាប"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "ឯកសារ​ធំ"
+#: record.py:841
+msgid "High"
+msgstr "ខ្ពស់"
 
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "ឯកសារ​តូច"
-
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "ស្ងាត់"
-
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "បង្វិល"
-
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "ទទឹង"
-
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
-msgstr "កំពស់"
-
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "ថត​រូបភាព"
-
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "បន្ថែម​រូបភាព"
-
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "ទាញ %(1)s ពី %(2)s"
-
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "មិន​អាច​ទាញ %(1)s បាន​ទេ"
-
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
-#, python-format
-#, python-format, fuzzy
-msgid "Save %(1)s to:"
-msgstr "ថត %(1) ទៅ:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:169
-#, python-format
-msgid "Your %(1)s is full"
-msgstr "%(1)s របស់អ្នក​ពេញ​ហ៊ា"
-
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "កំណត់​ប្រចាំ​ថ្ងៃ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "យូអេសប៊ី"
-
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "កាត​អេសឌី"
-
-#: /home/sugar/src/activities/record.activity/constants.py:173
+#: record.py:849
 msgid "Preferences"
 msgstr "ចំណូល​ចិត្ត"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "ថាស​នៅ​សល់ ៖"
+#: record.py:899
+msgid "Immediate"
+msgstr "ភ្លាម"
 
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr "អត្រាប៊ីត"
-
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "អត្រាប៊ីត​ធំ​ជាង​គេ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "អត្រាប៊ីត​តូច​ជាង​គេ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr "គ្រប់គ្រង​អត្រាប៊ីត"
-
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "ព្រំដែន"
-
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "កណ្ដាល"
-
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "ស៊ុម"
-
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "អង្តេត​ស៊ុមឃីដោយ​ស្វ័យប្រវត្តិ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "បង្ខំ​ស៊ុមឃី"
-
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "ចង្វាក់​ស៊ុមឃី​"
-
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr "ស៊ុមឃី​ចំងាយ​តូចបំផុត"
-
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "កម្រិត​ស៊ុមឃី"
-
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "កម្រិត​ប្រកាន​ជ្រៀតជ្រេត"
-
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
-msgstr "ឆាប់ៗ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:190
-msgid "Sharpness"
-msgstr "កម្រិតស្រួច"
-
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "កម្រិត​ទំហំ"
-
+#: record.py:916
 #, python-format
-#~ msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-#~ msgstr "មានសល់ពេល %(1)s ម៉ោង, %(2)s នាទី, %(1)s វិនាទី"
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%s វិនាទី"
 
+#: record.py:941
 #, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "មានសល់ពេល %(1)s នាទី, %(2)s វិនាទី"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "មានសល់ពេល %(1)s ម៉ោង"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "មានសល់ពេល %(1)s នាទី"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "មានសល់ពេល %(1)s វិនាទី"
-
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(1)s ម៉ោង"
-
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(1)s រូបភាព"
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s នាទី"
