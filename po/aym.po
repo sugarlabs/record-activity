@@ -1,0 +1,149 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-06-04 00:30-0400\n"
+"PO-Revision-Date: 2011-11-23 06:14+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: aym\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
+
+#  "Grabar"
+#: activity/activity.info:2
+msgid "Record"
+msgstr "Imaña"
+
+#  "Eliminar"
+#: button.py:26
+msgid "Remove"
+msgstr "Chhaqtayaña"
+
+#  "Copiar al portapapel"
+#: button.py:37
+msgid "Copy to clipboard"
+msgstr "Laphi kipiru talliqaña"
+
+#  "Foto"
+#: constants.py:24 record.py:133
+msgid "Photo"
+msgstr "Uñtasi"
+
+#  "Video"
+#: constants.py:31 record.py:141
+msgid "Video"
+msgstr "Uñtaña"
+
+#  "Audio"
+#: constants.py:38 record.py:152
+msgid "Audio"
+msgstr "Ist'awi"
+
+#  "%s por %s"
+#: glive.py:397 model.py:355
+#, python-format
+msgid "%s by %s"
+msgstr "%s ukata %s"
+
+#  "Guardando..."
+#: glive.py:556
+msgid "Saving..."
+msgstr "Imaskiwa..."
+
+#  "Autor:"
+#: mediaview.py:54
+msgid "Author:"
+msgstr "Luriri:"
+
+#  "Etiquetas:"
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "Chimpunaka:"
+
+#  "Fecha:"
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Uru:"
+
+#  "%d:%02d restantes"
+#: model.py:154
+#, python-format
+msgid "%d:%02d remaining"
+msgstr "jilt'askiwa %d:%02d"
+
+#  "Título:"
+#: record.py:202
+msgid "Title:"
+msgstr "Suti:"
+
+#  "Descarga fallida."
+#: record.py:527
+msgid "Download failed."
+msgstr "Janiwa apaqayaskiti."
+
+#  "Descargando..."
+#: record.py:529
+msgid "Downloading..."
+msgstr "Apaqaskiwa..."
+
+#  "Solicitando..."
+#: record.py:531
+msgid "Requesting..."
+msgstr "Mayiskiwa..."
+
+#  "Calidad:"
+#: record.py:828
+msgid "Quality:"
+msgstr "Chiqapa:"
+
+#  "Baja"
+#: record.py:829
+msgid "Low"
+msgstr "Jayphu"
+
+#  "Alta"
+#: record.py:833
+msgid "High"
+msgstr "Suma"
+
+#  "Preferencias"
+#: record.py:841
+msgid "Preferences"
+msgstr "Wakichañawinaka"
+
+#  "Cronómetro:"
+#: record.py:888
+msgid "Timer:"
+msgstr "Pacha chimpu:"
+
+#  "Inmediato"
+#: record.py:892
+msgid "Immediate"
+msgstr "Jichpacha"
+
+#  "%s segundo"
+#  "%s segundos"
+#: record.py:909
+#, python-format
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%s payiri pacha t'aqa"
+msgstr[1] "%s payiri pacha taq'anaka"
+
+#  "Duración:"
+#: record.py:917
+msgid "Duration:"
+msgstr "Jakawi:"
+
+#  "%s minuto"
+#  ""%s minutos"
+#: record.py:935
+#, python-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s pacha t'aqa"
+msgstr[1] "%s pacha t'aqanaka"
