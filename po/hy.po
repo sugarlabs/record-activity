@@ -23,8 +23,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-06-04 00:30-0400\n"
-"PO-Revision-Date: 2011-11-11 21:32+0200\n"
-"Last-Translator: anush.mkrtchyan <anush.mkrtchyan@ca1492.com>\n"
+"PO-Revision-Date: 2011-12-19 17:21+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,7 @@ msgstr "%s ըստ %s"
 
 #: glive.py:556
 msgid "Saving..."
-msgstr "Պահպանմանում է ..."
+msgstr "Պահպանում ..."
 
 #: mediaview.py:54
 msgid "Author:"
@@ -124,7 +124,8 @@ msgid "Immediate"
 msgstr "Անմիջական"
 
 #: record.py:909
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s վարկյան"
@@ -137,7 +138,6 @@ msgstr "Տևողություն:"
 # too many %s
 #: record.py:935
 #, python-format
-#, python-format, 
 #, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
