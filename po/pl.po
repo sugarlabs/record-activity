@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-04 00:30-0400\n"
+"POT-Creation-Date: 2011-12-02 00:33-0500\n"
 "PO-Revision-Date: 2011-12-15 12:47+0200\n"
 "Last-Translator: Jakub <jamarat@o2.pl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,24 +30,24 @@ msgstr "Usuń"
 msgid "Copy to clipboard"
 msgstr "Kopiuj do schowka"
 
-#: constants.py:24 record.py:133
+#: constants.py:25 record.py:140
 msgid "Photo"
 msgstr "Zdjęcie"
 
-#: constants.py:31 record.py:141
+#: constants.py:32 record.py:148
 msgid "Video"
 msgstr "Wideo"
 
-#: constants.py:38 record.py:152
+#: constants.py:39 record.py:159
 msgid "Audio"
 msgstr "Dźwięk"
 
-#: glive.py:397 model.py:355
+#: glive.py:396 model.py:384
 #, python-format
 msgid "%s by %s"
 msgstr "%s z %s"
 
-#: glive.py:556
+#: glive.py:555
 msgid "Saving..."
 msgstr "Zapisuję..."
 
@@ -63,52 +63,48 @@ msgstr "Tagi:"
 msgid "Date:"
 msgstr "Data:"
 
-#: model.py:154
+#: model.py:183
 #, python-format
 msgid "%d:%02d remaining"
 msgstr "%d:%02d pozostało"
 
-#: record.py:202
+#: record.py:209
 msgid "Title:"
 msgstr "Tytuł:"
 
-#: record.py:527
+#: record.py:535
 msgid "Download failed."
 msgstr "Pobieranie nieudane."
 
-#: record.py:529
+#: record.py:537
 msgid "Downloading..."
 msgstr "Pobieram..."
 
-#: record.py:531
+#: record.py:539
 msgid "Requesting..."
 msgstr "Żądam..."
 
-#: record.py:828
+#: record.py:836
 msgid "Quality:"
 msgstr "Jakość:"
 
-#: record.py:829
+#: record.py:837
 msgid "Low"
 msgstr "Niska"
 
-#: record.py:833
+#: record.py:841
 msgid "High"
 msgstr "Wysoka"
 
-#: record.py:841
+#: record.py:849
 msgid "Preferences"
 msgstr "Ustawienia"
 
-#: record.py:888
-msgid "Timer:"
-msgstr "Stoper:"
-
-#: record.py:892
+#: record.py:899
 msgid "Immediate"
 msgstr "Natychmiast"
 
-#: record.py:909
+#: record.py:916
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
@@ -116,17 +112,19 @@ msgstr[0] "%s sekunda"
 msgstr[1] "%s sekundy"
 msgstr[2] "%s sekund"
 
-#: record.py:917
-msgid "Duration:"
-msgstr "Czas trwania:"
-
-#: record.py:935
+#: record.py:941
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s minuta"
 msgstr[1] "%s minuty"
 msgstr[2] "%s minut"
+
+#~ msgid "Timer:"
+#~ msgstr "Stoper:"
+
+#~ msgid "Duration:"
+#~ msgstr "Czas trwania:"
 
 #~ msgid "Time Lapse"
 #~ msgstr "Upływ czasu"
