@@ -180,7 +180,8 @@ class Model:
 
         mins = value / 60
         secs = value % 60
-        text = _('%d:%02d remaining') % (mins, secs)
+        text = _('%(mins)d:%(secs)02d remaining') % {'mins': mins,
+                'secs': secs}
 
         self.set_progress(progress_value, text)
 
@@ -381,7 +382,8 @@ class Model:
         stringType = constants.MEDIA_INFO[type]['istr']
 
         # Translators: photo by photographer, e.g. "Photo by Mary"
-        recd.title = _('%s by %s') % (stringType, recd.recorderName)
+        recd.title = _('%(type)s by %(name)s') % {'type': stringType,
+                'name': recd.recorderName}
 
         color = sugar.profile.get_color()
         recd.colorStroke = color.get_stroke_color()

@@ -393,7 +393,8 @@ class Glive:
         stringType = constants.MEDIA_INFO[type]['istr']
         
         # Translators: photo by photographer, e.g. "Photo by Mary"
-        tl[gst.TAG_TITLE] = _('%s by %s') % (stringType, self.model.get_nickname())
+        tl[gst.TAG_TITLE] = _('%(type)s by %(name)s') % {'type': stringType,
+                'name': self.model.get_nickname()}
         return tl
 
     def blockedCb(self, x, y, z):
