@@ -3,6 +3,6 @@ name = Record
 bundle_id = org.laptop.RecordActivity
 exec = sugar-activity record.Record
 icon = activity-record
-activity_version = 93
+activity_version = 94
 show_launcher = yes
 license = MIT
