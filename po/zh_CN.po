@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-15 00:31-0500\n"
-"PO-Revision-Date: 2011-12-22 16:04+0200\n"
-"Last-Translator: lite <litekok@gmail.com>\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2012-03-25 06:12+0200\n"
+"Last-Translator: Xin <dram.wang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -41,12 +41,12 @@ msgstr "视频"
 msgid "Audio"
 msgstr "音频"
 
-#: glive.py:396 model.py:384
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
-msgstr "%s 由 %s"
+msgid "%(type)s by %(name)s"
+msgstr "%(name)s 的 %(type)s"
 
-#: glive.py:555
+#: glive.py:556
 msgid "Saving..."
 msgstr "正在储存..."
 
@@ -64,8 +64,8 @@ msgstr "日期:"
 
 #: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
-msgstr "剩余 %d：%02d"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr "剩余 %(mins)d:%(secs)02d"
 
 #: record.py:209
 msgid "Title:"
@@ -114,6 +114,14 @@ msgstr[0] "%s 秒"
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s 分"
+
+#, python-format
+#~ msgid "%s by %s"
+#~ msgstr "%s 由 %s"
+
+#, python-format
+#~ msgid "%d:%02d remaining"
+#~ msgstr "剩余 %d：%02d"
 
 #~ msgid "Timer:"
 #~ msgstr "计时器:"
