@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-17 00:31-0400\n"
-"PO-Revision-Date: 2012-03-25 06:12+0200\n"
+"PO-Revision-Date: 2012-03-25 06:22+0200\n"
 "Last-Translator: Xin <dram.wang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -44,7 +44,7 @@ msgstr "音频"
 #: glive.py:396 model.py:385
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr "%(name)s 的 %(type)s"
+msgstr "由 %(name)s 创作的 %(type)s"
 
 #: glive.py:556
 msgid "Saving..."
