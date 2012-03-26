@@ -199,6 +199,7 @@ class Model:
             self.glive.take_photo()
             return
 
+        self.set_progress(0, '')
         self._timer_value = self.activity.get_selected_duration()
         self._timer_duration = self._timer_value
         self._timer_handle = gobject.timeout_add(1000, self._timer_tick)
