@@ -397,9 +397,6 @@ class Glive:
                 'name': self.model.get_nickname()}
         return tl
 
-    def blockedCb(self, x, y, z):
-        pass
-
     def _take_photo(self, photo_mode):
         if self._pic_exposure_open:
             return
@@ -407,11 +404,9 @@ class Glive:
         self._photo_mode = photo_mode
         self._pic_exposure_open = True
         pad = self._photobin.get_static_pad("sink")
-        pad.set_blocked_async(True, self.blockedCb, None)
         self._pipeline.add(self._photobin)
         self._photobin.set_state(gst.STATE_PLAYING)
         self._pipeline.get_by_name("tee").link(self._photobin)
-        pad.set_blocked_async(False, self.blockedCb, None)
 
     def take_photo(self):
         if self._has_camera:
@@ -422,10 +417,8 @@ class Glive:
             return
 
         pad = self._photobin.get_static_pad("sink")
-        pad.set_blocked_async(True, self.blockedCb, None)
         self._pipeline.get_by_name("tee").unlink(self._photobin)
         self._pipeline.remove(self._photobin)
-        pad.set_blocked_async(False, self.blockedCb, None)
 
         self._pic_exposure_open = False
         pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
