@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-02 00:33-0500\n"
-"PO-Revision-Date: 2012-01-27 11:26+0200\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2012-04-03 00:30+0200\n"
 "Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -39,14 +39,14 @@ msgstr "Vídeo"
 
 #: constants.py:39 record.py:159
 msgid "Audio"
-msgstr "Audio"
+msgstr "Som"
 
-#: glive.py:396 model.py:384
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
-msgstr "%s por %s"
+msgid "%(type)s by %(name)s"
+msgstr "%(type)s de %(name)s"
 
-#: glive.py:555
+#: glive.py:556
 msgid "Saving..."
 msgstr "A guardar..."
 
@@ -64,8 +64,8 @@ msgstr "Data:"
 
 #: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
-msgstr "%d:%02d restante"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr "%(mins)d:%(secs)02d restantes"
 
 #: record.py:209
 msgid "Title:"
@@ -116,6 +116,14 @@ msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s minuto"
 msgstr[1] "%s minutos"
+
+#, python-format
+#~ msgid "%s by %s"
+#~ msgstr "%s por %s"
+
+#, python-format
+#~ msgid "%d:%02d remaining"
+#~ msgstr "%d:%02d restante"
 
 #~ msgid "Timer:"
 #~ msgstr "Temporizador:"
