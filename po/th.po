@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-15 00:31-0500\n"
-"PO-Revision-Date: 2012-03-09 11:45+0200\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2012-04-11 11:12+0200\n"
 "Last-Translator: Meechai <malaku38@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: th\n"
@@ -41,12 +41,12 @@ msgstr "วีดิโอ"
 msgid "Audio"
 msgstr "เสียง"
 
-#: glive.py:396 model.py:384
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
-msgstr "%s โดย %s"
+msgid "%(type)s by %(name)s"
+msgstr "%(type)s โดย %(name)s"
 
-#: glive.py:555
+#: glive.py:556
 msgid "Saving..."
 msgstr "กำลังบันทึก..."
 
@@ -64,8 +64,8 @@ msgstr "วันที่:"
 
 #: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
-msgstr "%d:%02d ที่เหลืออยู่"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr "ที่เหลืออยู่ %(mins)d:%(secs)02d"
 
 #: record.py:209
 msgid "Title:"
@@ -114,6 +114,14 @@ msgstr[0] "%s วินาที"
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s นาที"
+
+#, python-format
+#~ msgid "%s by %s"
+#~ msgstr "%s โดย %s"
+
+#, python-format
+#~ msgid "%d:%02d remaining"
+#~ msgstr "%d:%02d ที่เหลืออยู่"
 
 #~ msgid "Timer:"
 #~ msgstr "จับเวลา:"
