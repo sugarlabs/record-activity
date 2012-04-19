@@ -6,304 +6,277 @@ msgid ""
 msgstr ""
 "Project-Id-Version: record-activity\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2008-04-09 06:26-0400\n"
-"Last-Translator: Prashant Thakkar <prashantbthakkar@gmail.com>\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2011-11-30 05:01+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "रिकार्ड"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
-#, fuzzy
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s मिनट"
-
-#: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
-#, fuzzy
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)s सेकेंड"
-
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "फोटो"
-
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "वीडियो"
-
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "ऑडियो"
-
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "बीता समय"
-
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "एनिमेशन"
-
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "दीर्घ दृश्य"
-
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "मुलाकात"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
-#, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(2)s द्वारा %(1)s"
-
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "शीर्षक:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "रिकार्डर:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "तारीख़ः"
-
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "चिप्पियाँ:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "सहेजें"
-
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "रिकार्डिंग खतम"
-
-#: /home/sugar/src/activities/record.activity/constants.py:138
+#: button.py:26
 msgid "Remove"
 msgstr "हटाएँ"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "रेकॉर्डिंग बन्द"
-
-#: /home/sugar/src/activities/record.activity/constants.py:140
+#: button.py:37
 msgid "Copy to clipboard"
 msgstr "क्लिपबोर्ड में नकल करें"
 
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "टाइमर:"
+#: constants.py:25 record.py:140
+msgid "Photo"
+msgstr "फोटो"
 
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "अवधिः"
+#: constants.py:32 record.py:148
+msgid "Video"
+msgstr "वीडियो"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
+#: constants.py:39 record.py:159
+msgid "Audio"
+msgstr "ऑडियो"
+
+#: glive.py:396 model.py:385
+#, python-format
+msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "तुरंत"
+#: glive.py:556
+msgid "Saving..."
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "बजाएँ"
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "ठहरें"
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "चिप्पियाँ:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "फ्रेम जोडो"
+#: mediaview.py:118
+msgid "Date:"
+msgstr "तारीख़ः"
 
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "फ्रेम हटाओ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:149
+#: model.py:183
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "%(1)s फ्रेम प्रति सेकंड"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
+#: record.py:209
+msgid "Title:"
+msgstr "शीर्षक:"
+
+#: record.py:535
+msgid "Download failed."
+msgstr ""
+
+#: record.py:537
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:539
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:836
 #, fuzzy
-msgid "Quality"
-msgstr "गुणवत्ता"
+msgid "Quality:"
+msgstr "गुणवत्ता:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "तयशुदा"
-
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "सर्वोत्तम"
-
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "तेज"
-
-#: /home/sugar/src/activities/record.activity/constants.py:154
+#: record.py:837
 msgid "Low"
 msgstr "धीमा"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "बडी फ़ाईल"
+#: record.py:841
+msgid "High"
+msgstr "तेज"
 
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "छोटी फ़ाईल"
-
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "मूक"
-
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "घुमाएँ"
-
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "चौड़ाई"
-
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
-msgstr "ऊंचाई"
-
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "फोटो खींचने के लिए क्लिक करें"
-
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "फोटो जोड़ने के लिए क्लिक करें"
-
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "%(1)s से %(2)s डाउनलोड किया जा रहा है"
-
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "%(1)s को डाउनलोड नहीं किया जा सकता"
-
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
-#, python-format
-#, python-format, fuzzy
-msgid "Save %(1)s to:"
-msgstr "संग्रहितकरें"
-
-#: /home/sugar/src/activities/record.activity/constants.py:169
-#, python-format
-msgid "Your %(1)s is full"
-msgstr "  आपकी %(1)भर गयी है"
-
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "चिठ्ठा"
-
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "यू.एस.बी"
-
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "  एस.डी. कार्ड "
-
-#: /home/sugar/src/activities/record.activity/constants.py:173
+#: record.py:849
 msgid "Preferences"
 msgstr "पसंद नापसंद"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "मुक्त जगहा"
-
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr " बिट रेट"
-
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "अधिकतम बिट रेट"
-
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "न्यूनतम बिट रेट"
-
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr " बिट रेट काबू करे"
-
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "किनारा"
-
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "मध्य"
-
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "ढांचा"
-
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "महत्वपूर्ण ढाँचे की स्वचलित खोज  "
-
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "महत्वपूर्ण ढाँचे को  दबाना"
-
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "महत्वपूर्ण ढाँचे की आवृत्ति"
-
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr " महत्वपूर्ण ढाँचे की न्यूनतम दूरी "
-
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "महत्वपूर्ण ढाँचे की दहलीज़"
-
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "शोर की संवेदीती"
-
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
+#: record.py:899
+msgid "Immediate"
 msgstr "तुरंत"
 
-#: /home/sugar/src/activities/record.activity/constants.py:190
-msgid "Sharpness"
-msgstr "स्पष्टता"
+#: record.py:916
+#, python-format
+#, fuzzy
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%s सेकेंड"
+msgstr[1] ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "धारण शक्ति"
+#: record.py:941
+#, python-format
+#, fuzzy
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s मिनट"
+msgstr[1] ""
+
+#~ msgid "Timer:"
+#~ msgstr "टाइमर:"
+
+#~ msgid "Duration:"
+#~ msgstr "अवधिः"
+
+#~ msgid "Time Lapse"
+#~ msgstr "बीता समय"
+
+#~ msgid "Animation"
+#~ msgstr "एनिमेशन"
+
+#~ msgid "Panorama"
+#~ msgstr "दीर्घ दृश्य"
+
+#~ msgid "Interview"
+#~ msgstr "मुलाकात"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
+#, python-format
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(2)s द्वारा %(1)s"
+
+#~ msgid "Recorder:"
+#~ msgstr "रिकार्डर:"
+
+#~ msgid "Saving"
+#~ msgstr "सहेजें"
+
+#~ msgid "Finished recording"
+#~ msgstr "रिकार्डिंग खतम"
+
+#~ msgid "Stopped recording"
+#~ msgstr "रेकॉर्डिंग बन्द"
+
+#~ msgid "Play"
+#~ msgstr "बजाएँ"
+
+#~ msgid "Pause"
+#~ msgstr "ठहरें"
+
+#~ msgid "Add frame"
+#~ msgstr "फ्रेम जोडो"
+
+#~ msgid "Remove frame"
+#~ msgstr "फ्रेम हटाओ"
+
+#, python-format
+#~ msgid "%(1)s frames per second"
+#~ msgstr "%(1)s फ्रेम प्रति सेकंड"
+
+#~ msgid "Default"
+#~ msgstr "तयशुदा"
+
+#~ msgid "Best"
+#~ msgstr "सर्वोत्तम"
+
+#~ msgid "Large file"
+#~ msgstr "बडी फ़ाईल"
+
+#~ msgid "Small file"
+#~ msgstr "छोटी फ़ाईल"
+
+#~ msgid "Silent"
+#~ msgstr "मूक"
+
+#~ msgid "Rotate"
+#~ msgstr "घुमाएँ"
+
+#~ msgid "Width"
+#~ msgstr "चौड़ाई"
+
+#~ msgid "Height"
+#~ msgstr "ऊंचाई"
+
+#~ msgid "Click to take picture"
+#~ msgstr "फोटो खींचने के लिए क्लिक करें"
+
+#~ msgid "Click to add picture"
+#~ msgstr "फोटो जोड़ने के लिए क्लिक करें"
+
+#, python-format
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "%(1)s से %(2)s डाउनलोड किया जा रहा है"
+
+#, python-format
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "%(1)s को डाउनलोड नहीं किया जा सकता"
+
+#, python-format
+#, python-format, fuzzy
+#~ msgid "Save %(1)s to:"
+#~ msgstr "संग्रहितकरें"
+
+#, python-format
+#~ msgid "Your %(1)s is full"
+#~ msgstr "  आपकी %(1)भर गयी है"
+
+#~ msgid "Journal"
+#~ msgstr "चिठ्ठा"
+
+#~ msgid "USB"
+#~ msgstr "यू.एस.बी"
+
+#~ msgid "SD Card"
+#~ msgstr "  एस.डी. कार्ड "
+
+#~ msgid "Free space:"
+#~ msgstr "मुक्त जगहा"
+
+#~ msgid "Bitrate"
+#~ msgstr " बिट रेट"
+
+#~ msgid "Maximum Bitrate"
+#~ msgstr "अधिकतम बिट रेट"
+
+#~ msgid "Minumum Bitrate"
+#~ msgstr "न्यूनतम बिट रेट"
+
+#~ msgid "Manage Bitrate"
+#~ msgstr " बिट रेट काबू करे"
+
+#~ msgid "Border"
+#~ msgstr "किनारा"
+
+#~ msgid "Center"
+#~ msgstr "मध्य"
+
+#~ msgid "Frames"
+#~ msgstr "ढांचा"
+
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "महत्वपूर्ण ढाँचे की स्वचलित खोज  "
+
+#~ msgid "Force keyframe"
+#~ msgstr "महत्वपूर्ण ढाँचे को  दबाना"
+
+#~ msgid "Keyframe frequency"
+#~ msgstr "महत्वपूर्ण ढाँचे की आवृत्ति"
+
+#~ msgid "Keyframe minimum distance"
+#~ msgstr " महत्वपूर्ण ढाँचे की न्यूनतम दूरी "
+
+#~ msgid "Keyframe threshold"
+#~ msgstr "महत्वपूर्ण ढाँचे की दहलीज़"
+
+#~ msgid "Noise Sensitivity"
+#~ msgstr "शोर की संवेदीती"
+
+#~ msgid "Quick"
+#~ msgstr "तुरंत"
+
+#~ msgid "Sharpness"
+#~ msgstr "स्पष्टता"
+
+#~ msgid "Capacity"
+#~ msgstr "धारण शक्ति"
 
 #, python-format
 #~ msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"

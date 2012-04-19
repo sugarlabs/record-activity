@@ -6,301 +6,275 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2009-01-11 14:47-0500\n"
-"Last-Translator: Nicci Manns <nicci@saunalahti.fi>\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2011-08-14 07:00+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "Spela in"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
-#, fuzzy
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s minuter"
-
-#: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
-#, fuzzy
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)s sekunder"
-
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "Foto"
-
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "Video"
-
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "Ljud"
-
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "Tidslängd"
-
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "Animering"
-
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "Panoramavy"
-
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "Intervju "
-
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
-#, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(1)s av %(2)s"
-
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "Titel:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "Inspelare:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "Datum:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "Nyckelord:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "Sparar"
-
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "Inspelning klar"
-
-#: /home/sugar/src/activities/record.activity/constants.py:138
+#: button.py:26
 msgid "Remove"
 msgstr "Ta bort"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "Slutade spela in"
-
-#: /home/sugar/src/activities/record.activity/constants.py:140
+#: button.py:37
 msgid "Copy to clipboard"
 msgstr "Kopiera till kopieringsminne"
 
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "Tid:"
+#: constants.py:25 record.py:140
+msgid "Photo"
+msgstr "Foto"
 
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "Varaktighet:"
+#: constants.py:32 record.py:148
+msgid "Video"
+msgstr "Video"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
+#: constants.py:39 record.py:159
+msgid "Audio"
+msgstr "Ljud"
+
+#: glive.py:396 model.py:385
+#, python-format
+msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "Direkt"
+#: glive.py:556
+msgid "Saving..."
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "Spela upp"
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "Pausa"
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "Nyckelord:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "Lägg till bild"
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Datum:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "Ta bort bild"
-
-#: /home/sugar/src/activities/record.activity/constants.py:149
+#: model.py:183
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "%(1)s bilder per sekund"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
+#: record.py:209
+msgid "Title:"
+msgstr "Titel:"
+
+#: record.py:535
+msgid "Download failed."
+msgstr ""
+
+#: record.py:537
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:539
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:836
 #, fuzzy
-msgid "Quality"
+msgid "Quality:"
 msgstr "Kvalite"
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "Standard"
-
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "Bästa"
-
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "Högsta"
-
-#: /home/sugar/src/activities/record.activity/constants.py:154
+#: record.py:837
 msgid "Low"
 msgstr "Lägsta"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "Stor fil"
+#: record.py:841
+msgid "High"
+msgstr "Högsta"
 
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "Liten fil"
-
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "Tyst"
-
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "Vrid"
-
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "Bredd"
-
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
-msgstr "Höjd"
-
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "Klicka för att ta ett foto"
-
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "Klicka för att lägga till bild"
-
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "Laddar ned %(1)s från %(2)s"
-
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "Kunde inte ladda ned %(1)s"
-
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
-#, python-format
-msgid "Save %(1)s to:"
-msgstr "Sparar %(1)s till:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:169
-#, python-format
-msgid "Your %(1)s is full"
-msgstr "Din %(1)s är full"
-
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "Dagbok"
-
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "USB-minne"
-
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "SD-kort"
-
-#: /home/sugar/src/activities/record.activity/constants.py:173
+#: record.py:849
 msgid "Preferences"
 msgstr "Inställningar"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "Ledigt utrymme:"
+#: record.py:899
+msgid "Immediate"
+msgstr "Direkt"
 
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr "Bitrate"
+#: record.py:916
+#, python-format
+#, fuzzy
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%s sekund"
+msgstr[1] "%s sekunder"
 
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "Maximal bitrate"
+#: record.py:941
+#, python-format
+#, fuzzy
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s minut"
+msgstr[1] "%s minuter"
 
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "Minimal bitrate"
+#~ msgid "Timer:"
+#~ msgstr "Tid:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr "Hantera bitrate"
+#~ msgid "Duration:"
+#~ msgstr "Varaktighet:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "Kant"
+#~ msgid "Time Lapse"
+#~ msgstr "Tidslängd"
 
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "Centrera"
+#~ msgid "Animation"
+#~ msgstr "Animering"
 
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "Ramar"
+#~ msgid "Panorama"
+#~ msgstr "Panoramavy"
 
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "Automatisk Nyckelbildsdetektering"
+#~ msgid "Interview"
+#~ msgstr "Intervju "
 
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "Tvinga skapande av nyckelbild"
+#, python-format
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(1)s av %(2)s"
 
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "Nyckelbildsfrekvens"
+#~ msgid "Recorder:"
+#~ msgstr "Inspelare:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr "Minimalt avstånd mellan nyckelbilder"
+#~ msgid "Saving"
+#~ msgstr "Sparar"
 
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "Nyckelbildströskelvärde"
+#~ msgid "Finished recording"
+#~ msgstr "Inspelning klar"
 
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "Bruskänslighet"
+#~ msgid "Stopped recording"
+#~ msgstr "Slutade spela in"
 
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
-msgstr "Snabb"
+#~ msgid "Play"
+#~ msgstr "Spela upp"
 
-#: /home/sugar/src/activities/record.activity/constants.py:190
-msgid "Sharpness"
-msgstr "Skarphet"
+#~ msgid "Pause"
+#~ msgstr "Pausa"
 
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "Kapacitet"
+#~ msgid "Add frame"
+#~ msgstr "Lägg till bild"
+
+#~ msgid "Remove frame"
+#~ msgstr "Ta bort bild"
+
+#, python-format
+#~ msgid "%(1)s frames per second"
+#~ msgstr "%(1)s bilder per sekund"
+
+#~ msgid "Default"
+#~ msgstr "Standard"
+
+#~ msgid "Best"
+#~ msgstr "Bästa"
+
+#~ msgid "Large file"
+#~ msgstr "Stor fil"
+
+#~ msgid "Small file"
+#~ msgstr "Liten fil"
+
+#~ msgid "Silent"
+#~ msgstr "Tyst"
+
+#~ msgid "Rotate"
+#~ msgstr "Vrid"
+
+#~ msgid "Width"
+#~ msgstr "Bredd"
+
+#~ msgid "Height"
+#~ msgstr "Höjd"
+
+#~ msgid "Click to take picture"
+#~ msgstr "Klicka för att ta ett foto"
+
+#~ msgid "Click to add picture"
+#~ msgstr "Klicka för att lägga till bild"
+
+#, python-format
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "Laddar ned %(1)s från %(2)s"
+
+#, python-format
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "Kunde inte ladda ned %(1)s"
+
+#, python-format
+#~ msgid "Save %(1)s to:"
+#~ msgstr "Sparar %(1)s till:"
+
+#, python-format
+#~ msgid "Your %(1)s is full"
+#~ msgstr "Din %(1)s är full"
+
+#~ msgid "Journal"
+#~ msgstr "Dagbok"
+
+#~ msgid "USB"
+#~ msgstr "USB-minne"
+
+#~ msgid "SD Card"
+#~ msgstr "SD-kort"
+
+#~ msgid "Free space:"
+#~ msgstr "Ledigt utrymme:"
+
+#~ msgid "Bitrate"
+#~ msgstr "Bitrate"
+
+#~ msgid "Maximum Bitrate"
+#~ msgstr "Maximal bitrate"
+
+#~ msgid "Minumum Bitrate"
+#~ msgstr "Minimal bitrate"
+
+#~ msgid "Manage Bitrate"
+#~ msgstr "Hantera bitrate"
+
+#~ msgid "Border"
+#~ msgstr "Kant"
+
+#~ msgid "Center"
+#~ msgstr "Centrera"
+
+#~ msgid "Frames"
+#~ msgstr "Ramar"
+
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "Automatisk Nyckelbildsdetektering"
+
+#~ msgid "Force keyframe"
+#~ msgstr "Tvinga skapande av nyckelbild"
+
+#~ msgid "Keyframe frequency"
+#~ msgstr "Nyckelbildsfrekvens"
+
+#~ msgid "Keyframe minimum distance"
+#~ msgstr "Minimalt avstånd mellan nyckelbilder"
+
+#~ msgid "Keyframe threshold"
+#~ msgstr "Nyckelbildströskelvärde"
+
+#~ msgid "Noise Sensitivity"
+#~ msgstr "Bruskänslighet"
+
+#~ msgid "Quick"
+#~ msgstr "Snabb"
+
+#~ msgid "Sharpness"
+#~ msgstr "Skarphet"
+
+#~ msgid "Capacity"
+#~ msgstr "Kapacitet"
 
 #, python-format
 #~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"

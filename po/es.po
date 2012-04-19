@@ -58,16 +58,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-04 00:30-0400\n"
-"PO-Revision-Date: 2011-09-17 06:20+0200\n"
-"Last-Translator: <alanjas@hotmail.com>\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2012-03-24 00:19+0200\n"
+"Last-Translator: AlanJAS <alanjas@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: activity/activity.info:2
 msgid "Record"
@@ -81,22 +81,23 @@ msgstr "Eliminar"
 msgid "Copy to clipboard"
 msgstr "Copiar al portapapel"
 
-#: constants.py:24 record.py:133
+#: constants.py:25 record.py:140
 msgid "Photo"
 msgstr "Foto"
 
-#: constants.py:31 record.py:141
+#: constants.py:32 record.py:148
 msgid "Video"
 msgstr "Video"
 
-#: constants.py:38 record.py:152
+#: constants.py:39 record.py:159
 msgid "Audio"
 msgstr "Audio"
 
-#: glive.py:397 model.py:355
+# (Foto o Video o Audio) por (nombre_de_usuario)
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
-msgstr "%s por %s"
+msgid "%(type)s by %(name)s"
+msgstr "%(type)s por %(name)s"
 
 #: glive.py:556
 msgid "Saving..."
@@ -114,54 +115,49 @@ msgstr "Etiquetas:"
 msgid "Date:"
 msgstr "Fecha:"
 
-#: model.py:154
+#: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
-msgstr "%d:%02d restantes"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr "Quedan %(mins)d:%(secs)02d"
 
-#: record.py:202
+#: record.py:209
 msgid "Title:"
 msgstr "Título:"
 
-#: record.py:527
+#: record.py:535
 msgid "Download failed."
 msgstr "Descarga fallida."
 
-#: record.py:529
+#: record.py:537
 msgid "Downloading..."
 msgstr "Descargando..."
 
-#: record.py:531
+#: record.py:539
 msgid "Requesting..."
 msgstr "Solicitando..."
 
-#: record.py:828
+#: record.py:836
 msgid "Quality:"
 msgstr "Calidad:"
 
-#: record.py:829
+#: record.py:837
 msgid "Low"
 msgstr "Baja"
 
-#: record.py:833
+#: record.py:841
 msgid "High"
 msgstr "Alta"
 
-#: record.py:841
+#: record.py:849
 msgid "Preferences"
 msgstr "Preferencias"
 
-# Cronometro is more readily understood as a timing device.
-#: record.py:888
-msgid "Timer:"
-msgstr "Cronómetro:"
-
 # contexto? -- xavi
-#: record.py:892
+#: record.py:899
 msgid "Immediate"
 msgstr "Inmediato"
 
-#: record.py:909
+#: record.py:916
 #, python-format
 #, python-format,
 msgid "%s second"
@@ -169,18 +165,29 @@ msgid_plural "%s seconds"
 msgstr[0] "%s segundo"
 msgstr[1] "%s segundos"
 
-# duracion o largo / longitud? ie: largometraje
-#: record.py:917
-msgid "Duration:"
-msgstr "Duración:"
-
-#: record.py:935
+#: record.py:941
 #, python-format
 #, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s minuto"
 msgstr[1] "%s minutos"
+
+#, python-format
+#~ msgid "%s by %s"
+#~ msgstr "%s por %s"
+
+#, python-format
+#~ msgid "%d:%02d remaining"
+#~ msgstr "%d:%02d restantes"
+
+# Cronometro is more readily understood as a timing device.
+#~ msgid "Timer:"
+#~ msgstr "Cronómetro:"
+
+# duracion o largo / longitud? ie: largometraje
+#~ msgid "Duration:"
+#~ msgstr "Duración:"
 
 #~ msgid "Time Lapse"
 #~ msgstr "Lapso de tiempo"

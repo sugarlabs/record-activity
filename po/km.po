@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-03 00:33-0400\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
 "PO-Revision-Date: 2011-08-14 13:58+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,13 +41,12 @@ msgstr "វីដេអូ"
 msgid "Audio"
 msgstr "សំលេង"
 
-#: glive.py:396 model.py:384
+#: glive.py:396 model.py:385
 #, python-format
-#, python-format, fuzzy
-msgid "%s by %s"
-msgstr "%s នៃ %s"
+msgid "%(type)s by %(name)s"
+msgstr ""
 
-#: glive.py:555
+#: glive.py:556
 msgid "Saving..."
 msgstr "កំពុង​រក្សា​ទុក..."
 
@@ -65,7 +64,7 @@ msgstr "ថ្ងៃ​ខែ ៖"
 
 #: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
+msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
 #: record.py:209
@@ -116,3 +115,8 @@ msgstr[0] "%s វិនាទី"
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s នាទី"
+
+#, python-format
+#, python-format, fuzzy
+#~ msgid "%s by %s"
+#~ msgstr "%s នៃ %s"

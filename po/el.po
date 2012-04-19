@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-27 00:32-0400\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
 "PO-Revision-Date: 2011-08-07 15:54+0200\n"
 "Last-Translator: Yannis <kiolalis@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,12 +41,12 @@ msgstr "Βίντεο"
 msgid "Audio"
 msgstr "Ήχος"
 
-#: glive.py:396 model.py:384
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
-msgstr "%s από %s"
+msgid "%(type)s by %(name)s"
+msgstr ""
 
-#: glive.py:555
+#: glive.py:556
 msgid "Saving..."
 msgstr "Αποθήκευση..."
 
@@ -64,8 +64,8 @@ msgstr "Ημερομηνία:"
 
 #: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
-msgstr "%d:%02d απομένουν"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr ""
 
 #: record.py:209
 msgid "Title:"
@@ -118,6 +118,14 @@ msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s λεπτό"
 msgstr[1] "%s λεπτά"
+
+#, python-format
+#~ msgid "%s by %s"
+#~ msgstr "%s από %s"
+
+#, python-format
+#~ msgid "%d:%02d remaining"
+#~ msgstr "%d:%02d απομένουν"
 
 #~ msgid "Timer:"
 #~ msgstr "Χρονόμετρο:"

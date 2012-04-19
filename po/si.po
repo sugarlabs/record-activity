@@ -6,14 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-27 00:32-0400\n"
-"PO-Revision-Date: 2008-09-15 06:28-0400\n"
-"Last-Translator: Rashan Anushka <rashan.uoc@gmail.com>\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2012-02-03 22:54+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: si\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: activity/activity.info:2
 msgid "Record"
@@ -39,12 +41,12 @@ msgstr "වීඩියෝ දසුන"
 msgid "Audio"
 msgstr "ශ්‍රව්‍ය"
 
-#: glive.py:396 model.py:384
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
+msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:555
+#: glive.py:556
 msgid "Saving..."
 msgstr ""
 
@@ -62,7 +64,7 @@ msgstr "දිනය:"
 
 #: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
+msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
 #: record.py:209
@@ -107,14 +109,16 @@ msgstr "එසැනින්"
 #, fuzzy
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "තත්පර %(1)s ක්"
+msgstr[0] "තත්පර %s ක්"
+msgstr[1] ""
 
 #: record.py:941
 #, python-format
 #, fuzzy
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "මිනිත්තු %(1)s"
+msgstr[0] "මිනිත්තු %s"
+msgstr[1] ""
 
 #~ msgid "Timer:"
 #~ msgstr "මුහුර්තකය:"

@@ -6,305 +6,279 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
-"PO-Revision-Date: 2008-09-08 12:41-0400\n"
-"Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2012-01-27 07:01+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "Бичлэг хийх"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
-#, fuzzy
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s минут"
-
-#: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
-#, fuzzy
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)s секунд"
-
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "Зураг"
-
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "Видео"
-
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "Дуу"
-
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "Хугацааны хурдасгуур"
-
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "Хөдөлгөөнт зураг"
-
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "Панорам"
-
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "Ярилцлага"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
-#, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(2)s-гын %(1)s"
-
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "Гарчиг:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "Дуу хураагуур:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "Огноо:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "Шошго:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "Хадгалж байна"
-
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "Бичлэг хийж дууслаа"
-
-#: /home/sugar/src/activities/record.activity/constants.py:138
+#: button.py:26
 msgid "Remove"
 msgstr "Устгах"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "Бичлэгийг зогсоолоо"
-
-#: /home/sugar/src/activities/record.activity/constants.py:140
+#: button.py:37
 msgid "Copy to clipboard"
 msgstr "Самбарт хуулах"
 
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "Тоолуур:"
+#: constants.py:25 record.py:140
+msgid "Photo"
+msgstr "Зураг"
 
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "Үргэлжлэх хугацаа:"
+#: constants.py:32 record.py:148
+msgid "Video"
+msgstr "Видео"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
+#: constants.py:39 record.py:159
+msgid "Audio"
+msgstr "Дуу"
+
+#: glive.py:396 model.py:385
+#, python-format
+msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "Яаралтай"
+#: glive.py:556
+msgid "Saving..."
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "Үзэх"
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "Завсарлах"
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "Шошго:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "Хүрээ нэмэх"
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Огноо:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "Хүрээг арилгах"
-
-#: /home/sugar/src/activities/record.activity/constants.py:149
+#: model.py:183
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "Секунд тутамд %(1)s кадр"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
+#: record.py:209
+msgid "Title:"
+msgstr "Гарчиг:"
+
+#: record.py:535
+msgid "Download failed."
+msgstr ""
+
+#: record.py:537
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:539
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:836
 #, fuzzy
-msgid "Quality"
-msgstr "Чанар"
+msgid "Quality:"
+msgstr "Чанар:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "Ердийн"
-
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "Хамгийн сайн"
-
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "Өндөр"
-
-#: /home/sugar/src/activities/record.activity/constants.py:154
+#: record.py:837
 msgid "Low"
 msgstr "Нам"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "Том файл"
-
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "Жижиг файл"
-
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "Дуугүй"
-
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "Эргүүлэх"
-
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "Өргөн"
-
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
+#: record.py:841
+msgid "High"
 msgstr "Өндөр"
 
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "Зураг авахдаа энд дарна уу"
-
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "Зураг нэмэхдээ энд дарна уу"
-
-# TRANS: Downloading Photo from Mary
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "%(2)s-ээс %(1)s-ийг татаж байна "
-
-# TRANS: Cannot download this Photo
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "Энэ %(1)s-г татаж чадахгүй байна"
-
-# TRANS: Save Photo to:
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
-#, python-format
-msgid "Save %(1)s to:"
-msgstr "%(1)s-ийг хадгалах хавтас:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:169
-#, python-format
-msgid "Your %(1)s is full"
-msgstr "Таны %(1)s дүүрэн байна"
-
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "Бүртгэл"
-
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "USB"
-
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "SD карт"
-
-#: /home/sugar/src/activities/record.activity/constants.py:173
+#: record.py:849
 msgid "Preferences"
 msgstr "Тохиргоо"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "Сул зай:"
+#: record.py:899
+msgid "Immediate"
+msgstr "Яаралтай"
 
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr "Бит-н хурд"
+#: record.py:916
+#, python-format
+#, fuzzy
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%s секунд"
+msgstr[1] ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "Хамгийн их бит-н хурд"
+#: record.py:941
+#, python-format
+#, fuzzy
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s минут"
+msgstr[1] ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "Хамгийн бага бит-н хурд"
+#~ msgid "Time Lapse"
+#~ msgstr "Хугацааны хурдасгуур"
 
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr "Бит-н хурдыг тохируулах"
+#~ msgid "Animation"
+#~ msgstr "Хөдөлгөөнт зураг"
 
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "Хүрээ"
+#~ msgid "Panorama"
+#~ msgstr "Панорам"
 
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "Төв"
+#~ msgid "Interview"
+#~ msgstr "Ярилцлага"
 
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "Кадрууд"
+# TRANS: photo by photographer, e.g., "Photo by Mary"
+#, python-format
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(2)s-гын %(1)s"
 
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "Үндсэн кадрыг автоматаар олох"
+#~ msgid "Recorder:"
+#~ msgstr "Дуу хураагуур:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "Үндсэн кадрыг оноох"
+#~ msgid "Saving"
+#~ msgstr "Хадгалж байна"
 
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "Үндсэн кадрын давтамж"
+#~ msgid "Finished recording"
+#~ msgstr "Бичлэг хийж дууслаа"
 
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr "Үндсэн кадрын хоорондын хамгийн бага зай"
+#~ msgid "Stopped recording"
+#~ msgstr "Бичлэгийг зогсоолоо"
 
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "Үндсэн кадрын хязгаар"
+#~ msgid "Timer:"
+#~ msgstr "Тоолуур:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "Шуугиан мэдрэгч"
+#~ msgid "Duration:"
+#~ msgstr "Үргэлжлэх хугацаа:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
-msgstr "Хурдан"
+#~ msgid "Play"
+#~ msgstr "Үзэх"
 
-#: /home/sugar/src/activities/record.activity/constants.py:190
-msgid "Sharpness"
-msgstr "Тодрол"
+#~ msgid "Pause"
+#~ msgstr "Завсарлах"
 
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "Багтаамж"
+#~ msgid "Add frame"
+#~ msgstr "Хүрээ нэмэх"
+
+#~ msgid "Remove frame"
+#~ msgstr "Хүрээг арилгах"
+
+#, python-format
+#~ msgid "%(1)s frames per second"
+#~ msgstr "Секунд тутамд %(1)s кадр"
+
+#~ msgid "Default"
+#~ msgstr "Ердийн"
+
+#~ msgid "Best"
+#~ msgstr "Хамгийн сайн"
+
+#~ msgid "Large file"
+#~ msgstr "Том файл"
+
+#~ msgid "Small file"
+#~ msgstr "Жижиг файл"
+
+#~ msgid "Silent"
+#~ msgstr "Дуугүй"
+
+#~ msgid "Rotate"
+#~ msgstr "Эргүүлэх"
+
+#~ msgid "Width"
+#~ msgstr "Өргөн"
+
+#~ msgid "Height"
+#~ msgstr "Өндөр"
+
+#~ msgid "Click to take picture"
+#~ msgstr "Зураг авахдаа энд дарна уу"
+
+#~ msgid "Click to add picture"
+#~ msgstr "Зураг нэмэхдээ энд дарна уу"
+
+# TRANS: Downloading Photo from Mary
+#, python-format
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "%(2)s-ээс %(1)s-ийг татаж байна"
+
+# TRANS: Cannot download this Photo
+#, python-format
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "Энэ %(1)s-г татаж чадахгүй байна"
+
+# TRANS: Save Photo to:
+#, python-format
+#~ msgid "Save %(1)s to:"
+#~ msgstr "%(1)s-ийг хадгалах хавтас:"
+
+#, python-format
+#~ msgid "Your %(1)s is full"
+#~ msgstr "Таны %(1)s дүүрэн байна"
+
+#~ msgid "Journal"
+#~ msgstr "Бүртгэл"
+
+#~ msgid "USB"
+#~ msgstr "USB"
+
+#~ msgid "SD Card"
+#~ msgstr "SD карт"
+
+#~ msgid "Free space:"
+#~ msgstr "Сул зай:"
+
+#~ msgid "Bitrate"
+#~ msgstr "Бит-н хурд"
+
+#~ msgid "Maximum Bitrate"
+#~ msgstr "Хамгийн их бит-н хурд"
+
+#~ msgid "Minumum Bitrate"
+#~ msgstr "Хамгийн бага бит-н хурд"
+
+#~ msgid "Manage Bitrate"
+#~ msgstr "Бит-н хурдыг тохируулах"
+
+#~ msgid "Border"
+#~ msgstr "Хүрээ"
+
+#~ msgid "Center"
+#~ msgstr "Төв"
+
+#~ msgid "Frames"
+#~ msgstr "Кадрууд"
+
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "Үндсэн кадрыг автоматаар олох"
+
+#~ msgid "Force keyframe"
+#~ msgstr "Үндсэн кадрыг оноох"
+
+#~ msgid "Keyframe frequency"
+#~ msgstr "Үндсэн кадрын давтамж"
+
+#~ msgid "Keyframe minimum distance"
+#~ msgstr "Үндсэн кадрын хоорондын хамгийн бага зай"
+
+#~ msgid "Keyframe threshold"
+#~ msgstr "Үндсэн кадрын хязгаар"
+
+#~ msgid "Noise Sensitivity"
+#~ msgstr "Шуугиан мэдрэгч"
+
+#~ msgid "Quick"
+#~ msgstr "Хурдан"
+
+#~ msgid "Sharpness"
+#~ msgstr "Тодрол"
+
+#~ msgid "Capacity"
+#~ msgstr "Багтаамж"
 
 #, python-format
 #~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-20 17:58+0000\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
 "PO-Revision-Date: 2008-03-21 07:32-0400\n"
 "Last-Translator: Adi Roiban <adiroiban@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,294 +18,264 @@ msgstr ""
 "X-Generator: Translate Toolkit 1.6.0\n"
 
 #: activity/activity.info:2
-#: /home/sugar/src/activities/record.activity/constants.py:122
 msgid "Record"
 msgstr "Înregistrează"
 
-#: /home/sugar/src/activities/record.activity/constants.py:21
-#, python-format
-#, fuzzy
-msgid "%(1)s minute"
-msgid_plural "%(1)s minutes"
-msgstr[0] "%(1)s minute"
-
-#: /home/sugar/src/activities/record.activity/constants.py:25
-#, python-format
-#, fuzzy
-msgid "%(1)s second"
-msgid_plural "%(1)s seconds"
-msgstr[0] "%(1)s secunde"
-
-#: /home/sugar/src/activities/record.activity/constants.py:123
-msgid "Photo"
-msgstr "Poze"
-
-#: /home/sugar/src/activities/record.activity/constants.py:124
-msgid "Video"
-msgstr "Video"
-
-#: /home/sugar/src/activities/record.activity/constants.py:125
-msgid "Audio"
-msgstr "Audio"
-
-#: /home/sugar/src/activities/record.activity/constants.py:126
-msgid "Time Lapse"
-msgstr "Timp scurs"
-
-#: /home/sugar/src/activities/record.activity/constants.py:127
-msgid "Animation"
-msgstr "Animație"
-
-#: /home/sugar/src/activities/record.activity/constants.py:128
-msgid "Panorama"
-msgstr "Panoramă"
-
-#: /home/sugar/src/activities/record.activity/constants.py:129
-msgid "Interview"
-msgstr "Intervieu"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#. TRANS: photo by photographer, e.g., "Photo by Mary"
-#: /home/sugar/src/activities/record.activity/constants.py:131
-#, python-format
-msgid "%(1)s by %(2)s"
-msgstr "%(1)s de la %(2)s"
-
-#: /home/sugar/src/activities/record.activity/constants.py:132
-msgid "Title:"
-msgstr "Titlu:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:133
-msgid "Recorder:"
-msgstr "Cine a înregistrat:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:134
-msgid "Date:"
-msgstr "Data:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:135
-msgid "Tags:"
-msgstr "Etichete:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:136
-msgid "Saving"
-msgstr "Salvez"
-
-#: /home/sugar/src/activities/record.activity/constants.py:137
-msgid "Finished recording"
-msgstr "Înregistrare încheiată"
-
-#: /home/sugar/src/activities/record.activity/constants.py:138
+#: button.py:26
 msgid "Remove"
 msgstr "Șterge"
 
-#: /home/sugar/src/activities/record.activity/constants.py:139
-msgid "Stopped recording"
-msgstr "Înregistrare oprită"
-
-#: /home/sugar/src/activities/record.activity/constants.py:140
+#: button.py:37
 msgid "Copy to clipboard"
 msgstr "Copiază în clipboard"
 
-#: /home/sugar/src/activities/record.activity/constants.py:141
-msgid "Timer:"
-msgstr "Cronomentru:"
+#: constants.py:25 record.py:140
+msgid "Photo"
+msgstr "Poze"
 
-#: /home/sugar/src/activities/record.activity/constants.py:142
-msgid "Duration:"
-msgstr "Durata:"
+#: constants.py:32 record.py:148
+msgid "Video"
+msgstr "Video"
 
-#: /home/sugar/src/activities/record.activity/constants.py:143
-msgid "Remaining:"
+#: constants.py:39 record.py:159
+msgid "Audio"
+msgstr "Audio"
+
+#: glive.py:396 model.py:385
+#, python-format
+msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:144
-msgid "Immediate"
-msgstr "Imediat"
+#: glive.py:556
+msgid "Saving..."
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:145
-msgid "Play"
-msgstr "Redă"
+#: mediaview.py:54
+msgid "Author:"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:146
-msgid "Pause"
-msgstr "Pauză"
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "Etichete:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:147
-msgid "Add frame"
-msgstr "Adaugă cadru"
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Data:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:148
-msgid "Remove frame"
-msgstr "Elimină cadru"
-
-#: /home/sugar/src/activities/record.activity/constants.py:149
+#: model.py:183
 #, python-format
-msgid "%(1)s frames per second"
-msgstr "%(1)s cadre pe secundă"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr ""
 
-#: /home/sugar/src/activities/record.activity/constants.py:150
+#: record.py:209
+msgid "Title:"
+msgstr "Titlu:"
+
+#: record.py:535
+msgid "Download failed."
+msgstr ""
+
+#: record.py:537
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:539
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:836
 #, fuzzy
-msgid "Quality"
+msgid "Quality:"
 msgstr "Calitatea:"
 
-#: /home/sugar/src/activities/record.activity/constants.py:151
-msgid "Default"
-msgstr "Implicit"
-
-#: /home/sugar/src/activities/record.activity/constants.py:152
-msgid "Best"
-msgstr "Cel mai bun"
-
-#: /home/sugar/src/activities/record.activity/constants.py:153
-msgid "High"
-msgstr "Ridicat"
-
-#: /home/sugar/src/activities/record.activity/constants.py:154
+#: record.py:837
 msgid "Low"
 msgstr "Scăzut"
 
-#: /home/sugar/src/activities/record.activity/constants.py:155
-msgid "Large file"
-msgstr "Fișier mare"
+#: record.py:841
+msgid "High"
+msgstr "Ridicat"
 
-#: /home/sugar/src/activities/record.activity/constants.py:156
-msgid "Small file"
-msgstr "Fișier mic"
-
-#: /home/sugar/src/activities/record.activity/constants.py:157
-msgid "Silent"
-msgstr "Mut"
-
-#: /home/sugar/src/activities/record.activity/constants.py:158
-msgid "Rotate"
-msgstr "Rotește"
-
-#: /home/sugar/src/activities/record.activity/constants.py:159
-msgid "Width"
-msgstr "Lăţime"
-
-#: /home/sugar/src/activities/record.activity/constants.py:160
-msgid "Height"
-msgstr "Înălţime"
-
-#: /home/sugar/src/activities/record.activity/constants.py:161
-msgid "Click to take picture"
-msgstr "Clic pentru a face o poză"
-
-#: /home/sugar/src/activities/record.activity/constants.py:162
-msgid "Click to add picture"
-msgstr "Clic pentru a adăuga o poză"
-
-#. TRANS: Downloading Photo from Mary
-#: /home/sugar/src/activities/record.activity/constants.py:164
-#, python-format
-msgid "Downloading %(1)s from %(2)s"
-msgstr "Descarc %(1)s de la %(2)s"
-
-#. TRANS: Cannot download this Photo
-#: /home/sugar/src/activities/record.activity/constants.py:166
-#, python-format
-msgid "Cannot download this %(1)s"
-msgstr "Nu s-a putut descărca acest/această %(1)s"
-
-#. TRANS: Save Photo to:
-#: /home/sugar/src/activities/record.activity/constants.py:168
-#, python-format
-#, python-format, fuzzy
-msgid "Save %(1)s to:"
-msgstr "Salvează %(1)s în:"
-
-#: /home/sugar/src/activities/record.activity/constants.py:169
-#, python-format
-msgid "Your %(1)s is full"
-msgstr "%(1)s tău e plin"
-
-#: /home/sugar/src/activities/record.activity/constants.py:170
-msgid "Journal"
-msgstr "Jurnal"
-
-#: /home/sugar/src/activities/record.activity/constants.py:171
-msgid "USB"
-msgstr "USB"
-
-#: /home/sugar/src/activities/record.activity/constants.py:172
-msgid "SD Card"
-msgstr "Card SD"
-
-#: /home/sugar/src/activities/record.activity/constants.py:173
+#: record.py:849
 msgid "Preferences"
 msgstr "Preferinţe"
 
-#: /home/sugar/src/activities/record.activity/constants.py:174
-msgid "Free space:"
-msgstr "Spaţiu liber:"
+#: record.py:899
+msgid "Immediate"
+msgstr "Imediat"
 
-#. TRANS: 7 photos
-#: /home/sugar/src/activities/record.activity/constants.py:176
-msgid "Bitrate"
-msgstr "Rată biţi"
-
-#: /home/sugar/src/activities/record.activity/constants.py:177
-msgid "Maximum Bitrate"
-msgstr "Rată biţi maximă"
-
-#: /home/sugar/src/activities/record.activity/constants.py:178
-msgid "Minumum Bitrate"
-msgstr "Rată biţi minimă"
-
-#: /home/sugar/src/activities/record.activity/constants.py:179
-msgid "Manage Bitrate"
-msgstr "Administrare rată biţi"
-
-#: /home/sugar/src/activities/record.activity/constants.py:180
-msgid "Border"
-msgstr "Margine"
-
-#: /home/sugar/src/activities/record.activity/constants.py:181
-msgid "Center"
-msgstr "Centru"
-
-#: /home/sugar/src/activities/record.activity/constants.py:182
-msgid "Frames"
-msgstr "Cadre"
-
-#: /home/sugar/src/activities/record.activity/constants.py:183
-msgid "Automatic keyframe detection"
-msgstr "Detectare automată cadre cheie"
-
-#: /home/sugar/src/activities/record.activity/constants.py:184
-msgid "Force keyframe"
-msgstr "Forţează cadre cheie"
-
-#: /home/sugar/src/activities/record.activity/constants.py:185
-msgid "Keyframe frequency"
-msgstr "Frecventă cadre cheie"
-
-#: /home/sugar/src/activities/record.activity/constants.py:186
-msgid "Keyframe minimum distance"
-msgstr "Distanţă minimă cadre cheie"
-
-#: /home/sugar/src/activities/record.activity/constants.py:187
-msgid "Keyframe threshold"
-msgstr "Prag cadre cheie"
-
-#: /home/sugar/src/activities/record.activity/constants.py:188
-msgid "Noise Sensitivity"
-msgstr "Sensibilitate zgomot"
-
-#: /home/sugar/src/activities/record.activity/constants.py:189
-msgid "Quick"
-msgstr "Rapid"
-
-#: /home/sugar/src/activities/record.activity/constants.py:190
+#: record.py:916
+#, python-format
 #, fuzzy
-msgid "Sharpness"
-msgstr "Contur mai pronunţat"
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%(1)s secunde"
 
-#: /home/sugar/src/activities/record.activity/constants.py:191
-msgid "Capacity"
-msgstr "Capacitate"
+#: record.py:941
+#, python-format
+#, fuzzy
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%(1)s minute"
+
+#~ msgid "Timer:"
+#~ msgstr "Cronomentru:"
+
+#~ msgid "Duration:"
+#~ msgstr "Durata:"
+
+#~ msgid "Time Lapse"
+#~ msgstr "Timp scurs"
+
+#~ msgid "Animation"
+#~ msgstr "Animație"
+
+#~ msgid "Panorama"
+#~ msgstr "Panoramă"
+
+#~ msgid "Interview"
+#~ msgstr "Intervieu"
+
+# TRANS: photo by photographer, e.g., "Photo by Mary"
+#, python-format
+#~ msgid "%(1)s by %(2)s"
+#~ msgstr "%(1)s de la %(2)s"
+
+#~ msgid "Recorder:"
+#~ msgstr "Cine a înregistrat:"
+
+#~ msgid "Saving"
+#~ msgstr "Salvez"
+
+#~ msgid "Finished recording"
+#~ msgstr "Înregistrare încheiată"
+
+#~ msgid "Stopped recording"
+#~ msgstr "Înregistrare oprită"
+
+#~ msgid "Play"
+#~ msgstr "Redă"
+
+#~ msgid "Pause"
+#~ msgstr "Pauză"
+
+#~ msgid "Add frame"
+#~ msgstr "Adaugă cadru"
+
+#~ msgid "Remove frame"
+#~ msgstr "Elimină cadru"
+
+#, python-format
+#~ msgid "%(1)s frames per second"
+#~ msgstr "%(1)s cadre pe secundă"
+
+#~ msgid "Default"
+#~ msgstr "Implicit"
+
+#~ msgid "Best"
+#~ msgstr "Cel mai bun"
+
+#~ msgid "Large file"
+#~ msgstr "Fișier mare"
+
+#~ msgid "Small file"
+#~ msgstr "Fișier mic"
+
+#~ msgid "Silent"
+#~ msgstr "Mut"
+
+#~ msgid "Rotate"
+#~ msgstr "Rotește"
+
+#~ msgid "Width"
+#~ msgstr "Lăţime"
+
+#~ msgid "Height"
+#~ msgstr "Înălţime"
+
+#~ msgid "Click to take picture"
+#~ msgstr "Clic pentru a face o poză"
+
+#~ msgid "Click to add picture"
+#~ msgstr "Clic pentru a adăuga o poză"
+
+#, python-format
+#~ msgid "Downloading %(1)s from %(2)s"
+#~ msgstr "Descarc %(1)s de la %(2)s"
+
+#, python-format
+#~ msgid "Cannot download this %(1)s"
+#~ msgstr "Nu s-a putut descărca acest/această %(1)s"
+
+#, python-format
+#, python-format, fuzzy
+#~ msgid "Save %(1)s to:"
+#~ msgstr "Salvează %(1)s în:"
+
+#, python-format
+#~ msgid "Your %(1)s is full"
+#~ msgstr "%(1)s tău e plin"
+
+#~ msgid "Journal"
+#~ msgstr "Jurnal"
+
+#~ msgid "USB"
+#~ msgstr "USB"
+
+#~ msgid "SD Card"
+#~ msgstr "Card SD"
+
+#~ msgid "Free space:"
+#~ msgstr "Spaţiu liber:"
+
+#~ msgid "Bitrate"
+#~ msgstr "Rată biţi"
+
+#~ msgid "Maximum Bitrate"
+#~ msgstr "Rată biţi maximă"
+
+#~ msgid "Minumum Bitrate"
+#~ msgstr "Rată biţi minimă"
+
+#~ msgid "Manage Bitrate"
+#~ msgstr "Administrare rată biţi"
+
+#~ msgid "Border"
+#~ msgstr "Margine"
+
+#~ msgid "Center"
+#~ msgstr "Centru"
+
+#~ msgid "Frames"
+#~ msgstr "Cadre"
+
+#~ msgid "Automatic keyframe detection"
+#~ msgstr "Detectare automată cadre cheie"
+
+#~ msgid "Force keyframe"
+#~ msgstr "Forţează cadre cheie"
+
+#~ msgid "Keyframe frequency"
+#~ msgstr "Frecventă cadre cheie"
+
+#~ msgid "Keyframe minimum distance"
+#~ msgstr "Distanţă minimă cadre cheie"
+
+#~ msgid "Keyframe threshold"
+#~ msgstr "Prag cadre cheie"
+
+#~ msgid "Noise Sensitivity"
+#~ msgstr "Sensibilitate zgomot"
+
+#~ msgid "Quick"
+#~ msgstr "Rapid"
+
+#, fuzzy
+#~ msgid "Sharpness"
+#~ msgstr "Contur mai pronunţat"
+
+#~ msgid "Capacity"
+#~ msgstr "Capacitate"
 
 #, python-format
 #~ msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"

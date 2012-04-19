@@ -1,8 +1,12 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-04 00:30-0400\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
 "PO-Revision-Date: 2011-11-26 09:11+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,7 +17,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#  "Grabar"
 #: activity/activity.info:2
 msgid "Record"
 msgstr ""
@@ -23,38 +26,33 @@ msgstr ""
 msgid "Remove"
 msgstr "Chinkachiy"
 
-#  "Copiar al portapapel"
 #: button.py:37
 msgid "Copy to clipboard"
 msgstr ""
 
-#  "Foto"
-#: constants.py:24 record.py:133
+#: constants.py:25 record.py:140
 msgid "Photo"
 msgstr ""
 
 #  "Video"
-#: constants.py:31 record.py:141
+#: constants.py:32 record.py:148
 msgid "Video"
 msgstr "Qhawarina"
 
 #  "Audio"
-#: constants.py:38 record.py:152
+#: constants.py:39 record.py:159
 msgid "Audio"
 msgstr "Uyarina"
 
-#  "%s por %s"
-#: glive.py:397 model.py:355
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
+msgid "%(type)s by %(name)s"
 msgstr ""
 
-#  "Guardando..."
 #: glive.py:556
 msgid "Saving..."
 msgstr ""
 
-#  "Autor:"
 #: mediaview.py:54
 msgid "Author:"
 msgstr ""
@@ -69,79 +67,56 @@ msgstr "Sutichaq:"
 msgid "Date:"
 msgstr "Punchay:"
 
-#  "%d:%02d restantes"
-#: model.py:154
+#: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
+msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#  "Título:"
-#: record.py:202
+#: record.py:209
 msgid "Title:"
 msgstr ""
 
-#  "Descarga fallida."
-#: record.py:527
+#: record.py:535
 msgid "Download failed."
 msgstr ""
 
 #  "Descargando..."
-#: record.py:529
+#: record.py:537
 msgid "Downloading..."
 msgstr "Uraykachichkan..."
 
-#  "Solicitando..."
-#: record.py:531
+#: record.py:539
 msgid "Requesting..."
 msgstr ""
 
-#  "Calidad:"
-#: record.py:828
+#: record.py:836
 msgid "Quality:"
 msgstr ""
 
-#  "Baja"
-#: record.py:829
+#: record.py:837
 msgid "Low"
 msgstr ""
 
-#  "Alta"
-#: record.py:833
+#: record.py:841
 msgid "High"
 msgstr ""
 
-#  "Preferencias"
-#: record.py:841
+#: record.py:849
 msgid "Preferences"
 msgstr ""
 
-#  "Cronómetro:"
-#: record.py:888
-msgid "Timer:"
-msgstr ""
-
-#  "Inmediato"
-#: record.py:892
+#: record.py:899
 msgid "Immediate"
 msgstr ""
 
-#  "%s segundo"
-#  "%s segundos"
-#: record.py:909
+#: record.py:916
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#  "Duración:"
-#: record.py:917
-msgid "Duration:"
-msgstr ""
-
-#  "%s minuto"
-#  ""%s minutos"
-#: record.py:935
+#: record.py:941
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"

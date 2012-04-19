@@ -6,14 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-02 00:31-0400\n"
-"PO-Revision-Date: 2008-07-09 08:31-0400\n"
-"Last-Translator: Juliano Bittencourt <juliano@laptop.org>\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2011-08-14 06:37+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: activity/activity.info:2
 msgid "Record"
@@ -27,21 +29,21 @@ msgstr "Remover"
 msgid "Copy to clipboard"
 msgstr "Copiar para a prancheta"
 
-#: constants.py:24 record.py:133
+#: constants.py:25 record.py:140
 msgid "Photo"
 msgstr "Foto"
 
-#: constants.py:31 record.py:141
+#: constants.py:32 record.py:148
 msgid "Video"
 msgstr "Vídeo"
 
-#: constants.py:38 record.py:152
+#: constants.py:39 record.py:159
 msgid "Audio"
 msgstr "Som"
 
-#: glive.py:397 model.py:355
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
+msgid "%(type)s by %(name)s"
 msgstr ""
 
 #: glive.py:556
@@ -60,70 +62,68 @@ msgstr "Etiquetas:"
 msgid "Date:"
 msgstr "Data:"
 
-#: model.py:154
+#: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
+msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:202
+#: record.py:209
 msgid "Title:"
 msgstr "Título:"
 
-#: record.py:527
+#: record.py:535
 msgid "Download failed."
 msgstr ""
 
-#: record.py:529
+#: record.py:537
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:531
+#: record.py:539
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:828
+#: record.py:836
 #, fuzzy
 msgid "Quality:"
 msgstr "Qualidade:"
 
-#: record.py:829
+#: record.py:837
 msgid "Low"
 msgstr "Baixa"
 
-#: record.py:833
+#: record.py:841
 msgid "High"
 msgstr "Alta"
 
-#: record.py:841
+#: record.py:849
 msgid "Preferences"
 msgstr "Preferências"
 
-# I think it's better not to translate this term because it's used by brazilians.
-#: record.py:888
-msgid "Timer:"
-msgstr "Timer:"
-
-#: record.py:892
+#: record.py:899
 msgid "Immediate"
 msgstr "Imediato"
 
-#: record.py:909
+#: record.py:916
 #, python-format
-#, fuzzy
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "%(1)s segundos"
+msgstr[0] "%s segundo"
+msgstr[1] "%s segundos"
 
-#: record.py:917
-msgid "Duration:"
-msgstr "Duração:"
-
-#: record.py:935
+#: record.py:941
 #, python-format
-#, fuzzy
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "%(1)s minutos"
+msgstr[0] "%s minuto"
+msgstr[1] "%s minutos"
+
+# I think it's better not to translate this term because it's used by brazilians.
+#~ msgid "Timer:"
+#~ msgstr "Timer:"
+
+#~ msgid "Duration:"
+#~ msgstr "Duração:"
 
 #~ msgid "Time Lapse"
 #~ msgstr "Duração"

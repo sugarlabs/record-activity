@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-04 00:30-0400\n"
-"PO-Revision-Date: 2011-08-23 01:42+0200\n"
-"Last-Translator: Hugo <hugo.gonzalez@upslp.edu.mx>\n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2011-09-12 19:43+0200\n"
+"Last-Translator: <saulleoart@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hus\n"
 "MIME-Version: 1.0\n"
@@ -27,100 +27,109 @@ msgstr "Pakuw"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr "k'ot'biy kitnom-úw"
+msgstr "K'ot'biy kitnom-úw"
 
-#: constants.py:24 record.py:133
+#: constants.py:25 record.py:140
 msgid "Photo"
-msgstr "k'ot´biláb"
+msgstr "K'ot´biláb"
 
-#: constants.py:31 record.py:141
+#: constants.py:32 record.py:148
 msgid "Video"
-msgstr "T'iplab tejwamedhomtaláb"
+msgstr "T'iplab tejwamédhomtaláb"
 
-#: constants.py:38 record.py:152
+#: constants.py:39 record.py:159
 msgid "Audio"
 msgstr "Ots’bixtaláb"
 
-#: glive.py:397 model.py:355
+#: glive.py:396 model.py:385
 #, python-format
-msgid "%s by %s"
-msgstr "%s by %s"
+msgid "%(type)s by %(name)s"
+msgstr ""
 
 #: glive.py:556
 msgid "Saving..."
-msgstr "Ts'at'ab"
+msgstr "Ts'at'áb..."
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr "Dha'bal"
+msgstr "Dhabal:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr "úw bijlab"
+msgstr "úw bijliáb:"
 
 #: mediaview.py:118
 msgid "Date:"
-msgstr "Ajumtal íts'"
+msgstr "Ajumtal íts':"
 
-#: model.py:154
+#: model.py:183
 #, python-format
-msgid "%d:%02d remaining"
-msgstr "%d:%02d jilk'on"
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr ""
 
-#: record.py:202
+#: record.py:209
 msgid "Title:"
-msgstr "ok' bijláb"
+msgstr "Ok' bijláb:"
 
-#: record.py:527
+#: record.py:535
 msgid "Download failed."
-msgstr "pa'ba'"
+msgstr "Pa'baxtaláb yab alwa'."
 
-#: record.py:529
+#: record.py:537
 msgid "Downloading..."
-msgstr "Pa'bál"
+msgstr "Pa'bál..."
 
-#: record.py:531
+#: record.py:539
 msgid "Requesting..."
-msgstr "Requesting"
+msgstr "Konoyal..."
 
-#: record.py:828
+#: record.py:836
 msgid "Quality:"
-msgstr "Alwa'"
+msgstr "Alwá':"
 
-#: record.py:829
+#: record.py:837
 msgid "Low"
-msgstr "tsa'at"
-
-#: record.py:833
-msgid "High"
-msgstr "Yéjnek"
+msgstr "Tsa'at"
 
 #: record.py:841
+msgid "High"
+msgstr "Yejnek"
+
+#: record.py:849
 msgid "Preferences"
-msgstr "Dhakatnal"
+msgstr "Dhakatlábchik"
 
-#: record.py:888
-msgid "Timer:"
-msgstr "k'ij"
-
-#: record.py:892
+#: record.py:899
 msgid "Immediate"
 msgstr "Dhubatk'ij"
 
-#: record.py:909
-#, python-format, , 
+#: record.py:916
+#, python-format
+#, python-format, , ,
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "    %s second   %s seconds"
-msgstr[1] "Yanchik 0%s segundoYanchik 1%s segundos"
+msgstr[0] "%s i ádhik'ij"
+msgstr[1] "%s i ádhik'ij"
 
-#: record.py:917
-msgid "Duration:"
-msgstr "Owát"
-
-#: record.py:935
+#: record.py:941
 #, python-format
+#, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "Yanchik 0%s Tsakamk'ij"
-msgstr[1] "Yanchik 1%s Tsakamk'ij"
+msgstr[0] "%s i tsakamk'íj"
+msgstr[1] "%s i tsakamk'íj"
+
+#, python-format
+#, python-format,
+#~ msgid "%s by %s"
+#~ msgstr "%s ti %s"
+
+#, python-format
+#~ msgid "%d:%02d remaining"
+#~ msgstr "%d:%02d jilk'on"
+
+#~ msgid "Timer:"
+#~ msgstr "Lejbax k'ij"
+
+#~ msgid "Duration:"
+#~ msgstr "Owát:"
