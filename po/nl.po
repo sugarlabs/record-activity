@@ -31,7 +31,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-17 00:31-0400\n"
-"PO-Revision-Date: 2011-11-04 22:11+0200\n"
+"PO-Revision-Date: 2012-05-03 22:24+0200\n"
 "Last-Translator: whe <heppew@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -68,7 +68,7 @@ msgstr "Geluid"
 #: glive.py:396 model.py:385
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "%(type)s by %(name)s"
 
 #: glive.py:556
 msgid "Saving..."
@@ -89,7 +89,7 @@ msgstr "Datum:"
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "%(mins)d:%(secs)02d te gaan"
 
 #: record.py:209
 msgid "Title:"
