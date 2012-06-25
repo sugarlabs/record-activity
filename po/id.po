@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-17 00:31-0400\n"
-"PO-Revision-Date: 2012-05-22 02:50+0200\n"
+"PO-Revision-Date: 2012-06-25 19:20+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id\n"
@@ -19,110 +19,100 @@ msgstr ""
 
 #: activity/activity.info:2
 msgid "Record"
-msgstr ""
+msgstr "Rekam"
 
 #: button.py:26
 msgid "Remove"
-msgstr ""
+msgstr "Hapus"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Salin ke papan klip"
 
 #: constants.py:25 record.py:140
 msgid "Photo"
 msgstr "Foto"
 
 #: constants.py:32 record.py:148
-#, fuzzy
 msgid "Video"
 msgstr "Video"
 
 #: constants.py:39 record.py:159
-#, fuzzy
 msgid "Audio"
 msgstr "Audio"
 
 #: glive.py:396 model.py:385
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "%(type)s berdasarkan %(name)s"
 
 #: glive.py:556
-#, fuzzy
 msgid "Saving..."
 msgstr "Menyimpan..."
 
 #: mediaview.py:54
-#, fuzzy
 msgid "Author:"
-msgstr "Penulis:"
+msgstr "Pengarang:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr ""
+msgstr "Tag:"
 
 #: mediaview.py:118
-#, fuzzy
 msgid "Date:"
 msgstr "Tanggal:"
 
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "%(mins)d:%(secs)02d tersisa"
 
 #: record.py:209
-#, fuzzy
 msgid "Title:"
 msgstr "Judul:"
 
 #: record.py:535
 msgid "Download failed."
-msgstr ""
+msgstr "Pengunduhan gagal."
 
 #: record.py:537
 msgid "Downloading..."
-msgstr ""
+msgstr "Mengunduh..."
 
 #: record.py:539
 msgid "Requesting..."
-msgstr ""
+msgstr "Meminta..."
 
 #: record.py:836
 msgid "Quality:"
-msgstr ""
+msgstr "Kualitas:"
 
 #: record.py:837
-#, fuzzy
 msgid "Low"
 msgstr "Rendah"
 
 #: record.py:841
-#, fuzzy
 msgid "High"
 msgstr "Tinggi"
 
 #: record.py:849
-#, fuzzy
 msgid "Preferences"
 msgstr "Preferensi"
 
 #: record.py:899
-#, fuzzy
 msgid "Immediate"
 msgstr "Seketika"
 
 #: record.py:916
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s detik"
 
 #: record.py:941
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s menit"
