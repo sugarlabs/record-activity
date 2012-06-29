@@ -105,14 +105,14 @@ msgstr "Seketika"
 
 #: record.py:916
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s detik"
 
 #: record.py:941
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s menit"
