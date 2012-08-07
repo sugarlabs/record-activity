@@ -80,7 +80,7 @@ msgstr "Ամսաթիվ."
 
 #: model.py:183
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "%(mins)d:%(secs)02d մնացորդ"
 
