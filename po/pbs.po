@@ -1,0 +1,118 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"PO-Revision-Date: 2012-06-27 22:48+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: pbs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
+
+#: activity/activity.info:2
+msgid "Record"
+msgstr "Maka'an"
+
+#: button.py:26
+msgid "Remove"
+msgstr "Malejei'"
+
+#: button.py:37
+msgid "Copy to clipboard"
+msgstr "Make'eik maka'l ne ndakal ngk'uix se nip mvajau"
+
+#: constants.py:25 record.py:140
+msgid "Photo"
+msgstr "Sangueje' su'ua'"
+
+#: constants.py:32 record.py:148
+msgid "Video"
+msgstr "Ndaka'an leet"
+
+#: constants.py:39 record.py:159
+msgid "Audio"
+msgstr "Nda'u"
+
+#: glive.py:396 model.py:385
+#, python-format
+msgid "%(type)s by %(name)s"
+msgstr "%(type)s lulei %(name)s"
+
+#: glive.py:556
+msgid "Saving..."
+msgstr "Makjaat..."
+
+#: mediaview.py:54
+msgid "Author:"
+msgstr "Ne se ndutsjau:"
+
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "Ndanú:"
+
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Ndanu peuk kulejeik ngum'au':"
+
+#: model.py:183
+#, python-format
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr "Lijañ %(mins)d:%(secs)02d"
+
+#: record.py:209
+msgid "Title:"
+msgstr "Ne ngunjiu re kily'e me'ets:"
+
+#: record.py:535
+msgid "Download failed."
+msgstr "Kad-ep ndani'at ndupup re se maveje'p."
+
+#: record.py:537
+msgid "Downloading..."
+msgstr "Mapu'p re se maveje'p..."
+
+#: record.py:539
+msgid "Requesting..."
+msgstr "Ma'ajaun'..."
+
+#: record.py:836
+msgid "Quality:"
+msgstr "Lik'iajam vajaú:"
+
+#: record.py:837
+msgid "Low"
+msgstr "Kunja'aich"
+
+#: record.py:841
+msgid "High"
+msgstr "Kujaich'"
+
+#: record.py:849
+msgid "Preferences"
+msgstr "Ravu se k'ua vumang"
+
+#: record.py:899
+msgid "Immediate"
+msgstr "Maneí"
+
+#: record.py:916
+#, python-format
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%s kanui"
+msgstr[1] "%s kanuima"
+
+#: record.py:941
+#, python-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s Chi'i kusap"
+msgstr[1] "%s kad-a kusap"
