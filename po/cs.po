@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-17 00:31-0400\n"
-"PO-Revision-Date: 2011-04-14 06:02+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-07-02 12:07+0200\n"
+"Last-Translator: jui <appukonrad@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: activity/activity.info:2
 msgid "Record"
-msgstr ""
+msgstr "Nahrát"
 
 #: button.py:26
 msgid "Remove"
@@ -27,36 +27,36 @@ msgstr "Odstranit"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Zkopírovat do schránky"
 
 #: constants.py:25 record.py:140
 msgid "Photo"
-msgstr ""
+msgstr "Fotografie"
 
 #: constants.py:32 record.py:148
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: constants.py:39 record.py:159
 msgid "Audio"
-msgstr "Poslech"
+msgstr "Zvuk"
 
 #: glive.py:396 model.py:385
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "%(type)s z %(name)s"
 
 #: glive.py:556
 msgid "Saving..."
-msgstr ""
+msgstr "Ukládám..."
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr ""
+msgstr "Autor:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr ""
+msgstr "Štítky:"
 
 #: mediaview.py:118
 msgid "Date:"
@@ -65,27 +65,27 @@ msgstr "Datum:"
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "%(mins)d:%(secs)02d zůstává"
 
 #: record.py:209
 msgid "Title:"
-msgstr ""
+msgstr "Název:"
 
 #: record.py:535
 msgid "Download failed."
-msgstr ""
+msgstr "Stahování selhalo."
 
 #: record.py:537
 msgid "Downloading..."
-msgstr ""
+msgstr "Stahování..."
 
 #: record.py:539
 msgid "Requesting..."
-msgstr ""
+msgstr "Vyžádání..."
 
 #: record.py:836
 msgid "Quality:"
-msgstr ""
+msgstr "Kvalita:"
 
 #: record.py:837
 msgid "Low"
@@ -101,23 +101,23 @@ msgstr "Predvolby"
 
 #: record.py:899
 msgid "Immediate"
-msgstr ""
+msgstr "Okamžitě"
 
 #: record.py:916
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s sekunda"
+msgstr[1] "%s sekundy"
+msgstr[2] "%s sekund"
 
 #: record.py:941
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%s minuta"
+msgstr[1] "%s minuty"
+msgstr[2] "%s minut"
 
 #~ msgid "Duration:"
 #~ msgstr "Trvání:"
