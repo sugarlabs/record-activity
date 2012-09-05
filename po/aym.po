@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-17 00:31-0400\n"
-"PO-Revision-Date: 2011-11-23 06:14+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-08-29 16:07+0200\n"
+"Last-Translator: EdgarQuispeChambi <quispedgar@yahoo.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: aym\n"
 "MIME-Version: 1.0\n"
@@ -50,7 +50,7 @@ msgstr "Ist'awi"
 #: glive.py:396 model.py:385
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "%(type)s jaqukipaña %(name)s wakichatampi"
 
 #  "Guardando..."
 #: glive.py:556
@@ -75,7 +75,7 @@ msgstr "Uru:"
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "Utjaskiwa %(mins)d:%(secs)02d"
 
 #  "Título:"
 #: record.py:209
@@ -120,7 +120,7 @@ msgstr "Wakichañawinaka"
 #  "Inmediato"
 #: record.py:899
 msgid "Immediate"
-msgstr "Jichpacha"
+msgstr "Jichhpacha"
 
 #  "%s segundo"
 #  "%s segundos"
@@ -128,8 +128,8 @@ msgstr "Jichpacha"
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "%s payiri pacha t'aqa"
-msgstr[1] "%s payiri pacha taq'anaka"
+msgstr[0] "%s sapa segundo pacha t'aqa"
+msgstr[1] "%s walja segundo pacha taq'anaka"
 
 #  "%s minuto"
 #  ""%s minutos"
@@ -137,8 +137,8 @@ msgstr[1] "%s payiri pacha taq'anaka"
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "%s pacha t'aqa"
-msgstr[1] "%s pacha t'aqanaka"
+msgstr[0] "%s sapa minuto pacha t'aqa"
+msgstr[1] "%s walja minuto pacha t'aqanaka"
 
 #  "%s por %s"
 #, python-format
