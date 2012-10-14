@@ -105,7 +105,7 @@ msgstr "Ināianei Tonu"
 
 #: record.py:916
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s hēkona"
