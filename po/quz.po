@@ -17,22 +17,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 "X-Generator: Pootle 2.0.5\n"
 
+#  [ES] "Grabar"
 #: activity/activity.info:2
 msgid "Record"
-msgstr ""
+msgstr "Grabanapaq"
 
 #  "Eliminar"
 #: button.py:26
 msgid "Remove"
 msgstr "Chinkachiy"
 
+#  [ES] "Copiar al portapapel"
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Raphi apaykachaqman kikinchay"
 
+#  [ES] "Foto"
 #: constants.py:25 record.py:140
 msgid "Photo"
-msgstr ""
+msgstr "Wanki"
 
 #  "Video"
 #: constants.py:32 record.py:148
@@ -44,17 +47,19 @@ msgstr "Qhawarina"
 msgid "Audio"
 msgstr "Uyarina"
 
+#  [ES] "%(type)s por %(name)s"
 #: glive.py:396 model.py:385
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "Kay %(type)s nisqata %(name)s ruwarun"
 
+#  [ES] "Guardando..."
 #: glive.py:556
 msgid "Saving..."
-msgstr ""
+msgstr "Waqaychachkan..."
 
+#  [ES] "Autor:"
 #: mediaview.py:54
-#, fuzzy
 msgid "Author:"
 msgstr "Ruraqi:"
 
@@ -68,59 +73,71 @@ msgstr "Sutichaqkuna:"
 msgid "Date:"
 msgstr "Punchay:"
 
+#  [ES] "Quedan %(mins)d:%(secs)02d"
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "%(mins)d:%(secs)02d kachkhanraq"
 
+#  [ES] "Título:"
 #: record.py:209
 msgid "Title:"
-msgstr ""
+msgstr "Sutinchaynin:"
 
+#  [ES] "Descarga fallida."
 #: record.py:535
 msgid "Download failed."
-msgstr ""
+msgstr "Uyachisqaqa pantarun."
 
 #  "Descargando..."
 #: record.py:537
 msgid "Downloading..."
 msgstr "Uraykachichkan..."
 
+#  [ES] "Solicitando..."
 #: record.py:539
 msgid "Requesting..."
-msgstr ""
+msgstr "Mañakuchkanran..."
 
+#  [ES] "Calidad:"
 #: record.py:836
 msgid "Quality:"
-msgstr ""
+msgstr "Chanin:"
 
+#  [ES] "Baja"
 #: record.py:837
 msgid "Low"
-msgstr ""
+msgstr "Pisi"
 
+#  [ES] "Alta"
 #: record.py:841
 msgid "High"
-msgstr ""
+msgstr "Achkha"
 
+#  [ES] "Preferencias"
 #: record.py:849
-#, fuzzy
 msgid "Preferences"
-msgstr "Aqllasqakuna"
+msgstr "Akllanakuna"
 
+#  [ES] "Inmediato"
 #: record.py:899
 msgid "Immediate"
-msgstr ""
+msgstr "Utqhaynin"
 
+#  SYNTAX ERROR: msgstr[0] ""
+#  SYNTAX ERROR: msgstr[1] ""
 #: record.py:916
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s segundo"
+msgstr[1] "%s segundokuna"
 
+# SYNTAX ERROR: msgstr[0] ""
+#  SYNTAX ERROR: msgstr[1] ""
 #: record.py:941
-#, python-format
+#, python-format, fuzzy
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s chinini"
+msgstr[1] "%s chininikuna %s minutokuna"
