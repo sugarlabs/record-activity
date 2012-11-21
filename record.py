@@ -214,9 +214,10 @@ class Record(activity.Activity):
         self._title_entry.connect('changed', self._title_changed)
         self._controls_hbox.pack_start(self._title_entry, expand=True, fill=True, padding=10)
 
-        container = RecordContainer(self._media_view, self._controls_hbox)
-        main_box.pack_start(container, expand=True, fill=True, padding=6)
-        container.show()
+        self._record_container = RecordContainer(self._media_view, self._controls_hbox)
+        main_box.pack_start(self._record_container, expand=True, fill=True,
+                padding=6)
+        self._record_container.show()
 
         self._thumb_tray = HTray()
         self._thumb_tray.set_size_request(-1, 150)
@@ -332,6 +333,7 @@ class Record(activity.Activity):
         self._title_entry.set_text(recd.title)
         self._title_entry.show()
         self._title_label.show()
+        self._record_container.set_title_visible(True)
 
         func(recd.recorderName, recd.colorStroke, recd.colorFill, utils.getDateString(recd.time), recd.tags)
 
@@ -374,6 +376,7 @@ class Record(activity.Activity):
             self._active_recd = None
             self._title_entry.hide()
             self._title_label.hide()
+            self._record_container.set_title_visible(False)
             self._play_button.hide()
             self._playback_scale.hide()
             self._progress.hide()
@@ -468,6 +471,7 @@ class Record(activity.Activity):
         self._title_entry.set_text(recd.title)
         self._title_entry.show()
         self._title_label.show()
+        self._record_container.set_title_visible(True)
         self._shutter_button.hide()
         self._progress.hide()
 
@@ -476,6 +480,7 @@ class Record(activity.Activity):
         self._shutter_button.hide()
         self._title_entry.hide()
         self._title_label.hide()
+        self._record_container.set_title_visible(False)
         self._play_button.show()
         self._playback_scale.show()
         path = recd.getAudioImageFilepath()
@@ -488,6 +493,7 @@ class Record(activity.Activity):
         self._shutter_button.hide()
         self._title_entry.hide()
         self._title_label.hide()
+        self._record_container.set_title_visible(False)
         self._play_button.show()
         self._playback_scale.show()
         self._media_view.show_video()
@@ -562,6 +568,7 @@ class RecordContainer(gtk.Container):
     def __init__(self, media_view, controls_hbox):
         self._media_view = media_view
         self._controls_hbox = controls_hbox
+        self._show_title = False
         self._controls_hbox_height = 0
         super(RecordContainer, self).__init__()
 
@@ -641,6 +648,18 @@ class RecordContainer(gtk.Container):
         media_view_x = self._center_in_plane(self.allocation.width, media_view_width)
         media_view_y = self._center_in_plane(remaining_height, media_view_height)
 
+        if self._show_title:
+            # position the controls hbox at the top of the window
+            # and the same width as the media view
+            controls_box_y = 0
+            # put the mediaview after the title
+            media_view_y = media_view_y + self._controls_hbox_height
+        else:
+            # position hbox at the bottom of the window,
+            # with the requested height,
+            # and the same width as the media view
+            controls_box_y = self.allocation.height - self._controls_hbox_height
+
         # send allocation to mediaview
         alloc = gdk.Rectangle()
         alloc.width = media_view_width
@@ -649,11 +668,9 @@ class RecordContainer(gtk.Container):
         alloc.y = media_view_y
         self._media_view.size_allocate(alloc)
 
-        # position hbox at the bottom of the window, with the requested height,
-        # and the same width as the media view
         alloc = gdk.Rectangle()
         alloc.x = media_view_x
-        alloc.y = self.allocation.height - self._controls_hbox_height
+        alloc.y = controls_box_y
         alloc.width = media_view_width
         alloc.height = self._controls_hbox_height
         self._controls_hbox.size_allocate(alloc)
@@ -664,6 +681,10 @@ class RecordContainer(gtk.Container):
     def do_forall(self, include_internals, callback, data):
         for widget in (self._media_view, self._controls_hbox):
             callback(widget, data)
+
+    def set_title_visible(self, visible):
+        self._show_title = visible
+        self.queue_draw()
 
 class PlaybackScale(gtk.HScale):
     def __init__(self, model):
