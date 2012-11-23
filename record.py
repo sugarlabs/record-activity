@@ -239,9 +239,6 @@ class Record(activity.Activity):
         self._toolbar_controls.set_quality(data.get('quality', 0))
 
     def _key_pressed(self, widget, event):
-        if self.model.ui_frozen():
-            return False
-
         key = event.keyval
 
         if key == gtk.keysyms.KP_Page_Up: # game key O
@@ -250,7 +247,11 @@ class Record(activity.Activity):
                     self._shutter_button.clicked()
             else: # return to live mode
                 self.model.set_state(constants.STATE_READY)
-        elif key == gtk.keysyms.c and event.state == gdk.CONTROL_MASK:
+
+        if self.model.ui_frozen():
+            return False
+
+        if key == gtk.keysyms.c and event.state == gdk.CONTROL_MASK:
             self._copy_to_clipboard(self._active_recd)
         elif key == gtk.keysyms.i:
             self._toggle_info()
