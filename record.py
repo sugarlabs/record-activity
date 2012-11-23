@@ -872,7 +872,7 @@ class RecordControl():
 
     def set_mode(self, mode):
         if mode == constants.MODE_PHOTO:
-            self.quality.set_sensitive(True)
+            self.quality.set_sensitive(False)
             self._timer_combo.set_sensitive(True)
             self._duration_combo.set_sensitive(False)
         if mode == constants.MODE_VIDEO:
