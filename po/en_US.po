@@ -26,8 +26,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-17 00:31-0400\n"
-"PO-Revision-Date: 2012-03-22 04:41+0200\n"
+"POT-Creation-Date: 2012-11-24 00:34-0500\n"
+"PO-Revision-Date: 2012-11-24 16:20+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en_US\n"
@@ -37,9 +37,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2
+#. TRANS: "name" option from activity.info file
 msgid "Record"
 msgstr "Record"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
 
 #: button.py:26
 msgid "Remove"
@@ -61,12 +70,12 @@ msgstr "Video"
 msgid "Audio"
 msgstr "Audio"
 
-#: glive.py:396 model.py:385
+#: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr "%(type)s by %(name)s"
 
-#: glive.py:556
+#: glive.py:549
 msgid "Saving..."
 msgstr "Saving..."
 
@@ -91,39 +100,39 @@ msgstr "%(mins)d:%(secs)02d remaining"
 msgid "Title:"
 msgstr "Title:"
 
-#: record.py:535
+#: record.py:542
 msgid "Download failed."
 msgstr "Download failed."
 
-#: record.py:537
+#: record.py:544
 msgid "Downloading..."
 msgstr "Downloading..."
 
-#: record.py:539
+#: record.py:546
 msgid "Requesting..."
 msgstr "Requesting..."
 
-#: record.py:836
+#: record.py:858
 msgid "Quality:"
 msgstr "Quality:"
 
-#: record.py:837
+#: record.py:859
 msgid "Low"
 msgstr "Low"
 
-#: record.py:841
+#: record.py:863
 msgid "High"
 msgstr "High"
 
-#: record.py:849
+#: record.py:871
 msgid "Preferences"
 msgstr "Preferences"
 
-#: record.py:899
+#: record.py:921
 msgid "Immediate"
 msgstr "Immediate"
 
-#: record.py:916
+#: record.py:938
 #, python-format
 #, python-format,
 msgid "%s second"
@@ -131,7 +140,7 @@ msgid_plural "%s seconds"
 msgstr[0] "%s second"
 msgstr[1] "%s seconds"
 
-#: record.py:941
+#: record.py:963
 #, python-format
 #, python-format,
 msgid "%s minute"
