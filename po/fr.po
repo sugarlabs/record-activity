@@ -26,8 +26,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-17 00:31-0400\n"
-"PO-Revision-Date: 2012-07-14 00:42+0200\n"
+"POT-Creation-Date: 2012-11-24 00:34-0500\n"
+"PO-Revision-Date: 2012-11-24 17:23+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -37,9 +37,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2
+#. TRANS: "name" option from activity.info file
 msgid "Record"
 msgstr "Enregistrer"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
+"Libère l'artiste visuel qui sommeille en toi ! Prends des photos, réalise "
+"des films et utilise-les pour recréer ton univers. La seule limite, c'est "
+"celle de ton imagination."
 
 #: button.py:26
 msgid "Remove"
@@ -61,12 +71,12 @@ msgstr "Vidéo"
 msgid "Audio"
 msgstr "Audio"
 
-#: glive.py:396 model.py:385
+#: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr "%(type)s par %(name)s"
 
-#: glive.py:556
+#: glive.py:549
 msgid "Saving..."
 msgstr "Enregistrement..."
 
@@ -91,39 +101,39 @@ msgstr "%(mins)d:%(secs)02d restants"
 msgid "Title:"
 msgstr "Titre :"
 
-#: record.py:535
+#: record.py:542
 msgid "Download failed."
 msgstr "Échec du téléchargement."
 
-#: record.py:537
+#: record.py:544
 msgid "Downloading..."
 msgstr "Téléchargement en cours..."
 
-#: record.py:539
+#: record.py:546
 msgid "Requesting..."
 msgstr "Demande..."
 
-#: record.py:836
+#: record.py:858
 msgid "Quality:"
 msgstr "Qualité :"
 
-#: record.py:837
+#: record.py:859
 msgid "Low"
 msgstr "Basse"
 
-#: record.py:841
+#: record.py:863
 msgid "High"
 msgstr "Élevée"
 
-#: record.py:849
+#: record.py:871
 msgid "Preferences"
 msgstr "Préférences"
 
-#: record.py:899
+#: record.py:921
 msgid "Immediate"
 msgstr "Immédiat"
 
-#: record.py:916
+#: record.py:938
 #, python-format
 #, python-format,
 msgid "%s second"
@@ -131,7 +141,7 @@ msgid_plural "%s seconds"
 msgstr[0] "%s seconde"
 msgstr[1] "%s secondes"
 
-#: record.py:941
+#: record.py:963
 #, python-format
 #, python-format,
 msgid "%s minute"
