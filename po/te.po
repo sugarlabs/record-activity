@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"POT-Creation-Date: 2012-11-24 00:34-0500\n"
 "PO-Revision-Date: 2011-11-27 06:15+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2
+#. TRANS: "name" option from activity.info file
 msgid "Record"
 msgstr "రికార్డు చేయి"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
 
 #: button.py:26
 msgid "Remove"
@@ -41,12 +48,12 @@ msgstr "చలనచిత్రము"
 msgid "Audio"
 msgstr "ధ్వని"
 
-#: glive.py:396 model.py:385
+#: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:556
+#: glive.py:549
 msgid "Saving..."
 msgstr ""
 
@@ -71,40 +78,40 @@ msgstr ""
 msgid "Title:"
 msgstr "పీఠిక:"
 
-#: record.py:535
+#: record.py:542
 msgid "Download failed."
 msgstr ""
 
-#: record.py:537
+#: record.py:544
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:539
+#: record.py:546
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:836
+#: record.py:858
 #, fuzzy
 msgid "Quality:"
 msgstr "నాణ్యత:"
 
-#: record.py:837
+#: record.py:859
 msgid "Low"
 msgstr "తక్కువైన"
 
-#: record.py:841
+#: record.py:863
 msgid "High"
 msgstr "ఉత్తమమైన"
 
-#: record.py:849
+#: record.py:871
 msgid "Preferences"
 msgstr "ఇష్టాలు"
 
-#: record.py:899
+#: record.py:921
 msgid "Immediate"
 msgstr "వెంటనే"
 
-#: record.py:916
+#: record.py:938
 #, python-format
 #, fuzzy
 msgid "%s second"
@@ -112,7 +119,7 @@ msgid_plural "%s seconds"
 msgstr[0] "%s సెకనులు"
 msgstr[1] ""
 
-#: record.py:941
+#: record.py:963
 #, python-format
 #, fuzzy
 msgid "%s minute"
