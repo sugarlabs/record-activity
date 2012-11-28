@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"POT-Creation-Date: 2012-11-24 00:34-0500\n"
 "PO-Revision-Date: 2012-06-25 19:20+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,16 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2
+#. TRANS: "name" option from activity.info file
 msgid "Record"
 msgstr "Rekam"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
 
 #: button.py:26
 msgid "Remove"
@@ -41,12 +48,12 @@ msgstr "Video"
 msgid "Audio"
 msgstr "Audio"
 
-#: glive.py:396 model.py:385
+#: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr "%(type)s berdasarkan %(name)s"
 
-#: glive.py:556
+#: glive.py:549
 msgid "Saving..."
 msgstr "Menyimpan..."
 
@@ -71,46 +78,46 @@ msgstr "%(mins)d:%(secs)02d tersisa"
 msgid "Title:"
 msgstr "Judul:"
 
-#: record.py:535
+#: record.py:542
 msgid "Download failed."
 msgstr "Pengunduhan gagal."
 
-#: record.py:537
+#: record.py:544
 msgid "Downloading..."
 msgstr "Mengunduh..."
 
-#: record.py:539
+#: record.py:546
 msgid "Requesting..."
 msgstr "Meminta..."
 
-#: record.py:836
+#: record.py:858
 msgid "Quality:"
 msgstr "Kualitas:"
 
-#: record.py:837
+#: record.py:859
 msgid "Low"
 msgstr "Rendah"
 
-#: record.py:841
+#: record.py:863
 msgid "High"
 msgstr "Tinggi"
 
-#: record.py:849
+#: record.py:871
 msgid "Preferences"
 msgstr "Preferensi"
 
-#: record.py:899
+#: record.py:921
 msgid "Immediate"
 msgstr "Seketika"
 
-#: record.py:916
+#: record.py:938
 #, python-format
 #, python-format,
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s detik"
 
-#: record.py:941
+#: record.py:963
 #, python-format
 #, python-format,
 msgid "%s minute"
