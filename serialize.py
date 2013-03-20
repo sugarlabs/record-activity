@@ -3,6 +3,7 @@ import cStringIO
 import os
 import gtk
 import logging
+import dbus
 
 from sugar.datastore import datastore
 
@@ -163,7 +164,7 @@ def _addRecdXmlAttrs(el, recd, forMeshTransmit):
     if (recd.type == constants.TYPE_AUDIO) and (not forMeshTransmit):
         aiPixbuf = recd.getAudioImagePixbuf()
         if aiPixbuf:
-            aiPixbufString = str(utils.getStringFromPixbuf(aiPixbuf))
+            aiPixbufString = str(utils.getStringEncodedFromPixbuf(aiPixbuf))
             el.setAttribute('audioImage', aiPixbufString)
 
     if (recd.datastoreId != None) and (not forMeshTransmit):
@@ -189,7 +190,7 @@ def _addRecdXmlAttrs(el, recd, forMeshTransmit):
 
     pixbuf = recd.getThumbPixbuf()
     if pixbuf:
-        thumb64 = str(utils.getStringFromPixbuf(pixbuf))
+        thumb64 = str(utils.getStringEncodedFromPixbuf(pixbuf))
         el.setAttribute('base64Thumb', thumb64)
 
 def saveMediaHash(mediaHashs, activity):
@@ -272,8 +273,8 @@ def _saveMediaToDatastore(el, recd, activity):
             if datastorePreviewPixbuf.get_width() != datastorePreviewWidth:
                 datastorePreviewPixbuf = datastorePreviewPixbuf.scale_simple(datastorePreviewWidth, datastorePreviewHeight, gtk.gdk.INTERP_NEAREST)
 
-            datastorePreviewBase64 = utils.getStringFromPixbuf(datastorePreviewPixbuf)
-            mediaObject.metadata['preview'] = datastorePreviewBase64
+            datastorePreview = utils.getStringFromPixbuf(datastorePreviewPixbuf)
+            mediaObject.metadata['preview'] = dbus.ByteArray(datastorePreview)
 
         colors = str(recd.colorStroke) + "," + str(recd.colorFill)
         mediaObject.metadata['icon-color'] = colors

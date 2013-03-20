@@ -8,10 +8,17 @@ from time import strftime
 
 import constants
 
-def getStringFromPixbuf(pixbuf):
+
+def getStringEncodedFromPixbuf(pixbuf):
     data = [""]
     pixbuf.save_to_callback(_saveDataToBufferCb, "png", {}, data)
     return base64.b64encode(str(data[0]))
+
+
+def getStringFromPixbuf(pixbuf):
+    data = [""]
+    pixbuf.save_to_callback(_saveDataToBufferCb, "png", {}, data)
+    return str(data[0])
 
 
 def _saveDataToBufferCb(buf, data):

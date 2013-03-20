@@ -366,7 +366,7 @@ class Glive:
         taglist = self._get_tags(constants.TYPE_AUDIO)
 
         if self._audio_pixbuf:
-            pixbuf_b64 = utils.getStringFromPixbuf(self._audio_pixbuf)
+            pixbuf_b64 = utils.getStringEncodedFromPixbuf(self._audio_pixbuf)
             taglist[gst.TAG_EXTENDED_COMMENT] = "coverart=" + pixbuf_b64
 
         vorbis_enc = audioline.get_by_name('audioVorbisenc')
