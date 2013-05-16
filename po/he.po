@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"POT-Creation-Date: 2012-11-24 00:34-0500\n"
 "PO-Revision-Date: 2008-12-15 15:01-0500\n"
 "Last-Translator: Guy Sheffer <guysoft@ort.org.il>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,9 +15,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Translate Toolkit 1.6.0\n"
 
-#: activity/activity.info:2
+#. TRANS: "name" option from activity.info file
 msgid "Record"
 msgstr "הקלטה"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
 
 #: button.py:26
 msgid "Remove"
@@ -39,12 +46,12 @@ msgstr "וידאו"
 msgid "Audio"
 msgstr "צליל"
 
-#: glive.py:396 model.py:385
+#: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:556
+#: glive.py:549
 msgid "Saving..."
 msgstr ""
 
@@ -69,46 +76,46 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
-#: record.py:535
+#: record.py:542
 msgid "Download failed."
 msgstr ""
 
-#: record.py:537
+#: record.py:544
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:539
+#: record.py:546
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:836
+#: record.py:858
 msgid "Quality:"
 msgstr ""
 
-#: record.py:837
+#: record.py:859
 msgid "Low"
 msgstr ""
 
-#: record.py:841
+#: record.py:863
 msgid "High"
 msgstr ""
 
-#: record.py:849
+#: record.py:871
 msgid "Preferences"
 msgstr ""
 
-#: record.py:899
+#: record.py:921
 msgid "Immediate"
 msgstr ""
 
-#: record.py:916
+#: record.py:938
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: record.py:941
+#: record.py:963
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
