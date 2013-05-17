@@ -1,4 +1,5 @@
 #Copyright (c) 2008, Media Modifications Ltd.
+#Copyright (c) 2013, Sugar Labs
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -37,9 +38,12 @@ from sugar.activity import activity
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbarbox import ToolbarBox
 from sugar.graphics.toolbarbox import ToolbarButton
+from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.activity.widgets import StopButton
 from sugar.activity.widgets import ActivityToolbarButton
+from sugar.graphics.menuitem import MenuItem
+from sugar.graphics import style
 
 from model import Model
 from button import RecdButton
@@ -55,12 +59,17 @@ logger = logging.getLogger('record.py')
 COLOR_BLACK = gdk.color_parse('#000000')
 COLOR_WHITE = gdk.color_parse('#ffffff')
 
+TIMER_VALUES = [0, 5, 10]
+DURATION_VALUES = [2, 4, 6]
+QUALITY_VALUES = ['low', 'high']
+
 gst.debug_set_active(True)
 gst.debug_set_colored(False)
 if logging.getLogger().level <= logging.DEBUG:
     gst.debug_set_default_threshold(gst.LEVEL_WARNING)
 else:
     gst.debug_set_default_threshold(gst.LEVEL_ERROR)
+
 
 class Record(activity.Activity):
     def __init__(self, handle):
@@ -282,7 +291,7 @@ class Record(activity.Activity):
         return self._toolbar_controls.get_timer()
 
     def get_selected_duration(self):
-        return self._toolbar_controls.get_duration()
+        return self._toolbar_controls.get_duration() * 60  # convert to secs
 
     def set_progress(self, value, text):
         self._progress.set_progress(value)
@@ -847,117 +856,149 @@ class PlayButton(gtk.Button):
 class RecordControl():
 
     def __init__(self, toolbar):
-        self._timer_combo = TimerCombo()
-        toolbar.insert(self._timer_combo, -1)
 
-        self._duration_combo = DurationCombo()
-        toolbar.insert(self._duration_combo, -1)
+        self._timer_value = TIMER_VALUES[0]
+        self._timer_button = ToolButton('timer-0')
+        self._timer_button.set_tooltip(_('Select timer'))
+        self._timer_button.connect('clicked', self._timer_selection_cb)
+        toolbar.insert(self._timer_button, -1)
+        self._setup_timer_palette()
 
-        preferences_toolbar = gtk.Toolbar()
-        combo = gtk.combo_box_new_text()
-        self.quality = ToolComboBox(combo=combo, label_text=_('Quality:'))
-        self.quality.combo.append_text(_('Low'))
-        if hw.get_xo_version() != 1:
-            # Disable High quality on XO-1. The system simply isn't beefy
-            # enough for recording to work well.
-            self.quality.combo.append_text(_('High'))
-        self.quality.combo.set_active(0)
-        self.quality.show_all()
-        preferences_toolbar.insert(self.quality, -1)
+        self._duration_value = DURATION_VALUES[0]
+        self._duration_button = ToolButton('duration-2')
+        self._duration_button.set_tooltip(_('Select duration'))
+        self._duration_button.connect('clicked', self._duration_selection_cb)
+        toolbar.insert(self._duration_button, -1)
+        self._setup_duration_palette()
 
-        preferences_button = ToolbarButton()
-        preferences_button.set_page(preferences_toolbar)
-        preferences_button.props.icon_name = 'preferences-system'
-        preferences_button.props.label = _('Preferences')
-        toolbar.insert(preferences_button, -1)
+        self._quality_value = 0
+        self._quality_button = ToolButton('low-quality')
+        self._quality_button.set_tooltip(_('Select quality'))
+        self._quality_button.connect('clicked', self._quality_selection_cb)
+        toolbar.insert(self._quality_button, -1)
+        self._setup_quality_palette()
+
+    def _timer_selection_cb(self, widget):
+        if self._timer_palette:
+
+            if not self._timer_palette.is_up():
+                self._timer_palette.popup(immediate=True,
+                                    state=self._timer_palette.SECONDARY)
+            else:
+                self._timer_palette.popdown(immediate=True)
+            return
+
+    def _setup_timer_palette(self):
+        self._timer_palette = self._timer_button.get_palette()
+
+        for seconds in TIMER_VALUES:
+            if seconds == 0:
+                text = _('Immediate')
+            else:
+                text = ngettext('%s second', '%s seconds', seconds) % seconds
+            menu_item = MenuItem(icon_name='timer-%d' % (seconds),
+                                 text_label=text)
+            menu_item.connect('activate', self._timer_selected_cb, seconds)
+            self._timer_palette.menu.append(menu_item)
+            menu_item.show()
+
+    def _timer_selected_cb(self, button, seconds):
+        self.set_timer_idx(TIMER_VALUES.index(seconds))
+
+    def _duration_selection_cb(self, widget):
+        if self._duration_palette:
+            if not self._duration_palette.is_up():
+                self._duration_palette.popup(immediate=True,
+                                    state=self._duration_palette.SECONDARY)
+            else:
+                self._duration_palette.popdown(immediate=True)
+            return
+
+    def _setup_duration_palette(self):
+        self._duration_palette = self._duration_button.get_palette()
+        for minutes in DURATION_VALUES:
+            if minutes == 0:
+                text = gtk.Label(_('Immediate'))
+            else:
+                text = ngettext('%s minute', '%s minutes', minutes) % minutes
+            menu_item = MenuItem(icon_name='duration-%d' % (minutes),
+                                 text_label=text)
+            menu_item.connect('activate', self._duration_selected_cb, minutes)
+            self._duration_palette.menu.append(menu_item)
+            menu_item.show()
+
+    def _duration_selected_cb(self, button, minutes):
+        self.set_duration_idx(DURATION_VALUES.index(minutes))
+
+    def _quality_selection_cb(self, widget):
+        if self._quality_palette:
+            if not self._quality_palette.is_up():
+                self._quality_palette.popup(immediate=True,
+                                    state=self._quality_palette.SECONDARY)
+            else:
+                self._quality_palette.popdown(immediate=True)
+            return
+
+    def _setup_quality_palette(self):
+        self._quality_palette = self._quality_button.get_palette()
+        for quality in QUALITY_VALUES:
+            text = _('%s quality') % (quality)
+            menu_item = MenuItem(icon_name=quality + '-quality',
+                                 text_label=text)
+            menu_item.connect('activate', self._quality_selected_cb, quality)
+            self._quality_palette.menu.append(menu_item)
+            menu_item.show()
+
+    def _quality_selected_cb(self, button, quality):
+        self.set_quality(QUALITY_VALUES.index(quality))
 
     def set_mode(self, mode):
         if mode == constants.MODE_PHOTO:
-            self.quality.set_sensitive(False)
-            self._timer_combo.set_sensitive(True)
-            self._duration_combo.set_sensitive(False)
+            self._quality_button.set_sensitive(False)
+            self._timer_button.set_sensitive(True)
+            self._duration_button.set_sensitive(False)
         if mode == constants.MODE_VIDEO:
-            self.quality.set_sensitive(True)
-            self._timer_combo.set_sensitive(True)
-            self._duration_combo.set_sensitive(True)
+            self._quality_button.set_sensitive(True)
+            self._timer_button.set_sensitive(True)
+            self._duration_button.set_sensitive(True)
         if mode == constants.MODE_AUDIO:
-            self.quality.set_sensitive(False)
-            self._timer_combo.set_sensitive(True)
-            self._duration_combo.set_sensitive(True)
+            self._quality_button.set_sensitive(False)
+            self._timer_button.set_sensitive(True)
+            self._duration_button.set_sensitive(True)
 
     def get_timer(self):
-        return self._timer_combo.get_value()
+        return self._timer_value
 
     def get_timer_idx(self):
-        return self._timer_combo.get_value_idx()
+        if self._timer_value in TIMER_VALUES:
+            return TIMER_VALUES.index(self._timer_value)
+        else:
+            return TIMER_VALUES[0]
 
     def set_timer_idx(self, idx):
-        self._timer_combo.set_value_idx(idx)
+        self._timer_value = TIMER_VALUES[idx]
+        if hasattr(self, '_timer_button'):
+            self._timer_button.set_icon('timer-%d' % (self._timer_value))
 
     def get_duration(self):
-        return self._duration_combo.get_value()
+        return self._duration_value
 
     def get_duration_idx(self):
-        return self._duration_combo.get_value_idx()
+        if self._duration_value in DURATION_VALUES:
+            return DURATION_VALUES.index(self._duration_value)
+        else:
+            return DURATION_VALUES[0]
 
     def set_duration_idx(self, idx):
-        return self._duration_combo.set_value_idx(idx)
+        self._duration_value = DURATION_VALUES[idx]
+        if hasattr(self, '_duration_button'):
+            self._duration_button.set_icon(
+                'duration-%d' % (self._duration_value))
 
     def get_quality(self):
-        return self.quality.combo.get_active()
+        return self._quality_value
 
     def set_quality(self, idx):
-        self.quality.combo.set_active(idx)
-
-
-class TimerCombo(IconComboBox):
-    TIMERS = (0, 5, 10)
-
-    def __init__(self):
-        super(TimerCombo, self).__init__('timer')
-        
-        for i in self.TIMERS:
-            if i == 0:
-                self.append_item(i, _('Immediate'))
-            else:
-                string = TimerCombo._seconds_string(i)
-                self.append_item(i, string)
-        self.combo.set_active(0)
-
-    def get_value(self):
-        return TimerCombo.TIMERS[self.combo.get_active()]
-
-    def get_value_idx(self):
-        return self.combo.get_active()
-
-    def set_value_idx(self, idx):
-        self.combo.set_active(idx)
-
-    @staticmethod
-    def _seconds_string(x):
-        return ngettext('%s second', '%s seconds', x) % x
-
-
-class DurationCombo(IconComboBox):
-    DURATIONS = (2, 4, 6)
-
-    def __init__(self):
-        super(DurationCombo, self).__init__('duration')
-
-        for i in self.DURATIONS:
-            string = DurationCombo._minutes_string(i)
-            self.append_item(i, string)
-        self.combo.set_active(0)
-
-    def get_value(self):
-        return 60 * self.DURATIONS[self.combo.get_active()]
-
-    def get_value_idx(self):
-        return self.combo.get_active()
-
-    def set_value_idx(self, idx):
-        self.combo.set_active(idx)
-
-    @staticmethod
-    def _minutes_string(x):
-        return ngettext('%s minute', '%s minutes', x) % x
+        self._quality_value = idx
+        if hasattr(self, '_quality_button'):
+            self._quality_button.set_icon('%s-quality' % (QUALITY_VALUES[idx]))
