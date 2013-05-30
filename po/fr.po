@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 00:34-0500\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
 "PO-Revision-Date: 2012-11-24 17:23+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,15 +59,15 @@ msgstr "Retirer"
 msgid "Copy to clipboard"
 msgstr "Copier vers le presse-papier"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "Photo"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "Vidéo"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "Audio"
 
@@ -97,43 +97,39 @@ msgstr "Date :"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "%(mins)d:%(secs)02d restants"
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "Titre :"
 
-#: record.py:542
+#: record.py:551
 msgid "Download failed."
 msgstr "Échec du téléchargement."
 
-#: record.py:544
+#: record.py:553
 msgid "Downloading..."
 msgstr "Téléchargement en cours..."
 
-#: record.py:546
+#: record.py:555
 msgid "Requesting..."
 msgstr "Demande..."
 
-#: record.py:858
-msgid "Quality:"
-msgstr "Qualité :"
+#: record.py:862
+msgid "Select timer"
+msgstr ""
 
-#: record.py:859
-msgid "Low"
-msgstr "Basse"
+#: record.py:869
+msgid "Select duration"
+msgstr ""
 
-#: record.py:863
-msgid "High"
-msgstr "Élevée"
+#: record.py:876
+msgid "Select quality"
+msgstr ""
 
-#: record.py:871
-msgid "Preferences"
-msgstr "Préférences"
-
-#: record.py:921
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "Immédiat"
 
-#: record.py:938
+#: record.py:898
 #, python-format
 #, python-format,
 msgid "%s second"
@@ -141,13 +137,30 @@ msgid_plural "%s seconds"
 msgstr[0] "%s seconde"
 msgstr[1] "%s secondes"
 
-#: record.py:963
+#: record.py:923
 #, python-format
 #, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s minute"
 msgstr[1] "%s minutes"
+
+#: record.py:945
+#, python-format, fuzzy
+msgid "%s quality"
+msgstr "Qualité optimale"
+
+#~ msgid "Quality:"
+#~ msgstr "Qualité :"
+
+#~ msgid "Low"
+#~ msgstr "Basse"
+
+#~ msgid "High"
+#~ msgstr "Élevée"
+
+#~ msgid "Preferences"
+#~ msgstr "Préférences"
 
 #, python-format
 #~ msgid "%s by %s"
@@ -349,9 +362,6 @@ msgstr[1] "%s minutes"
 #, python-format
 #~ msgid "%(1)s photos"
 #~ msgstr "%(1)s photos"
-
-#~ msgid "Best quality"
-#~ msgstr "Qualité optimale"
 
 #~ msgid "High quality"
 #~ msgstr "Qualité élevée"
