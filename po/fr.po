@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2012-11-24 17:23+0200\n"
+"PO-Revision-Date: 2013-05-30 15:06+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -115,15 +115,15 @@ msgstr "Demande..."
 
 #: record.py:862
 msgid "Select timer"
-msgstr ""
+msgstr "Sélectionne la temporisation"
 
 #: record.py:869
 msgid "Select duration"
-msgstr ""
+msgstr "Sélectionne la durée"
 
 #: record.py:876
 msgid "Select quality"
-msgstr ""
+msgstr "Sélectionne la qualité"
 
 #: record.py:896 record.py:921
 msgid "Immediate"
@@ -146,9 +146,9 @@ msgstr[0] "%s minute"
 msgstr[1] "%s minutes"
 
 #: record.py:945
-#, python-format, fuzzy
+#, python-format, 
 msgid "%s quality"
-msgstr "Qualité optimale"
+msgstr "Qualité %s"
 
 #~ msgid "Quality:"
 #~ msgstr "Qualité :"
