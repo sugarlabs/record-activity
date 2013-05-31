@@ -40,7 +40,7 @@ logger = logging.getLogger('glive')
 
 OGG_TRAITS = {
         0: { 'width': 160, 'height': 120, 'quality': 16 },
-        1: { 'width': 400, 'height': 300, 'quality': 16 } }
+        1: { 'width': 384, 'height': 288, 'quality': 16 } }
 
 class Glive:
     PHOTO_MODE_PHOTO = 0
