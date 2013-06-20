@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 00:34-0500\n"
-"PO-Revision-Date: 2013-04-18 20:16+0200\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"PO-Revision-Date: 2013-06-19 20:01+0200\n"
 "Last-Translator: anushnur <anush.mkrtchyan@ca1492.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
@@ -55,15 +55,15 @@ msgstr "Վերացնել"
 msgid "Copy to clipboard"
 msgstr "Պատճենել ցուցատախտակին"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "Լուսանկար"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "Վիդեո"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "Աուդիո"
 
@@ -94,43 +94,39 @@ msgstr "Ամսաթիվ."
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "%(mins)d:%(secs)02d մնացորդ"
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "Վերնագիր."
 
-#: record.py:542
+#: record.py:551
 msgid "Download failed."
 msgstr "Բեռնումը ձախողվեց"
 
-#: record.py:544
+#: record.py:553
 msgid "Downloading..."
 msgstr "Բեռնումն ընթացքի մեջ է..."
 
-#: record.py:546
+#: record.py:555
 msgid "Requesting..."
 msgstr "Հայցում..."
 
-#: record.py:858
-msgid "Quality:"
-msgstr "Որակ"
+#: record.py:862
+msgid "Select timer"
+msgstr "Ընտրել ժամաչափիչը"
 
-#: record.py:859
-msgid "Low"
-msgstr "Ցածր"
+#: record.py:869
+msgid "Select duration"
+msgstr "Ընտրել տևողությունը"
 
-#: record.py:863
-msgid "High"
-msgstr "Բարձր"
+#: record.py:876
+msgid "Select quality"
+msgstr "Ընտրել որակը"
 
-#: record.py:871
-msgid "Preferences"
-msgstr "Նախընտրություններ"
-
-#: record.py:921
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "Անմիջական"
 
-#: record.py:938
+#: record.py:898
 #, python-format
 #, python-format,
 msgid "%s second"
@@ -139,13 +135,30 @@ msgstr[0] "%s վարկյան"
 msgstr[1] "%s վարկյան"
 
 # too many %s
-#: record.py:963
+#: record.py:923
 #, python-format
 #, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s րոպե"
 msgstr[1] "%s րոպե"
+
+#: record.py:945
+#, python-format
+msgid "%s quality"
+msgstr "%s որակը"
+
+#~ msgid "Quality:"
+#~ msgstr "Որակ"
+
+#~ msgid "Low"
+#~ msgstr "Ցածր"
+
+#~ msgid "High"
+#~ msgstr "Բարձր"
+
+#~ msgid "Preferences"
+#~ msgstr "Նախընտրություններ"
 
 #, python-format
 #~ msgid "%s by %s"
