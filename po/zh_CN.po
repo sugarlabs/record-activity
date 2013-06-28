@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 00:34-0500\n"
-"PO-Revision-Date: 2012-11-24 16:34+0200\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"PO-Revision-Date: 2013-05-30 17:34+0200\n"
 "Last-Translator: lite <litekok@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -36,15 +36,15 @@ msgstr "删除"
 msgid "Copy to clipboard"
 msgstr "复制到剪贴板"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "照片"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "视频"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "音频"
 
@@ -74,53 +74,67 @@ msgstr "日期:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "剩余 %(mins)d:%(secs)02d"
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "标题:"
 
-#: record.py:542
+#: record.py:551
 msgid "Download failed."
 msgstr "下载失败。"
 
-#: record.py:544
+#: record.py:553
 msgid "Downloading..."
 msgstr "正在下载…"
 
-#: record.py:546
+#: record.py:555
 msgid "Requesting..."
 msgstr "正在请求…"
 
-#: record.py:858
-msgid "Quality:"
-msgstr "质量:"
+#: record.py:862
+msgid "Select timer"
+msgstr "选择定时器"
 
-#: record.py:859
-msgid "Low"
-msgstr "低"
+#: record.py:869
+msgid "Select duration"
+msgstr "选择持续时间"
 
-#: record.py:863
-msgid "High"
-msgstr "高"
+#: record.py:876
+msgid "Select quality"
+msgstr "选择质量"
 
-#: record.py:871
-msgid "Preferences"
-msgstr "使用偏好"
-
-#: record.py:921
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "立即"
 
-#: record.py:938
+#: record.py:898
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s 秒"
 
-#: record.py:963
+#: record.py:923
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s 分"
+
+#: record.py:945
+#, python-format
+#, python-format,
+msgid "%s quality"
+msgstr "%s 质量"
+
+#~ msgid "Quality:"
+#~ msgstr "质量:"
+
+#~ msgid "Low"
+#~ msgstr "低"
+
+#~ msgid "High"
+#~ msgstr "高"
+
+#~ msgid "Preferences"
+#~ msgstr "使用偏好"
 
 #, python-format
 #~ msgid "%s by %s"
@@ -307,9 +321,6 @@ msgstr[0] "%s 分"
 #, python-format
 #~ msgid "%(1)s photos"
 #~ msgstr "%(1)s 个照片"
-
-#~ msgid "Best quality"
-#~ msgstr "最佳质量"
 
 #~ msgid "High quality"
 #~ msgstr "高质量"

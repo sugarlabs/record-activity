@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 00:34-0500\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
 "PO-Revision-Date: 2012-06-27 22:48+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,15 +36,15 @@ msgstr "Malejei'"
 msgid "Copy to clipboard"
 msgstr "Make'eik maka'l ne ndakal ngk'uix se nip mvajau"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "Sangueje' su'ua'"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "Ndaka'an leet"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "Nda'u"
 
@@ -74,52 +74,65 @@ msgstr "Ndanu peuk kulejeik ngum'au':"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "Lijañ %(mins)d:%(secs)02d"
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "Ne ngunjiu re kily'e me'ets:"
 
-#: record.py:542
+#: record.py:551
 msgid "Download failed."
 msgstr "Kad-ep ndani'at ndupup re se maveje'p."
 
-#: record.py:544
+#: record.py:553
 msgid "Downloading..."
 msgstr "Mapu'p re se maveje'p..."
 
-#: record.py:546
+#: record.py:555
 msgid "Requesting..."
 msgstr "Ma'ajaun'..."
 
-#: record.py:858
-msgid "Quality:"
-msgstr "Lik'iajam vajaú:"
+#: record.py:862
+msgid "Select timer"
+msgstr ""
 
-#: record.py:859
-msgid "Low"
-msgstr "Kunja'aich"
+#: record.py:869
+msgid "Select duration"
+msgstr ""
 
-#: record.py:863
-msgid "High"
-msgstr "Kujaich'"
+#: record.py:876
+msgid "Select quality"
+msgstr ""
 
-#: record.py:871
-msgid "Preferences"
-msgstr "Ravu se k'ua vumang"
-
-#: record.py:921
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "Maneí"
 
-#: record.py:938
+#: record.py:898
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s kanui"
 msgstr[1] "%s kanuima"
 
-#: record.py:963
+#: record.py:923
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s Chi'i kusap"
 msgstr[1] "%s kad-a kusap"
+
+#: record.py:945
+#, python-format
+msgid "%s quality"
+msgstr ""
+
+#~ msgid "Quality:"
+#~ msgstr "Lik'iajam vajaú:"
+
+#~ msgid "Low"
+#~ msgstr "Kunja'aich"
+
+#~ msgid "High"
+#~ msgstr "Kujaich'"
+
+#~ msgid "Preferences"
+#~ msgstr "Ravu se k'ua vumang"

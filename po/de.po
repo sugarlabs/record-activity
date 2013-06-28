@@ -124,7 +124,8 @@ msgstr[0] "%s Minute"
 msgstr[1] "%s Minuten"
 
 #: record.py:945
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "%s quality"
 msgstr "%s Qualität"
 

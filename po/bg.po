@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
 "PO-Revision-Date: 2008-02-07 08:23-0500\n"
 "Last-Translator: Alexander Todorov <atodorov@redhat.com>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
@@ -18,9 +18,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Translate Toolkit 1.6.0\n"
 
-#: activity/activity.info:2
+#. TRANS: "name" option from activity.info file
 msgid "Record"
 msgstr "Запис"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
 
 #: button.py:26
 msgid "Remove"
@@ -30,24 +37,24 @@ msgstr "Изтриване"
 msgid "Copy to clipboard"
 msgstr "Копиране в паметта"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "Снимка"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "Видео"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "Звук"
 
-#: glive.py:396 model.py:385
+#: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:556
+#: glive.py:549
 msgid "Saving..."
 msgstr ""
 
@@ -68,55 +75,69 @@ msgstr "Дата:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "Заглавие:"
 
-#: record.py:535
+#: record.py:551
 msgid "Download failed."
 msgstr ""
 
-#: record.py:537
+#: record.py:553
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:539
+#: record.py:555
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:836
-msgid "Quality:"
-msgstr "Качество:"
+#: record.py:862
+msgid "Select timer"
+msgstr ""
 
-#: record.py:837
-msgid "Low"
-msgstr "Лошо"
+#: record.py:869
+msgid "Select duration"
+msgstr ""
 
-#: record.py:841
-msgid "High"
-msgstr "Добро"
+#: record.py:876
+msgid "Select quality"
+msgstr ""
 
-#: record.py:849
-msgid "Preferences"
-msgstr "Предпочитания"
-
-#: record.py:899
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "Веднага"
 
-#: record.py:916
+#: record.py:898
 #, python-format
 #, fuzzy
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%(1)s секунди"
 
-#: record.py:941
+#: record.py:923
 #, python-format
 #, fuzzy
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%(1)s минути"
+
+#: record.py:945
+#, python-format
+#, python-format, fuzzy
+msgid "%s quality"
+msgstr "Отлично качество"
+
+#~ msgid "Quality:"
+#~ msgstr "Качество:"
+
+#~ msgid "Low"
+#~ msgstr "Лошо"
+
+#~ msgid "High"
+#~ msgstr "Добро"
+
+#~ msgid "Preferences"
+#~ msgstr "Предпочитания"
 
 #~ msgid "Timer:"
 #~ msgstr "Хронометър:"
@@ -314,9 +335,6 @@ msgstr[0] "%(1)s минути"
 #, python-format
 #~ msgid "%(1)s minutes, %(1)s seconds remaining"
 #~ msgstr "Остават %(1)s минути, %(1)s секунди"
-
-#~ msgid "Best quality"
-#~ msgstr "Отлично качество"
 
 #~ msgid "High quality"
 #~ msgstr "Високо качество"

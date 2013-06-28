@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 00:34-0500\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
 "PO-Revision-Date: 2012-08-27 08:07+0200\n"
 "Last-Translator: aman0115 <aman.maharjan@olenepal.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,15 +37,15 @@ msgstr "हटाउ"
 msgid "Copy to clipboard"
 msgstr "क्लिपबोर्डमा सार"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "तस्बिर"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "भिडियो"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "आवाज"
 
@@ -75,44 +75,39 @@ msgstr "मिति:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "%(mins)d:%(secs)02d बाँकी छ"
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "शिर्षक:"
 
-#: record.py:542
+#: record.py:551
 msgid "Download failed."
 msgstr "डाउनलोड हुन सकेन"
 
-#: record.py:544
+#: record.py:553
 msgid "Downloading..."
 msgstr "डाउनलोड हुदैछ"
 
-#: record.py:546
+#: record.py:555
 msgid "Requesting..."
 msgstr "अनुरोध गर्दैछ..."
 
-# this is referring to quality of videos / audios. is गुण appropriate?
-#: record.py:858
-msgid "Quality:"
-msgstr "गुणस्तर:"
+#: record.py:862
+msgid "Select timer"
+msgstr ""
 
-#: record.py:859
-msgid "Low"
-msgstr "सानो"
+#: record.py:869
+msgid "Select duration"
+msgstr ""
 
-#: record.py:863
-msgid "High"
-msgstr "ठुलो"
+#: record.py:876
+msgid "Select quality"
+msgstr ""
 
-#: record.py:871
-msgid "Preferences"
-msgstr "प्राथमिकता"
-
-#: record.py:921
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "तुरून्त"
 
-#: record.py:938
+#: record.py:898
 #, python-format
 #, python-format,
 msgid "%s second"
@@ -120,13 +115,31 @@ msgid_plural "%s seconds"
 msgstr[0] "%s सेकेन्ड"
 msgstr[1] "%s सेकेन्डहरु"
 
-#: record.py:963
+#: record.py:923
 #, python-format
 #, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s मिनेट"
 msgstr[1] "%s मिनेटहरु"
+
+#: record.py:945
+#, python-format
+msgid "%s quality"
+msgstr ""
+
+# this is referring to quality of videos / audios. is गुण appropriate?
+#~ msgid "Quality:"
+#~ msgstr "गुणस्तर:"
+
+#~ msgid "Low"
+#~ msgstr "सानो"
+
+#~ msgid "High"
+#~ msgstr "ठुलो"
+
+#~ msgid "Preferences"
+#~ msgstr "प्राथमिकता"
 
 #~ msgid "Timer:"
 #~ msgstr "समय सुचक:"

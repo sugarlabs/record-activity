@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
 "PO-Revision-Date: 2012-03-10 16:42+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,9 +37,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2
+#. TRANS: "name" option from activity.info file
 msgid "Record"
 msgstr "பதிதல்"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
 
 #: button.py:26
 msgid "Remove"
@@ -49,24 +56,24 @@ msgstr "அகற்றுதல்"
 msgid "Copy to clipboard"
 msgstr "மறைப்பலகைக்கு பிரதி செய்"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "புகைப்படம்"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "நிகழ்படம்"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "ஒலி"
 
-#: glive.py:396 model.py:385
+#: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:556
+#: glive.py:549
 msgid "Saving..."
 msgstr ""
 
@@ -87,56 +94,69 @@ msgstr "திகதி:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "தலைப்பு:"
 
-#: record.py:535
+#: record.py:551
 msgid "Download failed."
 msgstr ""
 
-#: record.py:537
+#: record.py:553
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:539
+#: record.py:555
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:836
-#, fuzzy
-msgid "Quality:"
-msgstr "தரம்"
+#: record.py:862
+msgid "Select timer"
+msgstr ""
 
-#: record.py:837
-msgid "Low"
-msgstr "கீழ்"
+#: record.py:869
+msgid "Select duration"
+msgstr ""
 
-#: record.py:841
-msgid "High"
-msgstr "உயரம்"
+#: record.py:876
+msgid "Select quality"
+msgstr ""
 
-#: record.py:849
-msgid "Preferences"
-msgstr "விருப்பத்தேர்வுகள்"
-
-#: record.py:899
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "உடணடியாக"
 
-#: record.py:916
+#: record.py:898
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s வினாடி"
 msgstr[1] "%s வினாடிகள்"
 
-#: record.py:941
+#: record.py:923
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s நிமிடம்"
 msgstr[1] "%s நிமிடங்கள்"
+
+#: record.py:945
+#, python-format
+msgid "%s quality"
+msgstr ""
+
+#, fuzzy
+#~ msgid "Quality:"
+#~ msgstr "தரம்"
+
+#~ msgid "Low"
+#~ msgstr "கீழ்"
+
+#~ msgid "High"
+#~ msgstr "உயரம்"
+
+#~ msgid "Preferences"
+#~ msgstr "விருப்பத்தேர்வுகள்"
 
 #~ msgid "Timer:"
 #~ msgstr "நேரக்கணிப்பாளர்"

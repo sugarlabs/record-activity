@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-17 00:31-0400\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
 "PO-Revision-Date: 2012-04-11 11:12+0200\n"
 "Last-Translator: Meechai <malaku38@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,16 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.0.5\n"
 
-#: activity/activity.info:2
+#. TRANS: "name" option from activity.info file
 msgid "Record"
 msgstr "บันทึก"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
 
 #: button.py:26
 msgid "Remove"
@@ -29,24 +36,24 @@ msgstr "ลบ"
 msgid "Copy to clipboard"
 msgstr "คัดลอกลงคลิปบอร์ด"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "รูปถ่าย"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "วีดิโอ"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "เสียง"
 
-#: glive.py:396 model.py:385
+#: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr "%(type)s โดย %(name)s"
 
-#: glive.py:556
+#: glive.py:549
 msgid "Saving..."
 msgstr "กำลังบันทึก..."
 
@@ -67,53 +74,67 @@ msgstr "วันที่:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "ที่เหลืออยู่ %(mins)d:%(secs)02d"
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "ชื่อเรื่อง:"
 
-#: record.py:535
+#: record.py:551
 msgid "Download failed."
 msgstr "ดาวน์โหลดล้มเหลว"
 
-#: record.py:537
+#: record.py:553
 msgid "Downloading..."
 msgstr "กำลังดาวน์โหลด..."
 
-#: record.py:539
+#: record.py:555
 msgid "Requesting..."
 msgstr "กำลังร้องขอ..."
 
-#: record.py:836
-msgid "Quality:"
-msgstr "คุณภาพ:"
+#: record.py:862
+msgid "Select timer"
+msgstr ""
 
-#: record.py:837
-msgid "Low"
-msgstr "ต่ำ"
+#: record.py:869
+msgid "Select duration"
+msgstr ""
 
-#: record.py:841
-msgid "High"
-msgstr "สูง"
+#: record.py:876
+msgid "Select quality"
+msgstr ""
 
-#: record.py:849
-msgid "Preferences"
-msgstr "ปรับแต่ง"
-
-#: record.py:899
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "ทันที"
 
-#: record.py:916
+#: record.py:898
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s วินาที"
 
-#: record.py:941
+#: record.py:923
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s นาที"
+
+#: record.py:945
+#, python-format
+#, python-format, fuzzy
+msgid "%s quality"
+msgstr "คุณภาพดีที่สุด"
+
+#~ msgid "Quality:"
+#~ msgstr "คุณภาพ:"
+
+#~ msgid "Low"
+#~ msgstr "ต่ำ"
+
+#~ msgid "High"
+#~ msgstr "สูง"
+
+#~ msgid "Preferences"
+#~ msgstr "ปรับแต่ง"
 
 #, python-format
 #~ msgid "%s by %s"
@@ -215,9 +236,6 @@ msgstr[0] "%s นาที"
 #, python-format
 #~ msgid "%(1)s seconds remaining"
 #~ msgstr "เหลืออยู่  %(1)s วินาที"
-
-#~ msgid "Best quality"
-#~ msgstr "คุณภาพดีที่สุด"
 
 #~ msgid "High quality"
 #~ msgstr "คุณภาพสูง"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 00:34-0500\n"
+"POT-Creation-Date: 2013-05-30 00:33-0400\n"
 "PO-Revision-Date: 2011-11-27 06:15+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,15 +36,15 @@ msgstr "తీసివేయి"
 msgid "Copy to clipboard"
 msgstr "క్లిప్ బోర్డ్ కు నకలు చేయి"
 
-#: constants.py:25 record.py:140
+#: constants.py:25 record.py:149
 msgid "Photo"
 msgstr "పటము"
 
-#: constants.py:32 record.py:148
+#: constants.py:32 record.py:157
 msgid "Video"
 msgstr "చలనచిత్రము"
 
-#: constants.py:39 record.py:159
+#: constants.py:39 record.py:168
 msgid "Audio"
 msgstr "ధ్వని"
 
@@ -74,44 +74,39 @@ msgstr "తేదీ:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:209
+#: record.py:218
 msgid "Title:"
 msgstr "పీఠిక:"
 
-#: record.py:542
+#: record.py:551
 msgid "Download failed."
 msgstr ""
 
-#: record.py:544
+#: record.py:553
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:546
+#: record.py:555
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:858
-#, fuzzy
-msgid "Quality:"
-msgstr "నాణ్యత:"
+#: record.py:862
+msgid "Select timer"
+msgstr ""
 
-#: record.py:859
-msgid "Low"
-msgstr "తక్కువైన"
+#: record.py:869
+msgid "Select duration"
+msgstr ""
 
-#: record.py:863
-msgid "High"
-msgstr "ఉత్తమమైన"
+#: record.py:876
+msgid "Select quality"
+msgstr ""
 
-#: record.py:871
-msgid "Preferences"
-msgstr "ఇష్టాలు"
-
-#: record.py:921
+#: record.py:896 record.py:921
 msgid "Immediate"
 msgstr "వెంటనే"
 
-#: record.py:938
+#: record.py:898
 #, python-format
 #, fuzzy
 msgid "%s second"
@@ -119,13 +114,32 @@ msgid_plural "%s seconds"
 msgstr[0] "%s సెకనులు"
 msgstr[1] ""
 
-#: record.py:963
+#: record.py:923
 #, python-format
 #, fuzzy
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s నిమిషాలు"
 msgstr[1] ""
+
+#: record.py:945
+#, python-format
+#, python-format, fuzzy
+msgid "%s quality"
+msgstr "మరీమంచి నాణ్యత"
+
+#, fuzzy
+#~ msgid "Quality:"
+#~ msgstr "నాణ్యత:"
+
+#~ msgid "Low"
+#~ msgstr "తక్కువైన"
+
+#~ msgid "High"
+#~ msgstr "ఉత్తమమైన"
+
+#~ msgid "Preferences"
+#~ msgstr "ఇష్టాలు"
 
 #~ msgid "Timer:"
 #~ msgstr "టైమరు:"
@@ -313,9 +327,6 @@ msgstr[1] ""
 #, python-format
 #~ msgid "%(1)s photos"
 #~ msgstr "%(1)s చిత్రములు"
-
-#~ msgid "Best quality"
-#~ msgstr "మరీమంచి నాణ్యత"
 
 #~ msgid "High quality"
 #~ msgstr "మంచి నాణ్యత"
