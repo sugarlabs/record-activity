@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2012-12-18 01:57+0200\n"
+"PO-Revision-Date: 2013-08-07 00:11+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: quz\n"
@@ -28,6 +28,9 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
+"Munasqaykiman hina artista kasqaykita phanchirichiy, kaypiqa foto nisqa "
+"wankikunata hurquy, películas nisqakunatapas ruwariy. Munasqaykita kamariy, "
+"umachaykipi kasqanta hurquriy."
 
 #  "Eliminar"
 #: button.py:26
@@ -78,7 +81,7 @@ msgstr "Sutichaqkuna:"
 #  "Fecha:"
 #: mediaview.py:118
 msgid "Date:"
-msgstr "Punchay:"
+msgstr "P'unchaw:"
 
 #  [ES] "Quedan %(mins)d:%(secs)02d"
 #: model.py:183
@@ -108,15 +111,15 @@ msgstr "Mañakuchkanran..."
 
 #: record.py:862
 msgid "Select timer"
-msgstr ""
+msgstr "Temporizador nisqata akllay"
 
 #: record.py:869
 msgid "Select duration"
-msgstr ""
+msgstr "Unayayninta akllay"
 
 #: record.py:876
 msgid "Select quality"
-msgstr ""
+msgstr "Kusa kayninta akllay"
 
 #  [ES] "Inmediato"
 #: record.py:896 record.py:921
@@ -140,12 +143,12 @@ msgstr[1] "%s segundokuna"
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s chinini"
-msgstr[1] "%s chininikuna "
+msgstr[1] "%s chininikuna"
 
 #: record.py:945
 #, python-format
 msgid "%s quality"
-msgstr ""
+msgstr "%s kusa kaynin"
 
 #  [ES] "Calidad:"
 #~ msgid "Quality:"
