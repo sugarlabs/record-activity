@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2012-04-03 00:30+0200\n"
+"PO-Revision-Date: 2013-09-30 23:02+0200\n"
 "Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -27,6 +27,8 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
+"Solta o artista visual dentro de ti! Tira fotos, faz filmes e utiliza-os "
+"para recrear o teu mundo. O único limite é a tua imaginação."
 
 #: button.py:26
 msgid "Remove"
@@ -92,15 +94,15 @@ msgstr "A pedir..."
 
 #: record.py:862
 msgid "Select timer"
-msgstr ""
+msgstr "Escolher temporizador"
 
 #: record.py:869
 msgid "Select duration"
-msgstr ""
+msgstr "Escolher duração"
 
 #: record.py:876
 msgid "Select quality"
-msgstr ""
+msgstr "Escolher qualidade"
 
 #: record.py:896 record.py:921
 msgid "Immediate"
@@ -122,9 +124,9 @@ msgstr[1] "%s minutos"
 
 #: record.py:945
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "%s quality"
-msgstr "Melhor qualidade"
+msgstr "qualidade %s"
 
 #~ msgid "Quality:"
 #~ msgstr "Qualidade:"
