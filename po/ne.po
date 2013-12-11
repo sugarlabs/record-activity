@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2012-08-27 08:07+0200\n"
-"Last-Translator: aman0115 <aman.maharjan@olenepal.org>\n"
+"PO-Revision-Date: 2013-11-20 07:56+0200\n"
+"Last-Translator: Ganesh <ganesh.ghimire@olenepal.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #. TRANS: "name" option from activity.info file
 msgid "Record"
-msgstr "खिच"
+msgstr "रेकर्ड गर"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
@@ -27,11 +27,14 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
+"आफू भित्र भएको भिजुअल कलाकारिता प्रकट गर्नुहोस् ! फोटो खिच्नुहोस्, भिडियो "
+"बनाउनुहोस् र तिनीहरूको प्रयोग गरेर प्रसन्न हुनुहोस्। यसको सिमा मात्र तपाईँको "
+"कल्पना हो।"
 
 # हटाउ is a really better translation and slightly less rude (than निकाल) (agreed).
 #: button.py:26
 msgid "Remove"
-msgstr "हटाउ"
+msgstr "हटाऊ"
 
 #: button.py:37
 msgid "Copy to clipboard"
@@ -93,15 +96,15 @@ msgstr "अनुरोध गर्दैछ..."
 
 #: record.py:862
 msgid "Select timer"
-msgstr ""
+msgstr "टाइमर चयन गर"
 
 #: record.py:869
 msgid "Select duration"
-msgstr ""
+msgstr "समय अवधि चयन गर"
 
 #: record.py:876
 msgid "Select quality"
-msgstr ""
+msgstr "गुणस्तर चयन गर"
 
 #: record.py:896 record.py:921
 msgid "Immediate"
@@ -126,7 +129,7 @@ msgstr[1] "%s मिनेटहरु"
 #: record.py:945
 #, python-format
 msgid "%s quality"
-msgstr ""
+msgstr "%s गुणस्तर"
 
 # this is referring to quality of videos / audios. is गुण appropriate?
 #~ msgid "Quality:"
