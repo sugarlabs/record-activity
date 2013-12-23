@@ -145,7 +145,7 @@ msgstr[1] "%s minuti"
 
 #: record.py:945
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%s quality"
 msgstr "%s qualità"
 
