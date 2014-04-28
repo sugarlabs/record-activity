@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: record-activity\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2010-02-19 18:24+0300\n"
-"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
+"PO-Revision-Date: 2014-02-07 16:35+0200\n"
+"Last-Translator: elxrashedy <abdXelrhman@gmail.com>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #. TRANS: "name" option from activity.info file
 msgid "Record"
-msgstr "سجّل"
+msgstr "التسجيل"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
@@ -28,26 +28,28 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
+"حرر الفنان التشكيلى الذى بداخلك ، إستخدم الصور والمقاطع المرئيه فى إعاده "
+"تشكيل العالم !! فلا حِدودَ لِمُخَيلتك."
 
 #: button.py:26
 msgid "Remove"
-msgstr "أزِل"
+msgstr "أزل"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr "انسخ للحافظة"
+msgstr "إنسخ إلى الحافظه"
 
 #: constants.py:25 record.py:149
 msgid "Photo"
-msgstr "صورة"
+msgstr "الصوره"
 
 #: constants.py:32 record.py:157
 msgid "Video"
-msgstr "فيديو"
+msgstr "المقطع المرئى"
 
 #: constants.py:39 record.py:168
 msgid "Audio"
-msgstr "صوت"
+msgstr "الصوت"
 
 #: glive.py:396 model.py:386
 #, python-format
@@ -56,19 +58,19 @@ msgstr ""
 
 #: glive.py:549
 msgid "Saving..."
-msgstr ""
+msgstr "جارٍ الحفظ..."
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr ""
+msgstr "المؤلف :"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr "الوسوم:"
+msgstr "الوسوم :"
 
 #: mediaview.py:118
 msgid "Date:"
-msgstr "التاريخ:"
+msgstr "التاريخ :"
 
 #: model.py:183
 #, python-format
@@ -77,55 +79,62 @@ msgstr ""
 
 #: record.py:218
 msgid "Title:"
-msgstr "العنوان:"
+msgstr "العنوان :"
 
 #: record.py:551
 msgid "Download failed."
-msgstr ""
+msgstr "فشل التنزيل."
 
 #: record.py:553
 msgid "Downloading..."
-msgstr ""
+msgstr "جارٍ التنزيل..."
 
 #: record.py:555
 msgid "Requesting..."
-msgstr ""
+msgstr "جارٍ إرسال الطلب..."
 
 #: record.py:862
 msgid "Select timer"
-msgstr ""
+msgstr "حدد المؤقت"
 
 #: record.py:869
 msgid "Select duration"
-msgstr ""
+msgstr "حدد المده"
 
 #: record.py:876
 msgid "Select quality"
-msgstr ""
+msgstr "حدد الجوده"
 
 #: record.py:896 record.py:921
 msgid "Immediate"
-msgstr "حالا"
+msgstr "حالاً"
 
 #: record.py:898
 #, python-format
-#, fuzzy
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "%(1)s ثوان"
+msgstr[0] "لا ثوانى"
+msgstr[1] "ثانيه واحده"
+msgstr[2] "ثانيتان"
+msgstr[3] "%s ثوانى"
+msgstr[4] "%s ثانيتاً"
+msgstr[5] "%s ثانيه"
 
 #: record.py:923
 #, python-format
-#, fuzzy
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "%(1)s دقائق"
+msgstr[0] "لا دقائق"
+msgstr[1] "دقيقه واحده"
+msgstr[2] "دقيقتان"
+msgstr[3] "%s دقائق"
+msgstr[4] "%s دقيقتاً"
+msgstr[5] "%s دقيقه"
 
 #: record.py:945
 #, python-format
-#, python-format, fuzzy
 msgid "%s quality"
-msgstr "أفضل جودة"
+msgstr "%s جوده"
 
 #, fuzzy
 #~ msgid "Quality:"
