@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2013-11-20 07:56+0200\n"
-"Last-Translator: Ganesh <ganesh.ghimire@olenepal.org>\n"
+"PO-Revision-Date: 2014-01-06 09:52+0200\n"
+"Last-Translator: Basanta <basanta.shrestha@olenepal.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
@@ -116,7 +116,7 @@ msgstr "तुरून्त"
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s सेकेन्ड"
-msgstr[1] "%s सेकेन्डहरु"
+msgstr[1] "%s सेकेन्ड"
 
 #: record.py:923
 #, python-format
@@ -124,7 +124,7 @@ msgstr[1] "%s सेकेन्डहरु"
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s मिनेट"
-msgstr[1] "%s मिनेटहरु"
+msgstr[1] "%s मिनेट"
 
 #: record.py:945
 #, python-format
