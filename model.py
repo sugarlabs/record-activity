@@ -112,7 +112,6 @@ class Model:
 
         self._mode = mode
 
-        self.activity.remove_all_thumbnails()
         for recd in self.mediaHashs[mode]:
             self.activity.add_thumbnail(recd, True)
 

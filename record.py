@@ -47,7 +47,6 @@ from button import RecdButton
 import constants
 from instance import Instance
 import utils
-from tray import HTray
 from mediaview import MediaView
 
 logger = logging.getLogger('record.py')
@@ -237,13 +236,8 @@ class Record(activity.Activity):
         self._record_container = RecordContainer(
             self._media_view, self._controls_hbox)
         main_box.pack_start(self._record_container, expand=True, fill=True,
-                            padding=6)
+                            padding=0)
         self._record_container.show()
-
-        self._thumb_tray = HTray()
-        self._thumb_tray.set_size_request(-1, 150)
-        main_box.pack_end(self._thumb_tray, expand=False)
-        self._thumb_tray.show_all()
 
     def serialize(self):
         data = {}
@@ -373,10 +367,8 @@ class Record(activity.Activity):
     def _toggle_fullscreen(self):
         if not self._fullscreen:
             self._toolbar_box.hide()
-            self._thumb_tray.hide()
         else:
             self._toolbar_box.show()
-            self._thumb_tray.show()
 
         self._fullscreen = not self._fullscreen
         self._media_view.set_fullscreen(self._fullscreen)
@@ -451,10 +443,11 @@ class Record(activity.Activity):
         button.set_data(
             'handler-ids', (clicked_handler, remove_handler,
                             clipboard_handler))
-        self._thumb_tray.add_item(button)
-        button.show()
-        if scroll_to_end:
-            self._thumb_tray.scroll_to_end()
+        # TODO: add to the media collection view instead to the tray
+        # self._thumb_tray.add_item(button)
+        # button.show()
+        # if scroll_to_end:
+        #    self._thumb_tray.scroll_to_end()
 
     def _copy_to_clipboard(self, recd):
         if recd is None:
@@ -491,13 +484,9 @@ class Record(activity.Activity):
         handlers = recdbutton.get_data('handler-ids')
         for handler in handlers:
             recdbutton.disconnect(handler)
-
-        self._thumb_tray.remove_item(recdbutton)
+        # TODO: remove from media collection
+        # self._thumb_tray.remove_item(recdbutton)
         recdbutton.cleanup()
-
-    def remove_all_thumbnails(self):
-        for child in self._thumb_tray.get_children():
-            self._remove_thumbnail(child)
 
     def show_still(self, pixbuf):
         self._media_view.show_still(pixbuf)
