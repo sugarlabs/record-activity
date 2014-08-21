@@ -35,15 +35,12 @@ pygst.require('0.10')
 import gst
 
 from sugar.activity import activity
-from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbarbox import ToolbarBox
-from sugar.graphics.toolbarbox import ToolbarButton
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.activity.widgets import StopButton
 from sugar.activity.widgets import ActivityToolbarButton
 from sugar.graphics.menuitem import MenuItem
-from sugar.graphics import style
 
 from model import Model
 from button import RecdButton
@@ -52,8 +49,6 @@ from instance import Instance
 import utils
 from tray import HTray
 from mediaview import MediaView
-import hw
-from iconcombobox import IconComboBox
 
 logger = logging.getLogger('record.py')
 COLOR_BLACK = gdk.color_parse('#000000')

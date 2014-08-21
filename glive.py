@@ -29,7 +29,6 @@ pygst.require('0.10')
 import gobject
 gobject.threads_init()
 
-from sugar.activity.activity import get_bundle_path
 import logging
 
 from instance import Instance
@@ -421,7 +420,7 @@ class Glive:
 
         self._photo_mode = photo_mode
         self._pic_exposure_open = True
-        pad = self._photobin.get_static_pad("sink")
+        # pad = self._photobin.get_static_pad("sink")
         self._pipeline.add(self._photobin)
         self._photobin.set_state(gst.STATE_PLAYING)
         self._pipeline.get_by_name("tee").link(self._photobin)
@@ -434,7 +433,7 @@ class Glive:
         if not self._pic_exposure_open:
             return
 
-        pad = self._photobin.get_static_pad("sink")
+        # pad = self._photobin.get_static_pad("sink")
         self._pipeline.get_by_name("tee").unlink(self._photobin)
         self._pipeline.remove(self._photobin)
 
@@ -527,7 +526,7 @@ class Glive:
         thumb_queue = thumbline.get_by_name('thumb_queue')
         thumb_queue.set_property("leaky", True)
         thumb_queue.set_property("max-size-buffers", 1)
-        thumb_tee = thumbline.get_by_name('thumb_tee')
+        # thumb_tee = thumbline.get_by_name('thumb_tee')
         thumb_fakesink = thumbline.get_by_name('thumb_fakesink')
         self._thumb_handoff_handler = thumb_fakesink.connect(
             "handoff", self.copyThumbPic)
