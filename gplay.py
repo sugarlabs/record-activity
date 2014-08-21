@@ -1,22 +1,22 @@
-#Copyright (c) 2008, Media Modifications Ltd.
+# Copyright (c) 2008, Media Modifications Ltd.
 
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 
 import gobject
 gobject.threads_init()
@@ -27,9 +27,12 @@ import gst
 import logging
 logger = logging.getLogger('record:gplay.py')
 
+
 class Gplay(gobject.GObject):
     __gsignals__ = {
-        'playback-status-changed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_FLOAT)),
+        'playback-status-changed': (gobject.SIGNAL_RUN_LAST,
+                                    gobject.TYPE_NONE, (gobject.TYPE_INT,
+                                                        gobject.TYPE_FLOAT)),
     }
 
     def __init__(self, activity_obj):
@@ -65,7 +68,10 @@ class Gplay(gobject.GObject):
             duration = self._player.query_duration(gst.FORMAT_TIME, None)[0]
             location = duration * (position / 100)
 
-        event = gst.event_new_seek(1.0, gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE, gst.SEEK_TYPE_SET, location, gst.SEEK_TYPE_NONE, 0)
+        event = gst.event_new_seek(
+            1.0, gst.FORMAT_TIME,
+            gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE,
+            gst.SEEK_TYPE_SET, location, gst.SEEK_TYPE_NONE, 0)
         res = self._player.send_event(event)
         if res:
             self._player.set_new_stream_time(0L)
@@ -86,7 +92,8 @@ class Gplay(gobject.GObject):
         self._player.set_state(gst.STATE_PLAYING)
         self._emit_playback_status(0)
 
-        self._playback_monitor_handler = gobject.timeout_add(500, self._playback_monitor)
+        self._playback_monitor_handler = gobject.timeout_add(
+            500, self._playback_monitor)
 
     def _playback_monitor(self):
         try:
@@ -113,4 +120,3 @@ class Gplay(gobject.GObject):
 
         self._player.set_state(gst.STATE_NULL)
         self._emit_playback_status(0)
-

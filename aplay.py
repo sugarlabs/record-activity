@@ -19,6 +19,7 @@ import constants
 
 logger = logging.getLogger('record:aplay.py')
 
+
 def play(file, done_cb=None):
     player.set_state(gst.STATE_NULL)
 

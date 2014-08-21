@@ -1,23 +1,23 @@
-#Copyright (c) 2008, Media Modifications Ltd.
-#Copyright (c) 2013, Sugar Labs
+# Copyright (c) 2008, Media Modifications Ltd.
+# Copyright (c) 2013, Sugar Labs
 
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 
 import os
 import logging
@@ -80,14 +80,14 @@ class Record(activity.Activity):
         self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
         self.connect("visibility-notify-event", self._visibility_changed)
 
-        #the main classes
+        # the main classes
         self.model = Model(self)
         self.ui_init()
 
-        #CSCL
+        # CSCL
         self.connect("shared", self._shared_cb)
         if self.get_shared_activity():
-            #have you joined or shared this activity yourself?
+            # have you joined or shared this activity yourself?
             if self.get_shared():
                 self._joined_cb(self)
             else:
@@ -114,7 +114,8 @@ class Record(activity.Activity):
         super(Record, self).close()
 
     def _visibility_changed(self, widget, event):
-        self.model.set_visible(event.state != gtk.gdk.VISIBILITY_FULLY_OBSCURED)
+        self.model.set_visible(
+            event.state != gtk.gdk.VISIBILITY_FULLY_OBSCURED)
 
     def _shared_cb(self, activity):
         self.model.collab.set_activity_shared()
@@ -187,7 +188,8 @@ class Record(activity.Activity):
         main_box.show()
 
         self._media_view = MediaView()
-        self._media_view.connect('media-clicked', self._media_view_media_clicked)
+        self._media_view.connect('media-clicked',
+                                 self._media_view_media_clicked)
         self._media_view.connect('pip-clicked', self._media_view_pip_clicked)
         self._media_view.connect('info-clicked', self._media_view_info_clicked)
         self._media_view.connect('full-clicked', self._media_view_full_clicked)
@@ -199,33 +201,39 @@ class Record(activity.Activity):
 
         self._shutter_button = ShutterButton()
         self._shutter_button.connect("clicked", self._shutter_clicked)
-        self._controls_hbox.pack_start(self._shutter_button, expand=True, fill=False)
+        self._controls_hbox.pack_start(self._shutter_button, expand=True,
+                                       fill=False)
 
         self._countdown_image = CountdownImage()
-        self._controls_hbox.pack_start(self._countdown_image, expand=True, fill=False)
+        self._controls_hbox.pack_start(self._countdown_image, expand=True,
+                                       fill=False)
 
         self._play_button = PlayButton()
         self._play_button.connect('clicked', self._play_pause_clicked)
         self._controls_hbox.pack_start(self._play_button, expand=False)
 
         self._playback_scale = PlaybackScale(self.model)
-        self._controls_hbox.pack_start(self._playback_scale, expand=True, fill=True)
+        self._controls_hbox.pack_start(self._playback_scale, expand=True,
+                                       fill=True)
 
         self._progress = ProgressInfo()
         self._controls_hbox.pack_start(self._progress, expand=True, fill=True)
 
         self._title_label = gtk.Label()
-        self._title_label.set_markup("<b><span foreground='white'>"+_('Title:')+'</span></b>')
+        self._title_label.set_markup(
+            "<b><span foreground='white'>%s</span></b>" % _('Title:'))
         self._controls_hbox.pack_start(self._title_label, expand=False)
 
         self._title_entry = gtk.Entry()
         self._title_entry.modify_bg(gtk.STATE_INSENSITIVE, COLOR_BLACK)
         self._title_entry.connect('changed', self._title_changed)
-        self._controls_hbox.pack_start(self._title_entry, expand=True, fill=True, padding=10)
+        self._controls_hbox.pack_start(self._title_entry, expand=True,
+                                       fill=True, padding=10)
 
-        self._record_container = RecordContainer(self._media_view, self._controls_hbox)
+        self._record_container = RecordContainer(
+            self._media_view, self._controls_hbox)
         main_box.pack_start(self._record_container, expand=True, fill=True,
-                padding=6)
+                            padding=6)
         self._record_container.show()
 
         self._thumb_tray = HTray()
@@ -250,11 +258,11 @@ class Record(activity.Activity):
     def _key_pressed(self, widget, event):
         key = event.keyval
 
-        if key == gtk.keysyms.KP_Page_Up: # game key O
+        if key == gtk.keysyms.KP_Page_Up:               # game key O
             if self._shutter_button.props.visible:
                 if self._shutter_button.props.sensitive:
                     self._shutter_button.clicked()
-            else: # return to live mode
+            else:                                       # return to live mode
                 self.model.set_state(constants.STATE_READY)
 
         if self.model.ui_frozen():
@@ -312,7 +320,8 @@ class Record(activity.Activity):
         self._active_recd.setTitle(self._title_entry.get_text())
 
     def _media_view_media_clicked(self, widget):
-        if self._play_button.props.visible and self._play_button.props.sensitive:
+        if self._play_button.props.visible and \
+                self._play_button.props.sensitive:
             self._play_button.clicked()
 
     def _media_view_pip_clicked(self, widget):
@@ -332,7 +341,8 @@ class Record(activity.Activity):
             return
 
         self._showing_info = True
-        if self.model.get_mode() in (constants.MODE_PHOTO, constants.MODE_AUDIO):
+        if self.model.get_mode() in (constants.MODE_PHOTO,
+                                     constants.MODE_AUDIO):
             func = self._media_view.show_info_photo
         else:
             func = self._media_view.show_info_video
@@ -345,13 +355,15 @@ class Record(activity.Activity):
         self._title_label.show()
         self._record_container.set_title_visible(True)
 
-        func(recd.recorderName, recd.colorStroke, recd.colorFill, utils.getDateString(recd.time), recd.tags)
+        func(recd.recorderName, recd.colorStroke, recd.colorFill,
+             utils.getDateString(recd.time), recd.tags)
 
     def _media_view_full_clicked(self, widget):
         self._toggle_fullscreen()
 
     def _media_view_tags_changed(self, widget, tbuffer):
-        text = tbuffer.get_text(tbuffer.get_start_iter(), tbuffer.get_end_iter())
+        text = tbuffer.get_text(tbuffer.get_start_iter(),
+                                tbuffer.get_end_iter())
         self._active_recd.setTags(text)
 
     def _toggle_fullscreen(self):
@@ -376,7 +388,8 @@ class Record(activity.Activity):
 
     def set_state(self, state):
         radio_state = (state == constants.STATE_READY)
-        for item in (self._photo_button, self._audio_button, self._video_button):
+        for item in (self._photo_button, self._audio_button,
+                     self._video_button):
             if item:
                 item.set_sensitive(radio_state)
 
@@ -390,14 +403,18 @@ class Record(activity.Activity):
             self._play_button.hide()
             self._playback_scale.hide()
             self._progress.hide()
-            self._controls_hbox.set_child_packing(self._shutter_button, expand=True, fill=False, padding=0, pack_type=gtk.PACK_START)
+            self._controls_hbox.set_child_packing(
+                self._shutter_button, expand=True, fill=False, padding=0,
+                pack_type=gtk.PACK_START)
             self._shutter_button.set_normal()
             self._shutter_button.set_sensitive(True)
             self._shutter_button.show()
             self._media_view.show_live()
         elif state == constants.STATE_RECORDING:
             self._shutter_button.set_recording()
-            self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=gtk.PACK_START)
+            self._controls_hbox.set_child_packing(
+                self._shutter_button, expand=False, fill=False, padding=0,
+                pack_type=gtk.PACK_START)
             self._progress.show()
         elif state == constants.STATE_PROCESSING:
             self._set_cursor_busy()
@@ -422,17 +439,21 @@ class Record(activity.Activity):
 
     def add_thumbnail(self, recd, scroll_to_end):
         button = RecdButton(recd)
-        clicked_handler = button.connect("clicked", self._thumbnail_clicked, recd)
+        clicked_handler = button.connect(
+            "clicked", self._thumbnail_clicked, recd)
         remove_handler = button.connect("remove-requested", self._remove_recd)
-        clipboard_handler = button.connect("copy-clipboard-requested", self._thumbnail_copy_clipboard)
-        button.set_data('handler-ids', (clicked_handler, remove_handler, clipboard_handler))
+        clipboard_handler = button.connect(
+            "copy-clipboard-requested", self._thumbnail_copy_clipboard)
+        button.set_data(
+            'handler-ids', (clicked_handler, remove_handler,
+                            clipboard_handler))
         self._thumb_tray.add_item(button)
         button.show()
         if scroll_to_end:
             self._thumb_tray.scroll_to_end()
 
     def _copy_to_clipboard(self, recd):
-        if recd == None:
+        if recd is None:
             return
         if not recd.isClipboardCopyable():
             return
@@ -440,7 +461,9 @@ class Record(activity.Activity):
         media_path = recd.getMediaFilepath()
         tmp_path = utils.getUniqueFilepath(media_path, 0)
         shutil.copyfile(media_path, tmp_path)
-        gtk.Clipboard().set_with_data([('text/uri-list', 0, 0)], self._clipboard_get, self._clipboard_clear, tmp_path)
+        gtk.Clipboard().set_with_data(
+            [('text/uri-list', 0, 0)], self._clipboard_get,
+            self._clipboard_clear, tmp_path)
 
     def _clipboard_get(self, clipboard, selection_data, info, path):
         selection_data.set("text/uri-list", 8, "file://" + path)
@@ -516,15 +539,15 @@ class Record(activity.Activity):
     def _get_photo_path(self, recd):
         # FIXME should live (partially) in recd?
 
-        #downloading = self.ca.requestMeshDownload(recd)
-        #self.MESHING = downloading
+        # downloading = self.ca.requestMeshDownload(recd)
+        # self.MESHING = downloading
 
-        if True: #not downloading:
-            #self.progressWindow.updateProgress(0, "")
+        if True:  # not downloading:
+            # self.progressWindow.updateProgress(0, "")
             return recd.getMediaFilepath()
 
-        #maybe it is not downloaded from the mesh yet...
-        #but we can show the low res thumb in the interim
+        # maybe it is not downloaded from the mesh yet...
+        # but we can show the low res thumb in the interim
         return recd.getThumbFilepath()
 
     def _show_recd(self, recd, play=True):
@@ -561,6 +584,7 @@ class Record(activity.Activity):
 
     def _set_cursor_default(self):
         self.window.set_cursor(None)
+
 
 class RecordContainer(gtk.Container):
     """
@@ -600,7 +624,8 @@ class RecordContainer(gtk.Container):
             height=self.allocation.height,
             wclass=gdk.INPUT_OUTPUT,
             colormap=self.get_colormap(),
-            event_mask=self.get_events() | gdk.VISIBILITY_NOTIFY_MASK | gdk.EXPOSURE_MASK)
+            event_mask=self.get_events() | gdk.VISIBILITY_NOTIFY_MASK |
+            gdk.EXPOSURE_MASK)
         self.window.set_user_data(self)
 
         self.set_style(self.style.attach(self.window))
@@ -630,8 +655,9 @@ class RecordContainer(gtk.Container):
 
     @staticmethod
     def _constrain_4_3(width, height):
-        if (width % 4 == 0) and (height % 3 == 0) and ((width / 4) * 3) == height:
-            return width, height # nothing to do
+        if (width % 4 == 0) and (height % 3 == 0) and \
+                ((width / 4) * 3) == height:
+            return width, height  # nothing to do
 
         ratio = 4.0 / 3.0
         if ratio * height > width:
@@ -641,7 +667,7 @@ class RecordContainer(gtk.Container):
             height = (height / 3) * 3
             width = int(ratio * height)
 
-        return width, height 
+        return width, height
 
     @staticmethod
     def _center_in_plane(plane_size, size):
@@ -654,9 +680,12 @@ class RecordContainer(gtk.Container):
         remaining_height = self.allocation.height - self._controls_hbox_height
 
         # give the mediaview the rest, constrained to 4/3 and centered
-        media_view_width, media_view_height = self._constrain_4_3(self.allocation.width, remaining_height)
-        media_view_x = self._center_in_plane(self.allocation.width, media_view_width)
-        media_view_y = self._center_in_plane(remaining_height, media_view_height)
+        media_view_width, media_view_height = self._constrain_4_3(
+            self.allocation.width, remaining_height)
+        media_view_x = self._center_in_plane(
+            self.allocation.width, media_view_width)
+        media_view_y = self._center_in_plane(
+            remaining_height, media_view_height)
 
         if self._show_title:
             # position the controls hbox at the top of the window
@@ -668,7 +697,8 @@ class RecordContainer(gtk.Container):
             # position hbox at the bottom of the window,
             # with the requested height,
             # and the same width as the media view
-            controls_box_y = self.allocation.height - self._controls_hbox_height
+            controls_box_y = self.allocation.height - \
+                self._controls_hbox_height
 
         # send allocation to mediaview
         alloc = gdk.Rectangle()
@@ -696,11 +726,13 @@ class RecordContainer(gtk.Container):
         self._show_title = visible
         self.queue_draw()
 
+
 class PlaybackScale(gtk.HScale):
     def __init__(self, model):
         self.model = model
         self._change_handler = None
-        self._playback_adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
+        self._playback_adjustment = gtk.Adjustment(
+            0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
         super(PlaybackScale, self).__init__(self._playback_adjustment)
 
         self.set_draw_value(False)
@@ -716,7 +748,8 @@ class PlaybackScale(gtk.HScale):
 
     def _button_press(self, widget, event):
         self.model.start_seek()
-        self._change_handler = self.connect('value-changed', self._value_changed)
+        self._change_handler = self.connect(
+            'value-changed', self._value_changed)
 
     def _button_release(self, widget, event):
         self.disconnect(self._change_handler)
@@ -882,8 +915,8 @@ class RecordControl():
         if self._timer_palette:
 
             if not self._timer_palette.is_up():
-                self._timer_palette.popup(immediate=True,
-                                    state=self._timer_palette.SECONDARY)
+                self._timer_palette.popup(
+                    immediate=True, state=self._timer_palette.SECONDARY)
             else:
                 self._timer_palette.popdown(immediate=True)
             return
@@ -908,8 +941,8 @@ class RecordControl():
     def _duration_selection_cb(self, widget):
         if self._duration_palette:
             if not self._duration_palette.is_up():
-                self._duration_palette.popup(immediate=True,
-                                    state=self._duration_palette.SECONDARY)
+                self._duration_palette.popup(
+                    immediate=True, state=self._duration_palette.SECONDARY)
             else:
                 self._duration_palette.popdown(immediate=True)
             return
@@ -933,8 +966,8 @@ class RecordControl():
     def _quality_selection_cb(self, widget):
         if self._quality_palette:
             if not self._quality_palette.is_up():
-                self._quality_palette.popup(immediate=True,
-                                    state=self._quality_palette.SECONDARY)
+                self._quality_palette.popup(
+                    immediate=True, state=self._quality_palette.SECONDARY)
             else:
                 self._quality_palette.popdown(immediate=True)
             return

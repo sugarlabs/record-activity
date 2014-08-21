@@ -19,24 +19,24 @@ STATE_DOWNLOADING = 4
 
 MEDIA_INFO = {}
 MEDIA_INFO[TYPE_PHOTO] = {
-    'name' : 'photo',
-    'mime' : 'image/jpeg',
-    'ext' : 'jpg',
-    'istr' : _('Photo')
+    'name': 'photo',
+    'mime': 'image/jpeg',
+    'ext': 'jpg',
+    'istr': _('Photo')
 }
 
 MEDIA_INFO[TYPE_VIDEO] = {
-    'name' : 'video',
-    'mime' : 'video/ogg',
-    'ext' : 'ogg',
-    'istr' : _('Video')
+    'name': 'video',
+    'mime': 'video/ogg',
+    'ext': 'ogg',
+    'istr': _('Video')
 }
 
 MEDIA_INFO[TYPE_AUDIO] = {
-    'name' : 'audio',
-    'mime' :'audio/ogg',
-    'ext' : 'ogg',
-    'istr' : _('Audio')
+    'name': 'audio',
+    'mime': 'audio/ogg',
+    'ext': 'ogg',
+    'istr': _('Audio')
 }
 
 DBUS_SERVICE = "org.laptop.Record"
@@ -44,4 +44,3 @@ DBUS_IFACE = DBUS_SERVICE
 DBUS_PATH = "/org/laptop/Record"
 
 GFX_PATH = os.path.join(activity.get_bundle_path(), "gfx")
-
