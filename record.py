@@ -166,6 +166,15 @@ class Record(activity.Activity):
         self._audio_button.connect('clicked', self._mode_button_clicked)
         self._toolbar.insert(self._audio_button, -1)
 
+        self._media_collection_button = RadioToolButton()
+        self._media_collection_button.props.group = tool_group
+        self._media_collection_button.props.icon_name = 'media-collection'
+        self._media_collection_button.props.label = _('Media collection')
+        self._media_collection_button.mode = constants.MODE_COLLECTION
+        self._media_collection_button.connect('clicked',
+                                              self._mode_button_clicked)
+        self._toolbar.insert(self._media_collection_button, -1)
+
         self._toolbar.insert(gtk.SeparatorToolItem(), -1)
 
         self._toolbar_controls = RecordControl(self._toolbar)
