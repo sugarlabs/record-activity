@@ -185,10 +185,11 @@ class Record(activity.Activity):
         self._toolbar.insert(StopButton(self), -1)
         self.get_toolbar_box().show_all()
 
-        main_box = gtk.VBox()
-        self.set_canvas(main_box)
-        main_box.get_parent().modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
-        main_box.show()
+        self._main_notebook = gtk.Notebook()
+        self.set_canvas(self._main_notebook)
+        self._main_notebook.modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
+        self._main_notebook.set_show_tabs(False)
+        self._main_notebook.show()
 
         self._media_view = MediaView()
         self._media_view.connect('media-clicked',
@@ -235,9 +236,10 @@ class Record(activity.Activity):
 
         self._record_container = RecordContainer(
             self._media_view, self._controls_hbox)
-        main_box.pack_start(self._record_container, expand=True, fill=True,
-                            padding=0)
+        self._main_notebook.append_page(self._record_container, None)
         self._record_container.show()
+        self._media_collection = MediaCollection()
+        self._main_notebook.append_page(self._media_collection, None)
 
     def serialize(self):
         data = {}
@@ -280,6 +282,13 @@ class Record(activity.Activity):
         self.model.play_pause()
 
     def set_mode(self, mode):
+        if mode == constants.MODE_COLLECTION:
+            self._main_notebook.set_current_page(
+                constants.NOTEBOOK_COLLECTION_PAGE)
+        else:
+            self._main_notebook.set_current_page(
+                constants.NOTEBOOK_OPERATIONS_PAGE)
+
         self._toolbar_controls.set_mode(mode)
 
     # can be called from gstreamer thread, so must not do any GTK+ stuff
@@ -1028,3 +1037,12 @@ class RecordControl():
         self._quality_value = idx
         if hasattr(self, '_quality_button'):
             self._quality_button.set_icon('%s-quality' % (QUALITY_VALUES[idx]))
+
+
+class MediaCollection(gtk.EventBox):
+
+    def __init__(self, title=None):
+
+        gtk.EventBox.__init__(self)
+        self.modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
+        self.show_all()
