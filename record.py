@@ -25,6 +25,7 @@ import shutil
 from gettext import gettext as _
 from gettext import ngettext
 
+import gobject
 import gtk
 from gtk import gdk
 import cairo
@@ -35,6 +36,7 @@ pygst.require('0.10')
 import gst
 
 from sugar.activity import activity
+from sugar.activity.widgets import CopyButton
 from sugar.graphics.toolbarbox import ToolbarBox
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.radiotoolbutton import RadioToolButton
@@ -238,6 +240,11 @@ class Record(activity.Activity):
         self._main_notebook.append_page(self._record_container, None)
         self._record_container.show()
         self._media_collection = MediaCollection()
+        self._media_collection.connect("remove-requested",
+                                       self._remove_recd)
+        self._media_collection.connect("copy-clipboard-requested",
+                                       self._thumbnail_copy_clipboard)
+
         self._main_notebook.append_page(self._media_collection, None)
         self.set_canvas(self._main_notebook)
 
@@ -443,18 +450,6 @@ class Record(activity.Activity):
         self._show_recd(recd)
 
     def add_thumbnail(self, recd, scroll_to_end):
-        # TODO: implement copy to clipboard and menu in the media collection
-        """
-        button = RecdButton(recd)
-        clicked_handler = button.connect(
-            "clicked", self._thumbnail_clicked, recd)
-        remove_handler = button.connect("remove-requested", self._remove_recd)
-        clipboard_handler = button.connect(
-            "copy-clipboard-requested", self._thumbnail_copy_clipboard)
-        button.set_data(
-            'handler-ids', (clicked_handler, remove_handler,
-                            clipboard_handler))
-        """
         self._media_collection.add_item(recd)
         if scroll_to_end:
             self._media_collection.scroll_to_end()
@@ -479,23 +474,13 @@ class Record(activity.Activity):
         if os.path.exists(path):
             os.unlink(path)
 
-    def _thumbnail_copy_clipboard(self, recdbutton):
-        self._copy_to_clipboard(recdbutton.get_recd())
+    def _thumbnail_copy_clipboard(self, media_collection, recd):
+        self._copy_to_clipboard(recd)
 
-    def _remove_recd(self, recdbutton):
-        recd = recdbutton.get_recd()
+    def _remove_recd(self, media_collection, recd):
         self.model.delete_recd(recd)
         if self._active_recd == recd:
             self.model.set_state(constants.STATE_READY)
-
-        self._remove_thumbnail(recdbutton)
-
-    def _remove_thumbnail(self, recdbutton):
-        handlers = recdbutton.get_data('handler-ids')
-        for handler in handlers:
-            recdbutton.disconnect(handler)
-        self._media_collection.remove_item(recdbutton)
-        recdbutton.cleanup()
 
     def show_still(self, pixbuf):
         self._media_view.show_still(pixbuf)
@@ -1041,6 +1026,13 @@ class RecordControl():
 
 class MediaCollection(gtk.VBox):
 
+    __gsignals__ = {
+        'remove-requested': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+                             [object]),
+        'copy-clipboard-requested': (gobject.SIGNAL_RUN_LAST,
+                                     gobject.TYPE_NONE, [object]),
+    }
+
     def __init__(self, title=None):
 
         gtk.VBox.__init__(self)
@@ -1068,6 +1060,18 @@ class MediaCollection(gtk.VBox):
         bottom_bar.modify_bg(gtk.STATE_NORMAL, gdk.color_parse('#666666'))
         bottom_bar.set_size_request(-1, style.GRID_CELL_SIZE)
         self.pack_end(bottom_bar, False, False, 0)
+        button_box = gtk.HBox()
+        bottom_bar.add(button_box)
+
+        self._copy_btn = CopyButton()
+        button_box.pack_start(self._copy_btn, False, False, 0)
+        self._copy_btn.connect('clicked', self.__copy_cb)
+
+        self._remove_btn = ToolButton('basket')
+        self._remove_btn.set_tooltip(_("Remove"))
+        self._remove_btn.props.accelerator = '<Ctrl>X'
+        self._remove_btn.connect('clicked', self.__remove_cb)
+        button_box.pack_start(self._remove_btn, False, False, 0)
 
         self.show_all()
 
@@ -1076,8 +1080,20 @@ class MediaCollection(gtk.VBox):
                             recd.get_media_collection_pixbuf(),
                             recd])
 
-    def remove_item(self, button):
-        pass
-
     def scroll_to_end(self):
         pass
+
+    def __copy_cb(self, button):
+        selected = self._iconview.get_selected_items()
+        if selected:
+            model = self._iconview.get_model()
+            recd = model[selected[0]][2]
+            self.emit('copy-clipboard-requested', recd)
+
+    def __remove_cb(self, button):
+        selected = self._iconview.get_selected_items()
+        if selected:
+            model = self._iconview.get_model()
+            recd = model[selected[0]][2]
+            self.emit('remove-requested', recd)
+            model.remove(model.get_iter(selected[0]))
