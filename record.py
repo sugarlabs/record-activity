@@ -41,9 +41,9 @@ from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.activity.widgets import StopButton
 from sugar.activity.widgets import ActivityToolbarButton
 from sugar.graphics.menuitem import MenuItem
+from sugar.graphics import style
 
 from model import Model
-from button import RecdButton
 import constants
 from instance import Instance
 import utils
@@ -186,7 +186,6 @@ class Record(activity.Activity):
         self.get_toolbar_box().show_all()
 
         self._main_notebook = gtk.Notebook()
-        self.set_canvas(self._main_notebook)
         self._main_notebook.modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
         self._main_notebook.set_show_tabs(False)
         self._main_notebook.show()
@@ -240,6 +239,7 @@ class Record(activity.Activity):
         self._record_container.show()
         self._media_collection = MediaCollection()
         self._main_notebook.append_page(self._media_collection, None)
+        self.set_canvas(self._main_notebook)
 
     def serialize(self):
         data = {}
@@ -443,6 +443,8 @@ class Record(activity.Activity):
         self._show_recd(recd)
 
     def add_thumbnail(self, recd, scroll_to_end):
+        # TODO: implement copy to clipboard and menu in the media collection
+        """
         button = RecdButton(recd)
         clicked_handler = button.connect(
             "clicked", self._thumbnail_clicked, recd)
@@ -452,11 +454,10 @@ class Record(activity.Activity):
         button.set_data(
             'handler-ids', (clicked_handler, remove_handler,
                             clipboard_handler))
-        # TODO: add to the media collection view instead to the tray
-        # self._thumb_tray.add_item(button)
-        # button.show()
-        # if scroll_to_end:
-        #    self._thumb_tray.scroll_to_end()
+        """
+        self._media_collection.add_item(recd)
+        if scroll_to_end:
+            self._media_collection.scroll_to_end()
 
     def _copy_to_clipboard(self, recd):
         if recd is None:
@@ -493,8 +494,7 @@ class Record(activity.Activity):
         handlers = recdbutton.get_data('handler-ids')
         for handler in handlers:
             recdbutton.disconnect(handler)
-        # TODO: remove from media collection
-        # self._thumb_tray.remove_item(recdbutton)
+        self._media_collection.remove_item(recdbutton)
         recdbutton.cleanup()
 
     def show_still(self, pixbuf):
@@ -1039,10 +1039,45 @@ class RecordControl():
             self._quality_button.set_icon('%s-quality' % (QUALITY_VALUES[idx]))
 
 
-class MediaCollection(gtk.EventBox):
+class MediaCollection(gtk.VBox):
 
     def __init__(self, title=None):
 
-        gtk.EventBox.__init__(self)
-        self.modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
+        gtk.VBox.__init__(self)
+        # TODO: move to other place, maybe constants
+        self._button_size = 200   # 124 was the orgiginal size
+
+        self._scrolled = gtk.ScrolledWindow()
+        self._scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+
+        self._store = gtk.ListStore(str, gtk.gdk.Pixbuf, object)
+        self._iconview = gtk.IconView(self._store)
+        self._iconview.set_text_column(0)
+        self._iconview.set_selection_mode(gtk.SELECTION_SINGLE)
+
+        # this is needed to highlight the icon selected
+        renderer = gtk.CellRendererPixbuf()
+        renderer.set_property('follow-state', True)
+        self._iconview.pack_start(renderer)
+        self._iconview.set_attributes(renderer, pixbuf=1)
+
+        self._scrolled.add_with_viewport(self._iconview)
+        self.pack_start(self._scrolled, True, True, 0)
+
+        bottom_bar = gtk.EventBox()
+        bottom_bar.modify_bg(gtk.STATE_NORMAL, gdk.color_parse('#666666'))
+        bottom_bar.set_size_request(-1, style.GRID_CELL_SIZE)
+        self.pack_end(bottom_bar, False, False, 0)
+
         self.show_all()
+
+    def add_item(self, recd):
+        self._store.append([recd.title,
+                            recd.get_media_collection_pixbuf(),
+                            recd])
+
+    def remove_item(self, button):
+        pass
+
+    def scroll_to_end(self):
+        pass

@@ -191,3 +191,19 @@ class Recorded:
                 return None
 
             return self.datastoreOb.file_path
+
+    def get_media_collection_pixbuf(self):
+        ipb = self.getThumbPixbuf()
+        if self.type == constants.TYPE_PHOTO:
+            path = 'object-photo.svg'
+        elif self.type == constants.TYPE_VIDEO:
+            path = 'object-video.svg'
+        elif self.type == constants.TYPE_AUDIO:
+            path = 'object-audio.svg'
+
+        pixbuf = utils.load_colored_svg(path, self.colorStroke,
+                                        self.colorFill)
+        if ipb:
+            ipb.composite(pixbuf, 8, 8, ipb.get_width(), ipb.get_height(),
+                          8, 8, 1, 1, gtk.gdk.INTERP_BILINEAR, 255)
+        return pixbuf
