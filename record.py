@@ -45,6 +45,7 @@ from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbarbox import ToolbarButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.palette import Palette
 from sugar3.activity.widgets import StopButton
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.graphics.menuitem import MenuItem
@@ -235,6 +236,13 @@ class Record(activity.Activity):
 
         self._toolbar_controls = RecordControl(self._toolbar)
 
+        if os.path.exists('/dev/video1'):
+            switch_camera_btn = ToolButton('switch-camera')
+            switch_camera_btn.set_tooltip(_('Switch camera'))
+            switch_camera_btn.show()
+            switch_camera_btn.connect('clicked', self.__switch_camera_click_cb)
+            self._toolbar.insert(switch_camera_btn, -1)
+
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
@@ -311,6 +319,9 @@ class Record(activity.Activity):
         else:
             self._grid.attach_next_to(self._controls_hbox, self._media_view,
                 Gtk.PositionType.BOTTOM, 1, 1)
+
+    def __switch_camera_click_cb(self, btn):
+        self.model.switch_camera()
 
     def serialize(self):
         data = {}

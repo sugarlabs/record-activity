@@ -102,6 +102,9 @@ class Model:
     def get_has_camera(self):
         return self.glive.get_has_camera()
 
+    def switch_camera(self):
+        self.glive.switch_camera()
+
     def get_nickname(self):
         return sugar3.profile.get_nick_name()
 
