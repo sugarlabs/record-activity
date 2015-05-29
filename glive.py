@@ -52,6 +52,7 @@ class Glive:
         self._eos_cb = None
 
         self._has_camera = False
+        self._camera_device_name = '/dev/video0'
         self._can_limit_framerate = False
         self._playing = False
         self._pic_exposure_open = False
@@ -83,9 +84,11 @@ class Glive:
 
     def _detect_camera(self):
         v4l2src = gst.element_factory_make('v4l2src')
+        v4l2src.set_property('device', self._camera_device_name)
         if v4l2src.props.device_name is None:
             return
-
+        else:
+            logging.error('Device name is %s', v4l2src.props.device_name)
         self._has_camera = True
 
         # Figure out if we can place a framerate limit on the v4l2 element,
@@ -104,6 +107,30 @@ class Glive:
 
     def get_has_camera(self):
         return self._has_camera
+
+    def switch_camera(self):
+        camera_devices = ['/dev/video0', '/dev/video1']
+        index = camera_devices.index(self._camera_device_name)
+        next = index + 1
+        if next >= len(camera_devices):
+            next = 0
+        logging.error('Setting device %s', camera_devices[next])
+        self._camera_device_name = camera_devices[next]
+        self._detect_camera()
+        self.stop()
+        # copied from initialization
+        self._pipeline = gst.Pipeline("Record")
+        self._create_photobin()
+        self._create_audiobin()
+        self._create_videobin()
+        self._create_xbin()
+        self._create_pipeline()
+        self._thumb_pipes = []
+        self._mux_pipes = []
+        bus = self._pipeline.get_bus()
+        bus.add_signal_watch()
+        bus.connect('message', self._bus_message_handler)
+        self.play()
 
     def _create_photobin(self):
         queue = gst.element_factory_make("queue", "pbqueue")
