@@ -20,6 +20,7 @@
 # THE SOFTWARE.
 
 import os
+import glob
 from gettext import gettext as _
 import time
 
@@ -34,14 +35,18 @@ import utils
 logger = logging.getLogger('glive')
 
 
+def get_cameras():
+    return sorted(glob.glob('/dev/video*'))
+
+
 class Glive:
     def __init__(self, activity_obj, model):
         logger.debug('__init__')
         self.activity = activity_obj
         self.model = model
-        self._camera_device_name = '/dev/video0'
+        self._camera = get_cameras()[0]
 
-        self._has_camera = os.access(self._camera_device_name, os.F_OK)
+        self._has_camera = os.access(self._camera, os.F_OK)
 
         self._pixbuf = None
         self._audio_pixbuf = None
@@ -57,13 +62,8 @@ class Glive:
         return self._has_camera
 
     def switch_camera(self):
-        camera_devices = ['/dev/video0', '/dev/video1']
-        index = camera_devices.index(self._camera_device_name)
-        next = index + 1
-        if next >= len(camera_devices):
-            next = 0
-        logging.error('Setting device %s', camera_devices[next])
-        self._camera_device_name = camera_devices[next]
+        cameras = get_cameras()
+        self._camera = cameras[(cameras.index(self._camera)) + 1 % len(cameras)]
         self.stop()
         self._pipeline = self._make_photo_pipeline()
         self.play()
@@ -76,7 +76,7 @@ class Glive:
         """
 
         if self._has_camera:
-            args = {'src': 'v4l2src device={0}'.format(self._camera_device_name),
+            args = {'src': 'v4l2src device={0}'.format(self._camera),
                     'cap': 'video/x-raw,framerate=10/1'}
         else:
             args = {'src': 'videotestsrc pattern=black',
