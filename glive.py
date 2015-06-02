@@ -19,6 +19,7 @@
 #THE SOFTWARE.
 
 import os
+import glob
 from gettext import gettext as _
 import time
 
@@ -42,6 +43,15 @@ OGG_TRAITS = {
         0: { 'width': 160, 'height': 120, 'quality': 16 },
         1: { 'width': 384, 'height': 288, 'quality': 16 } }
 
+cameras = None
+
+def enumerate_cameras():
+    global cameras
+
+    if cameras is None:
+        cameras = sorted(glob.glob('/dev/video*'))
+    return cameras
+
 class Glive:
     PHOTO_MODE_PHOTO = 0
     PHOTO_MODE_AUDIO = 1
@@ -52,7 +62,7 @@ class Glive:
         self._eos_cb = None
 
         self._has_camera = False
-        self._camera_device_name = '/dev/video0'
+        self._camera_device_name = enumerate_cameras()[0]
         self._can_limit_framerate = False
         self._playing = False
         self._pic_exposure_open = False
@@ -109,7 +119,8 @@ class Glive:
         return self._has_camera
 
     def switch_camera(self):
-        camera_devices = ['/dev/video0', '/dev/video1']
+        cameras = None
+        camera_devices = enumerate_cameras()
         index = camera_devices.index(self._camera_device_name)
         next = index + 1
         if next >= len(camera_devices):
@@ -263,6 +274,7 @@ class Glive:
             srccaps = gst.Caps('video/x-raw-yuv,framerate=10/1')
         else:
             srccaps = gst.Caps('video/x-raw-yuv')
+        src.set_property('device', self._camera_device_name)
 
         # we attempt to limit the framerate on the v4l2src directly, but we
         # can't trust this: perhaps we are falling behind in our capture,
