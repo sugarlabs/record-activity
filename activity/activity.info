@@ -8,3 +8,4 @@ show_launcher = yes
 license = MIT
 summary = Unleash the visual artist inside you! Take pictures, make movies and use them to recreate your world. The only limit is your imagination.
 repository = git@github.com:godiard/record-activity.git
+max_participants = 6
