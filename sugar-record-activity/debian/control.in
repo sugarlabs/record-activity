@@ -1,0 +1,38 @@
+Source: sugar-record-activity
+Section: x11
+Priority: optional
+Maintainer: Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>
+Uploaders: Jonas Smedegaard <dr@jones.dk>,
+ Gonzalo Odiard <godiard@gmail.com>
+Build-Depends: @cdbs@
+Standards-Version: 3.9.6
+Vcs-Git: https://github.com/godiard/record-activity.git
+Vcs-Browser: https://github.com/godiard/record-activity.git
+Homepage: http://wiki.sugarlabs.org/go/Activities/Record
+XS-Python-Version: all
+
+Package: sugar-record-activity
+Architecture: all
+Depends: ${shlibs:Depends},
+ ${python:Depends},
+ ${cdbs:Depends},
+ ${misc:Depends}
+Recommends: ${cdbs:Recommends}
+Provides: ${python:Provides},
+ ${cdbs:Provides}
+Conflicts: ${cdbs:Conflicts}
+Replaces: ${cdbs:Replaces}
+Description: Sugar Learning Platform - record activity
+ Sugar Learning Platform promotes collaborative learning through Sugar
+ Activities that encourage critical thinking, the heart of a quality
+ education.  Designed from the ground up especially for children, Sugar
+ offers an alternative to traditional “office-desktop” software.
+ .
+ Learner applications in Sugar are called Activities.  They are software
+ packages that automatically save your work - producing specific
+ instances of the Activity that can be resumed at a later time.  Many
+ Activities support learner collaboration, where multiple learners may
+ be invited to join a collective Activity session.
+ .
+ Record can create audio recodings, take photos or film video.
+ The media can be shared with other users in the network.
