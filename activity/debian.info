@@ -1,0 +1,14 @@
+[Package]
+name = sugar-record-activity
+version = 0godiard1
+vcs-git = https://github.com/godiard/record-activity.git
+vcs-browser = https://github.com/godiard/record-activity.git
+primary_branch = debian-packaging
+# python-gst0.10 are the old gst bindings (no introspection, record is gtk2) 
+dependencies = telepathy, espeak, python-gst0.10
+
+[Maintainer]
+name = Debian Sugar Team
+email = pkg-sugar-devel@lists.alioth.debian.org
+uploaders = Jonas Smedegaard <dr@jones.dk>,
+ Gonzalo Odiard <godiard@gmail.com>

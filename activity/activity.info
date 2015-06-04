@@ -9,3 +9,29 @@ license = MIT
 summary = Unleash the visual artist inside you! Take pictures, make movies and use them to recreate your world. The only limit is your imagination.
 repository = https://github.com/godiard/record-activity.git
 max_participants = 6
+
+
+# Added fields
+activity_type = gtk2
+homepage = http://wiki.sugarlabs.org/go/Activities/Record
+long_description: Sugar Learning Platform - record activity
+ Sugar Learning Platform promotes collaborative learning through Sugar
+ Activities that encourage critical thinking, the heart of a quality
+ education.  Designed from the ground up especially for children, Sugar
+ offers an alternative to traditional “office-desktop” software.
+ .
+ Learner applications in Sugar are called Activities.  They are software
+ packages that automatically save your work - producing specific
+ instances of the Activity that can be resumed at a later time.  Many
+ Activities support learner collaboration, where multiple learners may
+ be invited to join a collective Activity session.
+ .
+ Record can create audio recodings, take photos or film video.
+ The media can be shared with other users in the network.
+
+sources_url = http://download.sugarlabs.org/sources/honey/Record/
+sources_format = tar.bz2
+
+[Maintainer]
+name = Gonzalo Odiard
+email = godiard@gmail.com
