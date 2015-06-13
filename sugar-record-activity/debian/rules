@@ -43,4 +43,4 @@ CDBS_DEPENDS_$(pkg) = python, python-gobject-2, python-gtk2, python-cairo, pytho
 CDBS_DEPENDS_$(pkg) +=, python-telepathy
 CDBS_DEPENDS_$(pkg) +=, gst-plugins-espeak
 CDBS_DEPENDS_$(pkg) +=, python-gst0.10
-CDBS_RECOMMENDS_$(pkg) +=, sugar-$(DEB_SUGAR_PRIMARY_BRANCH)-icon-theme | sugar-icon-theme
+CDBS_RECOMMENDS_$(pkg) +=, sugar-0.104-icon-theme | sugar-icon-theme

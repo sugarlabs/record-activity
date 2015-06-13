@@ -5,19 +5,19 @@ Source: http://download.sugarlabs.org/sources/honey/Record/
 
 Files: setup.py
 Copyright: (C) 2006, Red Hat, Inc.
-License: MIT
+License: GPL
 
 Files: hw.py
 Copyright: (C) 2010, One Laptop per Child
-License: MIT
+License: GPL
 
 Files: tray.py
 Copyright: (C) 2007, One Laptop Per Child
-License: MIT
+License: GPL
 
 Files: *
 Copyright: Gonzalo Odiard
-License: MIT
+License: GPL
  
  Copyright (C) 2015 Gonzalo Odiard
  

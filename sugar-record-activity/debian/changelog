@@ -1,5 +1,5 @@
-sugar-record-activity (99~0godiard1) UNRELEASED; urgency=low
+sugar-record-activity (100-0~godiard1) UNRELEASED; urgency=low
 
   * Initial version for Debian.
 
- -- Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>  Thu, 04 Jun 2015 09:43:55 -0300
+ -- Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>  Sat, 13 Jun 2015 15:32:29 -0300
