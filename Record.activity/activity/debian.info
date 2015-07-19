@@ -1,6 +1,6 @@
 [Package]
 name = sugar-record-activity
-version = 1~godiard1
+version = 2~godiard1
 vcs-git = https://github.com/godiard/record-activity.git
 vcs-browser = https://github.com/godiard/record-activity.git
 primary_branch = debian-packaging
