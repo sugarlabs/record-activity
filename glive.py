@@ -349,7 +349,9 @@ class Glive:
         # pipeline while manipulating it.
         # http://dev.laptop.org/ticket/10183
         self._pipeline.set_state(gst.STATE_NULL)
-        self.model.shutter_sound()
+        self.model.shutter_sound(self._stop_recording_audio)
+
+    def _stop_recording_audio(self):
         self._pipeline.remove(self._audiobin)
 
         audio_path = os.path.join(Instance.instancePath, "output.wav")
