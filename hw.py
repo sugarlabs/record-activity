@@ -16,6 +16,7 @@
 # Boston, MA 02111-1307, USA.
 
 import os
+import subprocess
 
 def _get_dmi(node):
     path = os.path.join('/sys/class/dmi/id', node)
@@ -24,14 +25,32 @@ def _get_dmi(node):
     except:
         return None
 
+def _get_model():
+    null = open(os.devnull, 'w')
+    args = 'olpc-hwinfo model'.split(' ')
+    try:
+        model = subprocess.check_output(args, stderr=null).strip()
+    except:
+        model = None
+    null.close()
+    return model
+
 def get_xo_version():
-    if _get_dmi('product_name') != 'XO':
-        return 0
-    version = _get_dmi('product_version')
+    version = None
+    if _get_dmi('product_name') == 'XO':
+        version = _get_dmi('product_version')
+    if version is None:
+        version = _get_model()
     if version == '1':
         return 1
-    if version == '1.5':
-        return 1.5
+    elif version == '1.5':
+         return 1.5
+    elif version == '1.75':
+        return 1.75
+    elif version == '4':
+        return 4
     else:
         return 0
 
+if __name__ == "__main__":
+    print get_xo_version()
