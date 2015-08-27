@@ -20,6 +20,7 @@
 #THE SOFTWARE.
 
 import os
+import subprocess
 import logging
 import shutil
 from gettext import gettext as _
@@ -101,6 +102,15 @@ class Record(activity.Activity):
             self.model.change_mode(constants.MODE_PHOTO)
         else:
             self.model.change_mode(constants.MODE_AUDIO)
+
+        # Restore critical hidden mixer controls to default
+        model = hw.get_xo_version()
+        if model == 1.75 or model == 4:
+            args = ['amixer', 'set', 'Analog Mic Boost', "100%"]
+            try:
+                subprocess.check_output(args)
+            except:
+                pass
 
     def read_file(self, path):
         self.model.read_file(path)
