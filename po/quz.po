@@ -7,30 +7,32 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2013-08-07 00:11+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2015-12-02 13:46+0000\n"
+"Last-Translator: Roger <contacto@somosazucar.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: quz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1449064003.000000\n"
 
 #  [ES] "Grabar"
 #. TRANS: "name" option from activity.info file
 msgid "Record"
-msgstr "Grabanapaq"
+msgstr "Waqaychana"
 
+# Munasqaykiman hina artista kasqaykita phanchirichiy, kaypiqa foto nisqa wankikunata hurquy, películas nisqakunatapas ruwariy. Munasqaykita kamariy, umachaykipi kasqanta hurquriy.
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
 msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
-"Munasqaykiman hina artista kasqaykita phanchirichiy, kaypiqa foto nisqa "
-"wankikunata hurquy, películas nisqakunatapas ruwariy. Munasqaykita kamariy, "
-"umachaykipi kasqanta hurquriy."
+"¡Allin sumaqpuni imatapas ruraq kasqaykita phanchirichiy! Kaypiqa phututa "
+"hurquy, wankikunata ruray, películakunatapas rurariy, yuwasqaykimanhina. "
+"Munasqaykita kamariy, umachaykipi kasqanta hurquriy."
 
 #  "Eliminar"
 #: button.py:26
@@ -40,12 +42,12 @@ msgstr "Chinkachiy"
 #  [ES] "Copiar al portapapel"
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr "Raphi apaykachaqman kikinchay"
+msgstr "Raphiwaqaychaqman kikinchay"
 
 #  [ES] "Foto"
 #: constants.py:25 record.py:149
 msgid "Photo"
-msgstr "Wanki"
+msgstr "Phutu"
 
 #  "Video"
 #: constants.py:32 record.py:157
@@ -57,31 +59,31 @@ msgstr "Qhawarina"
 msgid "Audio"
 msgstr "Uyarina"
 
-#  [ES] "%(type)s por %(name)s"
+# TRAD. ANT.- Kay %(type)s nisqata %(name)s ruwarun
 #: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr "Kay %(type)s nisqata %(name)s ruwarun"
+msgstr "Kay %(type)s nisqaman t'ikray %(name)s nisqaranti"
 
 #  [ES] "Guardando..."
 #: glive.py:549
 msgid "Saving..."
-msgstr "Waqaychachkan..."
+msgstr "Waqaychachkanmi..."
 
 #  [ES] "Autor:"
 #: mediaview.py:54
 msgid "Author:"
-msgstr "Ruraqi:"
+msgstr "Kamaq:"
 
 #  "Etiquetas:"
 #: mediaview.py:70
 msgid "Tags:"
-msgstr "Sutichaqkuna:"
+msgstr "Sanapakuna:"
 
 #  "Fecha:"
 #: mediaview.py:118
 msgid "Date:"
-msgstr "P'unchaw:"
+msgstr "Wakipu:"
 
 #  [ES] "Quedan %(mins)d:%(secs)02d"
 #: model.py:183
@@ -97,7 +99,7 @@ msgstr "Sutinchaynin:"
 #  [ES] "Descarga fallida."
 #: record.py:551
 msgid "Download failed."
-msgstr "Uyachisqaqa pantarun."
+msgstr "Urayachisqaqa pantarqunmi."
 
 #  "Descargando..."
 #: record.py:553
@@ -107,15 +109,19 @@ msgstr "Uraykachichkan..."
 #  [ES] "Solicitando..."
 #: record.py:555
 msgid "Requesting..."
-msgstr "Mañakuchkanran..."
+msgstr "Mañakuchkanmi..."
 
+# Seleccionar temporizador
+# 
 #: record.py:862
 msgid "Select timer"
-msgstr "Temporizador nisqata akllay"
+msgstr "Pachatupuqta akllay"
 
+# Seleccionar duración
+# 
 #: record.py:869
 msgid "Select duration"
-msgstr "Unayayninta akllay"
+msgstr "Kayk'a pacha kanqa chayta akllay"
 
 #: record.py:876
 msgid "Select quality"
@@ -124,7 +130,7 @@ msgstr "Kusa kayninta akllay"
 #  [ES] "Inmediato"
 #: record.py:896 record.py:921
 msgid "Immediate"
-msgstr "Utqhaynin"
+msgstr "Utqaylla"
 
 #  SYNTAX ERROR: msgstr[0] ""
 #  SYNTAX ERROR: msgstr[1] ""
@@ -132,18 +138,17 @@ msgstr "Utqhaynin"
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "%s segundo"
-msgstr[1] "%s segundokuna"
+msgstr[0] "%s ch'illmi"
+msgstr[1] "%s ch'illmikuna"
 
-# SYNTAX ERROR: msgstr[0] ""
-#  SYNTAX ERROR: msgstr[1] ""
+# chinini = mejor para segundo... o parpadeo
 #: record.py:923
 #, python-format
 #, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "%s chinini"
-msgstr[1] "%s chininikuna"
+msgstr[0] "%s tullmi"
+msgstr[1] "%s tullmikuna"
 
 #: record.py:945
 #, python-format

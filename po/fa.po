@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2011-08-14 14:01+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2015-09-21 16:59+0000\n"
+"Last-Translator: َAhmad <dramir2wiki@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1442854760.000000\n"
 
 #. TRANS: "name" option from activity.info file
 msgid "Record"
@@ -27,6 +28,8 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
+"هنرمند تجسمی درون خودتان را آزاد کنید! گرفتن عکس، ساختن فیلم و استفاده از "
+"آنها برای خلق جهان خود. تنها محدودیت شما تخیل شما است."
 
 #: button.py:26
 msgid "Remove"
@@ -51,15 +54,15 @@ msgstr "صدا"
 #: glive.py:396 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "%(type)s توسط %(name)s"
 
 #: glive.py:549
 msgid "Saving..."
-msgstr ""
+msgstr "درحال ذخیره..."
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr ""
+msgstr "مؤلف:"
 
 #: mediaview.py:70
 msgid "Tags:"
@@ -72,7 +75,7 @@ msgstr "تاریخ:"
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "%(mins)d:%(secs)02d باقی مانده"
 
 #: record.py:218
 msgid "Title:"
@@ -80,27 +83,27 @@ msgstr "عنوان:"
 
 #: record.py:551
 msgid "Download failed."
-msgstr ""
+msgstr "دانلود نا موفق:"
 
 #: record.py:553
 msgid "Downloading..."
-msgstr ""
+msgstr "در حال بارگیری..."
 
 #: record.py:555
 msgid "Requesting..."
-msgstr ""
+msgstr "در حال درخواست..."
 
 #: record.py:862
 msgid "Select timer"
-msgstr ""
+msgstr "انتخاب زمان سنج"
 
 #: record.py:869
 msgid "Select duration"
-msgstr ""
+msgstr "انتخاب مدت زمان"
 
 #: record.py:876
 msgid "Select quality"
-msgstr ""
+msgstr "انتخاب کیفیت"
 
 #: record.py:896 record.py:921
 msgid "Immediate"
@@ -119,10 +122,9 @@ msgid_plural "%s minutes"
 msgstr[0] "%s دقیقه"
 
 #: record.py:945
-#, python-format
-#, python-format, fuzzy
+#, python-format, python-format
 msgid "%s quality"
-msgstr "بهترین کیفیت"
+msgstr "%s کیفیت"
 
 #, fuzzy
 #~ msgid "Quality:"
