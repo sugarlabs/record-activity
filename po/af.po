@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2011-11-28 06:26+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2016-05-21 23:52+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: af\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1463874765.000000\n"
 
 #. TRANS: "name" option from activity.info file
 msgid "Record"
@@ -116,11 +117,10 @@ msgstr[1] "%s sekondes"
 
 #: record.py:923
 #, python-format
-#, fuzzy
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s minuut"
-msgstr[1] ""
+msgstr[1] "%s minute"
 
 #: record.py:945
 #, python-format
