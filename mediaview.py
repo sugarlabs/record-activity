@@ -1,95 +1,93 @@
 import os
 from gettext import gettext as _
 
-import gobject
-import gtk
-from gtk import gdk
+from gi.repository import GObject, Gdk, Gtk, GdkPixbuf
 
 import constants
 import utils
 
-COLOR_BLACK = gdk.color_parse('#000000')
-COLOR_WHITE = gdk.color_parse('#ffffff')
-COLOR_GREY = gdk.color_parse('#808080')
+COLOR_BLACK = Gdk.color_parse('#000000')
+COLOR_WHITE = Gdk.color_parse('#ffffff')
+COLOR_GREY = Gdk.color_parse('#808080')
 
-class XoIcon(gtk.Image):
+class XoIcon(Gtk.Image):
     def __init__(self):
-        super(XoIcon, self).__init__()
+        super(type(self), self).__init__()
 
     def set_colors(self, stroke, fill):
         pixbuf = utils.load_colored_svg('xo-guy.svg', stroke, fill)
         self.set_from_pixbuf(pixbuf)
 
 
-class InfoView(gtk.EventBox):
+class InfoView(Gtk.EventBox):
     """
     A metadata view/edit widget, that presents a primary view area in the top
     right and a secondary view area in the bottom left.
     """
     __gsignals__ = {
-        'primary-allocated': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
-        'secondary-allocated': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,)),
-        'tags-changed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_OBJECT,)),
+        'primary-allocated': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT,)),
+        'secondary-allocated': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT,)),
+        'tags-changed': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_OBJECT,)),
     }
 
     def __init__(self):
-        super(InfoView, self).__init__()
-        self.modify_bg(gtk.STATE_NORMAL, COLOR_GREY)
+        super(type(self), self).__init__()
+        self.modify_bg(Gtk.StateType.NORMAL, COLOR_GREY)
 
         self.connect('size-allocate', self._size_allocate)
 
-        self._outer_vbox = gtk.VBox(spacing=7)
+        self._outer_vbox = Gtk.VBox(spacing=7)
         self.add(self._outer_vbox)
 
-        hbox = gtk.HBox()
-        self._outer_vbox.pack_start(hbox, expand=True, fill=True)
+        hbox = Gtk.HBox()
+        self._outer_vbox.pack_start(hbox, True, True, 0)
 
-        inner_vbox = gtk.VBox(spacing=5)
-        hbox.pack_start(inner_vbox, expand=True, fill=True, padding=6)
+        inner_vbox = Gtk.VBox(spacing=5)
+        hbox.pack_start(inner_vbox, True, True, 6)
 
-        author_hbox = gtk.HBox()
-        inner_vbox.pack_start(author_hbox, expand=False)
+        author_hbox = Gtk.HBox()
+        inner_vbox.pack_start(author_hbox, False, True, 0)
 
-        label = gtk.Label()
+        label = Gtk.Label()
         label.set_markup('<b>' + _('Author:') + '</b>')
-        author_hbox.pack_start(label, expand=False)
+        author_hbox.pack_start(label, False, True, 0)
 
         self._xo_icon = XoIcon()
-        author_hbox.pack_start(self._xo_icon, expand=False)
+        author_hbox.pack_start(self._xo_icon, False, True, 0)
 
-        self._author_label = gtk.Label()
-        author_hbox.pack_start(self._author_label, expand=False)
+        self._author_label = Gtk.Label()
+        author_hbox.pack_start(self._author_label, False, True, 0)
 
-        self._date_label = gtk.Label()
+        self._date_label = Gtk.Label()
         self._date_label.set_line_wrap(True)
-        alignment = gtk.Alignment(0.0, 0.5, 0.0, 0.0)
+        alignment = Gtk.Alignment.new(0.0, 0.5, 0.0, 0.0)
         alignment.add(self._date_label)
-        inner_vbox.pack_start(alignment, expand=False)
+        inner_vbox.pack_start(alignment, False, True, 0)
 
-        label = gtk.Label()
+        label = Gtk.Label()
         label.set_markup('<b>' + _('Tags:') + '</b>')
-        alignment = gtk.Alignment(0.0, 0.5, 0.0, 0.0)
+        alignment = Gtk.Alignment.new(0.0, 0.5, 0.0, 0.0)
         alignment.add(label)
-        inner_vbox.pack_start(alignment, expand=False)
+        inner_vbox.pack_start(alignment, False, True, 0)
 
-        textview = gtk.TextView()
+        textview = Gtk.TextView()
         self._tags_buffer = textview.get_buffer()
         self._tags_buffer.connect('changed', self._tags_changed)
-        inner_vbox.pack_start(textview, expand=True, fill=True)
+        inner_vbox.pack_start(textview, True, True, 0)
 
         # the main viewing widget will be painted exactly on top of this one
-        alignment = gtk.Alignment(1.0, 0.0, 0.0, 0.0)
-        self._view_bg = gtk.EventBox()
-        self._view_bg.modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
+        alignment = Gtk.Alignment.new(1.0, 0.0, 0.0, 0.0)
+        self._view_bg = Gtk.EventBox()
+        self._view_bg.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
         alignment.add(self._view_bg)
-        hbox.pack_start(alignment, expand=False)
+        hbox.pack_start(alignment, False, True, 0)
 
         # the secondary viewing widget will be painted exactly on top of this one
-        alignment = gtk.Alignment(0.0, 1.0, 0.0, 0.0)
-        self._live_bg = gtk.EventBox()
-        self._live_bg.modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
+        alignment = Gtk.Alignment.new(0.0, 1.0, 0.0, 0.0)
+        self._live_bg = Gtk.EventBox()
+        self._live_bg.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
         alignment.add(self._live_bg)
-        self._outer_vbox.pack_start(alignment, expand=False)
+        self._outer_vbox.pack_start(alignment, False, True, 0)
 
     def fit_to_allocation(self, allocation):
         # main viewing area: 50% of each dimension
@@ -127,14 +125,14 @@ class InfoView(gtk.EventBox):
     def _tags_changed(self, widget):
         self.emit('tags-changed', widget)
 
-class VideoBox(gtk.EventBox):
+class VideoBox(Gtk.EventBox):
     """
     A widget with its own window for rendering a gstreamer video sink onto.
     """
     def __init__(self):
-        super(VideoBox, self).__init__()
-        self.unset_flags(gtk.DOUBLE_BUFFERED)
-        self.set_flags(gtk.APP_PAINTABLE)
+        super(type(self), self).__init__()
+        self.set_double_buffered(False)
+        self.set_app_paintable(True)
         self._sink = None
         self._xid = None
         self.connect('realize', self._realize)
@@ -154,19 +152,19 @@ class VideoBox(gtk.EventBox):
         self._sink = sink
         sink.set_xwindow_id(self._xid)
 
-class FullscreenButton(gtk.EventBox):
+class FullscreenButton(Gtk.EventBox):
     def __init__(self):
-        super(FullscreenButton, self).__init__()
+        super(type(self), self).__init__()
 
         path = os.path.join(constants.GFX_PATH, 'max-reduce.svg')
-        self._enlarge_pixbuf = gdk.pixbuf_new_from_file(path)
+        self._enlarge_pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
         self.width = self._enlarge_pixbuf.get_width()
         self.height = self._enlarge_pixbuf.get_height()
 
         path = os.path.join(constants.GFX_PATH, 'max-enlarge.svg')
-        self._reduce_pixbuf = gdk.pixbuf_new_from_file_at_size(path, self.width, self.height)
+        self._reduce_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(path, self.width, self.height)
 
-        self._image = gtk.Image()
+        self._image = Gtk.Image()
         self.set_enlarge()
         self._image.show()
         self.add(self._image)
@@ -178,34 +176,34 @@ class FullscreenButton(gtk.EventBox):
         self._image.set_from_pixbuf(self._reduce_pixbuf)
 
 
-class InfoButton(gtk.EventBox):
+class InfoButton(Gtk.EventBox):
     def __init__(self):
-        super(InfoButton, self).__init__()
+        super(type(self), self).__init__()
 
         path = os.path.join(constants.GFX_PATH, 'corner-info.svg')
-        pixbuf = gdk.pixbuf_new_from_file(path)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
         self.width = pixbuf.get_width()
         self.height = pixbuf.get_height()
 
-        self._image = gtk.image_new_from_pixbuf(pixbuf)
+        self._image = Gtk.Image.new_from_pixbuf(pixbuf)
         self._image.show()
         self.add(self._image)
 
 
-class ImageBox(gtk.EventBox):
+class ImageBox(Gtk.EventBox):
     def __init__(self):
-        super(ImageBox, self).__init__()
+        super(type(self), self).__init__()
         self._pixbuf = None
-        self._image = gtk.Image()
+        self._image = Gtk.Image()
         self.add(self._image)
 
     def show(self):
         self._image.show()
-        super(ImageBox, self).show()
+        super(type(self), self).show()
 
     def hide(self):
         self._image.hide()
-        super(ImageBox, self).hide()
+        super(type(self), self).hide()
 
     def clear(self):
         self._image.clear()
@@ -219,14 +217,14 @@ class ImageBox(gtk.EventBox):
             if width == self._pixbuf.get_width() and height == self._pixbuf.get_height():
                 pixbuf = self._pixbuf
             else:
-                pixbuf = self._pixbuf.scale_simple(width, height, gdk.INTERP_BILINEAR)
+                pixbuf = self._pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
 
             self._image.set_from_pixbuf(pixbuf)
 
         self._image.set_size_request(width, height)
         self.set_size_request(width, height)
 
-class MediaView(gtk.EventBox):
+class MediaView(Gtk.EventBox):
     """
     A widget to show the main record UI with a video feed, but with some
     extra features: possibility to show images, information UI about media,
@@ -240,11 +238,11 @@ class MediaView(gtk.EventBox):
     """
     __gtype_name__ = "MediaView"
     __gsignals__ = {
-        'media-clicked': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
-        'pip-clicked': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
-        'full-clicked': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
-        'info-clicked': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
-        'tags-changed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_OBJECT,)),
+        'media-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
+        'pip-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
+        'full-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
+        'info-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
+        'tags-changed': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_OBJECT,)),
     }
 
     MODE_LIVE = 0
@@ -265,12 +263,12 @@ class MediaView(gtk.EventBox):
         self._allocation = None
         self._hide_controls_timer = None
 
-        super(MediaView, self).__init__()
+        super(type(self), self).__init__()
         self.connect('size-allocate', self._size_allocate)
         self.connect('motion-notify-event', self._motion_notify)
-        self.set_events(gdk.POINTER_MOTION_MASK | gdk.POINTER_MOTION_HINT_MASK)
+        self.set_events(Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.POINTER_MOTION_HINT_MASK)
 
-        self._fixed = gtk.Fixed()
+        self._fixed = Gtk.Fixed()
         self.add(self._fixed)
 
         self._info_view = InfoView()
@@ -314,11 +312,11 @@ class MediaView(gtk.EventBox):
     def _motion_notify(self, widget, event):
         if self._hide_controls_timer:
             # remove timer, it will be reprogrammed right after
-            gobject.source_remove(self._hide_controls_timer)
+            GObject.source_remove(self._hide_controls_timer)
         else:
             self._show_controls()
 
-        self._hide_controls_timer = gobject.timeout_add(2000, self._hide_controls)
+        self._hide_controls_timer = GObject.timeout_add(2000, self._hide_controls)
 
     def _show_controls(self):
         if self._mode in (MediaView.MODE_LIVE, MediaView.MODE_VIDEO, MediaView.MODE_PHOTO, MediaView.MODE_STILL):
@@ -332,7 +330,7 @@ class MediaView(gtk.EventBox):
 
     def _hide_controls(self):
         if self._hide_controls_timer:
-            gobject.source_remove(self._hide_controls_timer)
+            GObject.source_remove(self._hide_controls_timer)
             self._hide_controls_timer = None
 
         self._full_button.hide()
@@ -430,7 +428,7 @@ class MediaView(gtk.EventBox):
         self._mode = new_mode
 
         if self._hide_controls_timer:
-            gobject.source_remove(self._hide_controls_timer)
+            GObject.source_remove(self._hide_controls_timer)
             self._hide_controls_timer = None
 
         if self._allocation:
@@ -466,7 +464,7 @@ class MediaView(gtk.EventBox):
 
     def set_fullscreen(self, fullscreen):
         if self._hide_controls_timer:
-            gobject.source_remove(self._hide_controls_timer)
+            GObject.source_remove(self._hide_controls_timer)
             self._hide_controls_timer = None
 
         if fullscreen:
@@ -495,7 +493,7 @@ class MediaView(gtk.EventBox):
 
     def show_photo(self, path):
         if path:
-            pixbuf = gdk.pixbuf_new_from_file(path)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
             self._image_box.set_pixbuf(pixbuf)
         self._switch_mode(MediaView.MODE_PHOTO)
 
@@ -507,9 +505,9 @@ class MediaView(gtk.EventBox):
 
     def show(self):
         self._fixed.show()
-        super(MediaView, self).show()
+        super(type(self), self).show()
 
     def hide(self):
         self._fixed.hide()
-        super(MediaView, self).hide()
+        super(type(self), self).hide()
 

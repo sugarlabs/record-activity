@@ -1,11 +1,10 @@
 from xml.dom.minidom import getDOMImplementation
 import cStringIO
 import os
-import gtk
 import logging
 import dbus
 
-from sugar.datastore import datastore
+from sugar3.datastore import datastore
 
 import constants
 from instance import Instance
@@ -265,13 +264,13 @@ def _saveMediaToDatastore(el, recd, activity):
             datastorePreviewPixbuf = recd.getAudioImagePixbuf()
         elif recd.type == constants.TYPE_PHOTO:
             datastorePreviewFilepath = recd.getMediaFilepath()
-            datastorePreviewPixbuf = gtk.gdk.pixbuf_new_from_file(datastorePreviewFilepath)
+            datastorePreviewPixbuf = GdkPixbuf.Pixbuf.new_from_file(datastorePreviewFilepath)
 
         if datastorePreviewPixbuf:
             datastorePreviewWidth = 300
             datastorePreviewHeight = 225
             if datastorePreviewPixbuf.get_width() != datastorePreviewWidth:
-                datastorePreviewPixbuf = datastorePreviewPixbuf.scale_simple(datastorePreviewWidth, datastorePreviewHeight, gtk.gdk.INTERP_NEAREST)
+                datastorePreviewPixbuf = datastorePreviewPixbuf.scale_simple(datastorePreviewWidth, datastorePreviewHeight, GdkPixbuf.InterpType.NEAREST)
 
             datastorePreview = utils.getStringFromPixbuf(datastorePreviewPixbuf)
             mediaObject.metadata['preview'] = dbus.ByteArray(datastorePreview)

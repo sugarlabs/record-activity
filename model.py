@@ -27,11 +27,10 @@ import os
 import time
 import json
 
-import gobject
-import gst
+from gi.repository import GObject, Gst
 
-import sugar.profile
-import sugar.env
+import sugar3.profile
+import sugar3.env
 
 import aplay
 import constants
@@ -99,7 +98,7 @@ class Model:
         return self.glive.get_has_camera()
 
     def get_nickname(self):
-        return sugar.profile.get_nick_name()
+        return sugar3.profile.get_nick_name()
 
     def get_mode(self):
         return self._mode
@@ -131,7 +130,7 @@ class Model:
             return
 
         if self._countdown_handle:
-            gobject.source_remove(self._countdown_handle)
+            GObject.source_remove(self._countdown_handle)
             self._countdown_handle = None
             self._countdown_value = 0
             self.activity.set_countdown(0)
@@ -202,7 +201,7 @@ class Model:
         self.set_progress(0, '')
         self._timer_value = self.activity.get_selected_duration()
         self._timer_duration = self._timer_value
-        self._timer_handle = gobject.timeout_add(1000, self._timer_tick)
+        self._timer_handle = GObject.timeout_add(1000, self._timer_tick)
 
         self.activity.set_shutter_sensitive(True)
         self.set_state(constants.STATE_RECORDING)
@@ -215,7 +214,7 @@ class Model:
 
     def _stop_media_capture(self):
         if self._timer_handle:
-            gobject.source_remove(self._timer_handle)
+            GObject.source_remove(self._timer_handle)
             self._timer_handle = None
             self._timer_value = 0
 
@@ -255,7 +254,7 @@ class Model:
         if timer > 0:
             self.activity.set_shutter_sensitive(False)
             self._countdown_value = self.activity.get_selected_timer()
-            self._countdown_handle = gobject.timeout_add(1000, self._countdown_tick)
+            self._countdown_handle = GObject.timeout_add(1000, self._countdown_tick)
             return
 
         # otherwise, capture normally
@@ -263,7 +262,7 @@ class Model:
 
     # called from gstreamer thread
     def still_ready(self, pixbuf):
-        gobject.idle_add(self.activity.show_still, pixbuf)
+        GObject.idle_add(self.activity.show_still, pixbuf)
 
     def add_recd(self, recd):
         self.mediaHashs[recd.type].append(recd)
@@ -286,8 +285,8 @@ class Model:
         #now that we've saved both the image and its pixbuf, we get their md5s
         self.createNewRecordedMd5Sums( recd )
 
-        gobject.idle_add(self.add_recd, recd, priority=gobject.PRIORITY_HIGH)
-        gobject.idle_add(self.activity.set_shutter_sensitive, True, priority=gobject.PRIORITY_HIGH)
+        GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
+        GObject.idle_add(self.activity.set_shutter_sensitive, True, priority=GObject.PRIORITY_HIGH)
 
     # called from gstreamer thread
     def save_video(self, path, still):
@@ -299,8 +298,8 @@ class Model:
 
         self.createNewRecordedMd5Sums( recd )
 
-        gobject.idle_add(self.add_recd, recd, priority=gobject.PRIORITY_HIGH)
-        gobject.idle_add(self.set_state, constants.STATE_READY)
+        GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
+        GObject.idle_add(self.set_state, constants.STATE_READY)
 
     def save_audio(self, path, still):
         recd = self.createNewRecorded(constants.TYPE_AUDIO)
@@ -317,12 +316,12 @@ class Model:
 
         self.createNewRecordedMd5Sums( recd )
 
-        gobject.idle_add(self.add_recd, recd, priority=gobject.PRIORITY_HIGH)
-        gobject.idle_add(self.set_state, constants.STATE_READY)
+        GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
+        GObject.idle_add(self.set_state, constants.STATE_READY)
 
     def _playback_status_changed(self, widget, status, value):
         self.activity.set_playback_scale(value)
-        if status == gst.STATE_NULL:
+        if status == Gst.State.NULL:
             self.activity.set_paused(True)
 
     def play_audio(self, recd):
@@ -338,7 +337,7 @@ class Model:
         self.activity.set_paused(False)
 
     def play_pause(self):
-        if self.gplay.get_state() == gst.STATE_PLAYING:
+        if self.gplay.get_state() == Gst.State.PLAYING:
             self.gplay.pause()
             self.activity.set_paused(True)
         else:
@@ -386,7 +385,7 @@ class Model:
         recd.title = _('%(type)s by %(name)s') % {'type': stringType,
                 'name': recd.recorderName}
 
-        color = sugar.profile.get_color()
+        color = sugar3.profile.get_color()
         recd.colorStroke = color.get_stroke_color()
         recd.colorFill = color.get_fill_color()
 

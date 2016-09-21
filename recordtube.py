@@ -1,7 +1,7 @@
 import os
 import logging
 
-import gobject
+from gi.repository import GObject
 from dbus.service import signal
 from dbus.gobject_service import ExportedGObject
 
@@ -14,18 +14,18 @@ class RecordTube(ExportedGObject):
 
     __gsignals__ = {
         'recd-bits-arrived':
-            (gobject.SIGNAL_RUN_FIRST, None, [object,object,object,object,object]),
+            (GObject.SignalFlags.RUN_FIRST, None, [object,object,object,object,object]),
         'recd-request':
-            (gobject.SIGNAL_RUN_FIRST, None, [object,object]),
+            (GObject.SignalFlags.RUN_FIRST, None, [object,object]),
         'new-recd':
-            (gobject.SIGNAL_RUN_FIRST, None, [object,object]),
+            (GObject.SignalFlags.RUN_FIRST, None, [object,object]),
         'recd-unavailable':
-            (gobject.SIGNAL_RUN_FIRST, None, [object,object])
+            (GObject.SignalFlags.RUN_FIRST, None, [object,object])
     }
 
 
     def __init__(self, tube):
-        super(RecordTube, self).__init__(tube, constants.DBUS_PATH)
+        super(type(self), self).__init__(tube, constants.DBUS_PATH)
         self.tube = tube
 
         self.idNotify = self.tube.add_signal_receiver(self._newRecdTubeCb, 'notifyBudsOfNewRecd', constants.DBUS_IFACE, path=constants.DBUS_PATH, sender_keyword='sender')

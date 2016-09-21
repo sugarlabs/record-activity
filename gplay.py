@@ -18,25 +18,22 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-import gobject
-gobject.threads_init()
-import pygst
-pygst.require('0.10')
-import gst
+from gi.repository import GObject, Gst
+GObject.threads_init()
 
 import logging
 logger = logging.getLogger('record:gplay.py')
 
-class Gplay(gobject.GObject):
+class Gplay(GObject.GObject):
     __gsignals__ = {
-        'playback-status-changed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_FLOAT)),
+        'playback-status-changed': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_INT, GObject.TYPE_FLOAT)),
     }
 
     def __init__(self, activity_obj):
-        super(Gplay, self).__init__()
+        super(type(self), self).__init__()
         self.activity = activity_obj
         self._playback_monitor_handler = None
-        self._player = gst.element_factory_make('playbin')
+        self._player = Gst.ElementFactory.make('playbin')
 
         bus = self._player.get_bus()
         bus.add_signal_watch()
@@ -55,44 +52,44 @@ class Gplay(gobject.GObject):
             self.seek(0)
             return
 
-        self._player.set_state(gst.STATE_READY)
+        self._player.set_state(Gst.State.READY)
         self._player.set_property('uri', location)
 
     def seek(self, position):
         if position == 0:
             location = 0
         else:
-            duration = self._player.query_duration(gst.FORMAT_TIME, None)[0]
+            duration = self._player.query_duration(Gst.FORMAT_TIME, None)[0]
             location = duration * (position / 100)
 
-        event = gst.event_new_seek(1.0, gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE, gst.SEEK_TYPE_SET, location, gst.SEEK_TYPE_NONE, 0)
+        event = Gst.event_new_seek(1.0, Gst.FORMAT_TIME, Gst.SEEK_FLAG_FLUSH | Gst.SEEK_FLAG_ACCURATE, Gst.SEEK_TYPE_SET, location, Gst.SEEK_TYPE_NONE, 0)
         res = self._player.send_event(event)
         if res:
             self._player.set_new_stream_time(0L)
 
     def pause(self):
-        self._player.set_state(gst.STATE_PAUSED)
+        self._player.set_state(Gst.State.PAUSED)
 
     def play(self):
-        if self.get_state() == gst.STATE_PLAYING:
+        if self.get_state() == Gst.State.PLAYING:
             return
 
         if not self._player.props.video_sink:
-            sink = gst.element_factory_make('xvimagesink')
+            sink = Gst.ElementFactory.make('xvimagesink')
             sink.props.force_aspect_ratio = True
             self._player.props.video_sink = sink
 
         self.activity.set_gplay_sink(self._player.props.video_sink)
-        self._player.set_state(gst.STATE_PLAYING)
+        self._player.set_state(Gst.State.PLAYING)
         self._emit_playback_status(0)
 
-        self._playback_monitor_handler = gobject.timeout_add(500, self._playback_monitor)
+        self._playback_monitor_handler = GObject.timeout_add(500, self._playback_monitor)
 
     def _playback_monitor(self):
         try:
-            position = self._player.query_position(gst.FORMAT_TIME)[0]
-            duration = self._player.query_duration(gst.FORMAT_TIME)[0]
-        except gst.QueryError:
+            position = self._player.query_position(Gst.FORMAT_TIME)[0]
+            duration = self._player.query_duration(Gst.FORMAT_TIME)[0]
+        except Gst.QueryError:
             return True
 
         value = (float(position) / float(duration)) * 100.0
@@ -100,7 +97,7 @@ class Gplay(gobject.GObject):
         return True
 
     def _emit_playback_status(self, position):
-        state = self._player.get_state()[1]
+        state = self._player.get_state(Gst.CLOCK_TIME_NONE)[1]
         self.emit('playback-status-changed', state, position)
 
     def get_state(self):
@@ -108,9 +105,9 @@ class Gplay(gobject.GObject):
 
     def stop(self):
         if self._playback_monitor_handler:
-            gobject.source_remove(self._playback_monitor_handler)
+            GObject.source_remove(self._playback_monitor_handler)
             self._playback_monitor_handler = None
 
-        self._player.set_state(gst.STATE_NULL)
+        self._player.set_state(Gst.State.NULL)
         self._emit_playback_status(0)
 

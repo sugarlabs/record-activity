@@ -1,7 +1,7 @@
 import os
 
-from sugar import profile
-from sugar import util
+from sugar3 import profile
+from sugar3 import util
 
 class Instance:
     key = profile.get_pubkey()

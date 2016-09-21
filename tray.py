@@ -15,32 +15,30 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import gobject
-import gtk
-import hippo
+from gi.repository import GObject, Gtk
 
-import sugar
-from sugar.graphics import style
-from sugar.graphics.icon import Icon
+import sugar3
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
 
 _PREVIOUS_PAGE = 0
 _NEXT_PAGE = 1
 
-class _TrayViewport(gtk.Viewport):
+class _TrayViewport(Gtk.Viewport):
     __gproperties__ = {
         'can-scroll' : (bool, None, None, False,
-                        gobject.PARAM_READABLE),
+                        GObject.PARAM_READABLE),
     }
 
     def __init__(self, orientation):
         self.orientation = orientation
         self._can_scroll = False
 
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
-        self.set_shadow_type(gtk.SHADOW_NONE)
+        self.set_shadow_type(Gtk.ShadowType.NONE)
 
-        self.traybar = gtk.Toolbar()
+        self.traybar = Gtk.Toolbar()
         self.traybar.set_orientation(orientation)
         self.traybar.set_show_arrow(False)
         self.add(self.traybar)
@@ -55,7 +53,7 @@ class _TrayViewport(gtk.Viewport):
             self._scroll_next()
 
     def _scroll_next(self):
-        if self.orientation == gtk.ORIENTATION_HORIZONTAL:
+        if self.orientation == Gtk.Orientation.HORIZONTAL:
             adj = self.get_hadjustment()
             new_value = adj.value + self.allocation.width
             adj.value = min(new_value, adj.upper - self.allocation.width)
@@ -65,7 +63,7 @@ class _TrayViewport(gtk.Viewport):
             adj.value = min(new_value, adj.upper - self.allocation.height)
 
     def _scroll_to_end(self):
-        if self.orientation == gtk.ORIENTATION_HORIZONTAL:
+        if self.orientation == Gtk.Orientation.HORIZONTAL:
             adj = self.get_hadjustment()
             adj.value = adj.upper# - self.allocation.width
         else:
@@ -73,7 +71,7 @@ class _TrayViewport(gtk.Viewport):
             adj.value = adj.upper - self.allocation.height
 
     def _scroll_previous(self):
-        if self.orientation == gtk.ORIENTATION_HORIZONTAL:
+        if self.orientation == Gtk.Orientation.HORIZONTAL:
             adj = self.get_hadjustment()
             new_value = adj.value - self.allocation.width
             adj.value = max(adj.lower, new_value)
@@ -83,8 +81,8 @@ class _TrayViewport(gtk.Viewport):
             adj.value = max(adj.lower, new_value)
 
     def do_size_request(self, requisition):
-        child_requisition = self.child.size_request()
-        if self.orientation == gtk.ORIENTATION_HORIZONTAL:
+        child_requisition = self.get_child().size_request()
+        if self.orientation == Gtk.Orientation.HORIZONTAL:
             requisition[0] = 0
             requisition[1] = child_requisition[1]
         else:
@@ -97,7 +95,7 @@ class _TrayViewport(gtk.Viewport):
 
     def _size_allocate_cb(self, viewport, allocation):
         bar_requisition = self.traybar.get_child_requisition()
-        if self.orientation == gtk.ORIENTATION_HORIZONTAL:
+        if self.orientation == Gtk.Orientation.HORIZONTAL:
             can_scroll = bar_requisition[0] > allocation.width
         else:
             can_scroll = bar_requisition[1] > allocation.height
@@ -106,19 +104,19 @@ class _TrayViewport(gtk.Viewport):
             self._can_scroll = can_scroll
             self.notify('can-scroll')
 
-class _TrayScrollButton(gtk.Button):
+class _TrayScrollButton(Gtk.Button):
     def __init__(self, icon_name, scroll_direction):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._viewport = None
 
         self._scroll_direction = scroll_direction
 
-        self.set_relief(gtk.RELIEF_NONE)
+        self.set_relief(Gtk.ReliefStyle.NONE)
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 
         icon = Icon(icon_name = icon_name,
-                    icon_size=gtk.ICON_SIZE_SMALL_TOOLBAR)
+                    icon_size=Gtk.IconSize.SMALL_TOOLBAR)
         self.set_image(icon)
         icon.show()
 
@@ -138,12 +136,12 @@ class _TrayScrollButton(gtk.Button):
 
     viewport = property(fset=set_viewport)
 
-class HTray(gtk.VBox):
+class HTray(Gtk.VBox):
     def __init__(self, **kwargs):
-        gobject.GObject.__init__(self, **kwargs)
+        GObject.GObject.__init__(self, **kwargs)
 
-        separator = hippo.Canvas()
-        box = hippo.CanvasBox(
+        separator = Hippo.Canvas()
+        box = Hippo.CanvasBox(
                     border_color=0xffffffff,
                     background_color=0xffffffff,
                     box_height=1,
@@ -151,32 +149,32 @@ class HTray(gtk.VBox):
         separator.set_root(box)
         self.pack_start(separator, False)
 
-        hbox = gtk.HBox()
-        self.pack_start(hbox)
+        hbox = Gtk.HBox()
+        self.pack_start(hbox, True, True, 0)
 
         scroll_left = _TrayScrollButton('go-left', _PREVIOUS_PAGE)
-        scroll_left_event = gtk.EventBox()
+        scroll_left_event = Gtk.EventBox()
         scroll_left_event.add(scroll_left)
         scroll_left_event.set_size_request(55, -1)
         hbox.pack_start(scroll_left_event, False)
 
-        self._viewport = _TrayViewport(gtk.ORIENTATION_HORIZONTAL)
-        hbox.pack_start(self._viewport)
+        self._viewport = _TrayViewport(Gtk.Orientation.HORIZONTAL)
+        hbox.pack_start(self._viewport, True, True, 0)
         self._viewport.show()
 
         scroll_right = _TrayScrollButton('go-right', _NEXT_PAGE)
-        scroll_right_event = gtk.EventBox()
+        scroll_right_event = Gtk.EventBox()
         scroll_right_event.add(scroll_right)
         scroll_right_event.set_size_request(55, -1)
         hbox.pack_start(scroll_right_event, False)
 
         scroll_left.set_focus_on_click(False)
-        scroll_left_event.modify_bg(gtk.STATE_NORMAL, sugar.graphics.style.COLOR_TOOLBAR_GREY.get_gdk_color())
-        scroll_left.modify_bg(gtk.STATE_ACTIVE, sugar.graphics.style.COLOR_BUTTON_GREY.get_gdk_color())
+        scroll_left_event.modify_bg(Gtk.StateType.NORMAL, sugar3.graphics.style.COLOR_TOOLBAR_GREY.get_gdk_color())
+        scroll_left.modify_bg(Gtk.StateType.ACTIVE, sugar3.graphics.style.COLOR_BUTTON_GREY.get_gdk_color())
 
         scroll_right.set_focus_on_click(False)
-        scroll_right_event.modify_bg(gtk.STATE_NORMAL, sugar.graphics.style.COLOR_TOOLBAR_GREY.get_gdk_color())
-        scroll_right.modify_bg(gtk.STATE_ACTIVE, sugar.graphics.style.COLOR_BUTTON_GREY.get_gdk_color())
+        scroll_right_event.modify_bg(Gtk.StateType.NORMAL, sugar3.graphics.style.COLOR_TOOLBAR_GREY.get_gdk_color())
+        scroll_right.modify_bg(Gtk.StateType.ACTIVE, sugar3.graphics.style.COLOR_BUTTON_GREY.get_gdk_color())
 
         scroll_left.viewport = self._viewport
         scroll_right.viewport = self._viewport

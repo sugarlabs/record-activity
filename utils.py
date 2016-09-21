@@ -1,8 +1,7 @@
 import base64
-import rsvg
 import re
 import os
-import gtk
+from gi.repository import Gtk, Rsvg
 import time
 from time import strftime
 
@@ -27,7 +26,7 @@ def _saveDataToBufferCb(buf, data):
 
 
 def getPixbufFromString(str):
-    pbl = gtk.gdk.PixbufLoader()
+    pbl = GdkPixbuf.PixbufLoader()
     data = base64.b64decode( str )
     pbl.write(data)
     pbl.close()
@@ -44,7 +43,7 @@ def load_colored_svg(filename, stroke, fill):
     entity = '<!ENTITY stroke_color "%s">' % stroke
     data = re.sub('<!ENTITY stroke_color .*>', entity, data)
 
-    return rsvg.Handle(data=data).get_pixbuf()
+    return Rsvg.Handle.new_from_data(data).get_pixbuf()
 
 def getUniqueFilepath( path, i ):
     pathOb = os.path.abspath( path )
@@ -56,7 +55,7 @@ def getUniqueFilepath( path, i ):
         return os.path.abspath( newPath )
 
 def generate_thumbnail(pixbuf):
-    return pixbuf.scale_simple(108, 81, gtk.gdk.INTERP_BILINEAR)
+    return pixbuf.scale_simple(108, 81, GdkPixbuf.InterpType.BILINEAR)
 
 def getDateString( when ):
     return strftime( "%c", time.localtime(when) )

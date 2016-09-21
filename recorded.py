@@ -19,7 +19,7 @@
 #THE SOFTWARE.
 
 import os
-import gtk
+from gi.repository import Gtk
 
 import constants
 from instance import Instance
@@ -107,7 +107,7 @@ class Recorded:
     def getThumbPixbuf( self ):
         thumbFilepath = self.getThumbFilepath()
         if thumbFilepath and os.path.isfile(thumbFilepath):
-            return gtk.gdk.pixbuf_new_from_file(thumbFilepath)
+            return GdkPixbuf.Pixbuf.new_from_file(thumbFilepath)
         else:
             return None
 
@@ -132,7 +132,7 @@ class Recorded:
         else:
             audioFilepath = self.getAudioImageFilepath()
             if (audioFilepath != None):
-                audioPixbuf = gtk.gdk.pixbuf_new_from_file(audioFilepath)
+                audioPixbuf = GdkPixbuf.Pixbuf.new_from_file(audioFilepath)
 
         return audioPixbuf
 
