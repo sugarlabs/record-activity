@@ -26,59 +26,60 @@ import shutil
 from gettext import gettext as _
 from gettext import ngettext
 
-import gtk
-from gtk import gdk
-import cairo
-import pango
-import pangocairo
-import pygst
-pygst.require('0.10')
-import gst
+import gi
+vs = {'Gdk': '3.0', 'Gst': '1.0', 'Gtk': '3.0', 'SugarExt': '1.0', 'PangoCairo': '1.0'}
+for api, ver in vs.iteritems():
+    gi.require_version(api, ver)
 
-from sugar.activity import activity
-from sugar.graphics.toolcombobox import ToolComboBox
-from sugar.graphics.toolbarbox import ToolbarBox
-from sugar.graphics.toolbarbox import ToolbarButton
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.activity.widgets import StopButton
-from sugar.activity.widgets import ActivityToolbarButton
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics import style
+from gi.repository import Gdk, Gtk, Pango, PangoCairo, Gst
+import cairo
+
+Gst.init(None)
+
+from sugar3.activity import activity
+from sugar3.graphics.toolcombobox import ToolComboBox
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.graphics.toolbarbox import ToolbarButton
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.activity.widgets import StopButton
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics import style
+from sugar3.graphics.tray import HTray
 
 from model import Model
 from button import RecdButton
 import constants
 from instance import Instance
 import utils
-from tray import HTray
 from mediaview import MediaView
 import hw
 from iconcombobox import IconComboBox
 
 logger = logging.getLogger('record.py')
-COLOR_BLACK = gdk.color_parse('#000000')
-COLOR_WHITE = gdk.color_parse('#ffffff')
+COLOR_BLACK = Gdk.color_parse('#000000')
+COLOR_WHITE = Gdk.color_parse('#ffffff')
 
 TIMER_VALUES = [0, 5, 10]
 DURATION_VALUES = [2, 4, 6]
 QUALITY_VALUES = ['low', 'high']
 
-gst.debug_set_active(True)
-gst.debug_set_colored(False)
+Gst.debug_set_active(True)
+Gst.debug_set_colored(False)
 if logging.getLogger().level <= logging.DEBUG:
-    gst.debug_set_default_threshold(gst.LEVEL_WARNING)
+    Gst.debug_set_default_threshold(Gst.DebugLevel.WARNING)
 else:
-    gst.debug_set_default_threshold(gst.LEVEL_ERROR)
+    Gst.debug_set_default_threshold(Gst.DebugLevel.ERROR)
 
 
 class Record(activity.Activity):
     def __init__(self, handle):
-        super(Record, self).__init__(handle)
+        super(type(self), self).__init__(handle)
         self.props.enable_fullscreen_mode = False
         Instance(self)
 
-        self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self.connect("visibility-notify-event", self._visibility_changed)
 
         #the main classes
@@ -121,10 +122,10 @@ class Record(activity.Activity):
     def close(self):
         self.model.gplay.stop()
         self.model.glive.stop()
-        super(Record, self).close()
+        super(type(self), self).close()
 
     def _visibility_changed(self, widget, event):
-        self.model.set_visible(event.state != gtk.gdk.VISIBILITY_FULLY_OBSCURED)
+        self.model.set_visible(event.get_state() != Gdk.VisibilityState.FULLY_OBSCURED)
 
     def _shared_cb(self, activity):
         self.model.collab.set_activity_shared()
@@ -180,20 +181,20 @@ class Record(activity.Activity):
         self._audio_button.connect('clicked', self._mode_button_clicked)
         self._toolbar.insert(self._audio_button, -1)
 
-        self._toolbar.insert(gtk.SeparatorToolItem(), -1)
+        self._toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
         self._toolbar_controls = RecordControl(self._toolbar)
 
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
         self._toolbar.insert(separator, -1)
         self._toolbar.insert(StopButton(self), -1)
         self.get_toolbar_box().show_all()
 
-        main_box = gtk.VBox()
+        main_box = Gtk.VBox()
         self.set_canvas(main_box)
-        main_box.get_parent().modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
+        main_box.get_parent().modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
         main_box.show()
 
         self._media_view = MediaView()
@@ -204,32 +205,32 @@ class Record(activity.Activity):
         self._media_view.connect('tags-changed', self._media_view_tags_changed)
         self._media_view.show()
 
-        self._controls_hbox = gtk.HBox()
+        self._controls_hbox = Gtk.HBox()
         self._controls_hbox.show()
 
         self._shutter_button = ShutterButton()
         self._shutter_button.connect("clicked", self._shutter_clicked)
-        self._controls_hbox.pack_start(self._shutter_button, expand=True, fill=False)
+        self._controls_hbox.pack_start(self._shutter_button, True, False, 0)
 
         self._countdown_image = CountdownImage()
-        self._controls_hbox.pack_start(self._countdown_image, expand=True, fill=False)
+        self._controls_hbox.pack_start(self._countdown_image, True, False, 0)
 
         self._play_button = PlayButton()
         self._play_button.connect('clicked', self._play_pause_clicked)
-        self._controls_hbox.pack_start(self._play_button, expand=False)
+        self._controls_hbox.pack_start(self._play_button, False, True, 0)
 
         self._playback_scale = PlaybackScale(self.model)
-        self._controls_hbox.pack_start(self._playback_scale, expand=True, fill=True)
+        self._controls_hbox.pack_start(self._playback_scale, expand=True, fill=True, padding=0)
 
         self._progress = ProgressInfo()
-        self._controls_hbox.pack_start(self._progress, expand=True, fill=True)
+        self._controls_hbox.pack_start(self._progress, expand=True, fill=True, padding=0)
 
-        self._title_label = gtk.Label()
+        self._title_label = Gtk.Label()
         self._title_label.set_markup("<b><span foreground='white'>"+_('Title:')+'</span></b>')
-        self._controls_hbox.pack_start(self._title_label, expand=False)
+        self._controls_hbox.pack_start(self._title_label, False, True, 0)
 
-        self._title_entry = gtk.Entry()
-        self._title_entry.modify_bg(gtk.STATE_INSENSITIVE, COLOR_BLACK)
+        self._title_entry = Gtk.Entry()
+        self._title_entry.modify_bg(Gtk.StateType.INSENSITIVE, COLOR_BLACK)
         self._title_entry.connect('changed', self._title_changed)
         self._controls_hbox.pack_start(self._title_entry, expand=True, fill=True, padding=10)
 
@@ -240,7 +241,7 @@ class Record(activity.Activity):
 
         self._thumb_tray = HTray()
         self._thumb_tray.set_size_request(-1, 150)
-        main_box.pack_end(self._thumb_tray, expand=False)
+        main_box.pack_end(self._thumb_tray, False, False, 0)
         self._thumb_tray.show_all()
 
     def serialize(self):
@@ -260,7 +261,7 @@ class Record(activity.Activity):
     def _key_pressed(self, widget, event):
         key = event.keyval
 
-        if key == gtk.keysyms.KP_Page_Up: # game key O
+        if key == Gdk.KEY_KP_Page_Up: # game key O
             if self._shutter_button.props.visible:
                 if self._shutter_button.props.sensitive:
                     self._shutter_button.clicked()
@@ -270,11 +271,11 @@ class Record(activity.Activity):
         if self.model.ui_frozen():
             return False
 
-        if key == gtk.keysyms.c and event.state == gdk.CONTROL_MASK:
+        if key == Gdk.KEY_c and event.state == Gdk.ModifierType.CONTROL_MASK:
             self._copy_to_clipboard(self._active_recd)
-        elif key == gtk.keysyms.i:
+        elif key == Gdk.KEY_i:
             self._toggle_info()
-        elif key == gtk.keysyms.Escape:
+        elif key == Gdk.KEY_Escape:
             if self._fullscreen:
                 self._toggle_fullscreen()
 
@@ -400,14 +401,14 @@ class Record(activity.Activity):
             self._play_button.hide()
             self._playback_scale.hide()
             self._progress.hide()
-            self._controls_hbox.set_child_packing(self._shutter_button, expand=True, fill=False, padding=0, pack_type=gtk.PACK_START)
+            self._controls_hbox.set_child_packing(self._shutter_button, expand=True, fill=False, padding=0, pack_type=Gtk.PACK_START)
             self._shutter_button.set_normal()
             self._shutter_button.set_sensitive(True)
             self._shutter_button.show()
             self._media_view.show_live()
         elif state == constants.STATE_RECORDING:
             self._shutter_button.set_recording()
-            self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=gtk.PACK_START)
+            self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=Gtk.PACK_START)
             self._progress.show()
         elif state == constants.STATE_PROCESSING:
             self._set_cursor_busy()
@@ -450,7 +451,7 @@ class Record(activity.Activity):
         media_path = recd.getMediaFilepath()
         tmp_path = utils.getUniqueFilepath(media_path, 0)
         shutil.copyfile(media_path, tmp_path)
-        gtk.Clipboard().set_with_data([('text/uri-list', 0, 0)], self._clipboard_get, self._clipboard_clear, tmp_path)
+        Gtk.Clipboard().set_with_data([('text/uri-list', 0, 0)], self._clipboard_get, self._clipboard_clear, tmp_path)
 
     def _clipboard_get(self, clipboard, selection_data, info, path):
         selection_data.set("text/uri-list", 8, "file://" + path)
@@ -567,12 +568,12 @@ class Record(activity.Activity):
         self.set_progress(recd.meshDownlodingPercent, msg)
 
     def _set_cursor_busy(self):
-        self.window.set_cursor(gdk.Cursor(gdk.WATCH))
+        self.window.set_cursor(Gdk.Cursor.new(Gdk.WATCH))
 
     def _set_cursor_default(self):
         self.window.set_cursor(None)
 
-class RecordContainer(gtk.Container):
+class RecordContainer(Gtk.Container):
     """
     A custom Container that contains a media view area, and a controls hbox.
 
@@ -590,27 +591,26 @@ class RecordContainer(gtk.Container):
         self._controls_hbox = controls_hbox
         self._show_title = False
         self._controls_hbox_height = 0
-        super(RecordContainer, self).__init__()
+        super(type(self), self).__init__()
 
         for widget in (self._media_view, self._controls_hbox):
-            if widget.flags() & gtk.REALIZED:
+            if widget.get_realized():
                 widget.set_parent_window(self.window)
 
             widget.set_parent(self)
 
     def do_realize(self):
-        self.set_flags(gtk.REALIZED)
+        self.set_realized(True)
 
-        self.window = gdk.Window(
+        self.allocation = self.get_allocation()
+        self.window = Gdk.Window(
             self.get_parent_window(),
-            window_type=gdk.WINDOW_CHILD,
             x=self.allocation.x,
             y=self.allocation.y,
             width=self.allocation.width,
             height=self.allocation.height,
-            wclass=gdk.INPUT_OUTPUT,
-            colormap=self.get_colormap(),
-            event_mask=self.get_events() | gdk.VISIBILITY_NOTIFY_MASK | gdk.EXPOSURE_MASK)
+            wclass=Gdk.WindowWindowClass.INPUT_OUTPUT)
+        self.window.set_events(self.get_events() | Gdk.EventMask.VISIBILITY_NOTIFY_MASK | Gdk.EventMask.EXPOSURE_MASK)
         self.window.set_user_data(self)
 
         self.set_style(self.style.attach(self.window))
@@ -681,7 +681,7 @@ class RecordContainer(gtk.Container):
             controls_box_y = self.allocation.height - self._controls_hbox_height
 
         # send allocation to mediaview
-        alloc = gdk.Rectangle()
+        alloc = ()
         alloc.width = media_view_width
         alloc.height = media_view_height
         alloc.x = media_view_x
@@ -695,26 +695,25 @@ class RecordContainer(gtk.Container):
         alloc.height = self._controls_hbox_height
         self._controls_hbox.size_allocate(alloc)
 
-        if self.flags() & gtk.REALIZED:
+        if self.get_realized():
             self.window.move_resize(*allocation)
 
-    def do_forall(self, include_internals, callback, data):
+    def do_forall(self, include_internals, callback, **kwargs):
         for widget in (self._media_view, self._controls_hbox):
-            callback(widget, data)
+            callback(widget, **kwargs)
 
     def set_title_visible(self, visible):
         self._show_title = visible
         self.queue_draw()
 
-class PlaybackScale(gtk.HScale):
+class PlaybackScale(Gtk.HScale):
     def __init__(self, model):
         self.model = model
         self._change_handler = None
-        self._playback_adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
-        super(PlaybackScale, self).__init__(self._playback_adjustment)
+        self._playback_adjustment = Gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
+        super(type(self), self).__init__(adjustment=self._playback_adjustment)
 
         self.set_draw_value(False)
-        self.set_update_policy(gtk.UPDATE_CONTINUOUS)
         self.connect('button-press-event', self._button_press)
         self.connect('button-release-event', self._button_release)
 
@@ -734,28 +733,28 @@ class PlaybackScale(gtk.HScale):
         self.model.end_seek()
 
 
-class ProgressInfo(gtk.VBox):
+class ProgressInfo(Gtk.VBox):
     def __init__(self):
-        super(ProgressInfo, self).__init__()
+        super(type(self), self).__init__()
 
-        self._progress_bar = gtk.ProgressBar()
-        self._progress_bar.modify_bg(gtk.STATE_NORMAL, COLOR_BLACK)
-        self._progress_bar.modify_bg(gtk.STATE_INSENSITIVE, COLOR_BLACK)
+        self._progress_bar = Gtk.ProgressBar()
+        self._progress_bar.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
+        self._progress_bar.modify_bg(Gtk.StateType.INSENSITIVE, COLOR_BLACK)
         self.pack_start(self._progress_bar, expand=True, fill=True, padding=5)
 
-        self._label = gtk.Label()
-        self._label.modify_fg(gtk.STATE_NORMAL, COLOR_WHITE)
-        self.pack_start(self._label, expand=True, fill=True)
+        self._label = Gtk.Label()
+        self._label.modify_fg(Gtk.StateType.NORMAL, COLOR_WHITE)
+        self.pack_start(self._label, expand=True, fill=True, padding=0)
 
     def show(self):
         self._progress_bar.show()
         self._label.show()
-        super(ProgressInfo, self).show()
+        super(type(self), self).show()
 
     def hide(self):
         self._progress_bar.hide()
         self._label.hide()
-        super(ProgressInfo, self).hide()
+        super(type(self), self).hide()
 
     def set_progress(self, value):
         self._progress_bar.set_fraction(value)
@@ -764,15 +763,15 @@ class ProgressInfo(gtk.VBox):
         self._label.set_text(text)
 
 
-class CountdownImage(gtk.Image):
+class CountdownImage(Gtk.Image):
     def __init__(self):
-        super(CountdownImage, self).__init__()
+        super(type(self), self).__init__()
         self._countdown_images = {}
 
     def _generate_image(self, num):
         w = 55
         h = w
-        pixmap = gdk.Pixmap(self.get_window(), w, h, -1)
+        pixmap = Gdk.Pixmap(self.get_window(), w, h, -1)
         ctx = pixmap.cairo_create()
         ctx.rectangle(0, 0, w, h)
         ctx.set_source_rgb(0, 0, 0)
@@ -790,7 +789,7 @@ class CountdownImage(gtk.Image):
         ctx.set_source_rgb(255, 255, 255)
         pctx = pangocairo.CairoContext(ctx)
         play = pctx.create_layout()
-        font = pango.FontDescription("sans 30")
+        font = Pango.FontDescription("sans 30")
         play.set_font_description(font)
         play.set_text(str(num))
         dim = play.get_pixel_extents()
@@ -809,21 +808,21 @@ class CountdownImage(gtk.Image):
         self.set_from_pixmap(self._countdown_images[num], None)
 
 
-class ShutterButton(gtk.Button):
+class ShutterButton(Gtk.Button):
     def __init__(self):
-        gtk.Button.__init__(self)
-        self.set_relief(gtk.RELIEF_NONE)
+        super(type(self), self).__init__()
+        self.set_relief(Gtk.ReliefStyle.NONE)
         self.set_focus_on_click(False)
-        self.modify_bg(gtk.STATE_ACTIVE, COLOR_BLACK)
+        self.modify_bg(Gtk.StateType.ACTIVE, COLOR_BLACK)
 
         path = os.path.join(constants.GFX_PATH, 'media-record.png')
-        self._rec_image = gtk.image_new_from_file(path)
+        self._rec_image = Gtk.Image.new_from_file(path)
 
         path = os.path.join(constants.GFX_PATH, 'media-record-red.png')
-        self._rec_red_image = gtk.image_new_from_file(path)
+        self._rec_red_image = Gtk.Image.new_from_file(path)
 
         path = os.path.join(constants.GFX_PATH, 'media-insensitive.png')
-        self._insensitive_image = gtk.image_new_from_file(path)
+        self._insensitive_image = Gtk.Image.new_from_file(path)
 
         self.set_normal()
 
@@ -832,7 +831,7 @@ class ShutterButton(gtk.Button):
             self.set_image(self._rec_image)
         else:
             self.set_image(self._insensitive_image)
-        super(ShutterButton, self).set_sensitive(sensitive)
+        super(type(self), self).set_sensitive(sensitive)
 
     def set_normal(self):
         self.set_image(self._rec_image)
@@ -841,18 +840,18 @@ class ShutterButton(gtk.Button):
         self.set_image(self._rec_red_image)
 
 
-class PlayButton(gtk.Button):
+class PlayButton(Gtk.Button):
     def __init__(self):
-        super(PlayButton, self).__init__()
-        self.set_relief(gtk.RELIEF_NONE)
+        super(type(self), self).__init__()
+        self.set_relief(Gtk.ReliefStyle.NONE)
         self.set_focus_on_click(False)
-        self.modify_bg(gtk.STATE_ACTIVE, COLOR_BLACK)
+        self.modify_bg(Gtk.StateType.ACTIVE, COLOR_BLACK)
 
         path = os.path.join(constants.GFX_PATH, 'media-play.png')
-        self._play_image = gtk.image_new_from_file(path)
+        self._play_image = Gtk.Image.new_from_file(path)
 
         path = os.path.join(constants.GFX_PATH, 'media-pause.png')
-        self._pause_image = gtk.image_new_from_file(path)
+        self._pause_image = Gtk.Image.new_from_file(path)
 
         self.set_play()
 

@@ -12,7 +12,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gst
+from gi.repository import Gst
 import os
 import logging
 import constants
@@ -20,18 +20,18 @@ import constants
 logger = logging.getLogger('record:aplay.py')
 
 def play(file, done_cb=None):
-    player.set_state(gst.STATE_NULL)
+    player.set_state(Gst.State.NULL)
 
     def eos_cb(bus, message):
         bus.disconnect_by_func(eos_cb)
-        player.set_state(gst.STATE_NULL)
+        player.set_state(Gst.State.NULL)
         if done_cb is not None:
             done_cb()
 
     def error_cb(bus, message):
         err, debug = message.parse_error()
         logger.error('play_pipe: %s %s' % (err, debug))
-        player.set_state(gst.STATE_NULL)
+        player.set_state(Gst.State.NULL)
         if done_cb is not None:
             done_cb()
 
@@ -40,10 +40,10 @@ def play(file, done_cb=None):
     bus.connect('message::error', error_cb)
 
     player.props.uri = 'file://' + os.path.join(constants.GFX_PATH, file)
-    player.set_state(gst.STATE_PLAYING)
+    player.set_state(Gst.State.PLAYING)
 
 
-player = gst.element_factory_make('playbin')
-fakesink = gst.element_factory_make('fakesink')
+player = Gst.ElementFactory.make('playbin')
+fakesink = Gst.ElementFactory.make('fakesink')
 player.set_property("video-sink", fakesink)
 player.get_bus().add_signal_watch()

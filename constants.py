@@ -2,7 +2,7 @@
 import os
 from gettext import gettext as _
 
-from sugar.activity import activity
+from sugar3.activity import activity
 
 MODE_PHOTO = 0
 MODE_VIDEO = 1

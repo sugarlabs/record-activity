@@ -18,15 +18,15 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-import gtk
+from gi.repository import Gtk
 
-from sugar.graphics.combobox import ComboBox
-from sugar.graphics import style
+from sugar3.graphics.combobox import ComboBox
+from sugar3.graphics import style
 
 
-class IconComboBox(gtk.ToolItem):
+class IconComboBox(Gtk.ToolItem):
     def __init__(self, icon_name, **kwargs):
-        gtk.ToolItem.__init__(self, **kwargs)
+        super(type(self), self).__init__()
 
         self.icon_name = icon_name
         self.set_border_width(style.DEFAULT_PADDING)
