@@ -19,7 +19,7 @@
 #THE SOFTWARE.
 
 import os
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 
 import constants
 from instance import Instance

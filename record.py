@@ -27,13 +27,15 @@ from gettext import gettext as _
 from gettext import ngettext
 
 import gi
-vs = {'Gdk': '3.0', 'Gst': '1.0', 'Gtk': '3.0', 'SugarExt': '1.0', 'PangoCairo': '1.0'}
+vs = {'Gdk': '3.0', 'Gst': '1.0', 'Gtk': '3.0', 'SugarExt': '1.0',
+      'PangoCairo': '1.0', 'GstVideo': '1.0'}
 for api, ver in vs.iteritems():
     gi.require_version(api, ver)
 
-from gi.repository import Gdk, Gtk, Pango, PangoCairo, Gst
+from gi.repository import GObject, Gdk, Gtk, Pango, PangoCairo, Gst, GstVideo
 import cairo
 
+GObject.threads_init()
 Gst.init(None)
 
 from sugar3.activity import activity
@@ -55,7 +57,6 @@ from instance import Instance
 import utils
 from mediaview import MediaView
 import hw
-from iconcombobox import IconComboBox
 
 logger = logging.getLogger('record.py')
 COLOR_BLACK = Gdk.color_parse('#000000')
@@ -65,12 +66,12 @@ TIMER_VALUES = [0, 5, 10]
 DURATION_VALUES = [2, 4, 6]
 QUALITY_VALUES = ['low', 'high']
 
-Gst.debug_set_active(True)
-Gst.debug_set_colored(False)
-if logging.getLogger().level <= logging.DEBUG:
-    Gst.debug_set_default_threshold(Gst.DebugLevel.WARNING)
-else:
-    Gst.debug_set_default_threshold(Gst.DebugLevel.ERROR)
+#Gst.debug_set_active(True)
+#Gst.debug_set_colored(False)
+#if logging.getLogger().level <= logging.DEBUG:
+#    Gst.debug_set_default_threshold(Gst.DebugLevel.WARNING)
+#else:
+#    Gst.debug_set_default_threshold(Gst.DebugLevel.ERROR)
 
 
 class Record(activity.Activity):
@@ -113,16 +114,18 @@ class Record(activity.Activity):
             except:
                 pass
 
+        self._old_cursor = self.get_window().get_cursor()
+
     def read_file(self, path):
         self.model.read_file(path)
 
     def write_file(self, path):
         self.model.write_file(path)
 
-    def close(self):
+    def close(self, **kwargs):
         self.model.gplay.stop()
         self.model.glive.stop()
-        super(type(self), self).close()
+        super(type(self), self).close(**kwargs)
 
     def _visibility_changed(self, widget, event):
         self.model.set_visible(event.get_state() != Gdk.VisibilityState.FULLY_OBSCURED)
@@ -145,10 +148,10 @@ class Record(activity.Activity):
 
         self._active_toolbar_idx = 0
 
-        self._toolbar_box = ToolbarBox()
+        toolbar_box = ToolbarBox()
         activity_button = ActivityToolbarButton(self)
-        self._toolbar_box.toolbar.insert(activity_button, 0)
-        self.set_toolbar_box(self._toolbar_box)
+        toolbar_box.toolbar.insert(activity_button, 0)
+        self.set_toolbar_box(toolbar_box)
         self._toolbar = self.get_toolbar_box().toolbar
 
         tool_group = None
@@ -192,7 +195,7 @@ class Record(activity.Activity):
         self._toolbar.insert(StopButton(self), -1)
         self.get_toolbar_box().show_all()
 
-        main_box = Gtk.VBox()
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_canvas(main_box)
         main_box.get_parent().modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
         main_box.show()
@@ -205,8 +208,7 @@ class Record(activity.Activity):
         self._media_view.connect('tags-changed', self._media_view_tags_changed)
         self._media_view.show()
 
-        self._controls_hbox = Gtk.HBox()
-        self._controls_hbox.show()
+        self._controls_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
         self._shutter_button = ShutterButton()
         self._shutter_button.connect("clicked", self._shutter_clicked)
@@ -220,10 +222,10 @@ class Record(activity.Activity):
         self._controls_hbox.pack_start(self._play_button, False, True, 0)
 
         self._playback_scale = PlaybackScale(self.model)
-        self._controls_hbox.pack_start(self._playback_scale, expand=True, fill=True, padding=0)
+        self._controls_hbox.pack_start(self._playback_scale, True, True, 0)
 
         self._progress = ProgressInfo()
-        self._controls_hbox.pack_start(self._progress, expand=True, fill=True, padding=0)
+        self._controls_hbox.pack_start(self._progress, True, True, 0)
 
         self._title_label = Gtk.Label()
         self._title_label.set_markup("<b><span foreground='white'>"+_('Title:')+'</span></b>')
@@ -233,10 +235,13 @@ class Record(activity.Activity):
         self._title_entry.modify_bg(Gtk.StateType.INSENSITIVE, COLOR_BLACK)
         self._title_entry.connect('changed', self._title_changed)
         self._controls_hbox.pack_start(self._title_entry, expand=True, fill=True, padding=10)
+        self._controls_hbox.show()
 
-        self._record_container = RecordContainer(self._media_view, self._controls_hbox)
-        main_box.pack_start(self._record_container, expand=True, fill=True,
-                padding=6)
+        #self._record_container = _RecordContainer(self._media_view, self._controls_hbox)
+        self._record_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self._record_container.pack_start(self._media_view, True, True, 0)
+        self._record_container.pack_start(self._controls_hbox, False, True, 0)
+        main_box.pack_start(self._record_container, True, True, 6)
         self._record_container.show()
 
         self._thumb_tray = HTray()
@@ -287,11 +292,11 @@ class Record(activity.Activity):
     def set_mode(self, mode):
         self._toolbar_controls.set_mode(mode)
 
-    # can be called from gstreamer thread, so must not do any GTK+ stuff
+    # can be called from GStreamer thread, so must not do any GTK+ stuff
     def set_glive_sink(self, sink):
         return self._media_view.set_video_sink(sink)
 
-    # can be called from gstreamer thread, so must not do any GTK+ stuff
+    # can be called from GStreamer thread, so must not do any GTK+ stuff
     def set_gplay_sink(self, sink):
         return self._media_view.set_video2_sink(sink)
 
@@ -354,7 +359,7 @@ class Record(activity.Activity):
         self._title_entry.set_text(recd.title)
         self._title_entry.show()
         self._title_label.show()
-        self._record_container.set_title_visible(True)
+        #self._record_container.set_title_visible(True)
 
         func(recd.recorderName, recd.colorStroke, recd.colorFill, utils.getDateString(recd.time), recd.tags)
 
@@ -367,10 +372,10 @@ class Record(activity.Activity):
 
     def _toggle_fullscreen(self):
         if not self._fullscreen:
-            self._toolbar_box.hide()
+            self.get_toolbar_box().hide()
             self._thumb_tray.hide()
         else:
-            self._toolbar_box.show()
+            self.get_toolbar_box().show()
             self._thumb_tray.show()
 
         self._fullscreen = not self._fullscreen
@@ -397,18 +402,18 @@ class Record(activity.Activity):
             self._active_recd = None
             self._title_entry.hide()
             self._title_label.hide()
-            self._record_container.set_title_visible(False)
+            #self._record_container.set_title_visible(False)
             self._play_button.hide()
             self._playback_scale.hide()
             self._progress.hide()
-            self._controls_hbox.set_child_packing(self._shutter_button, expand=True, fill=False, padding=0, pack_type=Gtk.PACK_START)
+            self._controls_hbox.set_child_packing(self._shutter_button, expand=True, fill=False, padding=0, pack_type=Gtk.PackType.START)
             self._shutter_button.set_normal()
             self._shutter_button.set_sensitive(True)
             self._shutter_button.show()
             self._media_view.show_live()
         elif state == constants.STATE_RECORDING:
             self._shutter_button.set_recording()
-            self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=Gtk.PACK_START)
+            self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=Gtk.PackType.START)
             self._progress.show()
         elif state == constants.STATE_PROCESSING:
             self._set_cursor_busy()
@@ -431,16 +436,15 @@ class Record(activity.Activity):
         self._active_recd = recd
         self._show_recd(recd)
 
-    def add_thumbnail(self, recd, scroll_to_end):
+    def add_thumbnail(self, recd):
         button = RecdButton(recd)
         clicked_handler = button.connect("clicked", self._thumbnail_clicked, recd)
         remove_handler = button.connect("remove-requested", self._remove_recd)
         clipboard_handler = button.connect("copy-clipboard-requested", self._thumbnail_copy_clipboard)
-        button.set_data('handler-ids', (clicked_handler, remove_handler, clipboard_handler))
-        self._thumb_tray.add_item(button)
+        button.handler_ids = (clicked_handler, remove_handler, clipboard_handler)
         button.show()
-        if scroll_to_end:
-            self._thumb_tray.scroll_to_end()
+        self._thumb_tray.add_item(button)
+        self._thumb_tray.scroll_to_item(button)
 
     def _copy_to_clipboard(self, recd):
         if recd == None:
@@ -472,8 +476,7 @@ class Record(activity.Activity):
         self._remove_thumbnail(recdbutton)
 
     def _remove_thumbnail(self, recdbutton):
-        handlers = recdbutton.get_data('handler-ids')
-        for handler in handlers:
+        for handler in recdbutton.handler_ids:
             recdbutton.disconnect(handler)
 
         self._thumb_tray.remove_item(recdbutton)
@@ -492,7 +495,7 @@ class Record(activity.Activity):
         self._title_entry.set_text(recd.title)
         self._title_entry.show()
         self._title_label.show()
-        self._record_container.set_title_visible(True)
+        #self._record_container.set_title_visible(True)
         self._shutter_button.hide()
         self._progress.hide()
 
@@ -501,7 +504,7 @@ class Record(activity.Activity):
         self._shutter_button.hide()
         self._title_entry.hide()
         self._title_label.hide()
-        self._record_container.set_title_visible(False)
+        #self._record_container.set_title_visible(False)
         self._play_button.show()
         self._playback_scale.show()
         path = recd.getAudioImageFilepath()
@@ -514,7 +517,7 @@ class Record(activity.Activity):
         self._shutter_button.hide()
         self._title_entry.hide()
         self._title_label.hide()
-        self._record_container.set_title_visible(False)
+        #self._record_container.set_title_visible(False)
         self._play_button.show()
         self._playback_scale.show()
         self._media_view.show_video()
@@ -568,12 +571,15 @@ class Record(activity.Activity):
         self.set_progress(recd.meshDownlodingPercent, msg)
 
     def _set_cursor_busy(self):
-        self.window.set_cursor(Gdk.Cursor.new(Gdk.WATCH))
+        self._old_cursor = self.get_window().get_cursor()
+        self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        Gdk.flush()
 
     def _set_cursor_default(self):
-        self.window.set_cursor(None)
+        self.get_window().set_cursor(self._old_cursor)
+        Gdk.flush()
 
-class RecordContainer(Gtk.Container):
+class _RecordContainer(Gtk.Container):
     """
     A custom Container that contains a media view area, and a controls hbox.
 

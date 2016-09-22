@@ -1,5 +1,4 @@
-from gi.repository import GObject
-from gi.repository import Gtk
+from gi.repository import GObject, Gtk, GdkPixbuf
 from gettext import gettext as _
 
 from sugar3.graphics.palette import Palette

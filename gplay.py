@@ -19,7 +19,6 @@
 #THE SOFTWARE.
 
 from gi.repository import GObject, Gst
-GObject.threads_init()
 
 import logging
 logger = logging.getLogger('record:gplay.py')
@@ -34,11 +33,15 @@ class Gplay(GObject.GObject):
         self.activity = activity_obj
         self._playback_monitor_handler = None
         self._player = Gst.ElementFactory.make('playbin')
+        if self._player is None:
+            logger.error('no playbin')
 
         bus = self._player.get_bus()
         bus.add_signal_watch()
         bus.connect('message::error', self._bus_error)
         bus.connect('message::eos', self._bus_eos)
+
+        # todo: set_sink
 
     def _bus_error(self, bus, message):
         err, debug = message.parse_error()
@@ -59,10 +62,13 @@ class Gplay(GObject.GObject):
         if position == 0:
             location = 0
         else:
-            duration = self._player.query_duration(Gst.FORMAT_TIME, None)[0]
+            duration = self._player.query_duration(Gst.Format.TIME, None)[0]
             location = duration * (position / 100)
 
-        event = Gst.event_new_seek(1.0, Gst.FORMAT_TIME, Gst.SEEK_FLAG_FLUSH | Gst.SEEK_FLAG_ACCURATE, Gst.SEEK_TYPE_SET, location, Gst.SEEK_TYPE_NONE, 0)
+        event = Gst.Event.new_seek(1.0, Gst.Format.TIME,
+                                   Gst.SeekFlags.FLUSH | Gst.SeekFlags.ACCURATE,
+                                   Gst.SeekType.SET, location,
+                                   Gst.SeekType.NONE, 0)
         res = self._player.send_event(event)
         if res:
             self._player.set_new_stream_time(0L)
@@ -76,6 +82,9 @@ class Gplay(GObject.GObject):
 
         if not self._player.props.video_sink:
             sink = Gst.ElementFactory.make('xvimagesink')
+            if sink is None:
+                logger.error('no xvimagesink')
+
             sink.props.force_aspect_ratio = True
             self._player.props.video_sink = sink
 
@@ -87,8 +96,8 @@ class Gplay(GObject.GObject):
 
     def _playback_monitor(self):
         try:
-            position = self._player.query_position(Gst.FORMAT_TIME)[0]
-            duration = self._player.query_duration(Gst.FORMAT_TIME)[0]
+            position = self._player.query_position(Gst.Format.TIME)[0]
+            duration = self._player.query_duration(Gst.Format.TIME)[0]
         except Gst.QueryError:
             return True
 
@@ -101,7 +110,7 @@ class Gplay(GObject.GObject):
         self.emit('playback-status-changed', state, position)
 
     def get_state(self):
-        return self._player.get_state()[1]
+        return self._player.get_state(Gst.CLOCK_TIME_NONE)[1]
 
     def stop(self):
         if self._playback_monitor_handler:

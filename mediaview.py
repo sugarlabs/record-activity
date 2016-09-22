@@ -1,10 +1,13 @@
 import os
+import logging
 from gettext import gettext as _
 
-from gi.repository import GObject, Gdk, Gtk, GdkPixbuf
+from gi.repository import GObject, Gdk, GdkX11, Gtk, GdkPixbuf, GstVideo
 
 import constants
 import utils
+
+logger = logging.getLogger('mediaview')
 
 COLOR_BLACK = Gdk.color_parse('#000000')
 COLOR_WHITE = Gdk.color_parse('#ffffff')
@@ -36,16 +39,18 @@ class InfoView(Gtk.EventBox):
 
         self.connect('size-allocate', self._size_allocate)
 
-        self._outer_vbox = Gtk.VBox(spacing=7)
+        self._outer_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
+                                   spacing=7)
         self.add(self._outer_vbox)
 
-        hbox = Gtk.HBox()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self._outer_vbox.pack_start(hbox, True, True, 0)
 
-        inner_vbox = Gtk.VBox(spacing=5)
+        inner_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
+                             spacing=5)
         hbox.pack_start(inner_vbox, True, True, 6)
 
-        author_hbox = Gtk.HBox()
+        author_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         inner_vbox.pack_start(author_hbox, False, True, 0)
 
         label = Gtk.Label()
@@ -105,9 +110,6 @@ class InfoView(Gtk.EventBox):
     def show(self):
         self.show_all()
 
-    def hide(self):
-        self.hide_all()
-
     def set_author(self, name, stroke, fill):
         self._xo_icon.set_colors(stroke, fill)
         self._author_label.set_text(name)
@@ -125,32 +127,42 @@ class InfoView(Gtk.EventBox):
     def _tags_changed(self, widget):
         self.emit('tags-changed', widget)
 
-class VideoBox(Gtk.EventBox):
+
+class VideoBox(Gtk.DrawingArea):
     """
-    A widget with its own window for rendering a gstreamer video sink onto.
+    For rendering a GStreamer video sink onto.
     """
     def __init__(self):
-        super(type(self), self).__init__()
-        self.set_double_buffered(False)
+        GObject.GObject.__init__(self)
+        self.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
+                        Gdk.EventMask.POINTER_MOTION_HINT_MASK |
+                        Gdk.EventMask.EXPOSURE_MASK |
+                        Gdk.EventMask.KEY_PRESS_MASK |
+                        Gdk.EventMask.KEY_RELEASE_MASK)
+
         self.set_app_paintable(True)
-        self._sink = None
+        self.set_double_buffered(False)
+
         self._xid = None
+        self._sink = None
         self.connect('realize', self._realize)
+        self.connect('draw', self._draw_cb)
 
-    def _realize(self, widget):
-        self._xid = self.window.xid
-
-    def do_expose_event(self):
+    def _draw_cb(self, widget, cr):
         if self._sink:
             self._sink.expose()
             return False
         else:
             return True
 
-    # can be called from gstreamer thread, must not do any GTK+ stuff
+    def _realize(self, widget):
+        self._xid = self.get_window().get_xid()
+
+    # can be called from GStreamer thread, must not do any GTK+ stuff
     def set_sink(self, sink):
         self._sink = sink
-        sink.set_xwindow_id(self._xid)
+        sink.set_window_handle(self._xid)
+
 
 class FullscreenButton(Gtk.EventBox):
     def __init__(self):
@@ -256,7 +268,7 @@ class MediaView(Gtk.EventBox):
     def _raise_widget(widget):
         widget.show()
         widget.realize()
-        widget.window.raise_()
+        widget.get_window().raise_()
 
     def __init__(self):
         self._mode = None
@@ -476,11 +488,11 @@ class MediaView(Gtk.EventBox):
         self._video.realize()
         self._video2.realize()
 
-    # can be called from gstreamer thread, must not do any GTK+ stuff
+    # can be called from GStreamer thread, must not do any GTK+ stuff
     def set_video_sink(self, sink):
         self._video.set_sink(sink)
 
-    # can be called from gstreamer thread, must not do any GTK+ stuff
+    # can be called from GStreamer thread, must not do any GTK+ stuff
     def set_video2_sink(self, sink):
         self._video2.set_sink(sink)
 

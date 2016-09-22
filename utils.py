@@ -1,28 +1,31 @@
 import base64
 import re
 import os
-from gi.repository import Gtk, Rsvg
+from gi.repository import Gtk, Rsvg, GdkPixbuf
 import time
-from time import strftime
 
 import constants
 
 
 def getStringEncodedFromPixbuf(pixbuf):
-    data = [""]
-    pixbuf.save_to_callback(_saveDataToBufferCb, "png", {}, data)
-    return base64.b64encode(str(data[0]))
+    result, data = pixbuf.save_to_bufferv('png', [], [])
+    return base64.b64encode(data)
+    #data = [""]
+    #pixbuf.save_to_callbackv(_saveDataToBufferCb, data, "png", [], [])
+    #return base64.b64encode(str(data[0]))
 
 
 def getStringFromPixbuf(pixbuf):
-    data = [""]
-    pixbuf.save_to_callback(_saveDataToBufferCb, "png", {}, data)
-    return str(data[0])
+    result, data = pixbuf.save_to_bufferv('png', [], [])
+    return data
+    #data = [""]
+    #pixbuf.save_to_callbackv(_saveDataToBufferCb, data, "png", [], [])
+    #return str(data[0])
 
 
-def _saveDataToBufferCb(buf, data):
-    data[0] += buf
-    return True
+#def _saveDataToBufferCb(buf, data):
+#    data[0] += buf
+#    return True
 
 
 def getPixbufFromString(str):
@@ -58,5 +61,5 @@ def generate_thumbnail(pixbuf):
     return pixbuf.scale_simple(108, 81, GdkPixbuf.InterpType.BILINEAR)
 
 def getDateString( when ):
-    return strftime( "%c", time.localtime(when) )
+    return time.strftime( "%c", time.localtime(when) )
 

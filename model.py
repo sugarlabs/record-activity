@@ -92,7 +92,7 @@ class Model:
                 self.activity.deserialize(json.loads(ui_el.data))
 
         for recd in self.mediaHashs[self._mode]:
-            self.activity.add_thumbnail(recd, True)
+            self.activity.add_thumbnail(recd)
 
     def get_has_camera(self):
         return self.glive.get_has_camera()
@@ -111,7 +111,7 @@ class Model:
 
         self.activity.remove_all_thumbnails()
         for recd in self.mediaHashs[mode]:
-            self.activity.add_thumbnail(recd, True)
+            self.activity.add_thumbnail(recd)
 
         self.activity.set_mode(mode)
         self.set_state(constants.STATE_READY)
@@ -260,27 +260,27 @@ class Model:
         # otherwise, capture normally
         self.shutter_sound(self._start_media_capture)
 
-    # called from gstreamer thread
+    # called from GStreamer thread
     def still_ready(self, pixbuf):
         GObject.idle_add(self.activity.show_still, pixbuf)
 
     def add_recd(self, recd):
         self.mediaHashs[recd.type].append(recd)
         if self._mode == recd.type:
-            self.activity.add_thumbnail(recd, True)
+            self.activity.add_thumbnail(recd)
 
         if not recd.buddy:
             self.collab.share_recd(recd)
 
-    # called from gstreamer thread
+    # called from GStreamer thread
     def save_photo(self, pixbuf):
         recd = self.createNewRecorded(constants.TYPE_PHOTO)
 
         imgpath = os.path.join(Instance.instancePath, recd.mediaFilename)
-        pixbuf.save(imgpath, "jpeg")
+        pixbuf.savev(imgpath, "jpeg", [], [])
 
         pixbuf = utils.generate_thumbnail(pixbuf)
-        pixbuf.save(recd.make_thumb_path(), "png")
+        pixbuf.savev(recd.make_thumb_path(), "png", [], [])
 
         #now that we've saved both the image and its pixbuf, we get their md5s
         self.createNewRecordedMd5Sums( recd )
@@ -288,7 +288,7 @@ class Model:
         GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
         GObject.idle_add(self.activity.set_shutter_sensitive, True, priority=GObject.PRIORITY_HIGH)
 
-    # called from gstreamer thread
+    # called from GStreamer thread
     def save_video(self, path, still):
         recd = self.createNewRecorded(constants.TYPE_VIDEO)
         os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
