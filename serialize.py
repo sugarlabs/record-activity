@@ -1,3 +1,4 @@
+from gi.repository import GdkPixbuf
 from xml.dom.minidom import getDOMImplementation
 import cStringIO
 import os
