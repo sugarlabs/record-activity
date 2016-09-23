@@ -32,7 +32,7 @@ vs = {'Gdk': '3.0', 'Gst': '1.0', 'Gtk': '3.0', 'SugarExt': '1.0',
 for api, ver in vs.iteritems():
     gi.require_version(api, ver)
 
-from gi.repository import GObject, Gdk, Gtk, Pango, PangoCairo, Gst, GstVideo
+from gi.repository import GObject, Gdk, GdkPixbuf, Gtk, Pango, PangoCairo, Gst, GstVideo, SugarExt
 import cairo
 
 GObject.threads_init()
@@ -455,10 +455,21 @@ class Record(activity.Activity):
         media_path = recd.getMediaFilepath()
         tmp_path = utils.getUniqueFilepath(media_path, 0)
         shutil.copyfile(media_path, tmp_path)
-        Gtk.Clipboard().set_with_data([('text/uri-list', 0, 0)], self._clipboard_get, self._clipboard_clear, tmp_path)
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        data = [Gtk.TargetEntry.new('text/uri-list', 0, 0)]
+
+        # XXX SL#4307 - until set_with_data bindings are fixed upstream
+        if hasattr(clipboard, 'set_with_data'):
+            clipboard.set_with_data(data, self._clipboard_get,
+                                    self._clipboard_clear, tmp_path)
+        else:
+            SugarExt.clipboard_set_with_data(clipboard, data,
+                                             self._clipboard_get,
+                                             self._clipboard_clear, tmp_path)
+
 
     def _clipboard_get(self, clipboard, selection_data, info, path):
-        selection_data.set("text/uri-list", 8, "file://" + path)
+        selection_data.set_uris(["file://" + path])
 
     def _clipboard_clear(self, clipboard, path):
         if os.path.exists(path):
@@ -777,8 +788,8 @@ class CountdownImage(Gtk.Image):
     def _generate_image(self, num):
         w = 55
         h = w
-        pixmap = Gdk.Pixmap(self.get_window(), w, h, -1)
-        ctx = pixmap.cairo_create()
+        pixmap = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
+        ctx = cairo.Context(pixmap)
         ctx.rectangle(0, 0, w, h)
         ctx.set_source_rgb(0, 0, 0)
         ctx.fill()
@@ -793,18 +804,21 @@ class CountdownImage(Gtk.Image):
         ctx.translate(-x, -y)
 
         ctx.set_source_rgb(255, 255, 255)
-        pctx = pangocairo.CairoContext(ctx)
-        play = pctx.create_layout()
+        pctx = PangoCairo.create_context(ctx)
+        play = PangoCairo.create_layout(ctx)
         font = Pango.FontDescription("sans 30")
         play.set_font_description(font)
-        play.set_text(str(num))
-        dim = play.get_pixel_extents()
-        ctx.translate(-dim[0][0], -dim[0][1])
-        xoff = (w - dim[0][2]) / 2
-        yoff = (h - dim[0][3]) / 2
+        play.set_text(str(num), -1)
+        ink, log = play.get_pixel_extents()
+        logger.error('ink %r', (ink.x, ink.y, ink.width, ink.height))
+        #logger.error('log %r', (log.x, log.y, log.width, log.height))
+        # FIXME: SEGFAULTS HERE
+        ctx.translate(-ink.x, -ink.y)
+        xoff = (w - ink.width) / 2
+        yoff = (h - ink.height) / 2
         ctx.translate(xoff, yoff)
         ctx.translate(-3, 0)
-        pctx.show_layout(play)
+        PangoCairo.show_layout(pctx, play)
         return pixmap
 
     def set_value(self, num):
@@ -897,8 +911,7 @@ class RecordControl():
         if self._timer_palette:
 
             if not self._timer_palette.is_up():
-                self._timer_palette.popup(immediate=True,
-                                    state=self._timer_palette.SECONDARY)
+                self._timer_palette.popup(immediate=True)
             else:
                 self._timer_palette.popdown(immediate=True)
             return
@@ -993,7 +1006,7 @@ class RecordControl():
     def set_timer_idx(self, idx):
         self._timer_value = TIMER_VALUES[idx]
         if hasattr(self, '_timer_button'):
-            self._timer_button.set_icon('timer-%d' % (self._timer_value))
+            self._timer_button.set_icon_name('timer-%d' % (self._timer_value))
 
     def get_duration(self):
         return self._duration_value
@@ -1007,7 +1020,7 @@ class RecordControl():
     def set_duration_idx(self, idx):
         self._duration_value = DURATION_VALUES[idx]
         if hasattr(self, '_duration_button'):
-            self._duration_button.set_icon(
+            self._duration_button.set_icon_name(
                 'duration-%d' % (self._duration_value))
 
     def get_quality(self):
@@ -1016,4 +1029,4 @@ class RecordControl():
     def set_quality(self, idx):
         self._quality_value = idx
         if hasattr(self, '_quality_button'):
-            self._quality_button.set_icon('%s-quality' % (QUALITY_VALUES[idx]))
+            self._quality_button.set_icon_name('%s-quality' % (QUALITY_VALUES[idx]))

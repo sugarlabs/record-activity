@@ -294,7 +294,7 @@ class Model:
         os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
 
         still = utils.generate_thumbnail(still)
-        still.save(recd.make_thumb_path(), "png")
+        still.savev(recd.make_thumb_path(), "png", [], [])
 
         self.createNewRecordedMd5Sums( recd )
 
@@ -308,11 +308,11 @@ class Model:
         if still:
             image_path = os.path.join(Instance.instancePath, "audioPicture.png")
             image_path = utils.getUniqueFilepath(image_path, 0)
-            still.save(image_path, "png")
+            still.savev(image_path, "png", [], [])
             recd.audioImageFilename = os.path.basename(image_path)
 
             still = utils.generate_thumbnail(still)
-            still.save(recd.make_thumb_path(), "png")
+            still.savev(recd.make_thumb_path(), "png", [], [])
 
         self.createNewRecordedMd5Sums( recd )
 

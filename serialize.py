@@ -123,7 +123,7 @@ def fillRecdFromNode(recd, el):
             thumbPath = os.path.join(Instance.instancePath, "datastoreThumb.jpg")
             thumbPath = utils.getUniqueFilepath(thumbPath, 0)
             thumbImg = utils.getPixbufFromString(bt.nodeValue)
-            thumbImg.save(thumbPath, "jpeg", {"quality":"85"} )
+            thumbImg.savev(thumbPath, "jpeg", {"quality":"85"}, [], [])
             recd.thumbFilename = os.path.basename(thumbPath)
             logger.debug("saved thumbFilename")
         except:
@@ -135,7 +135,7 @@ def fillRecdFromNode(recd, el):
             audioImagePath = os.path.join(Instance.instancePath, "audioImage.png")
             audioImagePath = utils.getUniqueFilepath( audioImagePath, 0 )
             audioImage = utils.getPixbufFromString( ai.nodeValue )
-            audioImage.save(audioImagePath, "png", {} )
+            audioImage.savev(audioImagePath, "png", {}, [], [])
             recd.audioImageFilename = os.path.basename(audioImagePath)
             logger.debug("loaded audio image and set audioImageFilename")
         except:

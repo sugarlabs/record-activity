@@ -74,7 +74,7 @@ class RecordCollab(object):
             logger.error('_setup: Failed to get_preferred_connection')
 
         # Work out what our room is called and whether we have Tubes already
-        bus_name, conn_path, channel_paths = self.activity._shared_activity.get_channels()
+        bus_name, conn_path, channel_paths = self.activity._shared_activity.get_channels()  # FIXME: no attribute _shared_activity
         room = None
         tubes_chan = None
         text_chan = None
