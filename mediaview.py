@@ -153,6 +153,9 @@ class VideoBox(Gtk.DrawingArea):
             self._sink.expose()
             return False
         else:
+            cr.rectangle(0, 0, w, h)
+            cr.set_source_rgb(0, 0, 0)
+            cr.fill()
             return True
 
     def _realize(self, widget):
@@ -389,7 +392,7 @@ class MediaView(Gtk.EventBox):
 
             border = 20
             vid_x = border
-            vid_y = self.allocation.height - border - vid_h
+            vid_y = allocation.height - border - vid_h
             self._fixed.move(self._video, vid_x, vid_y)
         elif self._mode == MediaView.MODE_PHOTO:
             self._fixed.move(self._image_box, 0, 0)
@@ -402,7 +405,7 @@ class MediaView(Gtk.EventBox):
 
             border = 20
             vid_x = border
-            vid_y = self.allocation.height - border - vid_h
+            vid_y = allocation.height - border - vid_h
             self._fixed.move(self._video, vid_x, vid_y)
         elif self._mode == MediaView.MODE_STILL:
             self._fixed.move(self._image_box, 0, 0)

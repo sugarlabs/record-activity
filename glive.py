@@ -92,7 +92,7 @@ class Glive:
         # doesn't support framerate changes, but GStreamer caps suggest
         # otherwise)
         pipeline = Gst.Pipeline()
-        caps = Gst.Caps('video/x-raw,format=yuv,framerate=10/1')
+        caps = Gst.Caps('video/x-raw,format=(yuv),framerate=10/1')
         fsink = Gst.ElementFactory.make('fakesink', 'detect-camera-sink')
         if fsink is None:
             logger.error('no fakesink')
@@ -154,7 +154,10 @@ class Glive:
         if not hwdev_available:
             src.set_property("device", "default")
 
-        srccaps = Gst.Caps("audio/x-raw,format=int,rate=16000,channels=1,depth=16")
+        capsfilter = Gst.ElementFactory.make('capsfilter', 'abcaps')
+        if capsfilter is None:
+            logger.error('no capsfilter')
+        capsfilter.set_property('caps', Gst.caps_from_string("audio/x-raw,format=(int),rate=48000,channels=1,depth=16"))
 
         # guarantee perfect stream, important for A/V sync
         rate = Gst.ElementFactory.make("audiorate")
@@ -165,7 +168,7 @@ class Glive:
         # recording and then the A/V sync is bad for the whole video
         # (possibly a GStreamer/ALSA bug -- even if it gets caught up, it
         # should be able to resync without problem)
-        queue = Gst.ElementFactory.make("queue", "audioqueue")
+        queue = Gst.ElementFactory.make("queue", "abqueue")
         if queue is None:
             logger.error('no queue')
 
@@ -182,15 +185,24 @@ class Glive:
         if sink is None:
             logger.error('no filesink')
 
-        sink.set_property("location", os.path.join(Instance.instancePath, "output.wav"))
+        sink.set_property("location",
+                          os.path.join(Instance.instancePath, "output.wav"))
 
         self._audiobin = Gst.Bin("audiobin")
-        self._audiobin.add(src, rate, queue, enc, sink)
+        self._audiobin.add(src, capsfilter, rate, queue, enc, sink)
 
-        src.link_filtered(rate, srccaps)
-        rate.link(queue)
-        queue.link(enc)
-        enc.link(sink)
+        #if not src.link(capsfilter):
+        #    logger.error('src link to capsfilter failed')
+        #if not capsfilter.link(rate):
+        #    logger.error('capsfilter link to rate failed')
+        if not src.link(rate):
+            logger.error('src link to rate failed')
+        if not rate.link(queue):
+            logger.error('rate link to queue failed')
+        if not queue.link(enc):
+            logger.error('queue link to enc failed')
+        if not enc.link(sink):
+            logger.error('enc link to sink failed')
 
     def _create_videobin(self):
         queue = Gst.ElementFactory.make("queue", "videoqueue")
@@ -209,7 +221,7 @@ class Glive:
         if scalecapsfilter is None:
             logger.error('no capsfilter')
 
-        scalecaps = Gst.Caps('video/x-raw,format=yuv,width=160,height=120')
+        scalecaps = Gst.Caps('video/x-raw,format=(yuv),width=160,height=120')
         scalecapsfilter.set_property("caps", scalecaps)
 
         vc = Gst.ElementFactory.make("videoconvert", "vc")
@@ -235,12 +247,18 @@ class Glive:
         self._videobin = Gst.Bin("videobin")
         self._videobin.add(queue, scale, scalecapsfilter, vc, enc, mux, sink)
 
-        queue.link(scale)
-        scale.link_pads(None, scalecapsfilter, "sink")
-        scalecapsfilter.link_pads("src", vc, None)
-        vc.link(enc)
-        enc.link(mux)
-        mux.link(sink)
+        if not queue.link(scale):
+            logger.error('queue link to scale failed')
+        if not scale.link_pads(None, scalecapsfilter, "sink"):
+            logger.error('scale link pads to scalecapsfilter failed')
+        if not scalecapsfilter.link_pads("src", vc, None):
+            logger.error('scalecapsfilter link pads to vc failed')
+        if not vc.link(enc):
+            logger.error('vc link to enc failed')
+        if not enc.link(mux):
+            logger.error('enc link to mux failed')
+        if not mux.link(sink):
+            logger.error('mux link to sink failed')
 
         pad = queue.get_static_pad("sink")
         self._videobin.add_pad(Gst.GhostPad("sink", pad))
@@ -275,7 +293,7 @@ class Glive:
         vbenc = self._videobin.get_by_name("vbenc")
         vbenc.set_property("quality", 16)
         scaps = self._videobin.get_by_name("scalecaps")
-        scaps.set_property("caps", Gst.Caps("video/x-raw,format=yuv,width=%d,height=%d" % (width, height)))
+        scaps.set_property("caps", Gst.Caps("video/x-raw,format=(yuv),width=%d,height=%d" % (width, height)))
 
     def _create_pipeline(self):
         if not self._has_camera:
@@ -421,10 +439,10 @@ class Glive:
 
         if self._audio_pixbuf:
             pixbuf_b64 = utils.getStringEncodedFromPixbuf(self._audio_pixbuf)
-            taglist[Gst.TAG_EXTENDED_COMMENT] = "coverart=" + pixbuf_b64
+            taglist.add_value(Gst.TagMergeMode.APPEND, Gst.TAG_EXTENDED_COMMENT, "coverart=" + pixbuf_b64)
 
         vorbis_enc = audioline.get_by_name('audioVorbisenc')
-        vorbis_enc.merge_tags(taglist, Gst.TAG_MERGE_REPLACE_ALL)
+        vorbis_enc.merge_tags(taglist, Gst.TagMergeMode.REPLACE_ALL)
 
         audioFilesink = audioline.get_by_name('audioFilesink')
         audioOggFilepath = os.path.join(Instance.instancePath, "output.ogg")
@@ -438,17 +456,21 @@ class Glive:
 
     def _get_tags(self, type):
         tl = Gst.TagList()
-        tl[Gst.TAG_ARTIST] = self.model.get_nickname()
-        tl[Gst.TAG_COMMENT] = "olpc"
+        return tl
+
+        def _set(tag, value):
+            tl.add_value(Gst.TagMergeMode.APPEND, tag, value)
+        _set(Gst.TAG_ARTIST, self.model.get_nickname())
+        _set(Gst.TAG_COMMENT, "olpc")
         #this is unfortunately, unreliable
         #record.Record.log.debug("self.ca.metadata['title']->" + str(self.ca.metadata['title']) )
-        tl[Gst.TAG_ALBUM] = "olpc" #self.ca.metadata['title']
-        tl[Gst.TAG_DATE] = utils.getDateString(int(time.time()))
+        _set(Gst.TAG_ALBUM, "olpc") #self.ca.metadata['title']
+        _set(Gst.TAG_DATE, utils.getDateString(int(time.time())))
         stringType = constants.MEDIA_INFO[type]['istr']
-        
+
         # Translators: photo by photographer, e.g. "Photo by Mary"
-        tl[Gst.TAG_TITLE] = _('%(type)s by %(name)s') % {'type': stringType,
-                'name': self.model.get_nickname()}
+        _set(Gst.TAG_TITLE, _('%(type)s by %(name)s') % {'type': stringType,
+                'name': self.model.get_nickname()})
         return tl
 
     def _take_photo(self, photo_mode):
@@ -571,7 +593,7 @@ class Glive:
 
         self._thumb_exposure_open = False
         loader = GdkPixbuf.PixbufLoader.new_with_mime_type("image/jpeg")
-        loader.write(buffer)
+        loader.write(buffer.extract_dup(0, buffer.get_size()))
         loader.close()
         self.thumbBuf = loader.get_pixbuf()
         self.model.still_ready(self.thumbBuf)
@@ -585,7 +607,7 @@ class Glive:
         muxline = Gst.parse_launch('filesrc location=' + str(oggFilepath) + ' name=muxVideoFilesrc ! oggdemux name=muxOggdemux ! theoraparse ! oggmux name=muxOggmux ! filesink location=' + str(muxFilepath) + ' name=muxFilesink filesrc location=' + str(wavFilepath) + ' name=muxAudioFilesrc ! wavparse name=muxWavparse ! audioconvert name=muxAudioconvert ! vorbisenc name=muxVorbisenc ! muxOggmux.')
         taglist = self._get_tags(constants.TYPE_VIDEO)
         vorbis_enc = muxline.get_by_name('muxVorbisenc')
-        vorbis_enc.merge_tags(taglist, Gst.TAG_MERGE_REPLACE_ALL)
+        vorbis_enc.merge_tags(taglist, Gst.TagMergeMode.REPLACE_ALL)
 
         muxBus = muxline.get_bus()
         muxBus.add_signal_watch()
