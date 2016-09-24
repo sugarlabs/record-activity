@@ -41,8 +41,6 @@ class Gplay(GObject.GObject):
         bus.connect('message::error', self._bus_error)
         bus.connect('message::eos', self._bus_eos)
 
-        # todo: set_sink
-
     def _bus_error(self, bus, message):
         err, debug = message.parse_error()
         logger.error('bus error=%s debug=%s' % (err, debug))

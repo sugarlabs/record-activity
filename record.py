@@ -936,8 +936,7 @@ class RecordControl():
     def _duration_selection_cb(self, widget):
         if self._duration_palette:
             if not self._duration_palette.is_up():
-                self._duration_palette.popup(immediate=True,
-                                    state=self._duration_palette.SECONDARY)
+                self._duration_palette.popup(immediate=True)
             else:
                 self._duration_palette.popdown(immediate=True)
             return
@@ -961,8 +960,7 @@ class RecordControl():
     def _quality_selection_cb(self, widget):
         if self._quality_palette:
             if not self._quality_palette.is_up():
-                self._quality_palette.popup(immediate=True,
-                                    state=self._quality_palette.SECONDARY)
+                self._quality_palette.popup(immediate=True)
             else:
                 self._quality_palette.popdown(immediate=True)
             return
