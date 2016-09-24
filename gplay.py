@@ -97,7 +97,7 @@ class Gplay(GObject.GObject):
         except Gst.QueryError:
             return True
 
-        value = (float(position) / float(duration)) * 100.0
+        value = float(position * 100) / float(duration + 1)
         self._emit_playback_status(value)
         return True
 
