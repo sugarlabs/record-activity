@@ -691,27 +691,3 @@ class Glive:
             logger.error('%r', err)
             logger.error('%r', debug)
             pass
-
-    def abandonMedia(self):
-        self.stop()
-
-        if self._audio_transcode_handler:
-            GObject.source_remove(self._audio_transcode_handler)
-            self._audio_transcode_handler = None
-        if self._transcode_id:
-            GObject.source_remove(self._transcode_id)
-            self._transcode_id = None
-        if self._video_transcode_handler:
-            GObject.source_remove(self._video_transcode_handler)
-            self._video_transcode_handler = None
-
-        wav_path = os.path.join(Instance.instancePath, "output.wav")
-        if os.path.exists(wav_path):
-            os.remove(wav_path)
-        ogg_path = os.path.join(Instance.instancePath, "output.ogg") #ogv
-        if os.path.exists(ogg_path):
-            os.remove(ogg_path)
-        mux_path = os.path.join(Instance.instancePath, "mux.ogg") #ogv
-        if os.path.exists(mux_path):
-            os.remove(mux_path)
-
