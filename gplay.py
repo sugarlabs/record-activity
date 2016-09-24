@@ -88,7 +88,7 @@ class Gplay(GObject.GObject):
         self._player.set_state(Gst.State.PLAYING)
         self._emit_playback_status(0)
 
-        self._playback_monitor_handler = GObject.timeout_add(500, self._playback_monitor)
+        self._playback_monitor_handler = GObject.timeout_add(100, self._playback_monitor)
 
     def _playback_monitor(self):
         try:
