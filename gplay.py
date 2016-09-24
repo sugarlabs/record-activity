@@ -67,9 +67,7 @@ class Gplay(GObject.GObject):
                                    Gst.SeekFlags.FLUSH | Gst.SeekFlags.ACCURATE,
                                    Gst.SeekType.SET, location,
                                    Gst.SeekType.NONE, 0)
-        res = self._player.send_event(event)
-        if res:
-            self._player.set_new_stream_time(0L)
+        self._player.send_event(event)
 
     def pause(self):
         self._player.set_state(Gst.State.PAUSED)
