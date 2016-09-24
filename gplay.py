@@ -60,7 +60,7 @@ class Gplay(GObject.GObject):
         if position == 0:
             location = 0
         else:
-            duration = self._player.query_duration(Gst.Format.TIME, None)[0]
+            _, duration = self._player.query_duration(Gst.Format.TIME)
             location = duration * (position / 100)
 
         event = Gst.Event.new_seek(1.0, Gst.Format.TIME,
@@ -94,8 +94,8 @@ class Gplay(GObject.GObject):
 
     def _playback_monitor(self):
         try:
-            position = self._player.query_position(Gst.Format.TIME)[0]
-            duration = self._player.query_duration(Gst.Format.TIME)[0]
+            _, position = self._player.query_position(Gst.Format.TIME)
+            _, duration = self._player.query_duration(Gst.Format.TIME)
         except Gst.QueryError:
             return True
 
