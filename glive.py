@@ -22,7 +22,7 @@ import os
 from gettext import gettext as _
 import time
 
-from gi.repository import GObject, Gst, GdkX11, GstVideo, GdkPixbuf
+from gi.repository import GLib, GObject, Gst, GdkX11, GstVideo, GdkPixbuf
 
 from sugar3.activity.activity import get_bundle_path
 import logging
@@ -455,8 +455,7 @@ class Glive:
         audioline.set_state(Gst.State.PLAYING)
 
     def _get_tags(self, type):
-        tl = Gst.TagList()
-        return tl
+        tl = Gst.TagList.new_empty()
 
         def _set(tag, value):
             tl.add_value(Gst.TagMergeMode.APPEND, tag, value)
@@ -465,7 +464,9 @@ class Glive:
         #this is unfortunately, unreliable
         #record.Record.log.debug("self.ca.metadata['title']->" + str(self.ca.metadata['title']) )
         _set(Gst.TAG_ALBUM, "olpc") #self.ca.metadata['title']
-        _set(Gst.TAG_DATE, utils.getDateString(int(time.time())))
+        date = GLib.Date.new()
+        date.set_time_t(time.time())
+        _set(Gst.TAG_DATE, date)
         stringType = constants.MEDIA_INFO[type]['istr']
 
         # Translators: photo by photographer, e.g. "Photo by Mary"
