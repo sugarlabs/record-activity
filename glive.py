@@ -627,12 +627,12 @@ class Glive:
 
     def _query_position(self, pipe):
         try:
-            position, format = pipe.query_position(Gst.Format.TIME)
+            _, position = pipe.query_position(Gst.Format.TIME)
         except:
             position = Gst.CLOCK_TIME_NONE
 
         try:
-            duration, format = pipe.query_duration(Gst.Format.TIME)
+            _, duration = pipe.query_duration(Gst.Format.TIME)
         except:
             duration = Gst.CLOCK_TIME_NONE
 
