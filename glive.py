@@ -1,4 +1,5 @@
-#Copyright (c) 2008, Media Modifications Ltd.
+#Copyright (C) 2008, Media Modifications Ltd.
+#Copyright (C) 2011, One Laptop per Child
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
