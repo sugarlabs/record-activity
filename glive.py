@@ -85,6 +85,9 @@ class Glive:
 
         self._has_camera = True
 
+        self._can_limit_framerate = True  # TODO: this did fix stall
+        return
+
         # Figure out if we can place a framerate limit on the v4l2 element,
         # which in theory will make it all the way down to the hardware.
         # ideally, we should be able to do this by checking caps. However, I
@@ -92,14 +95,23 @@ class Glive:
         # doesn't support framerate changes, but GStreamer caps suggest
         # otherwise)
         pipeline = Gst.Pipeline()
-        caps = Gst.Caps('video/x-raw,format=(yuv),framerate=10/1')
-        fsink = Gst.ElementFactory.make('fakesink', 'detect-camera-sink')
-        if fsink is None:
+        caps = Gst.Caps.from_string('video/x-raw,framerate=(fraction)10/1')
+        capsfilter = Gst.ElementFactory.make('capsfilter', 'filter')
+        if capsfilter is None:
+            logger.error('no fakesink')
+        capsfilter.set_property('caps', caps)
+        fakesink = Gst.ElementFactory.make('fakesink', 'detect-camera-sink')
+        if fakesink is None:
             logger.error('no fakesink')
         pipeline.add(v4l2src)
-        pipeline.add(fsink)
-        v4l2src.link_filtered(fsink, caps)
+        pipeline.add(capsfilter)
+        pipeline.add(fakesink)
+        if v4l2src.link(capsfilter) is None:
+            logger.error('link v4l2src to capsfilter failed')
+        if capsfilter.link(fakesink) is None:
+            logger.error('link capsfilter to fakesink failed')
         self._can_limit_framerate = pipeline.set_state(Gst.State.PAUSED) != Gst.StateChangeReturn.FAILURE
+        logger.error('_can_limit_framerate %r', self._can_limit_framerate)
         pipeline.set_state(Gst.State.NULL)
 
     def get_has_camera(self):
@@ -158,6 +170,9 @@ class Glive:
         if capsfilter is None:
             logger.error('no capsfilter')
         capsfilter.set_property('caps', Gst.caps_from_string("audio/x-raw,format=(int),rate=48000,channels=1,depth=16"))
+
+#        caps = Gst.Caps.from_string("audio/x-raw,rate=(int)16000,channels=(int)1,depth=(int)16")
+#        capsfilter.set_property('caps', caps)
 
         # guarantee perfect stream, important for A/V sync
         rate = Gst.ElementFactory.make("audiorate")
@@ -221,6 +236,7 @@ class Glive:
         if scalecapsfilter is None:
             logger.error('no capsfilter')
 
+        #scalecaps = Gst.Caps.from_string('video/x-raw,framerate=(fraction)10/1,width=(int)160,height=(int)120')
         scalecaps = Gst.Caps('video/x-raw,format=(yuv),width=160,height=120')
         scalecapsfilter.set_property("caps", scalecaps)
 
@@ -291,27 +307,53 @@ class Glive:
 
     def _config_videobin(self, quality, width, height):
         vbenc = self._videobin.get_by_name("vbenc")
-        vbenc.set_property("quality", 16)
+        vbenc.set_property("quality", quality)
         scaps = self._videobin.get_by_name("scalecaps")
         scaps.set_property("caps", Gst.Caps("video/x-raw,format=(yuv),width=%d,height=%d" % (width, height)))
+        #caps = Gst.Caps.from_string("video/x-raw,format=(string)yuv,width=(int)%d,height=(int)%d" % (width, height))
+        #scaps.set_property("caps", caps)
 
     def _create_pipeline(self):
         if not self._has_camera:
             return
 
+        #src = Gst.ElementFactory.make("videotestsrc", "camsrc")
         src = Gst.ElementFactory.make("v4l2src", "camsrc")
         if src is None:
             logger.error('no v4l2src')
-
         self._pipeline.add(src)
+
+        framerate = Gst.Caps.from_string('video/x-raw,framerate=(fraction)10/1')
+
+        srcfilter = Gst.ElementFactory.make("capsfilter", "srcfilter")
+        if srcfilter is None:
+            logger.error('no capsfilter')
+        srcfilter.set_property('caps', framerate)
+        self._pipeline.add(srcfilter)
+        if not src.link(srcfilter):
+            logger.error('link src to srcfilter failed')
+
+        rate = Gst.ElementFactory.make("videorate", "rate")
+        if rate is None:
+            logger.error('no videorate')
+        self._pipeline.add(rate)
+        if not srcfilter.link(rate):
+            logger.error('link srcfilter to rate failed')
+
+        ratefilter = Gst.ElementFactory.make("capsfilter", "ratefilter")
+        if ratefilter is None:
+            logger.error('no capsfilter')
+        ratefilter.set_property('caps', framerate)
+        self._pipeline.add(ratefilter)
+        if not rate.link(ratefilter):
+            logger.error('link rate to ratefilter failed')
 
         tee = Gst.ElementFactory.make("tee", "tee")
         if tee is None:
             logger.error('no tee')
-
         self._pipeline.add(tee)
-        if not src.link(tee):
-            logger.debug('cannot link')
+        if not ratefilter.link(tee):
+            logger.error('cannot link')
 
         queue = Gst.ElementFactory.make("queue", "dispqueue")
         if queue is None:
@@ -323,13 +365,14 @@ class Glive:
 
         self._pipeline.add(queue)
         if not tee.link(queue):
-            logger.debug('cannot link')
+            logger.error('cannot link')
 
         self._xvsink = Gst.ElementFactory.make("xvimagesink", "xsink")
         if self._xvsink is None:
             logger.error('no xvimagesink')
 
         self._xv_available = self._xvsink.set_state(Gst.State.PAUSED) != Gst.StateChangeReturn.FAILURE
+        logger.error('_xv_available %r', self._xv_available)
         self._xvsink.set_state(Gst.State.NULL)
 
         # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
@@ -504,6 +547,8 @@ class Glive:
         pixBuf = pic.get_pixbuf()
         del pic
 
+        # FIXME: a double JPEG encoding occurs; photobin and pixbuf.savev
+
         self.save_photo(pixBuf)
 
     def save_photo(self, pixbuf):
@@ -555,6 +600,7 @@ class Glive:
         # FIXME: retest on F11
         # FIXME: could this be the result of audio shortening problems?
         self._eos_cb = self._video_eos
+        logger.error('stop recording video')
         self._pipeline.get_by_name('camsrc').send_event(Gst.Event.new_eos())
         self._audiobin.get_by_name('absrc').send_event(Gst.Event.new_eos())
 
@@ -643,7 +689,7 @@ class Glive:
         if message.type != Gst.MessageType.EOS:
             return True
 
-        GObject.source_remove(self._video_transcode_handler)
+        bus.disconnect(self._video_transcode_handler)
         self._video_transcode_handler = None
         GObject.source_remove(self._transcode_id)
         self._transcode_id = None
@@ -662,7 +708,7 @@ class Glive:
         if message.type != Gst.MessageType.EOS:
             return True
 
-        GObject.source_remove(self._audio_transcode_handler)
+        bus.disconnect(self._audio_transcode_handler)
         self._audio_transcode_handler = None
         GObject.source_remove(self._transcode_id)
         self._transcode_id = None
@@ -683,6 +729,11 @@ class Glive:
                 cb = self._eos_cb
                 self._eos_cb = None
                 cb()
+        elif t == Gst.MessageType.STREAM_STATUS:
+            #status_type, element = message.parse_stream_status()
+            #logger.error('%r', status_type)
+            #logger.error('%r', element)
+            pass
         elif t == Gst.MessageType.ERROR:
             #todo: if we come out of suspend/resume with errors, then get us back up and running...
             #todo: handle "No space left on the resource.gstfilesink.c"
