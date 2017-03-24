@@ -169,10 +169,7 @@ class Glive:
         capsfilter = Gst.ElementFactory.make('capsfilter', 'abcaps')
         if capsfilter is None:
             logger.error('no capsfilter')
-        capsfilter.set_property('caps', Gst.caps_from_string("audio/x-raw,format=(int),rate=48000,channels=1,depth=16"))
-
-#        caps = Gst.Caps.from_string("audio/x-raw,rate=(int)16000,channels=(int)1,depth=(int)16")
-#        capsfilter.set_property('caps', caps)
+        capsfilter.set_property('caps', Gst.caps_from_string("audio/x-raw,rate=(int)48000,channels=(int)1,depth=(int)16"))
 
         # guarantee perfect stream, important for A/V sync
         rate = Gst.ElementFactory.make("audiorate")
@@ -236,8 +233,7 @@ class Glive:
         if scalecapsfilter is None:
             logger.error('no capsfilter')
 
-        #scalecaps = Gst.Caps.from_string('video/x-raw,framerate=(fraction)10/1,width=(int)160,height=(int)120')
-        scalecaps = Gst.Caps('video/x-raw,format=(yuv),width=160,height=120')
+        scalecaps = Gst.Caps('video/x-raw,framerate=(fraction)10/1,width=160,height=120')
         scalecapsfilter.set_property("caps", scalecaps)
 
         vc = Gst.ElementFactory.make("videoconvert", "vc")
