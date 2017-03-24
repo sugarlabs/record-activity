@@ -116,6 +116,15 @@ class Record(activity.Activity):
 
         self._old_cursor = self.get_window().get_cursor()
 
+        # testing restarter
+        ct = os.stat('go').st_ctime
+        def restarter():
+            if os.stat('go').st_ctime != ct:
+                self.close()
+                return False
+            return True
+        GObject.timeout_add(233, restarter)
+
     def read_file(self, path):
         self.model.read_file(path)
 
@@ -195,10 +204,9 @@ class Record(activity.Activity):
         self._toolbar.insert(StopButton(self), -1)
         self.get_toolbar_box().show_all()
 
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        main_box = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
         self.set_canvas(main_box)
         main_box.get_parent().modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
-        main_box.show()
 
         self._media_view = MediaView()
         self._media_view.connect('media-clicked', self._media_view_media_clicked)
@@ -212,6 +220,7 @@ class Record(activity.Activity):
 
         self._shutter_button = ShutterButton()
         self._shutter_button.connect("clicked", self._shutter_clicked)
+        self._shutter_button.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
         self._controls_hbox.pack_start(self._shutter_button, True, False, 0)
 
         self._countdown_image = CountdownImage()
@@ -238,16 +247,19 @@ class Record(activity.Activity):
         self._controls_hbox.show()
 
         #self._record_container = _RecordContainer(self._media_view, self._controls_hbox)
-        self._record_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self._record_container.pack_start(self._media_view, True, True, 0)
-        self._record_container.pack_start(self._controls_hbox, False, True, 0)
-        main_box.pack_start(self._record_container, True, True, 6)
-        self._record_container.show()
+        #self._record_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        #self._record_container.pack_start(self._media_view, True, False, 0)
+        #self._record_container.pack_start(self._controls_hbox, True, False, 0)
+        #main_box.add(self._record_container)
+        #self._media_view.set_size_request(640, 480)
+        self._media_view.props.height_request = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2 - 150 - 6
+        main_box.add(self._media_view)
+        main_box.add(self._controls_hbox)
 
-        self._thumb_tray = HTray()
-        self._thumb_tray.set_size_request(-1, 150)
-        main_box.pack_end(self._thumb_tray, False, False, 0)
+        self._thumb_tray = HTray(hexpand=True, height_request=150)
+        main_box.add(self._thumb_tray)
         self._thumb_tray.show_all()
+        main_box.show()
 
     def serialize(self):
         data = {}
@@ -705,7 +717,7 @@ class _RecordContainer(Gtk.Container):
         alloc.y = media_view_y
         self._media_view.size_allocate(alloc)
 
-        alloc = gdk.Rectangle()
+        alloc = Gdk.Rectangle()
         alloc.x = media_view_x
         alloc.y = controls_box_y
         alloc.width = media_view_width
