@@ -63,11 +63,9 @@ class Gplay(GObject.GObject):
             _, duration = self._player.query_duration(Gst.Format.TIME)
             location = duration * (position / 100)
 
-        event = Gst.Event.new_seek(1.0, Gst.Format.TIME,
-                                   Gst.SeekFlags.FLUSH | Gst.SeekFlags.ACCURATE,
-                                   Gst.SeekType.SET, location,
-                                   Gst.SeekType.NONE, 0)
-        self._player.send_event(event)
+        self._player.seek_simple(Gst.Format.TIME,
+                                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
+                                 location)
 
     def pause(self):
         self._player.set_state(Gst.State.PAUSED)
