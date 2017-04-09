@@ -2,63 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2013-05-30 08:01+0200\n"
 "Last-Translator: AlanJAS <alanjas@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,6 +18,7 @@ msgstr ""
 "X-Generator: Pootle 2.0.5\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "Grabar"
 
@@ -90,25 +39,13 @@ msgstr "Eliminar"
 msgid "Copy to clipboard"
 msgstr "Copiar al portapapel"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "Foto"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "Video"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "Audio"
-
 # (Foto o Video o Audio) por (nombre_de_usuario)
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr "%(type)s por %(name)s"
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
 msgstr "Guardando..."
 
@@ -129,40 +66,52 @@ msgstr "Fecha:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "Quedan %(mins)d:%(secs)02d"
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "Foto"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "Video"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "Audio"
+
+#: record.py:228
 msgid "Title:"
 msgstr "Título:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr "Descarga fallida."
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
 msgstr "Descargando..."
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
 msgstr "Solicitando..."
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
 msgstr "Seleccionar temporizador"
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
 msgstr "Seleccionar duración"
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
 msgstr "Seleccionar calidad"
 
 # contexto? -- xavi
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
 msgstr "Inmediato"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 #, python-format,
 msgid "%s second"
@@ -170,7 +119,7 @@ msgid_plural "%s seconds"
 msgstr[0] "%s segundo"
 msgstr[1] "%s segundos"
 
-#: record.py:923
+#: record.py:933
 #, python-format
 #, python-format,
 msgid "%s minute"
@@ -178,243 +127,8 @@ msgid_plural "%s minutes"
 msgstr[0] "%s minuto"
 msgstr[1] "%s minutos"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 #, python-format,
 msgid "%s quality"
 msgstr "calidad %s"
-
-#~ msgid "Quality:"
-#~ msgstr "Calidad:"
-
-#~ msgid "Low"
-#~ msgstr "Baja"
-
-#~ msgid "High"
-#~ msgstr "Alta"
-
-#~ msgid "Preferences"
-#~ msgstr "Preferencias"
-
-#, python-format
-#~ msgid "%s by %s"
-#~ msgstr "%s por %s"
-
-#, python-format
-#~ msgid "%d:%02d remaining"
-#~ msgstr "%d:%02d restantes"
-
-# Cronometro is more readily understood as a timing device.
-#~ msgid "Timer:"
-#~ msgstr "Cronómetro:"
-
-# duracion o largo / longitud? ie: largometraje
-#~ msgid "Duration:"
-#~ msgstr "Duración:"
-
-#~ msgid "Time Lapse"
-#~ msgstr "Lapso de tiempo"
-
-#~ msgid "Animation"
-#~ msgstr "Animación"
-
-#~ msgid "Panorama"
-#~ msgstr "Panorama"
-
-#~ msgid "Interview"
-#~ msgstr "Entrevista"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#, python-format
-#~ msgid "%(1)s by %(2)s"
-#~ msgstr "%(1)s por %(2)s"
-
-# Recorder seria el que hizo la grabacion...? En que difiere de "Author".
-# Respuesta: No hay diferencia válida para una traducción. Es más, en una cámara de video VHS se sustituye Recorder por Autor.
-#~ msgid "Recorder:"
-#~ msgstr "Autor:"
-
-#~ msgid "Saving"
-#~ msgstr "Guardando"
-
-#~ msgid "Finished recording"
-#~ msgstr "Grabación terminada"
-
-#~ msgid "Stopped recording"
-#~ msgstr "Grabación detenida"
-
-#~ msgid "Remaining:"
-#~ msgstr "Restante:"
-
-#~ msgid "Play"
-#~ msgstr "Reproducir"
-
-#~ msgid "Pause"
-#~ msgstr "Pausa"
-
-#~ msgid "Add frame"
-#~ msgstr "Agregar cuadro"
-
-#~ msgid "Remove frame"
-#~ msgstr "Eliminar cuadro"
-
-#, python-format
-#~ msgid "%(1)s frames per second"
-#~ msgstr "%(1)s cuadros por segundo"
-
-#~ msgid "Default"
-#~ msgstr "Predeterminada"
-
-#~ msgid "Best"
-#~ msgstr "Óptima"
-
-#~ msgid "Large file"
-#~ msgstr "Archivo grande"
-
-#~ msgid "Small file"
-#~ msgstr "Archivo pequeño"
-
-# context? -- xavi
-#~ msgid "Silent"
-#~ msgstr "Mudo"
-
-#~ msgid "Rotate"
-#~ msgstr "Rotar"
-
-#~ msgid "Width"
-#~ msgstr "Ancho"
-
-#~ msgid "Height"
-#~ msgstr "Altura"
-
-#~ msgid "Click to take picture"
-#~ msgstr "Clic para tomar foto"
-
-# se agrega la foto (siguiendo "click to take picture") o se agrega una "imagen"?
-#~ msgid "Click to add picture"
-#~ msgstr "Clic para agregar una foto"
-
-# TRANS: Downloading Photo from Mary
-#, python-format
-#~ msgid "Downloading %(1)s from %(2)s"
-#~ msgstr "Descargando %(1)s desde %(2)s"
-
-# gender issues: la foto? el archivo? lo coso? -- xavi
-# TRANS: Cannot download this Photo
-#, python-format
-#~ msgid "Cannot download this %(1)s"
-#~ msgstr "Imposible descargar este %(1)s"
-
-# TRANS: Save Photo to:
-#, python-format
-#~ msgid "Save %(1)s to:"
-#~ msgstr "Guardar %(1)s en:"
-
-#, python-format
-#~ msgid "Your %(1)s is full"
-#~ msgstr "Su %(1)s está lleno"
-
-#~ msgid "Journal"
-#~ msgstr "Diario"
-
-#~ msgid "USB"
-#~ msgstr "USB"
-
-#~ msgid "SD Card"
-#~ msgstr "Tarjeta SD"
-
-#~ msgid "Free space:"
-#~ msgstr "Espacio libre:"
-
-#~ msgid "Bitrate"
-#~ msgstr "Tasa de bits"
-
-#~ msgid "Maximum Bitrate"
-#~ msgstr "Tasa máxima de bits"
-
-#~ msgid "Minumum Bitrate"
-#~ msgstr "Tasa mínima de bits"
-
-#~ msgid "Manage Bitrate"
-#~ msgstr "Manejar tasa de bits"
-
-#~ msgid "Border"
-#~ msgstr "Borde"
-
-#~ msgid "Center"
-#~ msgstr "Centro"
-
-# segun wikipedia esa seria la traduccion http://es.wikipedia.org/wiki/Fotograma
-# DjToXiC: Verdad, pero debería ser sustituido por Cuadros porque está en plural, en demás traducciones está como cuadros, es una palabra más larga que frame por lo tanto se puede ir de la pantalla y además es una laptop para niños, no?
-#~ msgid "Frames"
-#~ msgstr "Cuadros"
-
-# "fotograma clave" is used for keyframe, but this needs to be consistent with other uses of frame.
-# DjToXiC: I agree, but "cuadros clave" is present in others translations, and it is used in Video Editors.
-#~ msgid "Automatic keyframe detection"
-#~ msgstr "Detección automática de cuadros clave"
-
-#~ msgid "Force keyframe"
-#~ msgstr "Forzar cuadro clave"
-
-#~ msgid "Keyframe frequency"
-#~ msgstr "Frecuencia de cuadros clave"
-
-#~ msgid "Keyframe minimum distance"
-#~ msgstr "Distancia mínima entre cuadros clave"
-
-# DjToXiC: La palabra "keyframe" permanecía en la traducción anterior.
-#~ msgid "Keyframe threshold"
-#~ msgstr "Umbral del cuadro clave"
-
-#~ msgid "Noise Sensitivity"
-#~ msgstr "Sensibilidad de ruido"
-
-#~ msgid "Quick"
-#~ msgstr "Rápido"
-
-# Video sharpness is not the same as definitiion (or resolution) - Nitidez is a more accurate term here
-#~ msgid "Sharpness"
-#~ msgstr "Nitidez"
-
-#~ msgid "Capacity"
-#~ msgstr "Capacidad"
-
-#, python-format
-#~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-#~ msgstr "%(1)s horas, %(2)s minutos, %(3)s segundos restantes"
-
-#, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "%(1)s minutos, %(2)s segundos restantes"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "%(1)s horas restantes"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "%(1)s minutos restantes"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "%(1)s segundos restantes"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(1)s horas"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(1)s fotos"
-
-#~ msgid "High quality"
-#~ msgstr "Alta calidad"
-
-#~ msgid "Low quality"
-#~ msgstr "Baja calidad"
-
-#~ msgid "Your disk is full"
-#~ msgstr "Su disco está lleno"

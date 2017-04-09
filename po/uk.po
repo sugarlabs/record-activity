@@ -2,39 +2,27 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2017-03-28 17:23+0000\n"
+"Last-Translator: yurchor <yurchor@ukr.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1490721803.000000\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
-msgstr ""
+msgstr "Запис"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
@@ -42,100 +30,105 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
+"Дайте волю вашим артистичним нахилам! Створюйте знімки, записуйте відео і "
+"використовуйте їх для показу світу вашими очима. Єдиним обмеженням є ваша "
+"здатність це уявити."
 
 #: button.py:26
 msgid "Remove"
-msgstr ""
+msgstr "Вилучити"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Скопіювати до буфера"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr ""
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr ""
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr ""
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "%(type)s, %(name)s"
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
-msgstr ""
+msgstr "Зберігаємо…"
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr ""
+msgstr "Автор:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr ""
+msgstr "Мітки:"
 
 #: mediaview.py:118
 msgid "Date:"
-msgstr ""
+msgstr "Дата:"
 
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "Лишилося %(mins)d:%(secs)02d"
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "Фото"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "Відео"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "Звук"
+
+#: record.py:228
 msgid "Title:"
-msgstr ""
+msgstr "Заголовок:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
-msgstr ""
+msgstr "Не вдалося отримати."
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
-msgstr ""
+msgstr "Отримуємо…"
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
-msgstr ""
+msgstr "Запит…"
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
-msgstr ""
+msgstr "Виберіть таймер"
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
-msgstr ""
+msgstr "Виберіть тривалість"
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
-msgstr ""
+msgstr "Виберіть якість"
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
-msgstr ""
+msgstr "Негайно"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s секунда"
+msgstr[1] "%s секунд"
+msgstr[2] "%s секунд"
 
-#: record.py:923
+#: record.py:933
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s хвилина"
+msgstr[1] "%s хвилини"
+msgstr[2] "%s хвилин"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 msgid "%s quality"
-msgstr ""
+msgstr "Якість %s"

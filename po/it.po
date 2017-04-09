@@ -2,31 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2013-11-12 13:59+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,6 +18,7 @@ msgstr ""
 "X-Generator: Pootle 2.0.5\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "Registra"
 
@@ -59,24 +40,12 @@ msgstr "Rimuovi"
 msgid "Copy to clipboard"
 msgstr "Copia negli appunti"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "Foto"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "Video"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "Audio"
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr "%(type)s per %(name)s"
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
 msgstr "In salvataggio..."
 
@@ -97,268 +66,66 @@ msgstr "Data:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "%(mins)d:%(secs)02d rimasti"
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "Foto"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "Video"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "Audio"
+
+#: record.py:228
 msgid "Title:"
 msgstr "Titolo:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr "Scaricamento fallito."
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
 msgstr "In scaricamento..."
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
 msgstr "In richiesta..."
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
 msgstr "Seleziona il contaminuti"
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
 msgstr "Seleziona la durata"
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
 msgstr "Seleziona la qualità"
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
 msgstr "Immediata"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s secondo"
 msgstr[1] "%s secondi"
 
-#: record.py:923
+#: record.py:933
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s minuto"
 msgstr[1] "%s minuti"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 #, python-format,
 msgid "%s quality"
 msgstr "%s qualità"
-
-#~ msgid "Quality:"
-#~ msgstr "Qualità:"
-
-#~ msgid "Low"
-#~ msgstr "Bassa"
-
-#~ msgid "High"
-#~ msgstr "Alta"
-
-#~ msgid "Preferences"
-#~ msgstr "Preferenze"
-
-#~ msgid "Timer:"
-#~ msgstr "Timer:"
-
-#~ msgid "Duration:"
-#~ msgstr "Durata:"
-
-#~ msgid "Time Lapse"
-#~ msgstr "Intervallo di tempo"
-
-#~ msgid "Animation"
-#~ msgstr "Animazione"
-
-#~ msgid "Panorama"
-#~ msgstr "Panorama"
-
-#~ msgid "Interview"
-#~ msgstr "Intervista"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#, python-format
-#~ msgid "%(1)s by %(2)s"
-#~ msgstr "%(1)s di %(2)s"
-
-#~ msgid "Recorder:"
-#~ msgstr "Registratore:"
-
-#~ msgid "Saving"
-#~ msgstr "Scrittura"
-
-#~ msgid "Finished recording"
-#~ msgstr "Registrazione terminata"
-
-#~ msgid "Stopped recording"
-#~ msgstr "Registrazione interrotta"
-
-#~ msgid "Remaining:"
-#~ msgstr "Rimanenti:"
-
-#~ msgid "Play"
-#~ msgstr "Mostra"
-
-#~ msgid "Pause"
-#~ msgstr "Pausa"
-
-#~ msgid "Add frame"
-#~ msgstr "Aggiungi fotogramma"
-
-#~ msgid "Remove frame"
-#~ msgstr "Rimuovi fotogramma"
-
-#, python-format
-#~ msgid "%(1)s frames per second"
-#~ msgstr "%(1)s fotogrammi al secondo"
-
-#~ msgid "Default"
-#~ msgstr "Base"
-
-#~ msgid "Best"
-#~ msgstr "Ottima"
-
-#~ msgid "Large file"
-#~ msgstr "File grande"
-
-#~ msgid "Small file"
-#~ msgstr "File piccolo"
-
-#~ msgid "Silent"
-#~ msgstr "Muto"
-
-#~ msgid "Rotate"
-#~ msgstr "Ruota"
-
-#~ msgid "Width"
-#~ msgstr "Larghezza"
-
-#~ msgid "Height"
-#~ msgstr "Altezza"
-
-#~ msgid "Click to take picture"
-#~ msgstr "Premi per fotografare"
-
-#~ msgid "Click to add picture"
-#~ msgstr "Premi per aggiungere una foto"
-
-# TRANS: Downloading Photo from Mary
-#, python-format
-#~ msgid "Downloading %(1)s from %(2)s"
-#~ msgstr "Scaricando %(1)s da %(2)s"
-
-# TRANS: Cannot download this Photo
-#, python-format
-#~ msgid "Cannot download this %(1)s"
-#~ msgstr "Impossibile scaricare questa %(1)s"
-
-# TRANS: Save Photo to:
-#, python-format
-#~ msgid "Save %(1)s to:"
-#~ msgstr "Salva %(1)s in:"
-
-#, python-format
-#~ msgid "Your %(1)s is full"
-#~ msgstr "Il tuo %(1)s è pieno"
-
-#~ msgid "Journal"
-#~ msgstr "Diario"
-
-#~ msgid "USB"
-#~ msgstr "USB"
-
-#~ msgid "SD Card"
-#~ msgstr "SD Card"
-
-#~ msgid "Free space:"
-#~ msgstr "Spazio libero:"
-
-#~ msgid "Bitrate"
-#~ msgstr "Bitrate"
-
-#~ msgid "Maximum Bitrate"
-#~ msgstr "Massimo Bitrate"
-
-#~ msgid "Minumum Bitrate"
-#~ msgstr "Minimo Bitrate"
-
-#~ msgid "Manage Bitrate"
-#~ msgstr "Gestione Bitrate"
-
-#~ msgid "Border"
-#~ msgstr "Bordo"
-
-#~ msgid "Center"
-#~ msgstr "Centro"
-
-#~ msgid "Frames"
-#~ msgstr "Fotogrammi"
-
-#~ msgid "Automatic keyframe detection"
-#~ msgstr "Identificazione automatica dei fotogrammi"
-
-#~ msgid "Force keyframe"
-#~ msgstr "Forza cambioscena"
-
-#~ msgid "Keyframe frequency"
-#~ msgstr "Frequenza cambioscena"
-
-#~ msgid "Keyframe minimum distance"
-#~ msgstr "Distanza minima fra cambioscena"
-
-#~ msgid "Keyframe threshold"
-#~ msgstr "Soglia di cambioscena"
-
-#~ msgid "Noise Sensitivity"
-#~ msgstr "Sensibilità al Rumore"
-
-#~ msgid "Quick"
-#~ msgstr "Rapido"
-
-#~ msgid "Sharpness"
-#~ msgstr "Nitidezza"
-
-#~ msgid "Capacity"
-#~ msgstr "Capacità"
-
-#, python-format
-#~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-#~ msgstr "%(1)s ore, %(2)s minuti, %(3)s secondi rimanenti"
-
-#, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "%(1)s minuti, %(2)s secondi rimanenti"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "%(1)s ore rimanenti"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "%(1)s minuti rimanenti"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "%(1)s secondi rimanenti"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(1)s ore"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(1)s foto"
-
-#~ msgid "High quality"
-#~ msgstr "Qualità alta"
-
-#~ msgid "Low quality"
-#~ msgstr "Qualità bassa"
-
-#~ msgid "Your disk is full"
-#~ msgstr "Il disco è pieno"
