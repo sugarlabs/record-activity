@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2012-02-23 03:04+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,7 @@ msgstr ""
 "X-Generator: Pootle 2.0.5\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "Gufatamajwi"
 
@@ -36,24 +37,12 @@ msgstr "Kuraho"
 msgid "Copy to clipboard"
 msgstr "Koporora ushyire ku kibaho"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "Ifoto"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "Isohora mashusho"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "Isohora majwi"
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
 msgstr ""
 
@@ -74,39 +63,51 @@ msgstr "Itariki:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "Ifoto"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "Isohora mashusho"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "Isohora majwi"
+
+#: record.py:228
 msgid "Title:"
 msgstr "Umutwe w`amagambo:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr ""
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
 msgstr ""
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
 msgstr ""
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
 msgstr ""
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
 msgstr "Akokanya"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 #, fuzzy
 msgid "%s second"
@@ -114,7 +115,7 @@ msgid_plural "%s seconds"
 msgstr[0] "%s amasegonda"
 msgstr[1] "%s amasegonda"
 
-#: record.py:923
+#: record.py:933
 #, python-format
 #, fuzzy
 msgid "%s minute"
@@ -122,211 +123,7 @@ msgid_plural "%s minutes"
 msgstr[0] "%s iminota"
 msgstr[1] "%s iminota"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 msgid "%s quality"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Quality:"
-#~ msgstr "Imimerere y`ikintu:"
-
-#~ msgid "Low"
-#~ msgstr "Hasi"
-
-#~ msgid "High"
-#~ msgstr "Hejuru"
-
-#~ msgid "Preferences"
-#~ msgstr "Ibyo wifuza"
-
-#~ msgid "Timer:"
-#~ msgstr "ikintu kigendera kugihe"
-
-#~ msgid "Duration:"
-#~ msgstr "igihe"
-
-#~ msgid "Time Lapse"
-#~ msgstr "igihe cyarangiye"
-
-#~ msgid "Animation"
-#~ msgstr "kwerekana amashusho muburyo bunyuranamo"
-
-#~ msgid "Panorama"
-#~ msgstr "panorama"
-
-#~ msgid "Interview"
-#~ msgstr "isuzumabumenyi"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#, python-format
-#~ msgid "%(1)s by %(2)s"
-#~ msgstr "%(1)s na %(2)s"
-
-#~ msgid "Recorder:"
-#~ msgstr "Igifata amajwi"
-
-#~ msgid "Saving"
-#~ msgstr "kubika"
-
-#~ msgid "Finished recording"
-#~ msgstr "kurangiza gufata amajwi"
-
-#~ msgid "Stopped recording"
-#~ msgstr "guhagarika gufata amajwi"
-
-#~ msgid "Play"
-#~ msgstr "gukina"
-
-#~ msgid "Pause"
-#~ msgstr "Guhagarika by`akanya gato"
-
-#~ msgid "Add frame"
-#~ msgstr "Ongeraho frame"
-
-#~ msgid "Remove frame"
-#~ msgstr "Kuraho frame"
-
-#, python-format
-#~ msgid "%(1)s frames per second"
-#~ msgstr "%(1)s frames ku isegonda"
-
-#~ msgid "Default"
-#~ msgstr "ikintu kiri muburyo butemewe"
-
-#~ msgid "Best"
-#~ msgstr "ikiza"
-
-#~ msgid "Large file"
-#~ msgstr "Ububiko bunini"
-
-#~ msgid "Small file"
-#~ msgstr "Ububiko buto"
-
-#~ msgid "Silent"
-#~ msgstr "Guceceka"
-
-#~ msgid "Rotate"
-#~ msgstr "kuzengurutsa"
-
-#~ msgid "Width"
-#~ msgstr "ubugari"
-
-#~ msgid "Height"
-#~ msgstr "Ubuhagarike"
-
-#~ msgid "Click to take picture"
-#~ msgstr "Kanda ufate ifoto"
-
-#~ msgid "Click to add picture"
-#~ msgstr "Kanda wongereho ifoto"
-
-# TRANS: Downloading Photo from Mary
-#, python-format
-#~ msgid "Downloading %(1)s from %(2)s"
-#~ msgstr "Kura kuri mudasobwa %(1)s kuva %(2)s"
-
-# TRANS: Cannot download this Photo
-#, python-format
-#~ msgid "Cannot download this %(1)s"
-#~ msgstr "Ntibishoboka kuva kuri mudasobwa %(1)s"
-
-# TRANS: Save Photo to:
-#, python-format
-#, fuzzy
-#~ msgid "Save %(1)s to:"
-#~ msgstr "Bika %(1)s to:"
-
-#, python-format
-#~ msgid "Your %(1)s is full"
-#~ msgstr "Iicyawer %(1)s kiruzuye"
-
-#~ msgid "Journal"
-#~ msgstr "Ikinyamakuru"
-
-#~ msgid "USB"
-#~ msgstr "USB"
-
-#~ msgid "SD Card"
-#~ msgstr "iIkarita ya SD"
-
-#~ msgid "Free space:"
-#~ msgstr "Umwanya urimo ubusa"
-
-#~ msgid "Bitrate"
-#~ msgstr "Bitrate"
-
-#~ msgid "Maximum Bitrate"
-#~ msgstr " Bitrate nini"
-
-#~ msgid "Minumum Bitrate"
-#~ msgstr " Bitrate ntoya"
-
-#~ msgid "Manage Bitrate"
-#~ msgstr "Manage Bitrate"
-
-#~ msgid "Border"
-#~ msgstr "Umupaka"
-
-#~ msgid "Center"
-#~ msgstr "Ihuriro"
-
-#~ msgid "Frames"
-#~ msgstr "Frames"
-
-#~ msgid "Automatic keyframe detection"
-#~ msgstr "Automatic Keyframe detection"
-
-#~ msgid "Force keyframe"
-#~ msgstr "Force Keyframe"
-
-#~ msgid "Keyframe frequency"
-#~ msgstr "Keyframe frequency"
-
-#~ msgid "Keyframe minimum distance"
-#~ msgstr "Keyframe intera ntoya"
-
-#~ msgid "Keyframe threshold"
-#~ msgstr "Keyframe trreshold"
-
-#~ msgid "Noise Sensitivity"
-#~ msgstr "Urusakur rwumvikana"
-
-#~ msgid "Quick"
-#~ msgstr "Vuba"
-
-#~ msgid "Sharpness"
-#~ msgstr "Gutyara"
-
-#~ msgid "Capacity"
-#~ msgstr "ubushobozi"
-
-#, python-format
-#, fuzzy
-#~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-#~ msgstr "%(1)s amasaha, %(2)s iminota, %(1)s amasegonda asigaye"
-
-#, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "%(1)s iminota, %(2)s amasegonda asigaye"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "%(1)s amasaha asigaye"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "%(1)s iminota isigaye"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "%(1)s amasegonda asigaye"
-
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(1)s amasaha"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(1)s  Ifoto"

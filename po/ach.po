@@ -7,20 +7,21 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: 2013-06-07 11:04+0200\n"
-"Last-Translator: andika <andika@gmail.com>\n"
+"PO-Revision-Date: 2017-03-26 23:12+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: id\n"
+"Language: ach\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1490569960.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #: activity/activity.info:2
 msgid "Record"
-msgstr "Rekam"
+msgstr "Rekod"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
@@ -28,46 +29,46 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
-"Bebaskan artis visual di dalam diri Anda! Ambil foto, buat film, dan gunakan "
-"mereka untuk membuat ulang dunia Anda. Batasnya hanya imajinasi Anda."
+"Wot jami goc matye iyii! Mak cale, mii cal anena ki i tii kwedgi pi yubu "
+"lobo mamegi. Agikine tye ka i kit ma in bene itamo kwede."
 
 #: button.py:26
 msgid "Remove"
-msgstr "Hapus"
+msgstr "Kwany woko"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr "Salin ke papan klip"
+msgstr "Lok i dwok i kad me gwoko"
 
 #: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr "%(type)s berdasarkan %(name)s"
+msgstr "%(type)s ki %(name)s"
 
 #: glive.py:551
 msgid "Saving..."
-msgstr "Menyimpan..."
+msgstr "Gwoko..."
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr "Pengarang:"
+msgstr "Ngat mucoone:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr "Tag:"
+msgstr "Kakube:"
 
 #: mediaview.py:118
 msgid "Date:"
-msgstr "Tanggal:"
+msgstr "Nino dwe:"
 
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr "%(mins)d:%(secs)02d tersisa"
+msgstr "%(mins)d:%(secs)02d odong"
 
 #: record.py:159 constants.py:25
 msgid "Photo"
-msgstr "Foto"
+msgstr "Cal"
 
 #: record.py:167 constants.py:32
 msgid "Video"
@@ -75,55 +76,53 @@ msgstr "Video"
 
 #: record.py:178 constants.py:39
 msgid "Audio"
-msgstr "Audio"
+msgstr "Dwon awinya"
 
 #: record.py:228
 msgid "Title:"
-msgstr "Judul:"
+msgstr "Nying:"
 
 #: record.py:561
 msgid "Download failed."
-msgstr "Pengunduhan gagal."
+msgstr "Otany golo woko."
 
 #: record.py:563
 msgid "Downloading..."
-msgstr "Mengunduh..."
+msgstr "Tye dong kagolo woko..."
 
 #: record.py:565
 msgid "Requesting..."
-msgstr "Meminta..."
+msgstr "Tye kakwayo..."
 
 #: record.py:872
 msgid "Select timer"
-msgstr "Pilih pewaktu"
+msgstr "Yer lagwok cawa"
 
 #: record.py:879
 msgid "Select duration"
-msgstr "Pilih durasi"
+msgstr "Yer kare marii kwede"
 
 #: record.py:886
 msgid "Select quality"
-msgstr "Pilih kualitas"
+msgstr "Yer en maber atika"
 
 #: record.py:906 record.py:931
 msgid "Immediate"
-msgstr "Seketika"
+msgstr "Pi oyot"
 
 #: record.py:908
 #, python-format
-#, python-format,
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "%s detik"
+msgstr[0] "%s ceken"
 
 #: record.py:933
 #, python-format
-#, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "%s menit"
+msgstr[0] "%s dakika"
 
 #: record.py:955
 #, python-format
 msgid "%s quality"
-msgstr "kualitas %s"
+msgstr "%s maber atika"

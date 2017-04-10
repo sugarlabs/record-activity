@@ -6,16 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2008-12-15 15:01-0500\n"
-"Last-Translator: Guy Sheffer <guysoft@ort.org.il>\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2016-11-26 00:40+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1480120836.000000\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "הקלטה"
 
@@ -25,103 +29,102 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
+"שחררו את האמן החזותי שבכם! צלמו תמונות, ערכו סרטונים והשתמשו בהם כדי לייצג "
+"את עולמכם. המגבלה היחידה היא הדמיון שלכם."
 
 #: button.py:26
 msgid "Remove"
-msgstr ""
+msgstr "הסרה"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "העתקה ללוח הגזירים"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "צילום"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "וידאו"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "צליל"
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "%(type)s מאת %(name)s"
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
-msgstr ""
+msgstr "נשמר…"
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr ""
+msgstr "יוצר:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr ""
+msgstr "תגיות:"
 
 #: mediaview.py:118
 msgid "Date:"
-msgstr ""
+msgstr "תאריך:"
 
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "נותרו %(mins)d:%(secs)02d"
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "צילום"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "סרטון"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "צליל"
+
+#: record.py:228
 msgid "Title:"
-msgstr ""
+msgstr "כותרת:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
-msgstr ""
+msgstr "ההורדה נכשלה."
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
-msgstr ""
+msgstr "ההורדה מתבצעת…"
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
-msgstr ""
+msgstr "הבקשה נשלחת…"
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
-msgstr ""
+msgstr "בחירת מתזמן"
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
-msgstr ""
+msgstr "בחירת משך"
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
-msgstr ""
+msgstr "בחירת איכות"
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
-msgstr ""
+msgstr "מיידי"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s שנייה אחת"
+msgstr[1] "%s שניות"
 
-#: record.py:923
+#: record.py:933
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s דקה אחת"
+msgstr[1] "%s דקות"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 msgid "%s quality"
-msgstr ""
-
-#~ msgid "Time Lapse"
-#~ msgstr "השהייה"
+msgstr "איכות %s"

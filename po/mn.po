@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2012-09-18 01:14+0200\n"
 "Last-Translator: Cris Anderson <anderson861@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,7 @@ msgstr ""
 "X-Generator: Pootle 2.0.5\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "Бичлэг хийх"
 
@@ -36,24 +37,12 @@ msgstr "Устгах"
 msgid "Copy to clipboard"
 msgstr "Самбарт хуулах"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "Зураг"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "Видео"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "Дуу"
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
 msgstr "Хадгалж байна..."
 
@@ -74,265 +63,66 @@ msgstr "Огноо:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "Зураг"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "Видео"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "Дуу"
+
+#: record.py:228
 msgid "Title:"
 msgstr "Гарчиг:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr ""
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
 msgstr "Татаж байнаа..."
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
 msgstr ""
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
 msgstr ""
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
 msgstr ""
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
 msgstr "Яаралтай"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s секунд"
 msgstr[1] "%s секунд"
 
-#: record.py:923
+#: record.py:933
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s минут"
 msgstr[1] "%s минут"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 #, python-format, fuzzy
 msgid "%s quality"
 msgstr "Хамгийн сайн чанар"
-
-#~ msgid "Quality:"
-#~ msgstr "Чанар:"
-
-#~ msgid "Low"
-#~ msgstr "Нам"
-
-#~ msgid "High"
-#~ msgstr "Өндөр"
-
-#~ msgid "Preferences"
-#~ msgstr "Тохиргоо"
-
-#~ msgid "Time Lapse"
-#~ msgstr "Хугацааны хурдасгуур"
-
-#~ msgid "Animation"
-#~ msgstr "Хөдөлгөөнт зураг"
-
-#~ msgid "Panorama"
-#~ msgstr "Панорам"
-
-#~ msgid "Interview"
-#~ msgstr "Ярилцлага"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#, python-format
-#~ msgid "%(1)s by %(2)s"
-#~ msgstr "%(2)s-гын %(1)s"
-
-#~ msgid "Recorder:"
-#~ msgstr "Дуу хураагуур:"
-
-#~ msgid "Saving"
-#~ msgstr "Хадгалж байна"
-
-#~ msgid "Finished recording"
-#~ msgstr "Бичлэг хийж дууслаа"
-
-#~ msgid "Stopped recording"
-#~ msgstr "Бичлэгийг зогсоолоо"
-
-#~ msgid "Timer:"
-#~ msgstr "Тоолуур:"
-
-#~ msgid "Duration:"
-#~ msgstr "Үргэлжлэх хугацаа:"
-
-#~ msgid "Play"
-#~ msgstr "Үзэх"
-
-#~ msgid "Pause"
-#~ msgstr "Завсарлах"
-
-#~ msgid "Add frame"
-#~ msgstr "Хүрээ нэмэх"
-
-#~ msgid "Remove frame"
-#~ msgstr "Хүрээг арилгах"
-
-#, python-format
-#~ msgid "%(1)s frames per second"
-#~ msgstr "Секунд тутамд %(1)s кадр"
-
-#~ msgid "Default"
-#~ msgstr "Ердийн"
-
-#~ msgid "Best"
-#~ msgstr "Хамгийн сайн"
-
-#~ msgid "Large file"
-#~ msgstr "Том файл"
-
-#~ msgid "Small file"
-#~ msgstr "Жижиг файл"
-
-#~ msgid "Silent"
-#~ msgstr "Дуугүй"
-
-#~ msgid "Rotate"
-#~ msgstr "Эргүүлэх"
-
-#~ msgid "Width"
-#~ msgstr "Өргөн"
-
-#~ msgid "Height"
-#~ msgstr "Өндөр"
-
-#~ msgid "Click to take picture"
-#~ msgstr "Зураг авахдаа энд дарна уу"
-
-#~ msgid "Click to add picture"
-#~ msgstr "Зураг нэмэхдээ энд дарна уу"
-
-# TRANS: Downloading Photo from Mary
-#, python-format
-#~ msgid "Downloading %(1)s from %(2)s"
-#~ msgstr "%(2)s-ээс %(1)s-ийг татаж байна"
-
-# TRANS: Cannot download this Photo
-#, python-format
-#~ msgid "Cannot download this %(1)s"
-#~ msgstr "Энэ %(1)s-г татаж чадахгүй байна"
-
-# TRANS: Save Photo to:
-#, python-format
-#~ msgid "Save %(1)s to:"
-#~ msgstr "%(1)s-ийг хадгалах хавтас:"
-
-#, python-format
-#~ msgid "Your %(1)s is full"
-#~ msgstr "Таны %(1)s дүүрэн байна"
-
-#~ msgid "Journal"
-#~ msgstr "Бүртгэл"
-
-#~ msgid "USB"
-#~ msgstr "USB"
-
-#~ msgid "SD Card"
-#~ msgstr "SD карт"
-
-#~ msgid "Free space:"
-#~ msgstr "Сул зай:"
-
-#~ msgid "Bitrate"
-#~ msgstr "Бит-н хурд"
-
-#~ msgid "Maximum Bitrate"
-#~ msgstr "Хамгийн их бит-н хурд"
-
-#~ msgid "Minumum Bitrate"
-#~ msgstr "Хамгийн бага бит-н хурд"
-
-#~ msgid "Manage Bitrate"
-#~ msgstr "Бит-н хурдыг тохируулах"
-
-#~ msgid "Border"
-#~ msgstr "Хүрээ"
-
-#~ msgid "Center"
-#~ msgstr "Төв"
-
-#~ msgid "Frames"
-#~ msgstr "Кадрууд"
-
-#~ msgid "Automatic keyframe detection"
-#~ msgstr "Үндсэн кадрыг автоматаар олох"
-
-#~ msgid "Force keyframe"
-#~ msgstr "Үндсэн кадрыг оноох"
-
-#~ msgid "Keyframe frequency"
-#~ msgstr "Үндсэн кадрын давтамж"
-
-#~ msgid "Keyframe minimum distance"
-#~ msgstr "Үндсэн кадрын хоорондын хамгийн бага зай"
-
-#~ msgid "Keyframe threshold"
-#~ msgstr "Үндсэн кадрын хязгаар"
-
-#~ msgid "Noise Sensitivity"
-#~ msgstr "Шуугиан мэдрэгч"
-
-#~ msgid "Quick"
-#~ msgstr "Хурдан"
-
-#~ msgid "Sharpness"
-#~ msgstr "Тодрол"
-
-#~ msgid "Capacity"
-#~ msgstr "Багтаамж"
-
-#, python-format
-#~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-#~ msgstr "%(1)s цаг, %(2)s минут, %(3)s секунд үлдлээ"
-
-#, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "%(1)s минут, %(2)s секунд үлдлээ"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "%(1)s цаг үлдлээ"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "%(1)s минут үлдлээ"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "%(1)s секунд үлдлээ"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(1)s цаг"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(1)s зураг"
-
-#~ msgid "High quality"
-#~ msgstr "Өндөр чанар"
-
-#~ msgid "Low quality"
-#~ msgstr "Бага чанар"
-
-#~ msgid "Your disk is full"
-#~ msgstr "Таны хадгалах ой дүүрсэн байна"

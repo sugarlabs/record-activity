@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2012-04-05 22:44+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,7 @@ msgstr ""
 "X-Generator: Pootle 2.0.5\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "ریکارډ"
 
@@ -36,24 +37,12 @@ msgstr "لرکول"
 msgid "Copy to clipboard"
 msgstr "ټوټه دړې ته لمېسل"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "انځور"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "لیدیز"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "اوریز"
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
 msgstr ""
 
@@ -74,39 +63,51 @@ msgstr "نیټه:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "انځور"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "لیدیز"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "اوریز"
+
+#: record.py:228
 msgid "Title:"
 msgstr "سرلیک:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr ""
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
 msgstr ""
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
 msgstr ""
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
 msgstr ""
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
 msgstr "سمدستي"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 #, fuzzy
 msgid "%s second"
@@ -114,7 +115,7 @@ msgid_plural "%s seconds"
 msgstr[0] "%s ثانیې"
 msgstr[1] ""
 
-#: record.py:923
+#: record.py:933
 #, python-format
 #, fuzzy
 msgid "%s minute"
@@ -122,222 +123,8 @@ msgid_plural "%s minutes"
 msgstr[0] "%s دقیقې"
 msgstr[1] ""
 
-#: record.py:945
+#: record.py:955
 #, python-format
 #, python-format, fuzzy
 msgid "%s quality"
 msgstr "ښه څرنګتیا"
-
-#, fuzzy
-#~ msgid "Quality:"
-#~ msgstr "څرنګتیا"
-
-#~ msgid "Low"
-#~ msgstr "ټیټ"
-
-#~ msgid "High"
-#~ msgstr "لوړ"
-
-#~ msgid "Preferences"
-#~ msgstr "غوره توبونه"
-
-#~ msgid "Timer:"
-#~ msgstr "مهالښود:"
-
-#~ msgid "Duration:"
-#~ msgstr "موده:"
-
-#~ msgid "Time Lapse"
-#~ msgstr "تېر-مهال"
-
-#~ msgid "Animation"
-#~ msgstr "سېلن"
-
-#~ msgid "Panorama"
-#~ msgstr "هراړخیزه منظره"
-
-#~ msgid "Interview"
-#~ msgstr "مرکه"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#, python-format
-#~ msgid "%(1)s by %(2)s"
-#~ msgstr "%(1)s پر %(2)s"
-
-#~ msgid "Recorder:"
-#~ msgstr "ثبتونکی:"
-
-#~ msgid "Saving"
-#~ msgstr "ساتنه"
-
-#~ msgid "Finished recording"
-#~ msgstr "رېکارډونه پای ته ورسېده"
-
-#~ msgid "Stopped recording"
-#~ msgstr "ركارډ تم كړئ"
-
-#~ msgid "Remaining:"
-#~ msgstr "پاتې:"
-
-#~ msgid "Play"
-#~ msgstr "غږول"
-
-#~ msgid "Pause"
-#~ msgstr "ځنډ"
-
-#~ msgid "Add frame"
-#~ msgstr "چوکاټ زیاتول"
-
-#~ msgid "Remove frame"
-#~ msgstr "چوکاټ لرکول"
-
-#, python-format
-#~ msgid "%(1)s frames per second"
-#~ msgstr "%(1)s چوکاټه پر ثانیه"
-
-#~ msgid "Default"
-#~ msgstr "تلواله"
-
-#~ msgid "Best"
-#~ msgstr "ترټولو غوره"
-
-#~ msgid "Large file"
-#~ msgstr "لویه دوتنه"
-
-#~ msgid "Small file"
-#~ msgstr "وړه دوتنه"
-
-#~ msgid "Silent"
-#~ msgstr "غلي-چوپ"
-
-#~ msgid "Rotate"
-#~ msgstr "چورلول"
-
-#~ msgid "Width"
-#~ msgstr "پلنولې"
-
-#~ msgid "Height"
-#~ msgstr "لوړوالې"
-
-#~ msgid "Click to take picture"
-#~ msgstr "انځور کښنې لپاره ټک کړﺉ"
-
-#~ msgid "Click to add picture"
-#~ msgstr "انځور زیاتوونې لپاره ټک وکړﺉ"
-
-# TRANS: Downloading Photo from Mary
-#, python-format
-#~ msgid "Downloading %(1)s from %(2)s"
-#~ msgstr "رالېښل %(1)s له %(2)s"
-
-# TRANS: Cannot download this Photo
-#, python-format
-#~ msgid "Cannot download this %(1)s"
-#~ msgstr "دا %(1)s نشي رالېښل کېدای"
-
-#, python-format
-#, python-format, 
-#~ msgid "Save %(1)s to:"
-#~ msgstr "ساتل %(1)s په:"
-
-#, python-format
-#~ msgid "Your %(1)s is full"
-#~ msgstr "ستاسې %(1)s بشپړ دى"
-
-#~ msgid "Journal"
-#~ msgstr "ورځپاڼه"
-
-#~ msgid "USB"
-#~ msgstr "یو.اېس.بي"
-
-#~ msgid "SD Card"
-#~ msgstr "اېس.ډي کارټ"
-
-#~ msgid "Free space:"
-#~ msgstr "خپلواكه تشه:"
-
-#~ msgid "Bitrate"
-#~ msgstr "بېټرېټ"
-
-#~ msgid "Maximum Bitrate"
-#~ msgstr "تر ټولو زيات بېټرېټ"
-
-#~ msgid "Minumum Bitrate"
-#~ msgstr "تر ټولو لږ بېټرېټ"
-
-#~ msgid "Manage Bitrate"
-#~ msgstr "بېټرېټ سمبالول"
-
-#~ msgid "Border"
-#~ msgstr "برید"
-
-#~ msgid "Center"
-#~ msgstr "منځول"
-
-#~ msgid "Frames"
-#~ msgstr "چوکاټونه"
-
-#~ msgid "Automatic keyframe detection"
-#~ msgstr "خپلکارى كليدي چوكاټ موندونكې"
-
-#~ msgid "Force keyframe"
-#~ msgstr "ځواك كليدي چوكاټ"
-
-#~ msgid "Keyframe frequency"
-#~ msgstr "د كليدي چوكاټ فرېكوينسي"
-
-#~ msgid "Keyframe minimum distance"
-#~ msgstr "د كليدي چوكاټ ترټولو لږ واټن"
-
-#~ msgid "Keyframe threshold"
-#~ msgstr "د كليدي چوكاټ درشل"
-
-#~ msgid "Noise Sensitivity"
-#~ msgstr "د شورماشور حساسيت"
-
-#~ msgid "Quick"
-#~ msgstr "ژر"
-
-#~ msgid "Sharpness"
-#~ msgstr "ځيږوالې"
-
-#~ msgid "Capacity"
-#~ msgstr "ضرفيت"
-
-#, python-format
-#~ msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-#~ msgstr "%(1)s ساعتونه, %(2)s دقیقې, %(1)s ثانیې پاتې دي"
-
-#, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "%(1)s دقیقې، %(1)s ثانیې پاتې"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "٪(1)s ثانیې پاتې دي"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "%(1)s دقیقې پاتې دي"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "٪(1)s ثانیې پاتې دي"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(۱)s ساعته"
-
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(۱)s انځورونه"
-
-#~ msgid "High quality"
-#~ msgstr "لوړه څرنګتیا"
-
-#~ msgid "Low quality"
-#~ msgstr "ټیټه څرنګتیا"
-
-#~ msgid "Your disk is full"
-#~ msgstr "ستاسې ټیکلی ډک دی"
