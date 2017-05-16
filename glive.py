@@ -319,12 +319,11 @@ class Glive:
             logger.error('no v4l2src')
         self._pipeline.add(src)
 
-        framerate = Gst.Caps.from_string('video/x-raw,framerate=(fraction)10/1')
-
+        resolution = Gst.Caps.from_string('video/x-raw,width=640,height=480')
         srcfilter = Gst.ElementFactory.make("capsfilter", "srcfilter")
         if srcfilter is None:
             logger.error('no capsfilter')
-        srcfilter.set_property('caps', framerate)
+        srcfilter.set_property('caps', resolution)
         self._pipeline.add(srcfilter)
         if not src.link(srcfilter):
             logger.error('link src to srcfilter failed')
@@ -336,6 +335,7 @@ class Glive:
         if not srcfilter.link(rate):
             logger.error('link srcfilter to rate failed')
 
+        framerate = Gst.Caps.from_string('video/x-raw,framerate=(fraction)10/1')
         ratefilter = Gst.ElementFactory.make("capsfilter", "ratefilter")
         if ratefilter is None:
             logger.error('no capsfilter')
