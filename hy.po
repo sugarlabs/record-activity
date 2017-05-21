@@ -1,0 +1,133 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2017-04-06 02:56+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: hy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1491447383.000000\n"
+
+#. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
+msgid "Record"
+msgstr "Գրանցում"
+
+#. TRANS: "summary" option from activity.info file
+#. TRANS: "description" option from activity.info file
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
+"Արձակիր ներսիդ ցուցադրական արվեստագետին. Լուսանկարիր, պատրաստիր ֆիլմեր և "
+"օգտագործիր դրանք քո աշխարհը վերստեղծելու համար: Միակ սահմանափակումը քո "
+"երևակայությունն է:"
+
+#: button.py:26
+msgid "Remove"
+msgstr "Վերացնել"
+
+#: button.py:37
+msgid "Copy to clipboard"
+msgstr "Պատճենել ցուցատախտակին"
+
+#: glive.py:398 model.py:386
+#, python-format
+msgid "%(type)s by %(name)s"
+msgstr "%(type)s by %(name)s"
+
+#: glive.py:551
+msgid "Saving..."
+msgstr "Պահպանում ..."
+
+#: mediaview.py:54
+msgid "Author:"
+msgstr "Հեղինակ..."
+
+#: mediaview.py:70
+msgid "Tags:"
+msgstr "Պիտակներ."
+
+#: mediaview.py:118
+msgid "Date:"
+msgstr "Ամսաթիվ."
+
+#: model.py:183
+#, python-format
+#, python-format,
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr "%(mins)d:%(secs)02d մնացորդ"
+
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "Լուսանկար"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "Վիդեո"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "Աուդիո"
+
+#: record.py:228
+msgid "Title:"
+msgstr "Վերնագիր."
+
+#: record.py:561
+msgid "Download failed."
+msgstr "Բեռնումը ձախողվեց"
+
+#: record.py:563
+msgid "Downloading..."
+msgstr "Բեռնումն ընթացքի մեջ է..."
+
+#: record.py:565
+msgid "Requesting..."
+msgstr "Հայցում..."
+
+#: record.py:872
+msgid "Select timer"
+msgstr "Ընտրել ժամաչափիչը"
+
+#: record.py:879
+msgid "Select duration"
+msgstr "Ընտրել տևողությունը"
+
+#: record.py:886
+msgid "Select quality"
+msgstr "Ընտրել որակը"
+
+#: record.py:906 record.py:931
+msgid "Immediate"
+msgstr "Անմիջական"
+
+#: record.py:908
+#, fuzzy, python-format, python-format
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] "%s վարկյան"
+msgstr[1] "%s վարկյան"
+
+# too many %s
+#: record.py:933
+#, fuzzy, python-format, python-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] "%s րոպե"
+msgstr[1] "%s րոպե"
+
+#: record.py:955
+#, python-format
+msgid "%s quality"
+msgstr "%s որակը"
