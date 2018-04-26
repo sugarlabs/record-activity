@@ -152,13 +152,6 @@ class Model:
 
         if state == constants.STATE_READY:
             self.gplay.stop()
-
-            # if we aren't using Xv (e.g. glive is playing as PIP in video
-            # mode), then stop the pipeline so that we switch back to Xv
-            # in the call that follows.
-            if self.glive.get_has_camera() and not self.glive.is_using_xv():
-                self.glive.stop()
-
             self.glive.play()
         elif state == constants.STATE_INVISIBLE:
             self.gplay.stop()
@@ -333,7 +326,7 @@ class Model:
         self.gplay.set_location("file://" + recd.getMediaFilepath())
         self.glive.stop()
         self.gplay.play()
-        self.glive.play(use_xv=False)
+        self.glive.play()
         self.activity.set_paused(False)
 
     def play_pause(self):
