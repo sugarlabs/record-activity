@@ -60,7 +60,6 @@ class Glive:
         self._create_photobin()
         self._create_audiobin()
         self._create_videobin()
-        self._create_xbin()
         self._create_pipeline()
 
         self._thumb_pipes = []
@@ -228,40 +227,6 @@ class Glive:
 
         pad = queue.get_static_pad("sink")
         self._videobin.add_pad(Gst.GhostPad("sink", pad))
-
-    def _create_xbin(self):
-        scale = Gst.ElementFactory.make("videoscale")
-        if scale is None:
-            logger.error('no videoscale')
-
-        vc = Gst.ElementFactory.make("videoconvert")
-        if vc is None:
-            logger.error('no videoconvert')
-
-        xsink = Gst.ElementFactory.make("ximagesink", "xsink")
-        if xsink is None:
-            logger.error('no ximagesink')
-
-        xsink.set_property("force-aspect-ratio", True)
-
-        # http://thread.gmane.org/gmane.comp.video.gstreamer.devel/29644
-        xsink.set_property("sync", False)
-
-        self._xbin = Gst.Bin("xbin")
-        self._xbin.add(scale, vc, xsink)
-        scale.link(vc)
-        vc.link(xsink)
-
-        pad = scale.get_static_pad("sink")
-        self._xbin.add_pad(Gst.GhostPad("sink", pad))
-
-    def _config_videobin(self, quality, width, height):
-        vbenc = self._videobin.get_by_name("vbenc")
-        vbenc.set_property("quality", quality)
-        scaps = self._videobin.get_by_name("scalecaps")
-        scaps.set_property("caps", Gst.Caps("video/x-raw,format=(yuv),width=%d,height=%d" % (width, height)))
-        #caps = Gst.Caps.from_string("video/x-raw,format=(string)yuv,width=(int)%d,height=(int)%d" % (width, height))
-        #scaps.set_property("caps", caps)
 
     def _create_pipeline(self):
         cmd = 'autovideosrc name=src ' \
