@@ -145,7 +145,7 @@ class VideoBox(Gtk.DrawingArea):
 
         self._xid = None
         self._sink = None
-        self.connect('realize', self._realize)
+        self.connect('realize', self._realize_cb)
         self.connect('draw', self._draw_cb)
 
     def _draw_cb(self, widget, cr):
@@ -158,7 +158,7 @@ class VideoBox(Gtk.DrawingArea):
             cr.fill()
             return True
 
-    def _realize(self, widget):
+    def _realize_cb(self, widget):
         self._xid = self.get_window().get_xid()
 
     # can be called from GStreamer thread, must not do any GTK+ stuff
