@@ -312,14 +312,23 @@ class MediaView(Gtk.EventBox):
         self._switch_mode(MediaView.MODE_LIVE)
 
     def _size_allocate(self, widget, allocation):
-        # First check if we've already processed an allocation of this size.
-        # This is necessary because the operations we do in response to the
-        # size allocation cause another size allocation to happen.
-        if self._allocation == allocation:
+        if hasattr(allocation, 'equal'):  # GTK+ 3.20 or higher
+            if self._allocation and self._allocation.equal(allocation):
+                return
+        elif self._allocation and \
+            self._allocation.x == allocation.x and \
+            self._allocation.y == allocation.y and \
+            self._allocation.width == allocation.width and \
+            self._allocation.height == allocation.height:
             return
 
         self._allocation = allocation
-        self._place_widgets()
+
+        def defer():
+            self._place_widgets()
+            return False
+
+        GObject.timeout_add(10, defer)  # prevent a delayed image symptom
 
     def _motion_notify(self, widget, event):
         if self._hide_controls_timer:
