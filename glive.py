@@ -33,10 +33,6 @@ import utils
 
 logger = logging.getLogger('glive')
 
-OGG_TRAITS = {
-        0: { 'width': 160, 'height': 120, 'quality': 16 },
-        1: { 'width': 384, 'height': 288, 'quality': 16 } }
-
 class Glive:
     PHOTO_MODE_PHOTO = 0
     PHOTO_MODE_AUDIO = 1
@@ -195,19 +191,8 @@ class Glive:
             logger.error('no queue')
 
         queue.set_property("max-size-time", 5000000000) # 5 seconds
-        queue.set_property("max-size-bytes", 33554432) # 32mb
+        queue.set_property("max-size-bytes", 128 * 1024 * 1024)
         queue.connect("overrun", self._log_queue_overrun)
-
-        scale = Gst.ElementFactory.make("videoscale", "vbscale")
-        if scale is None:
-            logger.error('no videoscale')
-
-        scalecapsfilter = Gst.ElementFactory.make("capsfilter", "scalecaps")
-        if scalecapsfilter is None:
-            logger.error('no capsfilter')
-
-        scalecaps = Gst.Caps('video/x-raw,framerate=(fraction)10/1,width=160,height=120')
-        scalecapsfilter.set_property("caps", scalecaps)
 
         vc = Gst.ElementFactory.make("videoconvert", "vc")
         if vc is None:
@@ -230,14 +215,10 @@ class Glive:
         sink.set_property("location", os.path.join(Instance.instancePath, "output.ogg"))
 
         self._videobin = Gst.Bin("videobin")
-        self._videobin.add(queue, scale, scalecapsfilter, vc, enc, mux, sink)
+        self._videobin.add(queue, vc, enc, mux, sink)
 
-        if not queue.link(scale):
-            logger.error('queue link to scale failed')
-        if not scale.link_pads(None, scalecapsfilter, "sink"):
-            logger.error('scale link pads to scalecapsfilter failed')
-        if not scalecapsfilter.link_pads("src", vc, None):
-            logger.error('scalecapsfilter link pads to vc failed')
+        if not queue.link(vc):
+            logger.error('queue link to vc failed')
         if not vc.link(enc):
             logger.error('vc link to enc failed')
         if not enc.link(mux):
@@ -423,11 +404,6 @@ class Glive:
     def record_video(self, quality):
         if not self._has_camera:
             return
-
-        self._ogg_quality = quality
-        self._config_videobin(OGG_TRAITS[quality]['quality'],
-            OGG_TRAITS[quality]['width'],
-            OGG_TRAITS[quality]['height'])
 
         # If we use pad blocking and adjust the pipeline on-the-fly, the
         # resultant video has bad A/V sync :(
