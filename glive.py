@@ -169,7 +169,12 @@ class Glive:
                           os.path.join(Instance.instancePath, "output.wav"))
 
         self._audiobin = Gst.Bin("audiobin")
-        self._audiobin.add(src, capsfilter, rate, queue, enc, sink)
+        self._audiobin.add(src)
+        self._audiobin.add(capsfilter)
+        self._audiobin.add(rate)
+        self._audiobin.add(queue)
+        self._audiobin.add(enc)
+        self._audiobin.add(sink)
 
         #if not src.link(capsfilter):
         #    logger.error('src link to capsfilter failed')
@@ -214,7 +219,11 @@ class Glive:
         sink.set_property("location", os.path.join(Instance.instancePath, "output.ogg"))
 
         self._videobin = Gst.Bin("videobin")
-        self._videobin.add(queue, vc, enc, mux, sink)
+        self._videobin.add(queue)
+        self._videobin.add(vc)
+        self._videobin.add(enc)
+        self._videobin.add(mux)
+        self._videobin.add(sink)
 
         if not queue.link(vc):
             logger.error('queue link to vc failed')
