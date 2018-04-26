@@ -153,8 +153,8 @@ class VideoBox(Gtk.DrawingArea):
             self._sink.expose()
             return False
         else:
-            cr.rectangle(0, 0, w, h)
-            cr.set_source_rgb(0, 0, 0)
+            cr.rectangle(0, 0, widget.get_allocated_width(), widget.get_allocated_height())
+            cr.set_source_rgb(0.25, 0.25, 0.25)
             cr.fill()
             return True
 
