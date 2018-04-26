@@ -140,9 +140,6 @@ class VideoBox(Gtk.DrawingArea):
                         Gdk.EventMask.KEY_PRESS_MASK |
                         Gdk.EventMask.KEY_RELEASE_MASK)
 
-        self.set_app_paintable(True)
-        self.set_double_buffered(False)
-
         self._xid = None
         self._sink = None
         self.connect('realize', self._realize_cb)
