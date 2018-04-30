@@ -58,7 +58,16 @@ def getUniqueFilepath( path, i ):
         return os.path.abspath( newPath )
 
 def generate_thumbnail(pixbuf):
-    return pixbuf.scale_simple(108, 81, GdkPixbuf.InterpType.BILINEAR)
+    w = pixbuf.get_width()
+    h = pixbuf.get_height()
+    a = float(w) / float(h)
+    if a < 1.4:
+        nw = 108
+        nh = 81
+    else:
+        nw = 106
+        nh = 60
+    return pixbuf.scale_simple(nw, nh, GdkPixbuf.InterpType.BILINEAR)
 
 def getDateString( when ):
     return time.strftime( "%c", time.localtime(when) )

@@ -42,18 +42,29 @@ class RecdButton(TrayButton):
         return self._recd
 
     def get_image(self):
-        img = Gtk.Image()
         ipb = self._recd.getThumbPixbuf()
-        if self._recd.type == constants.TYPE_PHOTO:
-            path = 'object-photo.svg'
-        elif self._recd.type == constants.TYPE_VIDEO:
-            path = 'object-video.svg'
-        elif self._recd.type == constants.TYPE_AUDIO:
-            path = 'object-audio.svg'
+        w = ipb.get_width()
+        h = ipb.get_height()
+        a = float(w) / float(h)
+        if a < 1.4:
+            paths = {constants.TYPE_PHOTO: 'object-photo.svg',
+                     constants.TYPE_VIDEO: 'object-video.svg',
+                     constants.TYPE_AUDIO: 'object-audio.svg'}
+            x = 8
+            y = 8
+        else:
+            paths = {constants.TYPE_PHOTO: 'object-photo-16to9.svg',
+                     constants.TYPE_VIDEO: 'object-video-16to9.svg',
+                     constants.TYPE_AUDIO: 'object-audio-16to9.svg'}
+            x = 9
+            y = 18
+        path = paths[self._recd.type]
 
-        pixbuf = utils.load_colored_svg(path, self._recd.colorStroke, self._recd.colorFill)
-        if ipb:
-            ipb.composite(pixbuf, 8, 8, ipb.get_width(), ipb.get_height(), 8, 8, 1, 1, GdkPixbuf.InterpType.BILINEAR, 255)
+        pixbuf = utils.load_colored_svg(path, self._recd.colorStroke,
+                                        self._recd.colorFill)
+        ipb.composite(pixbuf, x, y, w, h, x, y, 1, 1,
+                      GdkPixbuf.InterpType.BILINEAR, 255)
+        img = Gtk.Image()
         img.set_from_pixbuf(pixbuf)
         img.show()
         return img
