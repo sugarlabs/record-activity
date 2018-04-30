@@ -252,7 +252,7 @@ class MediaView(Gtk.EventBox):
     __gsignals__ = {
         'media-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
         'pip-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
-        'full-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
+        'fullscreen-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
         'info-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
         'tags-changed': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_OBJECT,)),
     }
@@ -305,9 +305,10 @@ class MediaView(Gtk.EventBox):
         self._info_button.connect('button-release-event', self._info_clicked)
         self._fixed.put(self._info_button, 0, 0)
 
-        self._full_button = FullscreenButton()
-        self._full_button.connect('button-release-event', self._full_clicked)
-        self._fixed.put(self._full_button, 0, 0)
+        self._fullscreen_button = FullscreenButton()
+        self._fullscreen_button.connect('button-release-event',
+                                        self._fullscreen_clicked)
+        self._fixed.put(self._fullscreen_button, 0, 0)
 
         self._switch_mode(MediaView.MODE_LIVE)
 
@@ -341,7 +342,7 @@ class MediaView(Gtk.EventBox):
 
     def _show_controls(self):
         if self._mode in (MediaView.MODE_LIVE, MediaView.MODE_VIDEO, MediaView.MODE_PHOTO, MediaView.MODE_STILL):
-            self._raise_widget(self._full_button)
+            self._raise_widget(self._fullscreen_button)
 
         if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
             self._raise_widget(self._info_button)
@@ -354,7 +355,7 @@ class MediaView(Gtk.EventBox):
             GObject.source_remove(self._hide_controls_timer)
             self._hide_controls_timer = None
 
-        self._full_button.hide()
+        self._fullscreen_button.hide()
         if self._mode not in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
             self._info_button.hide()
 
@@ -373,9 +374,9 @@ class MediaView(Gtk.EventBox):
         self._info_button.hide()
 
         border = 5
-        full_button_x = allocation.width - border - self._full_button.width
-        full_button_y = border
-        self._fixed.move(self._full_button, full_button_x, full_button_y)
+        x = allocation.width - border - self._fullscreen_button.width
+        y = border
+        self._fixed.move(self._fullscreen_button, x, y)
 
         info_x = allocation.width - self._info_button.width
         info_y = allocation.height - self._info_button.height
@@ -418,7 +419,7 @@ class MediaView(Gtk.EventBox):
             self._image_box.set_size(allocation.width, allocation.height)
             self._image_box.show()
         elif self._mode in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
-            self._full_button.hide()
+            self._fullscreen_button.hide()
             self._info_view.set_size_request(allocation.width, allocation.height)
             self._info_view.fit_to_allocation(allocation)
             self._info_view.show()
@@ -465,8 +466,8 @@ class MediaView(Gtk.EventBox):
     def _video2_clicked(self, widget, event):
         self.emit('media-clicked')
 
-    def _full_clicked(self, widget, event):
-        self.emit('full-clicked')
+    def _fullscreen_clicked(self, widget, event):
+        self.emit('fullscreen-clicked')
 
     def _info_clicked(self, widget, event):
         self.emit('info-clicked')
@@ -489,9 +490,9 @@ class MediaView(Gtk.EventBox):
             self._hide_controls_timer = None
 
         if fullscreen:
-            self._full_button.set_reduce()
+            self._fullscreen_button.set_reduce()
         else:
-            self._full_button.set_enlarge()
+            self._fullscreen_button.set_enlarge()
 
     def realize_video(self):
         self._video.realize()
