@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#010101">
+	<!ENTITY fill_color "#CCCCCC">
+]><svg enable-background="new 0 0 123.5 123.5" height="123.5px" version="1.1" viewBox="0 0 123.5 123.5" width="123.5px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="object-video">
+	<rect fill="&fill_color;" height="120" stroke="&stroke_color;" stroke-width="3.5" width="120" x="1.75" y="1.75"/>
+	<g>
+		<circle cx="17.667" cy="104.25" fill="#FFFFFF" r="2.5"/>
+		<circle cx="39.708" cy="104.25" fill="#FFFFFF" r="2.5"/>
+		<circle cx="61.75" cy="104.25" fill="#FFFFFF" r="5"/>
+		<circle cx="83.791" cy="104.25" fill="#FFFFFF" r="2.5"/>
+		<circle cx="105.834" cy="104.25" fill="#FFFFFF" r="2.5"/>
+	</g>
+	<rect fill="#EEEEEE" height="60" width="106" x="8.75" y="17.75"/>
+</g></svg>
