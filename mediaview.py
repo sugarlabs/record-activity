@@ -335,8 +335,7 @@ class MediaView(Gtk.EventBox):
         if self._hide_controls_timer:
             # remove timer, it will be reprogrammed right after
             GObject.source_remove(self._hide_controls_timer)
-        else:
-            self._show_controls()
+        self._show_controls()
 
         self._hide_controls_timer = GObject.timeout_add(2000, self._hide_controls)
 
@@ -467,6 +466,7 @@ class MediaView(Gtk.EventBox):
         self.emit('media-clicked')
 
     def _fullscreen_clicked(self, widget, event):
+        self._hide_controls()
         self.emit('fullscreen-clicked')
 
     def _info_clicked(self, widget, event):
