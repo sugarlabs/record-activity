@@ -212,7 +212,8 @@ class Record(activity.Activity):
         self._media_view.connect('media-clicked', self._media_view_media_clicked)
         self._media_view.connect('pip-clicked', self._media_view_pip_clicked)
         self._media_view.connect('info-clicked', self._media_view_info_clicked)
-        self._media_view.connect('full-clicked', self._media_view_full_clicked)
+        self._media_view.connect('fullscreen-clicked',
+                                 self._media_view_fullscreen_clicked)
         self._media_view.connect('tags-changed', self._media_view_tags_changed)
         self._media_view.show()
 
@@ -375,7 +376,7 @@ class Record(activity.Activity):
 
         func(recd.recorderName, recd.colorStroke, recd.colorFill, utils.getDateString(recd.time), recd.tags)
 
-    def _media_view_full_clicked(self, widget):
+    def _media_view_fullscreen_clicked(self, widget):
         self._toggle_fullscreen()
 
     def _media_view_tags_changed(self, widget, tbuffer):
