@@ -15,7 +15,7 @@ COLOR_GREY = Gdk.color_parse('#808080')
 
 class XoIcon(Gtk.Image):
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.Image.__init__(self)
 
     def set_colors(self, stroke, fill):
         pixbuf = utils.load_colored_svg('xo-guy.svg', stroke, fill)
@@ -34,7 +34,7 @@ class InfoView(Gtk.EventBox):
     }
 
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.EventBox.__init__(self)
         self.modify_bg(Gtk.StateType.NORMAL, COLOR_GREY)
 
         self.connect('size-allocate', self._size_allocate)
@@ -166,7 +166,7 @@ class VideoBox(Gtk.DrawingArea):
 
 class FullscreenButton(Gtk.EventBox):
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.EventBox.__init__(self)
 
         path = os.path.join(constants.GFX_PATH, 'max-reduce.svg')
         self._enlarge_pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
@@ -190,7 +190,7 @@ class FullscreenButton(Gtk.EventBox):
 
 class InfoButton(Gtk.EventBox):
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.EventBox.__init__(self)
 
         path = os.path.join(constants.GFX_PATH, 'corner-info.svg')
         pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
@@ -204,18 +204,18 @@ class InfoButton(Gtk.EventBox):
 
 class ImageBox(Gtk.EventBox):
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.EventBox.__init__(self)
         self._pixbuf = None
         self._image = Gtk.Image()
         self.add(self._image)
 
     def show(self):
         self._image.show()
-        super(type(self), self).show()
+        Gtk.EventBox.show(self)
 
     def hide(self):
         self._image.hide()
-        super(type(self), self).hide()
+        Gtk.EventBox.hide(self)
 
     def clear(self):
         self._image.clear()
@@ -283,7 +283,7 @@ class MediaView(Gtk.EventBox):
         self._allocation = None
         self._hide_controls_timer = None
 
-        super(type(self), self).__init__()
+        Gtk.EventBox.__init__(self)
         self.connect('size-allocate', self._size_allocate)
         self.connect('motion-notify-event', self._motion_notify)
         self.set_events(Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.POINTER_MOTION_HINT_MASK)
@@ -535,9 +535,9 @@ class MediaView(Gtk.EventBox):
 
     def show(self):
         self._fixed.show()
-        super(type(self), self).show()
+        Gtk.EventBox.show(self)
 
     def hide(self):
         self._fixed.hide()
-        super(type(self), self).hide()
+        Gtk.EventBox.hide(self)
 
