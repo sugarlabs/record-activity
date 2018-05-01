@@ -241,9 +241,7 @@ class ImageBox(Gtk.EventBox):
         pixbuf = self._pixbuf.scale_simple(width_scaled, height_scaled,
                                            GdkPixbuf.InterpType.BILINEAR)
         self._image.set_from_pixbuf(pixbuf)
-
         self._image.set_size_request(width, height)
-        self.set_size_request(width, height)
 
 class MediaView(Gtk.EventBox):
     """
