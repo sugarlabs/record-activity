@@ -273,13 +273,13 @@ class MediaView(Gtk.EventBox):
 
     @staticmethod
     def _raise_widget(widget):
-        widget.show()
-        widget.realize()
-        widget.get_window().raise_()
+        widget.show()  # TODO: convert calls into .show()
 
     def __init__(self):
         self._mode = None
         self._allocation = None
+        self._controls_shown = False
+        self._show_controls_timer = None
         self._hide_controls_timer = None
 
         Gtk.EventBox.__init__(self)
@@ -337,13 +337,18 @@ class MediaView(Gtk.EventBox):
             return False
 
         GObject.timeout_add(10, defer)  # prevent a delayed image symptom
+        self.disconnect_by_func(self._size_allocate)
 
     def _motion_notify(self, widget, event):
-        if self._hide_controls_timer:
-            # remove timer, it will be reprogrammed right after
+        if self._controls_shown:
             GObject.source_remove(self._hide_controls_timer)
-        self._show_controls()
+            self._hide_controls_timer = GObject.timeout_add(2000, self._hide_controls)
+            return
 
+        if self._show_controls_timer:
+            GObject.source_remove(self._show_controls_timer)
+
+        self._show_controls_timer = GObject.timeout_add(10, self._show_controls)
         self._hide_controls_timer = GObject.timeout_add(2000, self._hide_controls)
 
     def _show_controls(self):
@@ -353,21 +358,25 @@ class MediaView(Gtk.EventBox):
         if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
             self._raise_widget(self._info_button)
 
-        if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
-            self._raise_widget(self._video)
+        # FIXME: VideoBox does not resize
+        # if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
+        #     self._raise_widget(self._video)
+
+        self._show_controls_timer = None
+        self._controls_shown = True
+        return False
 
     def _hide_controls(self):
-        if self._hide_controls_timer:
-            GObject.source_remove(self._hide_controls_timer)
-            self._hide_controls_timer = None
-
         self._fullscreen_button.hide()
         if self._mode not in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
             self._info_button.hide()
 
-        if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
-            self._video.hide()
+        # FIXME: VideoBox does not resize
+        # if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
+        #     self._video.hide()
 
+        self._hide_controls_timer = None
+        self._controls_shown = False
         return False
 
     def _place_widgets(self):
@@ -414,6 +423,7 @@ class MediaView(Gtk.EventBox):
 
             vid_h = allocation.height / 6
             vid_w = allocation.width / 6
+            # FIXME: VideoBox does not resize
             self._video.set_size_request(vid_w, vid_h)
 
             border = 20
@@ -455,9 +465,10 @@ class MediaView(Gtk.EventBox):
             return
         self._mode = new_mode
 
-        if self._hide_controls_timer:
-            GObject.source_remove(self._hide_controls_timer)
-            self._hide_controls_timer = None
+        if self._controls_shown:
+            if self._hide_controls_timer:
+                GObject.source_remove(self._hide_controls_timer)
+            self._hide_controls()
 
         if self._allocation:
             self._place_widgets()
@@ -473,7 +484,6 @@ class MediaView(Gtk.EventBox):
         self.emit('media-clicked')
 
     def _fullscreen_clicked(self, widget, event):
-        self._hide_controls()
         self.emit('fullscreen-clicked')
 
     def _info_clicked(self, widget, event):
@@ -492,9 +502,10 @@ class MediaView(Gtk.EventBox):
         self._show_info(MediaView.MODE_INFO_VIDEO, author, stroke, fill, date, tags)
 
     def set_fullscreen(self, fullscreen):
-        if self._hide_controls_timer:
-            GObject.source_remove(self._hide_controls_timer)
-            self._hide_controls_timer = None
+        if self._controls_shown:
+            if self._hide_controls_timer:
+                GObject.source_remove(self._hide_controls_timer)
+            self._hide_controls()
 
         if fullscreen:
             self._fullscreen_button.set_reduce()
