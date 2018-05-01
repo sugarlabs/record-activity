@@ -225,13 +225,21 @@ class ImageBox(Gtk.EventBox):
         self._pixbuf = pixbuf
 
     def set_size(self, width, height):
-        if self._pixbuf:
-            if width == self._pixbuf.get_width() and height == self._pixbuf.get_height():
-                pixbuf = self._pixbuf
-            else:
-                pixbuf = self._pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
+        width_image = self._pixbuf.get_width()
+        height_image = self._pixbuf.get_height()
+        ratio_image = float(width_image) / float(height_image)
+        ratio_screen = float(width) / float(height)
 
-            self._image.set_from_pixbuf(pixbuf)
+        if ratio_screen > ratio_image:
+            width_scaled = width_image * height / height_image
+            height_scaled = height
+        else:
+            width_scaled = width
+            height_scaled = height_image * width / width_image
+
+        pixbuf = self._pixbuf.scale_simple(width_scaled, height_scaled,
+                                           GdkPixbuf.InterpType.BILINEAR)
+        self._image.set_from_pixbuf(pixbuf)
 
         self._image.set_size_request(width, height)
         self.set_size_request(width, height)

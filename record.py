@@ -209,7 +209,8 @@ class Record(activity.Activity):
         main_box.get_parent().modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
 
         self._media_view = MediaView()
-        self._media_view.connect('media-clicked', self._media_view_media_clicked)
+        self._media_view.connect('media-clicked',
+                                 self._media_view_media_clicked)
         self._media_view.connect('pip-clicked', self._media_view_pip_clicked)
         self._media_view.connect('info-clicked', self._media_view_info_clicked)
         self._media_view.connect('fullscreen-clicked',
@@ -253,11 +254,14 @@ class Record(activity.Activity):
         #self._record_container.pack_start(self._controls_hbox, True, False, 0)
         #main_box.add(self._record_container)
         #self._media_view.set_size_request(640, 480)
-        self._media_view.props.height_request = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2 - 150 - 6
+
+        ht = 150  # height of tray
+        self._media_view.props.height_request = Gdk.Screen.height() - \
+            style.GRID_CELL_SIZE * 2 - ht - 6
         main_box.add(self._media_view)
         main_box.add(self._controls_hbox)
 
-        self._thumb_tray = HTray(hexpand=True, height_request=150)
+        self._thumb_tray = HTray(hexpand=True, height_request=ht)
         main_box.add(self._thumb_tray)
         self._thumb_tray.show_all()
         main_box.show()
