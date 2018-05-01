@@ -132,8 +132,9 @@ class VideoBox(Gtk.DrawingArea):
     """
     For rendering a GStreamer video sink onto.
     """
-    def __init__(self):
-        GObject.GObject.__init__(self)
+    def __init__(self, name):
+        self._name = name
+        Gtk.DrawingArea.__init__(self)
         self.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
                         Gdk.EventMask.POINTER_MOTION_HINT_MASK |
                         Gdk.EventMask.EXPOSURE_MASK |
@@ -301,11 +302,11 @@ class MediaView(Gtk.EventBox):
         self._image_box.connect('button-release-event', self._image_clicked)
         self._fixed.put(self._image_box, 0, 0)
 
-        self._video = VideoBox()
+        self._video = VideoBox('one')
         self._video.connect('button-release-event', self._video_clicked)
         self._fixed.put(self._video, 0, 0)
 
-        self._video2 = VideoBox()
+        self._video2 = VideoBox('two')
         self._video2.connect('button-release-event', self._video2_clicked)
         self._fixed.put(self._video2, 0, 0)
 
