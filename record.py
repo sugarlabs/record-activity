@@ -121,6 +121,7 @@ class Record(activity.Activity):
         def restarter():
             if os.stat('go').st_ctime != ct:
                 self.close()
+                os.execv('/usr/bin/sugar-activity', ['sugar-activity'])
                 return False
             return True
         GObject.timeout_add(233, restarter)
