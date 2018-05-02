@@ -220,6 +220,9 @@ class Record(activity.Activity):
         self._media_view.show()
 
         self._controls_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        trim_height_shutter_button = 7
+        self._controls_hbox.set_size_request(-1, style.GRID_CELL_SIZE +
+                                                 trim_height_shutter_button)
 
         self._shutter_button = ShutterButton()
         self._shutter_button.connect("clicked", self._shutter_clicked)
@@ -256,13 +259,13 @@ class Record(activity.Activity):
         #main_box.add(self._record_container)
         #self._media_view.set_size_request(640, 480)
 
-        ht = 150  # height of tray
+        height_tray = 150  # height of tray
         self._media_view.props.height_request = Gdk.Screen.height() - \
-            style.GRID_CELL_SIZE * 2 - ht - 6
+            style.GRID_CELL_SIZE * 2 - height_tray - trim_height_shutter_button
         main_box.add(self._media_view)
         main_box.add(self._controls_hbox)
 
-        self._thumb_tray = HTray(hexpand=True, height_request=ht)
+        self._thumb_tray = HTray(hexpand=True, height_request=height_tray)
         main_box.add(self._thumb_tray)
         self._thumb_tray.show_all()
         main_box.show()
