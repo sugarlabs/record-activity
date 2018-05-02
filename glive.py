@@ -122,22 +122,9 @@ class Glive:
         self._photobin.add_pad(Gst.GhostPad("sink", pad))
 
     def _create_audiobin(self):
-        src = Gst.ElementFactory.make("alsasrc", "absrc")
+        src = Gst.ElementFactory.make("autoaudiosrc", "absrc")
         if src is None:
-            logger.error('no alsasrc')
-
-        # attempt to use direct access to the 0,0 device, solving some A/V
-        # sync issues
-        src.set_property("device", "plughw:0,0")
-        hwdev_available = src.set_state(Gst.State.PAUSED) != Gst.StateChangeReturn.FAILURE
-        src.set_state(Gst.State.NULL)
-        if not hwdev_available:
-            src.set_property("device", "default")
-
-        capsfilter = Gst.ElementFactory.make('capsfilter', 'abcaps')
-        if capsfilter is None:
-            logger.error('no capsfilter')
-        capsfilter.set_property('caps', Gst.caps_from_string("audio/x-raw,rate=(int)48000,channels=(int)1,depth=(int)16"))
+            logger.error('no autoaudiosrc')
 
         # guarantee perfect stream, important for A/V sync
         rate = Gst.ElementFactory.make("audiorate")
@@ -170,16 +157,11 @@ class Glive:
 
         self._audiobin = Gst.Bin("audiobin")
         self._audiobin.add(src)
-        self._audiobin.add(capsfilter)
         self._audiobin.add(rate)
         self._audiobin.add(queue)
         self._audiobin.add(enc)
         self._audiobin.add(sink)
 
-        #if not src.link(capsfilter):
-        #    logger.error('src link to capsfilter failed')
-        #if not capsfilter.link(rate):
-        #    logger.error('capsfilter link to rate failed')
         if not src.link(rate):
             logger.error('src link to rate failed')
         if not rate.link(queue):
