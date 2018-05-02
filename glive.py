@@ -80,6 +80,7 @@ class Glive:
         bus.connect('sync-message::element', on_sync_message_cb)
 
     def _detect_camera(self):
+        # FIXME: check for /dev/video0
         self._has_camera = True
 
     def get_has_camera(self):
