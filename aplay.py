@@ -43,10 +43,10 @@ def play(file, done_cb=None):
     player.set_state(Gst.State.PLAYING)
 
 
-player = Gst.ElementFactory.make('playbin')
+player = Gst.ElementFactory.make('playbin', 'playbin')
 if player is None:
     logger.error('no playbin')
-fakesink = Gst.ElementFactory.make('fakesink')
+fakesink = Gst.ElementFactory.make('fakesink', 'fakesink')
 if fakesink is None:
     logger.error('no fakesink')
 player.set_property("video-sink", fakesink)

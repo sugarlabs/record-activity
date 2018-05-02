@@ -39,6 +39,8 @@ GObject.threads_init()
 Gst.init(None)
 
 from sugar3.activity import activity
+from sugar3.graphics.alert import Alert
+from sugar3.graphics.icon import Icon
 from sugar3.graphics.toolcombobox import ToolComboBox
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbarbox import ToolbarButton
@@ -76,7 +78,11 @@ Gst.debug_set_default_threshold(Gst.DebugLevel.WARNING)
 
 class Record(activity.Activity):
     def __init__(self, handle):
-        super(type(self), self).__init__(handle)
+        activity.Activity.__init__(self, handle)
+
+        if Gst.version() == (1L, 0L, 10L, 0L):
+            return self._incompatible()
+
         self.props.enable_fullscreen_mode = False
         Instance(self)
 
@@ -126,15 +132,47 @@ class Record(activity.Activity):
             return True
         GObject.timeout_add(233, restarter)
 
+    def _incompatible(self):
+        ''' Display abbreviated activity user interface with alert '''
+        toolbox = ToolbarBox()
+        stop = StopButton(self)
+        toolbox.toolbar.add(stop)
+        self.set_toolbar_box(toolbox)
+
+        title = _('Activity not compatible with this system.')
+        msg = _('Please downgrade activity and try again.')
+        alert = Alert(title=title, msg=msg)
+        alert.add_button(0, 'Stop', Icon(icon_name='activity-stop'))
+        self.add_alert(alert)
+
+        label = Gtk.Label(_('Uh oh, GStreamer is too old.'))
+        self.set_canvas(label)
+
+        alert.connect('response', self.__incompatible_response_cb)
+        stop.connect('clicked', self.__incompatible_stop_clicked_cb,
+                     alert)
+
+        self.show_all()
+
+    def __incompatible_stop_clicked_cb(self, button, alert):
+        self.remove_alert(alert)
+
+    def __incompatible_response_cb(self, alert, response):
+        self.remove_alert(alert)
+        self.close()
+
     def read_file(self, path):
-        self.model.read_file(path)
+        if hasattr(self, 'model'):
+            self.model.read_file(path)
 
     def write_file(self, path):
-        self.model.write_file(path)
+        if hasattr(self, 'model'):
+            self.model.write_file(path)
 
     def close(self, **kwargs):
-        self.model.gplay.stop()
-        self.model.glive.stop()
+        if hasattr(self, 'model'):
+            self.model.gplay.stop()
+            self.model.glive.stop()
         super(type(self), self).close(**kwargs)
 
     def _visibility_changed(self, widget, event):
