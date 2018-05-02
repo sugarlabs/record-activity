@@ -275,10 +275,6 @@ class MediaView(Gtk.EventBox):
     MODE_INFO_PHOTO = 4
     MODE_INFO_VIDEO = 5
 
-    @staticmethod
-    def _raise_widget(widget):
-        widget.show()  # TODO: convert calls into .show()
-
     def __init__(self):
         self._mode = None
         self._allocation = None
@@ -360,14 +356,14 @@ class MediaView(Gtk.EventBox):
     def _show_controls(self):
         logger.error('_show_controls')
         if self._mode in (MediaView.MODE_LIVE, MediaView.MODE_VIDEO, MediaView.MODE_PHOTO, MediaView.MODE_STILL):
-            self._raise_widget(self._fullscreen_button)
+            self._fullscreen_button.show()
 
         if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
-            self._raise_widget(self._info_button)
+            self._info_button.show()
 
         # FIXME: VideoBox does not resize
         # if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
-        #     self._raise_widget(self._video)
+        #     self._video.show()
 
         self._show_controls_timer = None
         self._controls_shown = True
@@ -448,23 +444,23 @@ class MediaView(Gtk.EventBox):
             self._info_view.set_size_request(allocation.width, allocation.height)
             self._info_view.fit_to_allocation(allocation)
             self._info_view.show()
-            self._raise_widget(self._info_button)
+            self._info_button.show()
 
     def _info_view_primary_allocated(self, widget, allocation):
         if self._mode == MediaView.MODE_INFO_PHOTO:
             self._fixed.move(self._image_box, allocation.x, allocation.y)
             self._image_box.set_size(allocation.width, allocation.height)
-            self._raise_widget(self._image_box)
+            self._image_box.show()
         elif self._mode == MediaView.MODE_INFO_VIDEO:
             self._fixed.move(self._video2, allocation.x, allocation.y)
             self._video2.set_size_request(allocation.width, allocation.height)
-            self._raise_widget(self._video2)
+            self._video2.show()
 
     def _info_view_secondary_allocated(self, widget, allocation):
         if self._mode in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
             self._fixed.move(self._video, allocation.x, allocation.y)
             self._video.set_size_request(allocation.width, allocation.height)
-            self._raise_widget(self._video)
+            self._video.show()
 
     def _info_view_tags_changed(self, widget, tbuffer):
         self.emit('tags-changed', tbuffer)
