@@ -87,6 +87,11 @@ class Glive:
         return self._has_camera
 
     def _create_photobin(self):
+        """
+        create a Gst.Bin for taking photographs
+
+        queue ! videoconvert ! jpegenc ! fakesink
+        """
         queue = Gst.ElementFactory.make("queue", "pbqueue")
         if queue is None:
             logger.error('no queue')
@@ -123,6 +128,11 @@ class Glive:
         self._photobin.add_pad(Gst.GhostPad("sink", pad))
 
     def _create_audiobin(self):
+        """
+        create a Gst.Bin for recording audio alone, or with video
+
+        autoaudiosrc ! audiorate ! queue ! wavenc ! filesink
+        """
         src = Gst.ElementFactory.make("autoaudiosrc", "absrc")
         if src is None:
             logger.error('no autoaudiosrc')
@@ -173,6 +183,11 @@ class Glive:
             logger.error('enc link to sink failed')
 
     def _create_videobin(self):
+        """
+        create a Gst.Bin for recording video alone
+
+        queue ! videoconvert ! theoraenc ! oggmux ! filesink
+        """
         queue = Gst.ElementFactory.make("queue", "videoqueue")
         if queue is None:
             logger.error('no queue')
@@ -221,6 +236,9 @@ class Glive:
         self._videobin.add_pad(Gst.GhostPad("sink", pad))
 
     def _create_pipeline(self):
+        """
+        create a Gst.Pipeline for displaying camera video on display
+        """
         cmd = 'autovideosrc name=src ' \
             '! tee name=tee ' \
             'tee.! queue ! videoconvert ! autovideosink '
@@ -243,16 +261,9 @@ class Glive:
         self._pipeline.set_state(Gst.State.PLAYING)
         self._playing = True
 
-    def pause(self):
-        self._pipeline.set_state(Gst.State.PAUSED)
-        self._playing = False
-
     def stop(self):
         self._pipeline.set_state(Gst.State.NULL)
         self._playing = False
-
-    def is_playing(self):
-        return self._playing
 
     def _get_state(self):
         return self._pipeline.get_state(Gst.CLOCK_TIME_NONE)[1]
