@@ -370,9 +370,8 @@ class MediaView(Gtk.EventBox):
         if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
             self._info_button.show()
 
-        # FIXME: VideoBox does not resize
-        # if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
-        #     self._video.show()
+        if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
+            self._video.show()
 
         self._show_controls_timer = None
         self._controls_shown = True
@@ -384,9 +383,8 @@ class MediaView(Gtk.EventBox):
         if self._mode not in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
             self._info_button.hide()
 
-        # FIXME: VideoBox does not resize
-        # if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
-        #     self._video.hide()
+        if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
+            self._video.hide()
 
         self._hide_controls_timer = None
         self._controls_shown = False
@@ -414,6 +412,7 @@ class MediaView(Gtk.EventBox):
         if self._mode == MediaView.MODE_LIVE:
             self._fixed.move(self._video, 0, 0)
             self._video.set_size_request(allocation.width, allocation.height)
+            self._video.queue_resize()
             self._video.show()
             self._image_box.clear()
         elif self._mode == MediaView.MODE_VIDEO:
@@ -425,6 +424,7 @@ class MediaView(Gtk.EventBox):
             vid_h = allocation.height / 6
             vid_w = allocation.width / 6
             self._video.set_size_request(vid_w, vid_h)
+            self._video.queue_resize()
 
             border = 20
             vid_x = border
@@ -435,10 +435,10 @@ class MediaView(Gtk.EventBox):
             self._image_box.set_size(allocation.width, allocation.height)
             self._image_box.show()
 
-            vid_h = allocation.height / 6
-            vid_w = allocation.width / 6
-            # FIXME: VideoBox does not resize
+            vid_h = self._image_box.height / 6
+            vid_w = self._image_box.width / 6
             self._video.set_size_request(vid_w, vid_h)
+            self._video.queue_resize()
 
             border = 20
             vid_x = border
