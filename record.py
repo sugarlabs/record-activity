@@ -205,10 +205,6 @@ class Record(activity.Activity):
         self._toolbar.insert(StopButton(self), -1)
         self.get_toolbar_box().show_all()
 
-        main_box = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
-        self.set_canvas(main_box)
-        main_box.get_parent().modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
-
         self._media_view = MediaView()
         self._media_view.connect('media-clicked',
                                  self._media_view_media_clicked)
@@ -252,23 +248,21 @@ class Record(activity.Activity):
         self._controls_hbox.pack_start(self._title_entry, expand=True, fill=True, padding=10)
         self._controls_hbox.show()
 
-        #self._record_container = _RecordContainer(self._media_view, self._controls_hbox)
-        #self._record_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        #self._record_container.pack_start(self._media_view, True, False, 0)
-        #self._record_container.pack_start(self._controls_hbox, True, False, 0)
-        #main_box.add(self._record_container)
-        #self._media_view.set_size_request(640, 480)
-
         height_tray = 150  # height of tray
-        self._media_view.props.height_request = Gdk.Screen.height() - \
-            style.GRID_CELL_SIZE * 2 - height_tray - trim_height_shutter_button
-        main_box.add(self._media_view)
-        main_box.add(self._controls_hbox)
 
         self._thumb_tray = HTray(hexpand=True, height_request=height_tray)
-        main_box.add(self._thumb_tray)
         self._thumb_tray.show_all()
+
+        self._media_view.set_size_request(-1, Gdk.Screen.height() - \
+            style.GRID_CELL_SIZE * 2 - height_tray - trim_height_shutter_button)
+
+        main_box = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
+        main_box.add(self._media_view)
+        main_box.add(self._controls_hbox)
+        main_box.add(self._thumb_tray)
         main_box.show()
+        self.set_canvas(main_box)
+        main_box.get_parent().modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
 
     def serialize(self):
         data = {}
@@ -380,7 +374,6 @@ class Record(activity.Activity):
         self._title_entry.set_text(recd.title)
         self._title_entry.show()
         self._title_label.show()
-        #self._record_container.set_title_visible(True)
 
         func(recd.recorderName, recd.colorStroke, recd.colorFill, utils.getDateString(recd.time), recd.tags)
 
@@ -423,7 +416,6 @@ class Record(activity.Activity):
             self._active_recd = None
             self._title_entry.hide()
             self._title_label.hide()
-            #self._record_container.set_title_visible(False)
             self._play_button.hide()
             self._playback_scale.hide()
             self._progress.hide()
@@ -527,7 +519,6 @@ class Record(activity.Activity):
         self._title_entry.set_text(recd.title)
         self._title_entry.show()
         self._title_label.show()
-        #self._record_container.set_title_visible(True)
         self._shutter_button.hide()
         self._progress.hide()
 
@@ -536,7 +527,6 @@ class Record(activity.Activity):
         self._shutter_button.hide()
         self._title_entry.hide()
         self._title_label.hide()
-        #self._record_container.set_title_visible(False)
         self._play_button.show()
         self._playback_scale.show()
         path = recd.getAudioImageFilepath()
@@ -549,7 +539,6 @@ class Record(activity.Activity):
         self._shutter_button.hide()
         self._title_entry.hide()
         self._title_label.hide()
-        #self._record_container.set_title_visible(False)
         self._play_button.show()
         self._playback_scale.show()
         self._media_view.show_video()
@@ -611,138 +600,6 @@ class Record(activity.Activity):
         self.get_window().set_cursor(self._old_cursor)
         Gdk.flush()
 
-class _RecordContainer(Gtk.Container):
-    """
-    A custom Container that contains a media view area, and a controls hbox.
-
-    The controls hbox is given the first height that it requests, locked in
-    for the duration of the widget.
-    The media view is given the remainder of the space, but is constrained to
-    a strict 4:3 ratio, therefore deducing its width.
-    The controls hbox is given the same width, and both elements are centered
-    horizontall.y
-    """
-    __gtype_name__ = 'RecordContainer'
-
-    def __init__(self, media_view, controls_hbox):
-        self._media_view = media_view
-        self._controls_hbox = controls_hbox
-        self._show_title = False
-        self._controls_hbox_height = 0
-        super(type(self), self).__init__()
-
-        for widget in (self._media_view, self._controls_hbox):
-            if widget.get_realized():
-                widget.set_parent_window(self.window)
-
-            widget.set_parent(self)
-
-    def do_realize(self):
-        self.set_realized(True)
-
-        self.allocation = self.get_allocation()
-        self.window = Gdk.Window(
-            self.get_parent_window(),
-            x=self.allocation.x,
-            y=self.allocation.y,
-            width=self.allocation.width,
-            height=self.allocation.height,
-            wclass=Gdk.WindowWindowClass.INPUT_OUTPUT)
-        self.window.set_events(self.get_events() | Gdk.EventMask.VISIBILITY_NOTIFY_MASK | Gdk.EventMask.EXPOSURE_MASK)
-        self.window.set_user_data(self)
-
-        self.set_style(self.style.attach(self.window))
-
-        for widget in (self._media_view, self._controls_hbox):
-            widget.set_parent_window(self.window)
-        self.queue_resize()
-
-    # GTK+ contains on exit if remove is not implemented
-    def do_remove(self, widget):
-        pass
-
-    def do_size_request(self, req):
-        # always request 320x240 (as a minimum for video)
-        req.width = 320
-        req.height = 240
-
-        self._media_view.size_request()
-
-        w, h = self._controls_hbox.size_request()
-
-        # add on height requested by controls hbox
-        if self._controls_hbox_height == 0:
-            self._controls_hbox_height = h
-
-        req.height += self._controls_hbox_height
-
-    @staticmethod
-    def _constrain_4_3(width, height):
-        if (width % 4 == 0) and (height % 3 == 0) and ((width / 4) * 3) == height:
-            return width, height # nothing to do
-
-        ratio = 4.0 / 3.0
-        if ratio * height > width:
-            width = (width / 4) * 4
-            height = int(width / ratio)
-        else:
-            height = (height / 3) * 3
-            width = int(ratio * height)
-
-        return width, height 
-
-    @staticmethod
-    def _center_in_plane(plane_size, size):
-        return (plane_size - size) / 2
-
-    def do_size_allocate(self, allocation):
-        self.allocation = allocation
-
-        # give the controls hbox the height that it requested
-        remaining_height = self.allocation.height - self._controls_hbox_height
-
-        # give the mediaview the rest, constrained to 4/3 and centered
-        media_view_width, media_view_height = self._constrain_4_3(self.allocation.width, remaining_height)
-        media_view_x = self._center_in_plane(self.allocation.width, media_view_width)
-        media_view_y = self._center_in_plane(remaining_height, media_view_height)
-
-        if self._show_title:
-            # position the controls hbox at the top of the window
-            # and the same width as the media view
-            controls_box_y = 0
-            # put the mediaview after the title
-            media_view_y = media_view_y + self._controls_hbox_height
-        else:
-            # position hbox at the bottom of the window,
-            # with the requested height,
-            # and the same width as the media view
-            controls_box_y = self.allocation.height - self._controls_hbox_height
-
-        # send allocation to mediaview
-        alloc = ()
-        alloc.width = media_view_width
-        alloc.height = media_view_height
-        alloc.x = media_view_x
-        alloc.y = media_view_y
-        self._media_view.size_allocate(alloc)
-
-        alloc = Gdk.Rectangle()
-        alloc.x = media_view_x
-        alloc.y = controls_box_y
-        alloc.width = media_view_width
-        alloc.height = self._controls_hbox_height
-        self._controls_hbox.size_allocate(alloc)
-
-        if self.get_realized():
-            self.window.move_resize(*allocation)
-
-    def do_forall(self, include_internals, callback, **kwargs):
-        for widget in (self._media_view, self._controls_hbox):
-            callback(widget, **kwargs)
-
-    def set_title_visible(self, visible):
-        self._show_title = visible
-        self.queue_draw()
 
 class PlaybackScale(Gtk.HScale):
     def __init__(self, model):
