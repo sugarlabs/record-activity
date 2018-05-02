@@ -256,6 +256,55 @@ class Glive:
     def _get_state(self):
         return self._pipeline.get_state(Gst.CLOCK_TIME_NONE)[1]
 
+    def take_photo(self):
+        if self._has_camera:
+            self._take_photo(self.PHOTO_MODE_PHOTO)
+
+    def _take_photo(self, photo_mode):
+        if self._pic_exposure_open:
+            return
+
+        self._photo_mode = photo_mode
+        self._pic_exposure_open = True
+        pad = self._photobin.get_static_pad("sink")
+        self._pipeline.add(self._photobin)
+        self._photobin.set_state(Gst.State.PLAYING)
+        self._pipeline.get_by_name("tee").link(self._photobin)
+
+    def _photo_handoff(self, fsink, buffer, pad, user_data=None):
+        if not self._pic_exposure_open:
+            return
+
+        pad = self._photobin.get_static_pad("sink")
+        self._pipeline.get_by_name("tee").unlink(self._photobin)
+        self._pipeline.remove(self._photobin)
+
+        self._pic_exposure_open = False
+        pic = GdkPixbuf.PixbufLoader.new_with_mime_type("image/jpeg")
+        pic.write(buffer.extract_dup(0, buffer.get_size()))
+        pic.close()
+        pixbuf = pic.get_pixbuf()
+        del pic
+
+        if self._photo_mode == self.PHOTO_MODE_AUDIO:
+            self._audio_pixbuf = pixbuf
+        else:
+            # FIXME: a double JPEG encoding occurs; photobin and pixbuf.savev
+            self.model.save_photo(pixbuf)
+
+    def record_audio(self):
+        if self._has_camera:
+            self._audio_pixbuf = None
+            self._take_photo(self.PHOTO_MODE_AUDIO)
+
+        # we should be able to add the audiobin on the fly, but unfortunately
+        # this results in several seconds of silence being added at the start
+        # of the recording. So we stop the whole pipeline while adjusting it.
+        # SL#2040
+        self._pipeline.set_state(Gst.State.NULL)
+        self._pipeline.add(self._audiobin)
+        self.play()
+
     def stop_recording_audio(self):
         # We should be able to simply pause and remove the audiobin, but
         # this seems to cause a GStreamer segfault. So we stop the whole
@@ -317,46 +366,6 @@ class Glive:
                 'name': self.model.get_nickname()})
         return tl
 
-    def _take_photo(self, photo_mode):
-        if self._pic_exposure_open:
-            return
-
-        self._photo_mode = photo_mode
-        self._pic_exposure_open = True
-        pad = self._photobin.get_static_pad("sink")
-        self._pipeline.add(self._photobin)
-        self._photobin.set_state(Gst.State.PLAYING)
-        self._pipeline.get_by_name("tee").link(self._photobin)
-
-    def take_photo(self):
-        if self._has_camera:
-            self._take_photo(self.PHOTO_MODE_PHOTO)
-
-    def _photo_handoff(self, fsink, buffer, pad, user_data=None):
-        if not self._pic_exposure_open:
-            return
-
-        pad = self._photobin.get_static_pad("sink")
-        self._pipeline.get_by_name("tee").unlink(self._photobin)
-        self._pipeline.remove(self._photobin)
-
-        self._pic_exposure_open = False
-        pic = GdkPixbuf.PixbufLoader.new_with_mime_type("image/jpeg")
-        pic.write(buffer.extract_dup(0, buffer.get_size()))
-        pic.close()
-        pixBuf = pic.get_pixbuf()
-        del pic
-
-        # FIXME: a double JPEG encoding occurs; photobin and pixbuf.savev
-
-        self.save_photo(pixBuf)
-
-    def save_photo(self, pixbuf):
-        if self._photo_mode == self.PHOTO_MODE_AUDIO:
-            self._audio_pixbuf = pixbuf
-        else:
-            self.model.save_photo(pixbuf)
-
     def record_video(self, quality):
         if not self._has_camera:
             return
@@ -369,19 +378,6 @@ class Glive:
         self._pipeline.set_state(Gst.State.NULL)
         self._pipeline.add(self._videobin)
         self._pipeline.get_by_name("tee").link(self._videobin)
-        self._pipeline.add(self._audiobin)
-        self.play()
-
-    def record_audio(self):
-        if self._has_camera:
-            self._audio_pixbuf = None
-            self._take_photo(self.PHOTO_MODE_AUDIO)
-
-        # we should be able to add the audiobin on the fly, but unfortunately
-        # this results in several seconds of silence being added at the start
-        # of the recording. So we stop the whole pipeline while adjusting it.
-        # SL#2040
-        self._pipeline.set_state(Gst.State.NULL)
         self._pipeline.add(self._audiobin)
         self.play()
 
