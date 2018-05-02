@@ -38,6 +38,7 @@ class Glive:
     PHOTO_MODE_AUDIO = 1
 
     def __init__(self, activity_obj, model):
+        logger.error('__init__')
         self.activity = activity_obj
         self.model = model
         self._eos_cb = None
@@ -57,9 +58,8 @@ class Glive:
 
         self._detect_camera()
 
-        self._create_photobin()
-        self._create_audiobin()
-        self._create_videobin()
+        #self._create_audiobin()
+        #self._create_videobin()
         self._create_pipeline()
 
         self._thumb_pipes = []
@@ -84,48 +84,8 @@ class Glive:
         self._has_camera = True
 
     def get_has_camera(self):
+        logger.error('get_has_camera')
         return self._has_camera
-
-    def _create_photobin(self):
-        """
-        create a Gst.Bin for taking photographs
-
-        queue ! videoconvert ! jpegenc ! fakesink
-        """
-        queue = Gst.ElementFactory.make("queue", "pbqueue")
-        if queue is None:
-            logger.error('no queue')
-
-        queue.set_property("leaky", True)
-        queue.set_property("max-size-buffers", 1)
-
-        vc = Gst.ElementFactory.make("videoconvert", "videoconvert")
-        if vc is None:
-            logger.error('no videoconvert')
-
-        jpeg = Gst.ElementFactory.make("jpegenc", "pbjpeg")
-        if jpeg is None:
-            logger.error('no jpegenc')
-
-        sink = Gst.ElementFactory.make("fakesink", "pbsink")
-        if sink is None:
-            logger.error('no fakesink')
-
-        sink.connect("handoff", self._photo_handoff)
-        sink.set_property("signal-handoffs", True)
-
-        self._photobin = Gst.Bin("photobin")
-        self._photobin.add(queue)
-        self._photobin.add(vc)
-        self._photobin.add(jpeg)
-        self._photobin.add(sink)
-
-        queue.link(vc)
-        vc.link(jpeg)
-        jpeg.link(sink)
-
-        pad = queue.get_static_pad("sink")
-        self._photobin.add_pad(Gst.GhostPad("sink", pad))
 
     def _create_audiobin(self):
         """
@@ -237,12 +197,25 @@ class Glive:
 
     def _create_pipeline(self):
         """
-        create a Gst.Pipeline for displaying camera video on display
+        create a Gst.Pipeline for
+        - displaying camera video on display,
+        - capturing photographs,
         """
         cmd = 'autovideosrc name=src ' \
             '! tee name=tee ' \
-            'tee.! queue ! videoconvert ! autovideosink '
+            'tee.! queue ! videoconvert ! autovideosink ' \
+            'tee.! queue ! videoconvert ! gdkpixbufsink name=photo'
         self._pipeline = Gst.parse_launch(cmd)
+        bus = self._pipeline.get_bus()
+
+        photo = self._pipeline.get_by_name('photo')
+
+        def on_message_cb(bus, msg):
+            if msg.get_structure() is not None:
+                if msg.get_structure().get_name() == 'pixbuf':
+                    self._last_pixbuf = photo.get_property('last-pixbuf')
+
+        bus.connect('message', on_message_cb)
 
     def _log_queue_overrun(self, queue):
         cbuffers = queue.get_property("current-level-buffers")
@@ -255,6 +228,7 @@ class Glive:
         return self._thumb_pipes[-1].get_by_name(name)
 
     def play(self):
+        logger.error('play')
         if self._get_state() == Gst.State.PLAYING:
             return
 
@@ -262,6 +236,7 @@ class Glive:
         self._playing = True
 
     def stop(self):
+        logger.error('stop')
         self._pipeline.set_state(Gst.State.NULL)
         self._playing = False
 
@@ -269,42 +244,19 @@ class Glive:
         return self._pipeline.get_state(Gst.CLOCK_TIME_NONE)[1]
 
     def take_photo(self):
+        logger.error('take_photo')
         if self._has_camera:
             self._take_photo(self.PHOTO_MODE_PHOTO)
 
     def _take_photo(self, photo_mode):
-        if self._pic_exposure_open:
-            return
-
         self._photo_mode = photo_mode
-        self._pic_exposure_open = True
-        pad = self._photobin.get_static_pad("sink")
-        self._pipeline.add(self._photobin)
-        self._photobin.set_state(Gst.State.PLAYING)
-        self._pipeline.get_by_name("tee").link(self._photobin)
-
-    def _photo_handoff(self, fsink, buffer, pad, user_data=None):
-        if not self._pic_exposure_open:
-            return
-
-        pad = self._photobin.get_static_pad("sink")
-        self._pipeline.get_by_name("tee").unlink(self._photobin)
-        self._pipeline.remove(self._photobin)
-
-        self._pic_exposure_open = False
-        pic = GdkPixbuf.PixbufLoader.new_with_mime_type("image/jpeg")
-        pic.write(buffer.extract_dup(0, buffer.get_size()))
-        pic.close()
-        pixbuf = pic.get_pixbuf()
-        del pic
-
         if self._photo_mode == self.PHOTO_MODE_AUDIO:
-            self._audio_pixbuf = pixbuf
+            self._audio_pixbuf = self._last_pixbuf
         else:
-            # FIXME: a double JPEG encoding occurs; photobin and pixbuf.savev
-            self.model.save_photo(pixbuf)
+            self.model.save_photo(self._last_pixbuf)
 
     def record_audio(self):
+        logger.error('record_audio')
         if self._has_camera:
             self._audio_pixbuf = None
             self._take_photo(self.PHOTO_MODE_AUDIO)
@@ -318,6 +270,7 @@ class Glive:
         self.play()
 
     def stop_recording_audio(self):
+        logger.error('stop_recording_audio')
         # We should be able to simply pause and remove the audiobin, but
         # this seems to cause a GStreamer segfault. So we stop the whole
         # pipeline while manipulating it.
@@ -379,6 +332,7 @@ class Glive:
         return tl
 
     def record_video(self, quality):
+        logger.error('record_video')
         if not self._has_camera:
             return
 
@@ -394,6 +348,7 @@ class Glive:
         self.play()
 
     def stop_recording_video(self):
+        logger.error('stop_recording_video')
         if not self._has_camera:
             return
 
@@ -403,7 +358,6 @@ class Glive:
         # FIXME: retest on F11
         # FIXME: could this be the result of audio shortening problems?
         self._eos_cb = self._video_eos
-        logger.error('stop recording video')
         self._pipeline.get_by_name('src').send_event(Gst.Event.new_eos())
         self._audiobin.get_by_name('absrc').send_event(Gst.Event.new_eos())
 
@@ -525,6 +479,7 @@ class Glive:
         return False
 
     def _bus_message_handler(self, bus, message):
+        # TODO: integrate into handler inside _create_pipeline
         t = message.type
         #logger.error('%r', t)
         if t == Gst.MessageType.EOS:

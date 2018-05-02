@@ -166,11 +166,11 @@ class VideoBox(Gtk.DrawingArea):
 
     def _draw_cb(self, widget, cr):
         if self._sink:
-            logging.error('%s _draw_cb with _sink' % self._name)
+            #logger.error('%s _draw_cb with _sink' % self._name)
             self._sink.expose()
             return False
         else:
-            logging.error('%s _draw_cb without _sink' % self._name)
+            #logger.error('%s _draw_cb without _sink' % self._name)
             cr.rectangle(0, 0,
                 widget.get_allocated_width(), widget.get_allocated_height())
             cr.set_source_rgb(0.25, 0.25, 0.25)
@@ -178,11 +178,11 @@ class VideoBox(Gtk.DrawingArea):
             return True
 
     def _realize_cb(self, widget):
-        logging.error('%s _realize_cb' % self._name)
+        logger.error('%s _realize_cb' % self._name)
         self._xid = self.get_window().get_xid()
 
     def set_sink(self, sink):
-        logging.error('%s set_sink' % self._name)
+        logger.error('%s set_sink' % self._name)
         self._sink = sink
         sink.set_window_handle(self._xid)
 
