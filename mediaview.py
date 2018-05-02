@@ -13,6 +13,22 @@ COLOR_BLACK = Gdk.color_parse('#000000')
 COLOR_WHITE = Gdk.color_parse('#ffffff')
 COLOR_GREY = Gdk.color_parse('#808080')
 
+
+def fit_image(width_image, height_image, width_screen, height_screen):
+
+    ratio_image = float(width_image) / float(height_image)
+    ratio_screen = float(width_screen) / float(height_screen)
+
+    if ratio_screen > ratio_image:
+        width_scaled = width_image * height_screen / height_image
+        height_scaled = height_screen
+    else:
+        width_scaled = width_screen
+        height_scaled = height_image * width_screen / width_image
+
+    return (width_scaled, height_scaled)
+
+
 class XoIcon(Gtk.Image):
     def __init__(self):
         Gtk.Image.__init__(self)
@@ -212,6 +228,7 @@ class ImageBox(Gtk.EventBox):
         Gtk.EventBox.__init__(self)
         self._pixbuf = None
         self._image = Gtk.Image()
+        self.width = self.height = None  # after scaling
         self.add(self._image)
 
     def show(self):
@@ -230,19 +247,11 @@ class ImageBox(Gtk.EventBox):
         self._pixbuf = pixbuf
 
     def set_size(self, width, height):
-        width_image = self._pixbuf.get_width()
-        height_image = self._pixbuf.get_height()
-        ratio_image = float(width_image) / float(height_image)
-        ratio_screen = float(width) / float(height)
+        (self.width, self.height) = fit_image(self._pixbuf.get_width(),
+                                              self._pixbuf.get_height(),
+                                              width, height)
 
-        if ratio_screen > ratio_image:
-            width_scaled = width_image * height / height_image
-            height_scaled = height
-        else:
-            width_scaled = width
-            height_scaled = height_image * width / width_image
-
-        pixbuf = self._pixbuf.scale_simple(width_scaled, height_scaled,
+        pixbuf = self._pixbuf.scale_simple(self.width, self.height,
                                            GdkPixbuf.InterpType.BILINEAR)
         self._image.set_from_pixbuf(pixbuf)
         self._image.set_size_request(width, height)
