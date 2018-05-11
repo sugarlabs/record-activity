@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 from gettext import gettext as _
 from xml.dom.minidom import parse
