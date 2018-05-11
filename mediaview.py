@@ -166,11 +166,11 @@ class VideoBox(Gtk.DrawingArea):
 
     def _draw_cb(self, widget, cr):
         if self._sink:
-            #logger.error('%s _draw_cb with _sink' % self._name)
+            #logger.debug('%s _draw_cb with _sink' % self._name)
             self._sink.expose()
             return False
         else:
-            #logger.error('%s _draw_cb without _sink' % self._name)
+            #logger.debug('%s _draw_cb without _sink' % self._name)
             cr.rectangle(0, 0,
                 widget.get_allocated_width(), widget.get_allocated_height())
             cr.set_source_rgb(0.25, 0.25, 0.25)
@@ -178,11 +178,11 @@ class VideoBox(Gtk.DrawingArea):
             return True
 
     def _realize_cb(self, widget):
-        logger.error('%s _realize_cb' % self._name)
+        logger.debug('%s _realize_cb' % self._name)
         self._xid = self.get_window().get_xid()
 
     def set_sink(self, sink):
-        logger.error('%s set_sink' % self._name)
+        logger.debug('%s set_sink' % self._name)
         self._sink = sink
         sink.set_window_handle(self._xid)
 
@@ -331,7 +331,7 @@ class MediaView(Gtk.EventBox):
         self._switch_mode(MediaView.MODE_LIVE)
 
     def _size_allocate(self, widget, allocation):
-        logger.error('MediaView._size_allocate %r x %r' % (allocation.width, allocation.height))
+        logger.debug('MediaView._size_allocate %r x %r' % (allocation.width, allocation.height))
         if hasattr(allocation, 'equal'):  # GTK+ 3.20 or higher
             if self._allocation and self._allocation.equal(allocation):
                 return
@@ -357,7 +357,7 @@ class MediaView(Gtk.EventBox):
             self._hide_controls_timer = GObject.timeout_add(2000, self._hide_controls)
             return
 
-        logger.error('_motion_notify fresh')
+        logger.debug('_motion_notify fresh')
         if self._show_controls_timer:
             GObject.source_remove(self._show_controls_timer)
 
@@ -365,7 +365,7 @@ class MediaView(Gtk.EventBox):
         self._hide_controls_timer = GObject.timeout_add(2000, self._hide_controls)
 
     def _show_controls(self):
-        logger.error('_show_controls')
+        logger.debug('_show_controls')
         if self._mode in (MediaView.MODE_LIVE, MediaView.MODE_VIDEO, MediaView.MODE_PHOTO, MediaView.MODE_STILL):
             self._fullscreen_button.show()
 
@@ -380,7 +380,7 @@ class MediaView(Gtk.EventBox):
         return False
 
     def _hide_controls(self):
-        logger.error('_hide_controls')
+        logger.debug('_hide_controls')
         self._fullscreen_button.hide()
         if self._mode not in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
             self._info_button.hide()
@@ -393,7 +393,7 @@ class MediaView(Gtk.EventBox):
         return False
 
     def _place_widgets(self):
-        logger.error('_place_widgets')
+        logger.debug('_place_widgets')
         allocation = self._allocation
 
         self._image_box.hide()
