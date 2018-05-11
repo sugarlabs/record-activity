@@ -86,8 +86,7 @@ class Record(activity.Activity):
         self.props.enable_fullscreen_mode = False
         Instance(self)
 
-        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
-        self.connect("visibility-notify-event", self._visibility_changed)
+        self.connect("notify::active", self.__active_cb)
 
         #the main classes
         self.model = Model(self)
@@ -175,8 +174,8 @@ class Record(activity.Activity):
             self.model.glive.stop()
         super(type(self), self).close(**kwargs)
 
-    def _visibility_changed(self, widget, event):
-        self.model.set_visible(event.get_state() != Gdk.VisibilityState.FULLY_OBSCURED)
+    def __active_cb(self, widget, pspec):
+        self.model.set_visible(self.props.active)
 
     def _shared_cb(self, activity):
         self.model.collab.set_activity_shared()
