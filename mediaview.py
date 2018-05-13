@@ -131,8 +131,13 @@ class InfoView(Gtk.EventBox):
         self._outer_vbox.pack_start(alignment, False, True, 0)
 
     def fit_to_allocation(self, allocation):
-        # main viewing area: 50% of each dimension
-        scale = 0.5
+        a = float(Gdk.Screen.width()) / float(Gdk.Screen.height())
+        if a < 1.4:
+            # main viewing area: 50% of each dimension for 4:3 displays
+            scale = 0.5
+        else:
+            # main viewing area: 75% of each dimension for 16:9 displays
+            scale = 0.75
         w = int(allocation.width * scale)
         h = int(allocation.height * scale)
         self._view_bg.set_size_request(w, h)
@@ -157,8 +162,8 @@ class InfoView(Gtk.EventBox):
         self._tags_buffer.set_text(tags)
 
     def _size_allocate(self, widget, allocation):
-        self.emit('primary-allocated', self._view_bg.allocation)
-        self.emit('secondary-allocated', self._live_bg.allocation)
+        self.emit('primary-allocated', self._view_bg.get_allocation())
+        self.emit('secondary-allocated', self._live_bg.get_allocation())
 
     def _tags_changed(self, widget):
         self.emit('tags-changed', widget)
