@@ -317,24 +317,33 @@ class Record(activity.Activity):
 
     def _key_pressed(self, widget, event):
         key = event.keyval
+        ctrl = event.state & Gdk.ModifierType.CONTROL_MASK
 
-        if key == Gdk.KEY_KP_Page_Up: # game key O
+        if (ctrl and key == Gdk.KEY_space) or \
+            key == Gdk.KEY_KP_Page_Up:  # game key O
+
             if self._shutter_button.props.visible:
                 if self._shutter_button.props.sensitive:
                     self._shutter_button.clicked()
-            else: # return to live mode
+            else:  # return to live mode
                 self.model.set_state(constants.STATE_READY)
+            return True
 
         if self.model.ui_frozen():
-            return False
+            return True
 
-        if key == Gdk.KEY_c and event.state == Gdk.ModifierType.CONTROL_MASK:
+        if ctrl and key == Gdk.KEY_c:
             self._copy_to_clipboard(self._active_recd)
-        elif key == Gdk.KEY_i:
+            return True
+
+        if key == Gdk.KEY_i:
             self._toggle_info()
-        elif key == Gdk.KEY_Escape:
-            if self._fullscreen:
-                self._toggle_fullscreen()
+            return True
+
+        if key == Gdk.KEY_Escape and self._fullscreen:
+            self._toggle_fullscreen()
+            return True
+            # FIXME: else if viewing a photograph, return to live mode
 
         return False
 
