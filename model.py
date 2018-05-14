@@ -67,6 +67,10 @@ class Model:
         for key, value in constants.MEDIA_INFO.items():
             self.mediaHashs[key] = []
 
+    def close(self):
+        self.gplay.stop()
+        self.glive.stop()
+
     def write_file(self, path):
         ui_serialized = self.activity.serialize()
         self.mediaHashs['ui'] = ui_serialized
@@ -338,13 +342,13 @@ class Model:
             self.gplay.play()
             self.activity.set_paused(False)
 
-    def start_seek(self):
+    def seek_start(self):
         self.gplay.pause()
 
-    def do_seek(self, position):
+    def seek_do(self, position):
         self.gplay.seek(position)
 
-    def end_seek(self):
+    def seek_end(self):
         self.gplay.play()
 
     def get_recd_by_md5(self, md5):

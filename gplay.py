@@ -21,7 +21,7 @@
 from gi.repository import GObject, Gst
 
 import logging
-logger = logging.getLogger('record:gplay.py')
+logger = logging.getLogger('gplay.py')
 
 class Gplay(GObject.GObject):
     __gsignals__ = {
@@ -29,26 +29,42 @@ class Gplay(GObject.GObject):
     }
 
     def __init__(self, activity_obj):
-        super(type(self), self).__init__()
+        logger.debug('__init__')
+        GObject.GObject.__init__(self)
         self.activity = activity_obj
         self._playback_monitor_handler = None
-        self._player = Gst.ElementFactory.make('playbin')
+        self._player = Gst.ElementFactory.make('playbin', 'playbin')
         if self._player is None:
             logger.error('no playbin')
 
         bus = self._player.get_bus()
         bus.add_signal_watch()
-        bus.connect('message::error', self._bus_error)
-        bus.connect('message::eos', self._bus_eos)
 
-    def _bus_error(self, bus, message):
-        err, debug = message.parse_error()
-        logger.error('bus error=%s debug=%s' % (err, debug))
+        def on_error_cb(bus, msg):
+            err, debug = msg.parse_error()
+            logger.error('bus error=%s debug=%s' % (err, debug))
 
-    def _bus_eos(self, bus, message):
-        self.stop()
+        bus.connect('message::error', on_error_cb)
+
+        def on_eos_cb(bus, msg):
+            logger.debug('message::eos')
+            self.stop()
+
+        bus.connect('message::eos', on_eos_cb)
+
+        bus.enable_sync_message_emission()
+        def on_sync_message_cb(bus, msg):
+            if msg.get_structure().get_name() == 'prepare-window-handle':
+                logger.debug('sync-message::element:prepare-window-handle')
+                self.activity.set_gplay_sink(msg.src)
+
+        bus.connect('sync-message::element', on_sync_message_cb)
+
+    def get_state(self):
+        return self._player.get_state(Gst.CLOCK_TIME_NONE)[1]
 
     def set_location(self, location):
+        logger.debug('set location %r', location)
         if self._player.get_property('uri') == location:
             self.seek(0)
             return
@@ -61,32 +77,24 @@ class Gplay(GObject.GObject):
             location = 0
         else:
             _, duration = self._player.query_duration(Gst.Format.TIME)
-            location = duration * (position / 100)
+            location = int(duration * position / 100)
 
-        self._player.seek_simple(Gst.Format.TIME,
-                                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
+        logger.debug('seek %.2f%% of %.2f which is %d' %
+                     (position, duration, location))
+
+        seek = self._player.seek_simple(Gst.Format.TIME,
+                                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.ACCURATE,
                                  location)
-
-    def pause(self):
-        self._player.set_state(Gst.State.PAUSED)
+        #self._player.get_state(1000000000)  # debugging; wait for seek
 
     def play(self):
-        if self.get_state() == Gst.State.PLAYING:
-            return
+        logger.debug('play')
 
-        if not self._player.props.video_sink:
-            sink = Gst.ElementFactory.make('xvimagesink')
-            if sink is None:
-                logger.error('no xvimagesink')
-
-            sink.props.force_aspect_ratio = True
-            self._player.props.video_sink = sink
-
-        self.activity.set_gplay_sink(self._player.props.video_sink)
         self._player.set_state(Gst.State.PLAYING)
-        self._emit_playback_status(0)
+        #self._player.get_state(1000000000)  # debugging; wait for play
 
-        self._playback_monitor_handler = GObject.timeout_add(100, self._playback_monitor)
+        self._playback_monitor()
+        self._playback_monitor_handler = GObject.timeout_add(50, self._playback_monitor)
 
     def _playback_monitor(self):
         try:
@@ -95,22 +103,34 @@ class Gplay(GObject.GObject):
         except Gst.QueryError:
             return True
 
-        value = float(position * 100) / float(duration + 1)
+        if duration == 0:  # duration may not yet be known
+            return True
+
+        value = position * 100 / duration
         self._emit_playback_status(value)
         return True
 
     def _emit_playback_status(self, position):
-        state = self._player.get_state(Gst.CLOCK_TIME_NONE)[1]
-        self.emit('playback-status-changed', state, position)
+        self.emit('playback-status-changed', self.get_state(), position)
 
-    def get_state(self):
-        return self._player.get_state(Gst.CLOCK_TIME_NONE)[1]
+    def pause(self):
+        logger.debug('pause')
+        if self.get_state() == Gst.State.PAUSED:
+            return
+
+        self._player.set_state(Gst.State.PAUSED)  # asynchronous
+        #self._player.get_state(1000000000)  # debugging; wait for pause
+
+        self._playback_monitor()
+
+        GObject.source_remove(self._playback_monitor_handler)
+        self._playback_monitor_handler = None
 
     def stop(self):
+        logger.debug('stop')
         if self._playback_monitor_handler:
             GObject.source_remove(self._playback_monitor_handler)
             self._playback_monitor_handler = None
 
         self._player.set_state(Gst.State.NULL)
         self._emit_playback_status(0)
-
