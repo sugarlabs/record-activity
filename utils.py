@@ -31,22 +31,11 @@ import constants
 def getStringEncodedFromPixbuf(pixbuf):
     result, data = pixbuf.save_to_bufferv('png', [], [])
     return base64.b64encode(data)
-    #data = [""]
-    #pixbuf.save_to_callbackv(_saveDataToBufferCb, data, "png", [], [])
-    #return base64.b64encode(str(data[0]))
 
 
 def getStringFromPixbuf(pixbuf):
     result, data = pixbuf.save_to_bufferv('png', [], [])
     return data
-    #data = [""]
-    #pixbuf.save_to_callbackv(_saveDataToBufferCb, data, "png", [], [])
-    #return str(data[0])
-
-
-#def _saveDataToBufferCb(buf, data):
-#    data[0] += buf
-#    return True
 
 
 def getPixbufFromString(str):

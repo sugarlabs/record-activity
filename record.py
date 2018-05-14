@@ -774,7 +774,7 @@ class CountdownImage(Gtk.Image):
 
 class ShutterButton(Gtk.Button):
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.Button.__init__(self)
         self.set_relief(Gtk.ReliefStyle.NONE)
         self.set_focus_on_click(False)
         self.modify_bg(Gtk.StateType.ACTIVE, COLOR_BLACK)

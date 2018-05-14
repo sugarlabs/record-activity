@@ -34,7 +34,7 @@ class RecdButton(TrayButton):
     }
 
     def __init__(self, recd):
-        super(type(self), self).__init__()
+        TrayButton.__init__(self)
         self._recd = recd
 
         self.set_icon_widget(self.get_image())

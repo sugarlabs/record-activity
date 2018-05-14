@@ -26,7 +26,7 @@ from sugar3.graphics import style
 
 class IconComboBox(Gtk.ToolItem):
     def __init__(self, icon_name, **kwargs):
-        super(type(self), self).__init__()
+        Gtk.ToolItem.__init__(self, **kwargs)
 
         self.icon_name = icon_name
         self.set_border_width(style.DEFAULT_PADDING)
