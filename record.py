@@ -229,7 +229,7 @@ class Record(activity.Activity):
         self._audio_button.props.group = tool_group
         self._audio_button.props.icon_name = 'media-audio'
         self._audio_button.props.label = _('Audio')
-        self._audio_button.props.tooltip = _('Audio mode\n\nWhen the record button is pressed,\ntake one photograph,\nand record sound using the microphone,\nuntil the button is pressed again.')
+        self._audio_button.props.tooltip = _('Audio recording mode\n\nWhen the record button is pressed,\ntake one photograph,\nand record sound using the microphone,\nuntil the button is pressed again.')
         self._audio_button.mode = constants.MODE_AUDIO
         self._audio_button.connect('clicked', self._mode_button_clicked)
         self._toolbar.insert(self._audio_button, -1)
