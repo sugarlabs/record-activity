@@ -347,7 +347,13 @@ class Record(activity.Activity):
         if key == Gdk.KEY_Escape and self._fullscreen:
             self._toggle_fullscreen()
             return True
-            # FIXME: else if viewing a photograph, return to live mode
+
+        # if viewing media, return to live mode
+        if key == Gdk.KEY_Escape and \
+            self.model.get_state() == constants.STATE_READY:
+
+            self.model.set_state(constants.STATE_READY)
+            return True
 
         return False
 
