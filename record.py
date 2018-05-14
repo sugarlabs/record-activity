@@ -208,6 +208,7 @@ class Record(activity.Activity):
             tool_group = self._photo_button
             self._photo_button.props.icon_name = 'camera-external'
             self._photo_button.props.label = _('Photo')
+            self._photo_button.props.tooltip = _('Picture camera mode\n\nWhen the record button is pressed,\ntake one picture from the camera.')
             self._photo_button.mode = constants.MODE_PHOTO
             self._photo_button.connect('clicked', self._mode_button_clicked)
             self._toolbar.insert(self._photo_button, -1)
@@ -216,6 +217,7 @@ class Record(activity.Activity):
             self._video_button.props.group = tool_group
             self._video_button.props.icon_name = 'media-video'
             self._video_button.props.label = _('Video')
+            self._video_button.props.tooltip = _('Video camera mode\n\nWhen the record button is pressed,\ntake photographs many times a second,\nand record sound using the microphone,\nuntil the button is pressed again.')
             self._video_button.mode = constants.MODE_VIDEO
             self._video_button.connect('clicked', self._mode_button_clicked)
             self._toolbar.insert(self._video_button, -1)
@@ -227,6 +229,7 @@ class Record(activity.Activity):
         self._audio_button.props.group = tool_group
         self._audio_button.props.icon_name = 'media-audio'
         self._audio_button.props.label = _('Audio')
+        self._audio_button.props.tooltip = _('Audio mode\n\nWhen the record button is pressed,\ntake one photograph,\nand record sound using the microphone,\nuntil the button is pressed again.')
         self._audio_button.mode = constants.MODE_AUDIO
         self._audio_button.connect('clicked', self._mode_button_clicked)
         self._toolbar.insert(self._audio_button, -1)
@@ -258,6 +261,7 @@ class Record(activity.Activity):
                                                  trim_height_shutter_button)
 
         self._shutter_button = ShutterButton()
+        self._shutter_button.set_tooltip_text(_("Record"))
         self._shutter_button.connect("clicked", self._shutter_clicked)
         self._shutter_button.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
         self._controls_hbox.pack_start(self._shutter_button, True, False, 0)
