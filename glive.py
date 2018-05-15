@@ -130,7 +130,7 @@ class Glive:
         cmd = 'autoaudiosrc name=src ' \
             '! queue max-size-time=30000000000 ' \
             'max-size-bytes=0 max-size-buffers=0 ' \
-            '! vorbisenc name=encoder ! oggmux ' \
+            '! vorbisenc name=vorbis ! oggmux ' \
             '! filesink location=%s' % ogg
         self._audio = Gst.parse_launch(cmd)
 
@@ -142,8 +142,8 @@ class Glive:
                               Gst.TAG_EXTENDED_COMMENT,
                               "coverart=" + pixbuf_b64)
 
-        encoder = self._audio.get_by_name('encoder')
-        encoder.merge_tags(taglist, Gst.TagMergeMode.REPLACE_ALL)
+        vorbis = self._audio.get_by_name('vorbis')
+        vorbis.merge_tags(taglist, Gst.TagMergeMode.REPLACE_ALL)
 
         # detect end of stream
         bus = self._audio.get_bus()
@@ -204,14 +204,14 @@ class Glive:
             '! videorate max-rate=10 ' \
             '! queue max-size-time=30000000000 ' \
             'max-size-bytes=0 max-size-buffers=0 ' \
-            '! theoraenc ' \
+            '! theoraenc name=theora ' \
             '! mux. ' \
             'autoaudiosrc name=asrc ' \
             '! audiorate ' \
             '! audioconvert ' \
             '! queue max-size-time=30000000000 ' \
             'max-size-bytes=0 max-size-buffers=0 ' \
-            '! vorbisenc name=encoder ! mux. ' \
+            '! vorbisenc name=vorbis ! mux. ' \
             'oggmux name=mux ! filesink location=%s' % ogv
         self._video = Gst.parse_launch(cmd)
 
@@ -223,8 +223,17 @@ class Glive:
                               Gst.TAG_EXTENDED_COMMENT,
                               "coverart=" + pixbuf_b64)
 
-        encoder = self._video.get_by_name('encoder')
-        encoder.merge_tags(taglist, Gst.TagMergeMode.REPLACE_ALL)
+        theora = self._video.get_by_name('theora')
+        vorbis = self._video.get_by_name('vorbis')
+        vorbis.merge_tags(taglist, Gst.TagMergeMode.REPLACE_ALL)
+
+        # set quality
+        if quality == 0:
+            theora.props.quality = 24
+            vorbis.props.quality = 0.2
+        if quality == 1:
+            theora.props.quality = 52
+            vorbis.props.quality = 0.4
 
         # detect end of stream
         bus = self._video.get_bus()
