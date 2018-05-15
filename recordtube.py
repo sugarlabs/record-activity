@@ -45,7 +45,7 @@ class RecordTube(ExportedGObject):
 
 
     def __init__(self, tube):
-        super(type(self), self).__init__(tube, constants.DBUS_PATH)
+        ExportedGObject.__init__(self, tube, constants.DBUS_PATH)
         self.tube = tube
 
         self.idNotify = self.tube.add_signal_receiver(self._newRecdTubeCb, 'notifyBudsOfNewRecd', constants.DBUS_IFACE, path=constants.DBUS_PATH, sender_keyword='sender')

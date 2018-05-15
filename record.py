@@ -696,7 +696,7 @@ class PlaybackScale(Gtk.HScale):
 
 class ProgressInfo(Gtk.VBox):
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.VBox.__init__(self)
 
         self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
@@ -710,12 +710,12 @@ class ProgressInfo(Gtk.VBox):
     def show(self):
         self._progress_bar.show()
         self._label.show()
-        super(type(self), self).show()
+        Gtk.VBox.show(self)
 
     def hide(self):
         self._progress_bar.hide()
         self._label.hide()
-        super(type(self), self).hide()
+        Gtk.VBox.hide(self)
 
     def set_progress(self, value):
         self._progress_bar.set_fraction(value)
@@ -726,7 +726,7 @@ class ProgressInfo(Gtk.VBox):
 
 class CountdownImage(Gtk.Image):
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.Image.__init__(self)
         self._countdown_images = {}
 
     def _generate_image(self, num):
@@ -795,7 +795,7 @@ class ShutterButton(Gtk.Button):
             self.set_image(self._rec_image)
         else:
             self.set_image(self._insensitive_image)
-        super(type(self), self).set_sensitive(sensitive)
+        Gtk.Button.set_sensitive(self, sensitive)
 
     def set_normal(self):
         self.set_image(self._rec_image)
@@ -806,7 +806,7 @@ class ShutterButton(Gtk.Button):
 
 class PlayButton(Gtk.Button):
     def __init__(self):
-        super(type(self), self).__init__()
+        Gtk.Button.__init__(self)
         self.set_relief(Gtk.ReliefStyle.NONE)
         self.set_focus_on_click(False)
         self.modify_bg(Gtk.StateType.ACTIVE, COLOR_BLACK)
