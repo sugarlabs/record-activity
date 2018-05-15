@@ -289,10 +289,36 @@ def _saveMediaToDatastore(el, recd, activity):
             datastorePreviewPixbuf = GdkPixbuf.Pixbuf.new_from_file(datastorePreviewFilepath)
 
         if datastorePreviewPixbuf:
+            # journal shows previews in a 4:3 aspect ratio
             datastorePreviewWidth = 300
             datastorePreviewHeight = 225
-            if datastorePreviewPixbuf.get_width() != datastorePreviewWidth:
-                datastorePreviewPixbuf = datastorePreviewPixbuf.scale_simple(datastorePreviewWidth, datastorePreviewHeight, GdkPixbuf.InterpType.NEAREST)
+
+            # scale to match available height, retaining aspect ratio
+            consequentWidth = datastorePreviewHeight * \
+                datastorePreviewPixbuf.get_width() / \
+                datastorePreviewPixbuf.get_height()
+            datastorePreviewPixbuf = \
+                datastorePreviewPixbuf.scale_simple(consequentWidth,
+                    datastorePreviewHeight,
+                    GdkPixbuf.InterpType.BILINEAR)
+
+            # where aspect ratio is unconventional, e.g. 16:9, trim sides
+            if consequentWidth != datastorePreviewWidth:
+                trimmedPixbuf = GdkPixbuf.Pixbuf.new(
+                    datastorePreviewPixbuf.get_colorspace(),
+                    datastorePreviewPixbuf.get_has_alpha(),
+                    datastorePreviewPixbuf.get_bits_per_sample(),
+                    datastorePreviewWidth,
+                    datastorePreviewHeight)
+                datastorePreviewPixbuf.copy_area(
+                    (consequentWidth - datastorePreviewWidth) / 2,
+                    0,
+                    datastorePreviewWidth,
+                    datastorePreviewHeight,
+                    trimmedPixbuf,
+                    0,
+                    0)
+                datastorePreviewPixbuf = trimmedPixbuf
 
             datastorePreview = utils.getStringFromPixbuf(datastorePreviewPixbuf)
             mediaObject.metadata['preview'] = dbus.ByteArray(datastorePreview)
