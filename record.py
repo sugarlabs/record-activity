@@ -435,7 +435,7 @@ class Record(activity.Activity):
         self._toggle_fullscreen()
 
     def _media_view_tags_changed(self, widget, tbuffer):
-        text = tbuffer.get_text(tbuffer.get_start_iter(), tbuffer.get_end_iter())
+        text = tbuffer.get_text(tbuffer.get_start_iter(), tbuffer.get_end_iter(), True)
         self._active_recd.setTags(text)
 
     def _toggle_fullscreen(self):
