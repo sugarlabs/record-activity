@@ -260,7 +260,6 @@ class Record(activity.Activity):
                                                  trim_height_shutter_button)
 
         self._shutter_button = ShutterButton()
-        self._shutter_button.set_tooltip_text(_("Record"))
         self._shutter_button.connect("clicked", self._shutter_clicked)
         self._shutter_button.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
         self._controls_hbox.pack_start(self._shutter_button, True, False, 0)
@@ -799,9 +798,11 @@ class ShutterButton(Gtk.Button):
 
     def set_normal(self):
         self.set_image(self._rec_image)
+        self.set_tooltip_text(_("Record"))
 
     def set_recording(self):
         self.set_image(self._rec_red_image)
+        self.set_tooltip_text(_("Stop recording"))
 
 
 class PlayButton(Gtk.Button):
@@ -821,9 +822,11 @@ class PlayButton(Gtk.Button):
 
     def set_play(self):
         self.set_image(self._play_image)
+        self.set_tooltip_text(_("Play"))
 
     def set_pause(self):
         self.set_image(self._pause_image)
+        self.set_tooltip_text(_("Pause"))
 
 
 class RecordControl():
