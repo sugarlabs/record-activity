@@ -122,14 +122,17 @@ class Record(activity.Activity):
         self._old_cursor = self.get_window().get_cursor()
 
         # testing restarter
-        ct = os.stat('go').st_ctime
         def restarter():
             if os.stat('go').st_ctime != ct:
                 self.close()
                 os.execv('/usr/bin/sugar-activity', ['sugar-activity'])
                 return False
             return True
-        GObject.timeout_add(233, restarter)
+        try:
+            ct = os.stat('go').st_ctime
+            GObject.timeout_add(233, restarter)
+        except:
+            pass
 
     def _incompatible(self):
         ''' Display abbreviated activity user interface with alert '''
