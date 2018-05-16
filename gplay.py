@@ -73,10 +73,10 @@ class Gplay(GObject.GObject):
         self._player.set_property('uri', location)
 
     def seek(self, position):
+        _, duration = self._player.query_duration(Gst.Format.TIME)
         if position == 0:
             location = 0
         else:
-            _, duration = self._player.query_duration(Gst.Format.TIME)
             location = int(duration * position / 100)
 
         logger.debug('seek %.2f%% of %.2f which is %d' %
