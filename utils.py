@@ -50,10 +50,10 @@ def load_colored_svg(filename, stroke, fill):
     path = os.path.join(constants.GFX_PATH, filename)
     data = open(path, 'r').read()
 
-    entity = '<!ENTITY fill_color "%s">' % fill
+    entity = '<!ENTITY fill_color "%s">' % str(fill)
     data = re.sub('<!ENTITY fill_color .*>', entity, data)
 
-    entity = '<!ENTITY stroke_color "%s">' % stroke
+    entity = '<!ENTITY stroke_color "%s">' % str(stroke)
     data = re.sub('<!ENTITY stroke_color .*>', entity, data)
 
     return Rsvg.Handle.new_from_data(data).get_pixbuf()
