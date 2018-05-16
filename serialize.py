@@ -140,27 +140,19 @@ def fillRecdFromNode(recd, el):
 
     bt = el.getAttributeNode('base64Thumb')
     if bt:
-        try:
-            thumbPath = os.path.join(Instance.instancePath, "datastoreThumb.jpg")
-            thumbPath = utils.getUniqueFilepath(thumbPath, 0)
-            thumbImg = utils.getPixbufFromString(bt.nodeValue)
-            thumbImg.savev(thumbPath, "jpeg", {"quality":"85"}, [], [])
-            recd.thumbFilename = os.path.basename(thumbPath)
-            logger.debug("saved thumbFilename")
-        except:
-            logger.error("unable to getRecdBase64Thumb")
+        thumbPath = os.path.join(Instance.instancePath, "datastoreThumb.jpg")
+        thumbPath = utils.getUniqueFilepath(thumbPath, 0)
+        thumbImg = utils.getPixbufFromString(bt.nodeValue)
+        thumbImg.savev(thumbPath, 'png', [], [])
+        recd.thumbFilename = os.path.basename(thumbPath)
 
     ai = el.getAttributeNode('audioImage')
     if (not ai == None):
-        try:
-            audioImagePath = os.path.join(Instance.instancePath, "audioImage.png")
-            audioImagePath = utils.getUniqueFilepath( audioImagePath, 0 )
-            audioImage = utils.getPixbufFromString( ai.nodeValue )
-            audioImage.savev(audioImagePath, "png", {}, [], [])
-            recd.audioImageFilename = os.path.basename(audioImagePath)
-            logger.debug("loaded audio image and set audioImageFilename")
-        except:
-            logger.error("unable to load audio image")
+        audioImagePath = os.path.join(Instance.instancePath, "audioImage.png")
+        audioImagePath = utils.getUniqueFilepath( audioImagePath, 0 )
+        audioImage = utils.getPixbufFromString( ai.nodeValue )
+        audioImage.savev(audioImagePath, "png", [], [])
+        recd.audioImageFilename = os.path.basename(audioImagePath)
 
     datastoreNode = el.getAttributeNode('datastoreId')
     if datastoreNode:
