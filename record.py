@@ -522,28 +522,8 @@ class Record(activity.Activity):
         if not recd.isClipboardCopyable():
             return
 
-        media_path = recd.getMediaFilepath()
-        tmp_path = utils.getUniqueFilepath(media_path, 0)
-        shutil.copyfile(media_path, tmp_path)
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        data = [Gtk.TargetEntry.new('text/uri-list', 0, 0)]
-
-        # XXX SL#4307 - until set_with_data bindings are fixed upstream
-        if hasattr(clipboard, 'set_with_data'):
-            clipboard.set_with_data(data, self._clipboard_get,
-                                    self._clipboard_clear, tmp_path)
-        else:
-            SugarExt.clipboard_set_with_data(clipboard, data,
-                                             self._clipboard_get,
-                                             self._clipboard_clear, tmp_path)
-
-
-    def _clipboard_get(self, clipboard, selection_data, info, path):
-        selection_data.set_uris(["file://" + path])
-
-    def _clipboard_clear(self, clipboard, path):
-        if os.path.exists(path):
-            os.unlink(path)
+        clipboard.set_image(recd.getCopyClipboardPixbuf())
 
     def _thumbnail_copy_clipboard(self, recdbutton):
         self._copy_to_clipboard(recdbutton.get_recd())
