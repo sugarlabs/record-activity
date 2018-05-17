@@ -86,12 +86,11 @@ class Recorded:
         self.metaChange = True
 
 
-    def isClipboardCopyable( self ):
-        copyme = True
-        if (self.buddy):
-            if (not self.downloadedFromBuddy):
+    def isClipboardCopyable(self):
+        if self.buddy:
+            if not self.downloadedFromBuddy:
                 return False
-        return copyme
+        return True
 
 
     #scenarios:
@@ -124,7 +123,7 @@ class Recorded:
         self.thumbFilename = os.path.basename(thumbFilepath)
         return self.getThumbFilepath()
 
-    def getAudioImagePixbuf( self ):
+    def getAudioImagePixbuf(self):
         audioPixbuf = None
 
         if self.audioImageFilename == None:
@@ -136,9 +135,8 @@ class Recorded:
 
         return audioPixbuf
 
-
-    def getAudioImageFilepath( self ):
-        if (self.audioImageFilename != None):
+    def getAudioImageFilepath(self):
+        if self.audioImageFilename != None:
             audioFilepath = os.path.join(Instance.instancePath, self.audioImageFilename)
             return os.path.abspath(audioFilepath)
         else:
@@ -146,13 +144,13 @@ class Recorded:
 
 
     def getMediaFilepath(self):
-        if (self.datastoreId == None):
-            if (not self.buddy):
+        if self.datastoreId == None:
+            if not self.buddy:
                 #just taken by you, so it is in the tempSessionDir
                 mediaFilepath = os.path.join(Instance.instancePath, self.mediaFilename)
                 return os.path.abspath(mediaFilepath)
             else:
-                if (self.downloadedFromBuddy):
+                if self.downloadedFromBuddy:
                     #the user has requested the high-res version, and it has downloaded
                     mediaFilepath = os.path.join(Instance.instancePath, self.mediaFilename)
                     return os.path.abspath(mediaFilepath)
@@ -171,9 +169,9 @@ class Recorded:
 
         else: #pulling from the datastore, regardless of who took it, cause we got it
             #first, get the datastoreObject and hold the reference in this Recorded instance
-            if (self.datastoreOb == None):
+            if self.datastoreOb == None:
                 self.datastoreOb = serialize.getMediaFromDatastore( self )
-            if (self.datastoreOb == None):
+            if self.datastoreOb == None:
                 print("RecordActivity error -- unable to get datastore object in getMediaFilepath")
                 return None
 
