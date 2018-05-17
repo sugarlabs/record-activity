@@ -52,6 +52,7 @@ class Recorded:
         self.mediaFilename = None
         self.thumbFilename = None
         self.audioImageFilename = None
+        self.videoImageFilename = None
 
         #for flagging when you are being saved to the datastore for the first time...
         #and just because you have a datastore id, doesn't mean you're saved
@@ -142,6 +143,25 @@ class Recorded:
         else:
             return self.getThumbFilepath()
 
+    def getVideoImagePixbuf(self):
+        videoPixbuf = None
+
+        if self.videoImageFilename == None:
+            videoPixbuf = self.getThumbPixbuf()
+        else:
+            videoFilepath = self.getVideoImageFilepath()
+            if (videoFilepath != None):
+                videoPixbuf = GdkPixbuf.Pixbuf.new_from_file(videoFilepath)
+
+        return videoPixbuf
+
+    def getVideoImageFilepath(self):
+        if self.videoImageFilename != None:
+            videoFilepath = os.path.join(Instance.instancePath,
+                self.videoImageFilename)
+            return os.path.abspath(videoFilepath)
+        else:
+            return self.getThumbFilepath()
 
     def getMediaFilepath(self):
         if self.datastoreId == None:
@@ -176,3 +196,12 @@ class Recorded:
                 return None
 
             return self.datastoreOb.file_path
+
+    def getCopyClipboardPixbuf(self):
+        if self.type == constants.TYPE_PHOTO:
+            return GdkPixbuf.Pixbuf.new_from_file(self.getMediaFilepath())
+        if self.type == constants.TYPE_VIDEO:
+            return self.getVideoImagePixbuf()
+        if self.type == constants.TYPE_AUDIO:
+            return self.getAudioImagePixbuf()
+        return None

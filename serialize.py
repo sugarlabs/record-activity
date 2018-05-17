@@ -154,6 +154,14 @@ def fillRecdFromNode(recd, el):
         audioImage.savev(audioImagePath, "png", [], [])
         recd.audioImageFilename = os.path.basename(audioImagePath)
 
+    vi = el.getAttributeNode('videoImage')
+    if (not vi == None):
+        videoImagePath = os.path.join(Instance.instancePath, "videoImage.png")
+        videoImagePath = utils.getUniqueFilepath(videoImagePath, 0)
+        videoImage = utils.getPixbufFromString(vi.nodeValue)
+        videoImage.savev(videoImagePath, "png", [], [])
+        recd.videoImageFilename = os.path.basename(videoImagePath)
+
     datastoreNode = el.getAttributeNode('datastoreId')
     if datastoreNode:
         recd.datastoreId = datastoreNode.nodeValue
@@ -179,6 +187,12 @@ def _addRecdXmlAttrs(el, recd, forMeshTransmit):
         if aiPixbuf:
             aiPixbufString = str(utils.getStringEncodedFromPixbuf(aiPixbuf))
             el.setAttribute('audioImage', aiPixbufString)
+
+    if (recd.type == constants.TYPE_VIDEO) and (not forMeshTransmit):
+        viPixbuf = recd.getVideoImagePixbuf()
+        if viPixbuf:
+            viPixbufString = str(utils.getStringEncodedFromPixbuf(viPixbuf))
+            el.setAttribute('videoImage', viPixbufString)
 
     if (recd.datastoreId != None) and (not forMeshTransmit):
         el.setAttribute('datastoreId', str(recd.datastoreId))

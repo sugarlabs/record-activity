@@ -240,6 +240,8 @@ class RecordCollab(object):
             logger.debug(cmd)
             os.system(cmd)
             path = dest_path
+        # TODO: add videoBundle from recd.getVideoImageFilepath() but
+        # requires transmitting audioBundle size
 
         self._tube.broadcastRecd(recd.mediaMd5, path, remote_person)
         recd.meshUploading = False
@@ -318,6 +320,8 @@ class RecordCollab(object):
             path = recd.getMediaFilepath()
             bundle_path = os.path.join(Instance.instancePath, "audioBundle")
             bundle_path = utils.getUniqueFilepath(bundle_path, 0)
+            # TODO: get videoBundle for recd.videoImageFilename
+            # requires transmitting audioBundle size
 
             cmd = "split -a 1 -b " + str(recd.mediaBytes) + " " + path + " " + bundle_path
             logger.debug(cmd)

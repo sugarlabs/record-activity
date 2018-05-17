@@ -291,6 +291,11 @@ class Model:
         recd = self.createNewRecorded(constants.TYPE_VIDEO)
         os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
 
+        image_path = os.path.join(Instance.instancePath, "videoPicture.png")
+        image_path = utils.getUniqueFilepath(image_path, 0)
+        still.savev(image_path, "png", [], [])
+        recd.videoImageFilename = os.path.basename(image_path)
+
         still = utils.generate_thumbnail(still)
         still.savev(recd.make_thumb_path(), "png", [], [])
 
