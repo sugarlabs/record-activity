@@ -293,7 +293,7 @@ class Record(activity.Activity):
         height_tray = 150  # height of tray
 
         self._thumb_tray = HTray(hexpand=True, height_request=height_tray)
-        self._thumb_tray.show_all()
+        self._thumb_tray.show()
 
         self._media_view.set_size_request(-1, Gdk.Screen.height() - \
             style.GRID_CELL_SIZE * 2 - height_tray - trim_height_shutter_button)
@@ -515,6 +515,8 @@ class Record(activity.Activity):
         button.show()
         self._thumb_tray.add_item(button)
         self._thumb_tray.scroll_to_item(button)
+        # FIXME: possible toolkit bug; scroll_to_item is ineffective,
+        # only noticed when the tray is full
 
     def _copy_to_clipboard(self, recd):
         if recd == None:
