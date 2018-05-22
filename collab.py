@@ -94,7 +94,7 @@ class RecordCollab(object):
             logger.error('_setup: Failed to get_preferred_connection')
 
         # Work out what our room is called and whether we have Tubes already
-        bus_name, conn_path, channel_paths = self.activity._shared_activity.get_channels()  # FIXME: no attribute _shared_activity
+        bus_name, conn_path, channel_paths = self.activity.get_shared_activity().get_channels()
         room = None
         tubes_chan = None
         text_chan = None
@@ -187,7 +187,7 @@ class RecordCollab(object):
             os.remove(path)
 
         good_buddy_obj = None
-        buds = self.activity._shared_activity.get_joined_buddies()
+        buds = self.activity.get_shared_activity().get_joined_buddies()
         for buddy_obj in buds:
             buddy = util.sha_data(buddy_obj.props.key)
             buddy = util.printable_hash(buddy)
