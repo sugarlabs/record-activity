@@ -675,13 +675,25 @@ class ProgressInfo(Gtk.VBox):
         Gtk.VBox.__init__(self)
 
         self._progress_bar = Gtk.ProgressBar()
-        self._progress_bar.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
-        self._progress_bar.modify_bg(Gtk.StateType.INSENSITIVE, COLOR_BLACK)
+        theme = """
+            progressbar progress {
+                background: @white;
+                border-color: @white;
+            }
+            progressbar trough {
+                background: @black;
+                border-color: @button_grey;
+            }"""
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(theme)
+        style_context = self._progress_bar.get_style_context()
+        style_context.add_provider(css_provider,
+                                   Gtk.STYLE_PROVIDER_PRIORITY_USER)
         self.pack_start(self._progress_bar, expand=True, fill=True, padding=5)
 
         self._label = Gtk.Label()
         self._label.modify_fg(Gtk.StateType.NORMAL, COLOR_WHITE)
-        self.pack_start(self._label, expand=True, fill=True, padding=0)
+        self.pack_start(self._label, expand=False, fill=False, padding=0)
 
     def show(self):
         self._progress_bar.show()
