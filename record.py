@@ -84,6 +84,7 @@ class Record(activity.Activity):
             return self._incompatible()
 
         self.props.enable_fullscreen_mode = False
+        self._state = None
         Instance(self)
 
         self.connect("notify::active", self.__active_cb)
@@ -118,8 +119,6 @@ class Record(activity.Activity):
                 subprocess.check_output(args)
             except:
                 pass
-
-        self._old_cursor = self.get_window().get_cursor()
 
         # testing restarter
         def restarter():
@@ -469,7 +468,8 @@ class Record(activity.Activity):
 
         self._showing_info = False
         if state == constants.STATE_READY:
-            self._set_cursor_default()
+            if self._state == constants.STATE_PROCESSING:
+                self.unbusy()
             self._active_recd = None
             self._title_entry.hide()
             self._title_label.hide()
@@ -486,12 +486,13 @@ class Record(activity.Activity):
             self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=Gtk.PackType.START)
             self._progress.show()
         elif state == constants.STATE_PROCESSING:
-            self._set_cursor_busy()
+            self.busy()
             self._shutter_button.hide()
             self._progress.show()
         elif state == constants.STATE_DOWNLOADING:
             self._shutter_button.hide()
             self._progress.show()
+        self._state = state
 
     def set_paused(self, value):
         if value:
@@ -629,15 +630,6 @@ class Record(activity.Activity):
             msg = _('Requesting...')
 
         self.set_progress(recd.meshDownlodingPercent, msg)
-
-    def _set_cursor_busy(self):
-        self._old_cursor = self.get_window().get_cursor()
-        self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
-        Gdk.flush()
-
-    def _set_cursor_default(self):
-        self.get_window().set_cursor(self._old_cursor)
-        Gdk.flush()
 
 
 class PlaybackScale(Gtk.HScale):
