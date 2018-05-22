@@ -209,6 +209,8 @@ class RecordCollab(object):
             recd.triedMeshBuddies.append(Instance.keyHashPrintable)
             self.activity.update_download_progress(recd)
 
+        return False
+
     def _recd_request_cb(self, remote_object, remote_person, md5sum):
         #if we are here, it is because someone has been told we have what they want.
         #we need to send them that thing, whatever that thing is
@@ -295,7 +297,8 @@ class RecordCollab(object):
             return
 
         #update that we've heard back about this, reset the timeout
-        GObject.source_remove(recd.meshReqCallbackId)
+        if recd.meshReqCallbackId:
+            GObject.source_remove(recd.meshReqCallbackId)
         recd.meshReqCallbackId = GObject.timeout_add(self._collab_timeout, self._check_recd_request, recd)
 
         #update the progress bar
