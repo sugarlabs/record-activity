@@ -22,9 +22,10 @@ import logging
 import xml.dom.minidom
 import os
 
+import gi
+gi.require_version('TelepathyGLib', '0.12')
 from gi.repository import GObject
-import telepathy
-import telepathy.client
+from gi.repository import TelepathyGLib
 
 from sugar3.presence import presenceservice
 from sugar3.presence.tubeconn import TubeConnection
@@ -82,59 +83,30 @@ class RecordCollab(object):
 
     def _setup(self):
         # sets up the tubes...
-        if not self.activity.get_shared_activity():
+        shared_activity = self.activity.shared_activity
+        if not shared_activity:
             logger.error('_setup: Failed to share or join activity')
             return
 
-        pservice = presenceservice.get_instance()
-        try:
-            name, path = pservice.get_preferred_connection()
-            self._connection = telepathy.client.Connection(name, path)
-        except:
-            logger.error('_setup: Failed to get_preferred_connection')
+        self._connection = shared_activity.telepathy_conn
+        tubes_chan = shared_activity.telepathy_tubes_chan
+        text_chan = shared_activity.telepathy_text_chan
 
-        # Work out what our room is called and whether we have Tubes already
-        bus_name, conn_path, channel_paths = self.activity.get_shared_activity().get_channels()
-        room = None
-        tubes_chan = None
-        text_chan = None
-        for channel_path in channel_paths:
-            channel = telepathy.client.Channel(bus_name, channel_path)
-            htype, handle = channel.GetHandle()
-            if htype == telepathy.HANDLE_TYPE_ROOM:
-                logger.debug('Found our room: it has handle#%d "%s"', handle, self._connection.InspectHandles(htype, [handle])[0])
-                room = handle
-                ctype = channel.GetChannelType()
-                if ctype == telepathy.CHANNEL_TYPE_TUBES:
-                    logger.debug('Found our Tubes channel at %s', channel_path)
-                    tubes_chan = channel
-                elif ctype == telepathy.CHANNEL_TYPE_TEXT:
-                    logger.debug('Found our Text channel at %s', channel_path)
-                    text_chan = channel
-
-        if not room:
-            logger.error("Presence service didn't create a room")
-            return
-        if not text_chan:
-            logger.error("Presence service didn't create a text channel")
-            return
-
-        # Make sure we have a Tubes channel - PS doesn't yet provide one
-        if not tubes_chan:
-            logger.debug("Didn't find our Tubes channel, requesting one...")
-            tubes_chan = self._connection.request_channel(telepathy.CHANNEL_TYPE_TUBES, telepathy.HANDLE_TYPE_ROOM, room, True)
-
-        self._tubes_channel = tubes_chan[telepathy.CHANNEL_TYPE_TUBES]
-        self._text_channel = text_chan[telepathy.CHANNEL_INTERFACE_GROUP]
+        self._tubes_channel = \
+            tubes_chan[TelepathyGLib.IFACE_CHANNEL_TYPE_TUBES]
+        self._text_channel = \
+            text_chan[TelepathyGLib.IFACE_CHANNEL_INTERFACE_GROUP]
 
         self._tubes_channel.connect_to_signal('NewTube', self._new_tube_cb)
 
     def _new_tube_cb(self, id, initiator, type, service, params, state):
         logger.debug('New tube: ID=%d initator=%d type=%d service=%s params=%r state=%d', id, initiator, type, service, params, state)
-        if type != telepathy.TUBE_TYPE_DBUS or service != constants.DBUS_SERVICE:
+        if type != TelepathyGLib.TubeType.DBUS or \
+            service != constants.DBUS_SERVICE:
+
             return
 
-        if state == telepathy.TUBE_STATE_LOCAL_PENDING:
+        if state == TelepathyGLib.TubeState.LOCAL_PENDING:
             self._tubes_channel.AcceptDBusTube(id)
         tube_connection = TubeConnection(self._connection, self._tubes_channel, id, group_iface=self._text_channel)
         self._tube = RecordTube(tube_connection)
