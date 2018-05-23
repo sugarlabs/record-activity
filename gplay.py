@@ -107,7 +107,7 @@ class Gplay(GObject.GObject):
         if duration == 0:  # duration may not yet be known
             return True
 
-        value = position * 100 / duration
+        value = position * 100.0 / duration
         self._emit_playback_status(value)
         return True
 
