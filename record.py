@@ -665,8 +665,9 @@ class PlaybackScale(Gtk.HScale):
 
     def _button_release(self, widget, event):
         logger.debug('PlaybackScale: _button_release')
-        self.disconnect(self._change_handler)
-        self._change_handler = None
+        if self._change_handler:
+            self.disconnect(self._change_handler)
+            self._change_handler = None
         self.model.seek_end()
 
 
