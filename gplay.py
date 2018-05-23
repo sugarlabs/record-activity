@@ -94,7 +94,8 @@ class Gplay(GObject.GObject):
         #self._player.get_state(1000000000)  # debugging; wait for play
 
         self._playback_monitor()
-        self._playback_monitor_handler = GObject.timeout_add(50, self._playback_monitor)
+        self._playback_monitor_handler = GObject.timeout_add(
+            50, self._playback_monitor)
 
     def _playback_monitor(self):
         try:
@@ -123,8 +124,9 @@ class Gplay(GObject.GObject):
 
         self._playback_monitor()
 
-        GObject.source_remove(self._playback_monitor_handler)
-        self._playback_monitor_handler = None
+        if self._playback_monitor_handler:
+            GObject.source_remove(self._playback_monitor_handler)
+            self._playback_monitor_handler = None
 
     def stop(self):
         logger.debug('stop')
