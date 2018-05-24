@@ -297,13 +297,23 @@ class Record(activity.Activity):
         self._media_view.set_size_request(-1, Gdk.Screen.height() - \
             style.GRID_CELL_SIZE * 2 - height_tray - trim_height_shutter_button)
 
-        main_box = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
-        main_box.add(self._media_view)
-        main_box.add(self._controls_hbox)
-        main_box.add(self._thumb_tray)
-        main_box.show()
-        self.set_canvas(main_box)
-        main_box.get_parent().modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
+        self._canvas = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
+        self._canvas.add(self._media_view)
+        self._canvas.add(self._controls_hbox)
+        self._canvas.add(self._thumb_tray)
+        self._canvas.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
+        self._canvas.show()
+        self.set_canvas(self._canvas)
+
+    def set_title_visible(self, visible):
+        if visible:
+            side = Gtk.PositionType.TOP
+        else:
+            side = Gtk.PositionType.BOTTOM
+
+        self._canvas.remove(self._controls_hbox)
+        self._canvas.attach_next_to(self._controls_hbox, self._media_view,
+            side, 1, 1)
 
     def serialize(self):
         data = {}
@@ -429,6 +439,7 @@ class Record(activity.Activity):
         self._title_entry.set_text(recd.title)
         self._title_entry.show()
         self._title_label.show()
+        self.set_title_visible(True)
 
         func(recd.recorderName, recd.colorStroke, recd.colorFill, utils.getDateString(recd.time), recd.tags)
 
@@ -472,6 +483,7 @@ class Record(activity.Activity):
             self._active_recd = None
             self._title_entry.hide()
             self._title_label.hide()
+            self.set_title_visible(False)
             self._play_button.hide()
             self._playback_scale.hide()
             self._progress.hide()
@@ -559,6 +571,7 @@ class Record(activity.Activity):
         self._title_entry.set_text(recd.title)
         self._title_entry.show()
         self._title_label.show()
+        self.set_title_visible(True)
         self._shutter_button.hide()
         self._progress.hide()
 
@@ -567,6 +580,7 @@ class Record(activity.Activity):
         self._shutter_button.hide()
         self._title_entry.hide()
         self._title_label.hide()
+        self.set_title_visible(False)
         self._play_button.show()
         self._playback_scale.show()
         path = recd.getAudioImageFilepath()
@@ -579,6 +593,7 @@ class Record(activity.Activity):
         self._shutter_button.hide()
         self._title_entry.hide()
         self._title_label.hide()
+        self.set_title_visible(False)
         self._play_button.show()
         self._playback_scale.show()
         self._media_view.show_video()
