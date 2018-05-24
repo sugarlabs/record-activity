@@ -56,8 +56,8 @@ class Model:
 
         self._mode = None
         self._state = constants.STATE_INVISIBLE
-        self._countdown_value = 0
         self._countdown_handle = None
+        self._countdown_ends = None
         self._timer_value = 0
         self._timer_duration = 0
         self._timer_handle = None
@@ -134,11 +134,7 @@ class Model:
             self.set_state(constants.STATE_READY)
             return
 
-        if self._countdown_handle:
-            GObject.source_remove(self._countdown_handle)
-            self._countdown_handle = None
-            self._countdown_value = 0
-            self.activity.set_countdown(0)
+        self.abort_countdown()
 
         # Change from visible to invisible.
         if self._state == constants.STATE_RECORDING:
@@ -148,6 +144,8 @@ class Model:
             self.set_state(constants.STATE_INVISIBLE)
 
     def set_state(self, state):
+        self.abort_countdown()
+
         # Never go into READY mode if we aren't visible.
         if state == constants.STATE_READY and not self._visible:
             logging.debug("state: overriding READY to INVISIBLE")
@@ -229,16 +227,14 @@ class Model:
         aplay.play('photoShutter.wav', done_cb)
 
     def _countdown_tick(self):
-        self._countdown_value = self._countdown_value - 1
-        value = self._countdown_value
-        self.activity.set_countdown(value)
-
-        if value <= 0:
-            self._countdown_handle = None
-            self._countdown_value = 0
+        remaining = self._countdown_ends - time.time()
+        if remaining < 0:
+            self.activity.set_countdown(0)
             self.shutter_sound(self._start_media_capture)
+            self._countdown_handle = None
             return False
 
+        self.activity.set_countdown(int(remaining + 1))
         return True
 
     def do_shutter(self):
@@ -251,12 +247,21 @@ class Model:
         timer = self.activity.get_selected_timer()
         if timer > 0:
             self.activity.set_shutter_sensitive(False)
-            self._countdown_value = self.activity.get_selected_timer()
-            self._countdown_handle = GObject.timeout_add(1000, self._countdown_tick)
+            value = self.activity.get_selected_timer()
+            self.activity.set_countdown(value)
+            self._countdown_ends = time.time() + value
+            self._countdown_handle = GObject.timeout_add(
+                100, self._countdown_tick)
             return
 
         # otherwise, capture normally
         self.shutter_sound(self._start_media_capture)
+
+    def abort_countdown(self):
+        if self._countdown_handle:
+            GObject.source_remove(self._countdown_handle)
+            self._countdown_handle = None
+            self.activity.set_countdown(0)
 
     # called from GStreamer thread
     def still_ready(self, pixbuf):

@@ -388,7 +388,6 @@ class Record(activity.Activity):
         if value == 0:
             self._shutter_button.show()
             self._countdown_image.hide()
-            self._countdown_image.clear()
             return
 
         self._shutter_button.hide()
@@ -504,6 +503,7 @@ class Record(activity.Activity):
         if self.model.ui_frozen():
             return
 
+        self.model.abort_countdown()
         self._active_recd = recd
         self._show_recd(recd)
 
@@ -713,52 +713,57 @@ class ProgressInfo(Gtk.VBox):
         self._label.set_text(text)
 
 
-class CountdownImage(Gtk.Image):
+class CountdownImage(Gtk.DrawingArea):
     def __init__(self):
-        Gtk.Image.__init__(self)
-        self._countdown_images = {}
+        Gtk.DrawingArea.__init__(self)
 
-    def _generate_image(self, num):
-        w = 55
-        h = w
-        pixmap = cairo.ImageSurface(cairo.FORMAT_RGB24, w, h)
-        ctx = cairo.Context(pixmap)
-        ctx.rectangle(0, 0, w, h)
-        ctx.set_source_rgb(0, 0, 0)
-        ctx.fill()
+        self._value = 0
 
-        x = 0
-        y = 4
-        ctx.translate(x, y)
         circle_path = os.path.join(constants.GFX_PATH, 'media-circle.png')
-        surface = cairo.ImageSurface.create_from_png(circle_path)
-        ctx.set_source_surface(surface, 0, 0)
-        ctx.paint()
-        ctx.translate(-x, -y)
+        self._circle_surface = cairo.ImageSurface.create_from_png(circle_path)
 
-        ctx.set_source_rgb(255, 255, 255)
-        pctx = PangoCairo.create_context(ctx)
-        play = PangoCairo.create_layout(ctx)
-        font = Pango.FontDescription("sans 30")
-        play.set_font_description(font)
-        play.set_text(str(num), -1)
-        ink, log = play.get_pixel_extents()
-        logger.error('ink %r', (ink.x, ink.y, ink.width, ink.height))
-        #logger.error('log %r', (log.x, log.y, log.width, log.height))
-        # FIXME: SEGFAULTS HERE
-        ctx.translate(-ink.x, -ink.y)
-        xoff = (w - ink.width) / 2
-        yoff = (h - ink.height) / 2
-        ctx.translate(xoff, yoff)
-        ctx.translate(-3, 0)
-        PangoCairo.show_layout(pctx, play)
-        return pixmap
+        self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
+        self.connect('draw', self._draw_cb)
 
-    def set_value(self, num):
-        if num not in self._countdown_images:
-            self._countdown_images[num] = self._generate_image(num)
+    def _draw_cb(self, widget, cr):
+        w = self.get_allocated_width()
+        h = self.get_allocated_height()
 
-        self.set_from_pixmap(self._countdown_images[num], None)
+        # clear to black
+        cr.rectangle(0, 0, w, h)
+        cr.set_source_rgb(0, 0, 0)
+        cr.fill()
+
+        if self._value == 0:
+            return False
+
+        # draw white circle from file, and centre in allocation
+        dx = (w - self._circle_surface.get_width()) / 2
+        dy = (h - self._circle_surface.get_height()) / 2
+        cr.translate(dx, dy)
+        cr.set_source_surface(self._circle_surface, 0, 0)
+        cr.paint()
+        cr.translate(-dx, -dy)
+
+        # draw white digits of value, and centre in allocation
+        layout = PangoCairo.create_layout(cr)
+        layout.set_font_description(Pango.FontDescription("sans bold 26"))
+        layout.set_text(str(self._value), -1)
+        layout.set_alignment(Pango.Alignment.CENTER)
+        ink_rect, logical_rect = layout.get_pixel_extents()
+        dx = (w - ink_rect.width) / 2 - ink_rect.x
+        dy = (h - ink_rect.height) / 2 - ink_rect.y
+        cr.translate(dx, dy)
+        cr.set_source_rgb(255, 255, 255)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
+
+        return False
+
+    def set_value(self, value):
+        if self._value != value:
+            self._value = value
+            self.queue_draw()
 
 
 class ShutterButton(Gtk.Button):
