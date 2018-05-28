@@ -377,21 +377,21 @@ class MediaView(Gtk.EventBox):
         self.disconnect_by_func(self._size_allocate)
 
     def _motion_notify(self, widget, event):
-        if self._controls_shown:
+        if not self._controls_shown:
+            if self._show_controls_timer:
+                GObject.source_remove(self._show_controls_timer)
+            self._show_controls_timer = GObject.timeout_add(10,
+                                                            self._show_controls)
+
+        if self._hide_controls_timer:
             GObject.source_remove(self._hide_controls_timer)
-            self._hide_controls_timer = GObject.timeout_add(2000, self._hide_controls)
-            return
-
-        logger.debug('_motion_notify fresh')
-        if self._show_controls_timer:
-            GObject.source_remove(self._show_controls_timer)
-
-        self._show_controls_timer = GObject.timeout_add(10, self._show_controls)
-        self._hide_controls_timer = GObject.timeout_add(2000, self._hide_controls)
+        self._hide_controls_timer = GObject.timeout_add(2000,
+                                                        self._hide_controls)
 
     def _show_controls(self):
         logger.debug('_show_controls')
-        if self._mode in (MediaView.MODE_LIVE, MediaView.MODE_VIDEO, MediaView.MODE_PHOTO, MediaView.MODE_STILL):
+        if self._mode in (MediaView.MODE_LIVE, MediaView.MODE_VIDEO,
+                          MediaView.MODE_PHOTO, MediaView.MODE_STILL):
             self._fullscreen_button.show()
 
         if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
