@@ -176,13 +176,8 @@ class VideoBox(Gtk.DrawingArea):
     def __init__(self, name):
         self._name = name
         Gtk.DrawingArea.__init__(self)
-        self.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
-                        Gdk.EventMask.POINTER_MOTION_HINT_MASK |
-                        Gdk.EventMask.EXPOSURE_MASK |
-                        Gdk.EventMask.BUTTON_PRESS_MASK |
-                        Gdk.EventMask.BUTTON_RELEASE_MASK |
-                        Gdk.EventMask.KEY_PRESS_MASK |
-                        Gdk.EventMask.KEY_RELEASE_MASK)
+        self.add_events(Gdk.EventMask.POINTER_MOTION_MASK |
+                        Gdk.EventMask.POINTER_MOTION_HINT_MASK)
 
         self._xid = None
         self._sink = None
@@ -208,6 +203,7 @@ class VideoBox(Gtk.DrawingArea):
 
     def set_sink(self, sink):
         logger.debug('%s set_sink' % self._name)
+        sink.props.handle_events = False
         self._sink = sink
         sink.set_window_handle(self._xid)
 
@@ -321,7 +317,8 @@ class MediaView(Gtk.EventBox):
         Gtk.EventBox.__init__(self)
         self.connect('size-allocate', self._size_allocate)
         self.connect('motion-notify-event', self._motion_notify)
-        self.set_events(Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.POINTER_MOTION_HINT_MASK)
+        self.add_events(Gdk.EventMask.POINTER_MOTION_MASK |
+                        Gdk.EventMask.POINTER_MOTION_HINT_MASK)
 
         self._fixed = Gtk.Fixed()
         self.add(self._fixed)
