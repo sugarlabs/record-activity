@@ -83,11 +83,11 @@ class Record(activity.Activity):
         if Gst.version() == (1L, 0L, 10L, 0L):
             return self._incompatible()
 
+        # for fullscreen feature, use local rather than toolkit
         self.props.enable_fullscreen_mode = False
+
         self._state = None
         Instance(self)
-
-        self.connect("notify::active", self.__active_cb)
 
         #the main classes
         self.model = Model(self)
@@ -102,14 +102,25 @@ class Record(activity.Activity):
             else:
                 self.connect("joined", self._joined_cb)
 
-        # Realize the video view widget so that it knows its own window XID
-        self._media_view.realize_video()
-
         # Changing to the first toolbar kicks off the rest of the setup
         if self.model.get_has_camera():
             self.model.change_mode(constants.MODE_PHOTO)
         else:
             self.model.change_mode(constants.MODE_AUDIO)
+
+        # Start live video pipeline when the video window becomes visible
+        def on_defer_cb():
+            self.model.set_visible(True)
+            self.connect("notify::active", self.__active_cb)
+            return False
+
+        def on_event_cb(widget, event):
+            if event.state == Gdk.VisibilityState.UNOBSCURED:
+                GObject.timeout_add(10, on_defer_cb)
+                self._media_view._video.disconnect_by_func(on_event_cb)
+
+        self._media_view._video.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
+        self._media_view._video.connect('visibility-notify-event', on_event_cb)
 
         # Restore critical hidden mixer controls to default
         model = hw.get_xo_version()
@@ -333,6 +344,16 @@ class Record(activity.Activity):
         key = event.keyval
         ctrl = event.state & Gdk.ModifierType.CONTROL_MASK
 
+        if ctrl and key == Gdk.KEY_z:
+            self._toggle_fullscreen()
+            return True
+
+        if ctrl and key == Gdk.KEY_s:
+            self.model.glive.stop()
+
+        if ctrl and key == Gdk.KEY_p:
+            self.model.glive.play()
+
         if (ctrl and key == Gdk.KEY_space) or \
             key == Gdk.KEY_KP_Page_Up:  # game key O
 
@@ -444,6 +465,7 @@ class Record(activity.Activity):
         func(recd.recorderName, recd.colorStroke, recd.colorFill, utils.getDateString(recd.time), recd.tags)
 
     def _media_view_fullscreen_clicked(self, widget):
+        # logger.debug('_media_view_fullscreen_clicked')
         self._toggle_fullscreen()
 
     def _media_view_tags_changed(self, widget, tbuffer):
@@ -451,15 +473,44 @@ class Record(activity.Activity):
         self._active_recd.setTags(text)
 
     def _toggle_fullscreen(self):
-        if not self._fullscreen:
+        # logger.debug('_toggle_fullscreen')
+        self._fullscreen = not self._fullscreen
+
+        self.model.glive.stop()
+        if self._fullscreen:
             self.get_toolbar_box().hide()
             self._thumb_tray.hide()
+            self._controls_hbox.hide()
         else:
             self.get_toolbar_box().show()
             self._thumb_tray.show()
+            self._controls_hbox.show()
 
-        self._fullscreen = not self._fullscreen
         self._media_view.set_fullscreen(self._fullscreen)
+
+        self._timer_hid = None
+
+        def on_timer_cb():
+            self.model.glive.play()
+            self._timer_hid = None
+            return False
+
+        self._timer_hid = GObject.timeout_add(1000, on_timer_cb)
+
+        def on_defer_cb():
+            self.model.glive.play()
+            if self._timer_hid:
+                GObject.source_remove(self._timer_hid)
+                self._timer_hid = None
+            return False
+
+        def on_event_cb(widget, event):
+            if event.state == Gdk.VisibilityState.UNOBSCURED:
+                GObject.timeout_add(30, on_defer_cb)
+                self._media_view._video.disconnect_by_func(on_event_cb)
+
+        self._media_view._video.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
+        self._media_view._video.connect('visibility-notify-event', on_event_cb)
 
     def _mode_button_clicked(self, button):
         self.model.change_mode(button.mode)
