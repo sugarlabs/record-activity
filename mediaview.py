@@ -356,16 +356,8 @@ class MediaView(Gtk.EventBox):
         self._switch_mode(MediaView.MODE_LIVE)
 
     def _size_allocate(self, widget, allocation):
-        logger.debug('MediaView._size_allocate %r x %r' % (allocation.width, allocation.height))
-        if hasattr(allocation, 'equal'):  # GTK+ 3.20 or higher
-            if self._allocation and self._allocation.equal(allocation):
-                return
-        elif self._allocation and \
-            self._allocation.x == allocation.x and \
-            self._allocation.y == allocation.y and \
-            self._allocation.width == allocation.width and \
-            self._allocation.height == allocation.height:
-            return
+        # logger.debug('MediaView._size_allocate %r x %r' %
+        #     (allocation.width, allocation.height))
 
         self._allocation = allocation
 
@@ -373,7 +365,7 @@ class MediaView(Gtk.EventBox):
             self._place_widgets()
             return False
 
-        GObject.timeout_add(10, defer)  # prevent a delayed image symptom
+        GObject.timeout_add(20, defer)  # prevent a delayed image symptom
         self.disconnect_by_func(self._size_allocate)
 
     def _motion_notify(self, widget, event):
