@@ -107,6 +107,7 @@ class Glive:
             return
 
         self._pipeline.set_state(Gst.State.NULL)  # synchronous
+        self.activity.set_glive_sink(None)
 
     def _get_state(self):
         return self._pipeline.get_state(Gst.CLOCK_TIME_NONE)[1]
