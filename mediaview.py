@@ -203,7 +203,8 @@ class VideoBox(Gtk.DrawingArea):
     def set_sink(self, sink):
         if sink is not None:
             # logger.debug('%s set_sink on' % self._name)
-            sink.props.handle_events = False
+            if hasattr(sink.props, "handle_events"):
+                sink.props.handle_events = False
             sink.set_window_handle(self._xid)
         else:
             # logger.debug('%s set_sink off' % self._name)
