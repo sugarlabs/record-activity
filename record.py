@@ -308,23 +308,27 @@ class Record(activity.Activity):
         self._media_view.set_size_request(-1, Gdk.Screen.height() - \
             style.GRID_CELL_SIZE * 2 - height_tray - trim_height_shutter_button)
 
-        self._canvas = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
-        self._canvas.add(self._media_view)
-        self._canvas.add(self._controls_hbox)
-        self._canvas.add(self._thumb_tray)
-        self._canvas.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
-        self._canvas.show()
-        self.set_canvas(self._canvas)
+        self._box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self._box.pack_start(self._media_view, True, True, 0)
+        self._box.pack_start(self._controls_hbox, True, False, 0)
+        self._box.pack_start(self._thumb_tray, False, False, 0)
+        self._box.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
+        self._box.show()
+        self.set_canvas(self._box)
 
     def set_title_visible(self, visible):
-        if visible:
-            side = Gtk.PositionType.TOP
-        else:
-            side = Gtk.PositionType.BOTTOM
+        self._box.remove(self._media_view)
+        self._box.remove(self._controls_hbox)
+        self._box.remove(self._thumb_tray)
 
-        self._canvas.remove(self._controls_hbox)
-        self._canvas.attach_next_to(self._controls_hbox, self._media_view,
-            side, 1, 1)
+        if visible:
+            self._box.pack_start(self._controls_hbox, False, False, 0)
+            self._box.pack_start(self._media_view, True, True, 0)
+            self._box.pack_start(self._thumb_tray, False, False, 0)
+        else:
+            self._box.pack_start(self._media_view, True, True, 0)
+            self._box.pack_start(self._controls_hbox, False, False, 0)
+            self._box.pack_start(self._thumb_tray, False, False, 0)
 
     def serialize(self):
         data = {}
