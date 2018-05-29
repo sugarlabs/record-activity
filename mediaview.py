@@ -188,14 +188,13 @@ class VideoBox(Gtk.DrawingArea):
         if self._sink:
             #logger.debug('%s _draw_cb with _sink' % self._name)
             self._sink.expose()
-            return False
         else:
             #logger.debug('%s _draw_cb without _sink' % self._name)
             cr.rectangle(0, 0,
                 widget.get_allocated_width(), widget.get_allocated_height())
-            cr.set_source_rgb(0.25, 0.25, 0.25)
+            cr.set_source_rgb(0.0, 0.0, 0.0)
             cr.fill()
-            return True
+        return False
 
     def _realize_cb(self, widget):
         logger.debug('%s _realize_cb' % self._name)
