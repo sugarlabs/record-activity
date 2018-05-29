@@ -545,9 +545,9 @@ class MediaView(Gtk.EventBox):
         else:
             self._fullscreen_button.set_enlarge()
 
-    def realize_video(self):
-        self._video.realize()
-        self._video2.realize()
+        self.connect('size-allocate', self._size_allocate)
+        self._video.set_size_request(-1, -1)
+        Gtk.EventBox.queue_resize(self)
 
     # can be called from GStreamer thread, must not do any GTK+ stuff
     def set_video_sink(self, sink):
