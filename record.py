@@ -35,7 +35,6 @@ for api, ver in vs.iteritems():
 from gi.repository import GObject, Gdk, GdkPixbuf, Gtk, Pango, PangoCairo, Gst, GstVideo, SugarExt
 import cairo
 
-GObject.threads_init()
 Gst.init(None)
 
 from sugar3.activity import activity
