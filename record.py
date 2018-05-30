@@ -57,7 +57,6 @@ import constants
 from instance import Instance
 import utils
 from mediaview import MediaView
-import hw
 
 logger = logging.getLogger('record')
 COLOR_BLACK = Gdk.color_parse('#000000')
@@ -120,15 +119,6 @@ class Record(activity.Activity):
 
         self._media_view._video.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self._media_view._video.connect('visibility-notify-event', on_event_cb)
-
-        # Restore critical hidden mixer controls to default
-        model = hw.get_xo_version()
-        if model == 1.75 or model == 4:
-            args = ['amixer', 'set', 'Analog Mic Boost', "100%"]
-            try:
-                subprocess.check_output(args)
-            except:
-                pass
 
         # testing restarter
         def restarter():
