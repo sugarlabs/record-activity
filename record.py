@@ -59,7 +59,7 @@ import utils
 from mediaview import MediaView
 import hw
 
-logger = logging.getLogger('record.py')
+logger = logging.getLogger('record')
 COLOR_BLACK = Gdk.color_parse('#000000')
 COLOR_WHITE = Gdk.color_parse('#ffffff')
 
