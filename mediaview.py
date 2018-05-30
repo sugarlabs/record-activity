@@ -316,7 +316,6 @@ class MediaView(Gtk.EventBox):
 
     def __init__(self):
         self._mode = None
-        self._allocation = None
         self._controls_shown = False
         self._show_controls_timer = None
         self._hide_controls_timer = None
@@ -362,8 +361,6 @@ class MediaView(Gtk.EventBox):
     def _size_allocate(self, widget, allocation):
         # logger.debug('MediaView._size_allocate %r x %r' %
         #     (allocation.width, allocation.height))
-
-        self._allocation = allocation
 
         def defer():
             self._place_widgets()
@@ -510,8 +507,7 @@ class MediaView(Gtk.EventBox):
                 GObject.source_remove(self._hide_controls_timer)
             self._hide_controls()
 
-        if self._allocation:
-            self._place_widgets()
+        self._place_widgets()
 
     def _image_clicked(self, widget, event):
         self.emit('media-clicked')
