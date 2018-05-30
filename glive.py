@@ -82,6 +82,9 @@ class Glive:
             if msg.get_structure() is not None:
                 if msg.get_structure().get_name() == 'pixbuf':
                     self._pixbuf = photo.get_property('last-pixbuf')
+            if msg.type == Gst.MessageType.ERROR:
+                err, debug = msg.parse_error()
+                logger.error('bus error=%s debug=%s' % (err, debug))
 
         bus.connect('message', on_message_cb)
 
