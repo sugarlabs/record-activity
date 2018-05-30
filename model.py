@@ -339,9 +339,7 @@ class Model:
 
     def play_video(self, recd):
         self.gplay.set_location("file://" + recd.getMediaFilepath())
-        self.glive.stop()
         self.gplay.play()
-        self.glive.play()
         self.activity.set_paused(False)
 
     def play_pause(self):

@@ -308,27 +308,24 @@ class Record(activity.Activity):
         self._media_view.set_size_request(-1, Gdk.Screen.height() - \
             style.GRID_CELL_SIZE * 2 - height_tray - trim_height_shutter_button)
 
-        self._box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self._box.pack_start(self._media_view, True, True, 0)
-        self._box.pack_start(self._controls_hbox, True, False, 0)
-        self._box.pack_start(self._thumb_tray, False, False, 0)
-        self._box.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
-        self._box.show()
-        self.set_canvas(self._box)
+        self._grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
+        self._media_view.props.hexpand = True
+        self._media_view.props.vexpand = True
+        for row in [self._media_view, self._controls_hbox, self._thumb_tray]:
+            self._grid.add(row)
+        self._grid.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
+        self._grid.show()
+        self.set_canvas(self._grid)
 
     def set_title_visible(self, visible):
-        self._box.remove(self._media_view)
-        self._box.remove(self._controls_hbox)
-        self._box.remove(self._thumb_tray)
+        self._grid.remove(self._controls_hbox)
 
         if visible:
-            self._box.pack_start(self._controls_hbox, False, False, 0)
-            self._box.pack_start(self._media_view, True, True, 0)
-            self._box.pack_start(self._thumb_tray, False, False, 0)
+            self._grid.attach_next_to(self._controls_hbox, self._media_view,
+                Gtk.PositionType.TOP, 1, 1)
         else:
-            self._box.pack_start(self._media_view, True, True, 0)
-            self._box.pack_start(self._controls_hbox, False, False, 0)
-            self._box.pack_start(self._thumb_tray, False, False, 0)
+            self._grid.attach_next_to(self._controls_hbox, self._media_view,
+                Gtk.PositionType.BOTTOM, 1, 1)
 
     def serialize(self):
         data = {}
@@ -348,7 +345,7 @@ class Record(activity.Activity):
         key = event.keyval
         ctrl = event.state & Gdk.ModifierType.CONTROL_MASK
 
-        if ctrl and key == Gdk.KEY_z:
+        if ctrl and key == Gdk.KEY_f:
             self._toggle_fullscreen()
             return True
 
@@ -380,12 +377,13 @@ class Record(activity.Activity):
             return True
 
         if key == Gdk.KEY_Escape and self._fullscreen:
+            # logger.debug('KEY_Escape while in fullscreen')
             self._toggle_fullscreen()
             return True
 
         # if viewing media, return to live mode
-        if key == Gdk.KEY_Escape and \
-            self.model.get_state() == constants.STATE_READY:
+        if key == Gdk.KEY_Escape and self._active_recd:
+            # logger.debug('KEY_Escape while _active_recd')
 
             self.model.set_state(constants.STATE_READY)
             return True
@@ -480,17 +478,27 @@ class Record(activity.Activity):
         # logger.debug('_toggle_fullscreen')
         self._fullscreen = not self._fullscreen
 
-        self.model.glive.stop()
+        if not self._active_recd:
+            self.model.glive.stop()
+
         if self._fullscreen:
             self.get_toolbar_box().hide()
             self._thumb_tray.hide()
-            self._controls_hbox.hide()
+            if self._active_recd:
+                self._controls_hbox.hide()
         else:
             self.get_toolbar_box().show()
             self._thumb_tray.show()
             self._controls_hbox.show()
 
         self._media_view.set_fullscreen(self._fullscreen)
+
+        if self._active_recd:
+            return
+
+        # hack, reason unknown
+        # problem: call to self.mode.glive.play() does not show live view
+        # solution: defer until after VideoBox resize is complete
 
         self._timer_hid = None
 
@@ -548,6 +556,8 @@ class Record(activity.Activity):
             self._shutter_button.show()
             self._media_view.show_live()
         elif state == constants.STATE_RECORDING:
+            if self._fullscreen:
+                self._toggle_fullscreen()
             self._shutter_button.set_recording()
             self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=Gtk.PackType.START)
             self._progress.show()
@@ -571,6 +581,7 @@ class Record(activity.Activity):
             return
 
         self.model.abort_countdown()
+        self.model.glive.stop()
         self._active_recd = recd
         self._show_recd(recd)
 
