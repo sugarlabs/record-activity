@@ -68,6 +68,7 @@ class Glive:
         - capturing photographs,
         """
         cmd = 'autovideosrc name=src ! video/x-raw,framerate=10/1 ' \
+            '! videorate ' \
             '! tee name=tee ' \
             'tee.! videoconvert ! queue leaky=2 ! autovideosink sync=false ' \
             'tee.! videoconvert ! queue ! gdkpixbufsink name=photo'
@@ -132,6 +133,7 @@ class Glive:
         # make a pipeline to record and encode audio to file
         ogg = os.path.join(Instance.instancePath, "output.ogg")
         cmd = 'autoaudiosrc name=src ' \
+            '! audioconvert ' \
             '! queue max-size-time=30000000000 ' \
             'max-size-bytes=0 max-size-buffers=0 ' \
             '! vorbisenc name=vorbis ! oggmux ' \
