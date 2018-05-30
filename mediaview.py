@@ -130,7 +130,7 @@ class InfoView(Gtk.EventBox):
         alignment.add(self._live_bg)
         self._outer_vbox.pack_start(alignment, False, True, 0)
 
-    def fit_to_allocation(self, allocation):
+    def fit_to_allocation(self, width, height):
         a = float(Gdk.Screen.width()) / float(Gdk.Screen.height())
         if a < 1.4:
             # main viewing area: 50% of each dimension for 4:3 displays
@@ -138,14 +138,14 @@ class InfoView(Gtk.EventBox):
         else:
             # main viewing area: 75% of each dimension for 16:9 displays
             scale = 0.75
-        w = int(allocation.width * scale)
-        h = int(allocation.height * scale)
+        w = int(width * scale)
+        h = int(height * scale)
         self._view_bg.set_size_request(w, h)
 
         # live area: 1/4 of each dimension
         scale = 0.25
-        w = int(allocation.width * scale)
-        h = int(allocation.height * scale)
+        w = int(width * scale)
+        h = int(height * scale)
         self._live_bg.set_size_request(w, h)
 
     def show(self):
@@ -274,6 +274,9 @@ class ImageBox(Gtk.EventBox):
         self._pixbuf = pixbuf
 
     def set_size(self, width, height):
+        if not self._pixbuf:
+            return
+
         (self.width, self.height) = fit_image(self._pixbuf.get_width(),
                                               self._pixbuf.get_height(),
                                               width, height)
@@ -412,7 +415,9 @@ class MediaView(Gtk.EventBox):
 
     def _place_widgets(self):
         logger.debug('_place_widgets')
-        allocation = self._allocation
+
+        w = self.get_allocated_width()
+        h = self.get_allocated_height()
 
         self._image_box.hide()
         self._video.hide()
@@ -421,38 +426,39 @@ class MediaView(Gtk.EventBox):
         self._info_button.hide()
 
         border = 5
-        x = allocation.width - border - self._fullscreen_button.width
+        x = w - border - self._fullscreen_button.width
         y = border
         self._fixed.move(self._fullscreen_button, x, y)
 
-        info_x = allocation.width - self._info_button.width
-        info_y = allocation.height - self._info_button.height
+        info_x = w - self._info_button.width
+        info_y = h - self._info_button.height
         self._fixed.move(self._info_button, info_x, info_y)
 
         if self._mode == MediaView.MODE_LIVE:
             self._fixed.move(self._video, 0, 0)
-            self._video.set_size_request(allocation.width, allocation.height)
+            self._video.set_size_request(w, h)
             self._video.queue_resize()
             self._video.show()
             self._image_box.clear()
         elif self._mode == MediaView.MODE_VIDEO:
             self._fixed.move(self._video2, 0, 0)
-            self._video2.set_size_request(allocation.width, allocation.height)
+            self._video2.set_size_request(w, h)
+            self._video2.queue_resize()
             self._video2.show()
             self._image_box.clear()
 
-            vid_h = allocation.height / 6
-            vid_w = allocation.width / 6
+            vid_h = h / 6
+            vid_w = w / 6
             self._video.set_size_request(vid_w, vid_h)
             self._video.queue_resize()
 
             border = 20
             vid_x = border
-            vid_y = allocation.height - border - vid_h
+            vid_y = h - border - vid_h
             self._fixed.move(self._video, vid_x, vid_y)
         elif self._mode == MediaView.MODE_PHOTO:
             self._fixed.move(self._image_box, 0, 0)
-            self._image_box.set_size(allocation.width, allocation.height)
+            self._image_box.set_size(w, h)
             self._image_box.show()
 
             vid_h = self._image_box.height / 6
@@ -462,16 +468,16 @@ class MediaView(Gtk.EventBox):
 
             border = 20
             vid_x = border
-            vid_y = allocation.height - border - vid_h
+            vid_y = h - border - vid_h
             self._fixed.move(self._video, vid_x, vid_y)
         elif self._mode == MediaView.MODE_STILL:
             self._fixed.move(self._image_box, 0, 0)
-            self._image_box.set_size(allocation.width, allocation.height)
+            self._image_box.set_size(w, h)
             self._image_box.show()
         elif self._mode in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
             self._fullscreen_button.hide()
-            self._info_view.set_size_request(allocation.width, allocation.height)
-            self._info_view.fit_to_allocation(allocation)
+            self._info_view.set_size_request(w, h)
+            self._info_view.fit_to_allocation(w, h)
             self._info_view.show()
             self._info_button.show()
 
@@ -548,6 +554,8 @@ class MediaView(Gtk.EventBox):
 
         self.connect('size-allocate', self._size_allocate)
         self._video.set_size_request(-1, -1)
+        self._video2.set_size_request(-1, -1)
+        self._image_box.set_size(1, 1)
         Gtk.EventBox.queue_resize(self)
 
     # can be called from GStreamer thread, must not do any GTK+ stuff
