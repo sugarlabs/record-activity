@@ -21,7 +21,7 @@
 from gi.repository import GObject, Gst
 
 import logging
-logger = logging.getLogger('gplay.py')
+logger = logging.getLogger('gplay')
 
 class Gplay(GObject.GObject):
     __gsignals__ = {
