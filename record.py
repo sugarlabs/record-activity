@@ -48,7 +48,10 @@ from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.palette import Palette
 from sugar3.activity.widgets import StopButton
 from sugar3.activity.widgets import ActivityToolbarButton
-from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics import style
 from sugar3.graphics.tray import HTray
 
@@ -965,16 +968,18 @@ class RecordControl():
 
     def _setup_timer_palette(self):
         self._timer_palette = self._timer_button.get_palette()
+        box = PaletteMenuBox()
+        self._timer_palette.set_content(box)
+        box.show()
 
         for seconds in TIMER_VALUES:
             if seconds == 0:
                 text = _('Immediate')
             else:
                 text = ngettext('%s second', '%s seconds', seconds) % seconds
-            menu_item = MenuItem(icon_name='timer-%d' % (seconds),
-                                 text_label=text)
+            menu_item = PaletteMenuItem(text, icon_name='timer-%d' % (seconds))
             menu_item.connect('activate', self._timer_selected_cb, seconds)
-            self._timer_palette.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
     def _timer_selected_cb(self, button, seconds):
@@ -990,15 +995,19 @@ class RecordControl():
 
     def _setup_duration_palette(self):
         self._duration_palette = self._duration_button.get_palette()
+        box = PaletteMenuBox()
+        self._duration_palette.set_content(box)
+        box.show()
+
         for minutes in DURATION_VALUES:
             if minutes == 0:
                 text = gtk.Label(_('Immediate'))
             else:
                 text = ngettext('%s minute', '%s minutes', minutes) % minutes
-            menu_item = MenuItem(icon_name='duration-%d' % (minutes),
-                                 text_label=text)
+            menu_item = PaletteMenuItem(text,
+                                        icon_name='duration-%d' % (minutes))
             menu_item.connect('activate', self._duration_selected_cb, minutes)
-            self._duration_palette.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
     def _duration_selected_cb(self, button, minutes):
@@ -1014,12 +1023,15 @@ class RecordControl():
 
     def _setup_quality_palette(self):
         self._quality_palette = self._quality_button.get_palette()
+        box = PaletteMenuBox()
+        self._quality_palette.set_content(box)
+        box.show()
+
         for quality in QUALITY_VALUES:
             text = _('%s quality') % (quality)
-            menu_item = MenuItem(icon_name=quality + '-quality',
-                                 text_label=text)
+            menu_item = PaletteMenuItem(text, icon_name=quality + '-quality')
             menu_item.connect('activate', self._quality_selected_cb, quality)
-            self._quality_palette.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
     def _quality_selected_cb(self, button, quality):

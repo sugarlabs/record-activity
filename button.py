@@ -23,6 +23,8 @@ from gi.repository import GObject, Gtk, GdkPixbuf
 from gettext import gettext as _
 
 from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.tray import TrayButton
 import constants
 import utils
@@ -43,9 +45,14 @@ class RecdButton(TrayButton):
         palette = Palette(recd.title)
         self.set_palette(palette)
 
-        self._rem_menu_item = Gtk.MenuItem(_('Remove'))
+        self._box = PaletteMenuBox()
+        palette.set_content(self._box)
+        self._box.show()
+
+        self._rem_menu_item = PaletteMenuItem(_('Erase'),
+                                              icon_name='edit-delete')
         self._rem_menu_item_handler = self._rem_menu_item.connect('activate', self._remove_clicked)
-        palette.menu.append(self._rem_menu_item)
+        self._box.append_item(self._rem_menu_item)
         self._rem_menu_item.show()
 
         self._add_copy_menu_item()
@@ -54,11 +61,12 @@ class RecdButton(TrayButton):
         if self._recd.buddy and not self._recd.downloadedFromBuddy:
             return
 
-        self._copy_menu_item = Gtk.MenuItem(_('Copy to clipboard'))
+        self._copy_menu_item = PaletteMenuItem(_('Copy to clipboard'),
+                                               icon_name='edit-copy')
         self._copy_menu_item_handler = self._copy_menu_item.connect('activate', self._copy_clipboard_clicked)
-        self.get_palette().menu.append(self._copy_menu_item)
+        self._box.append_item(self._copy_menu_item)
         self._copy_menu_item.show()
- 
+
     def get_recd(self):
         return self._recd
 
