@@ -66,13 +66,6 @@ TIMER_VALUES = [0, 5, 10]
 DURATION_VALUES = [2, 4, 6]
 QUALITY_VALUES = ['low', 'high']
 
-#Gst.debug_set_active(True)
-#Gst.debug_set_colored(False)
-#if logging.getLogger().level <= logging.DEBUG:
-#Gst.debug_set_default_threshold(Gst.DebugLevel.WARNING)
-#else:
-# Gst.debug_set_default_threshold(Gst.DebugLevel.ERROR)
-
 
 class Record(activity.Activity):
     def __init__(self, handle):
