@@ -111,10 +111,10 @@ class InfoView(Gtk.EventBox):
         alignment.add(label)
         inner_vbox.pack_start(alignment, False, True, 0)
 
-        textview = Gtk.TextView()
-        self._tags_buffer = textview.get_buffer()
+        self.textview = Gtk.TextView()
+        self._tags_buffer = self.textview.get_buffer()
         self._tags_buffer.connect('changed', self._tags_changed)
-        inner_vbox.pack_start(textview, True, True, 0)
+        inner_vbox.pack_start(self.textview, True, True, 0)
 
         # the main viewing widget will be painted exactly on top of this one
         alignment = Gtk.Alignment.new(1.0, 0.0, 0.0, 0.0)
@@ -329,11 +329,11 @@ class MediaView(Gtk.EventBox):
         self._fixed = Gtk.Fixed()
         self.add(self._fixed)
 
-        self._info_view = InfoView()
-        self._info_view.connect('primary-allocated', self._info_view_primary_allocated)
-        self._info_view.connect('secondary-allocated', self._info_view_secondary_allocated)
-        self._info_view.connect('tags-changed', self._info_view_tags_changed)
-        self._fixed.put(self._info_view, 0, 0)
+        self.info_view = InfoView()
+        self.info_view.connect('primary-allocated', self._info_view_primary_allocated)
+        self.info_view.connect('secondary-allocated', self._info_view_secondary_allocated)
+        self.info_view.connect('tags-changed', self._info_view_tags_changed)
+        self._fixed.put(self.info_view, 0, 0)
 
         self._image_box = ImageBox()
         self._image_box.connect('button-release-event', self._image_clicked)
@@ -419,7 +419,7 @@ class MediaView(Gtk.EventBox):
         self._image_box.hide()
         self._video.hide()
         self._video2.hide()
-        self._info_view.hide()
+        self.info_view.hide()
         self._info_button.hide()
 
         border = 5
@@ -473,9 +473,9 @@ class MediaView(Gtk.EventBox):
             self._image_box.show()
         elif self._mode in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
             self._fullscreen_button.hide()
-            self._info_view.set_size_request(w, h)
-            self._info_view.fit_to_allocation(w, h)
-            self._info_view.show()
+            self.info_view.set_size_request(w, h)
+            self.info_view.fit_to_allocation(w, h)
+            self.info_view.show()
             self._info_button.show()
 
     def _info_view_primary_allocated(self, widget, allocation):
@@ -526,9 +526,9 @@ class MediaView(Gtk.EventBox):
         self.emit('info-clicked')
 
     def _show_info(self, mode, author, stroke, fill, date, tags):
-        self._info_view.set_author(author, stroke, fill)
-        self._info_view.set_date(date)
-        self._info_view.set_tags(tags)
+        self.info_view.set_author(author, stroke, fill)
+        self.info_view.set_date(date)
+        self.info_view.set_tags(tags)
         self._switch_mode(mode)
 
     def show_info_photo(self, author, stroke, fill, date, tags):
