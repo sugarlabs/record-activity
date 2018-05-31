@@ -40,7 +40,7 @@ class Glive:
         self.activity = activity_obj
         self.model = model
 
-        self._has_camera = False
+        self._has_camera = os.access('/dev/video0', os.F_OK)
 
         self._pixbuf = None
         self._audio_pixbuf = None
@@ -49,16 +49,10 @@ class Glive:
         self._xid = None
         self._sink = None
 
-        self._detect_camera()
-
         self._pipeline = self._make_photo_pipeline()
 
-    def _detect_camera(self):
-        # FIXME: check for /dev/video0
-        self._has_camera = True
-
     def get_has_camera(self):
-        logger.debug('get_has_camera')
+        logger.debug('get_has_camera %r', self._has_camera)
         return self._has_camera
 
     def _make_photo_pipeline(self):
@@ -67,13 +61,21 @@ class Glive:
         - displaying camera video on display,
         - capturing photographs,
         """
-        cmd = 'autovideosrc name=src ! video/x-raw,framerate=10/1 ' \
+
+        if self._has_camera:
+            args = {'src': 'autovideosrc',
+                    'cap': 'video/x-raw,framerate=10/1'}
+        else:
+            args = {'src': 'videotestsrc pattern=black',
+                    'cap': 'video/x-raw,framerate=5/1,width=640,height=480'}
+
+        cmd = '{src} name=src ! {cap} ' \
             '! videorate ' \
             '! tee name=tee ' \
             'tee.! videoconvert ! queue leaky=2 ! autovideosink sync=false ' \
             'tee.! videoconvert ! queue ! gdkpixbufsink name=photo'
 
-        pipeline = Gst.parse_launch(cmd)
+        pipeline = Gst.parse_launch(cmd.format(**args))
         bus = pipeline.get_bus()
         bus.add_signal_watch()
 
@@ -125,10 +127,8 @@ class Glive:
         logger.debug('record_audio')
 
         # take a photograph
-        self._audio_pixbuf = None
-        if self._has_camera:
-            self._audio_pixbuf = self._pixbuf
-            self.model.still_ready(self._audio_pixbuf)
+        self._audio_pixbuf = self._pixbuf
+        self.model.still_ready(self._audio_pixbuf)
 
         # make a pipeline to record and encode audio to file
         ogg = os.path.join(Instance.instancePath, "output.ogg")
@@ -197,10 +197,8 @@ class Glive:
         self._pipeline.set_state(Gst.State.NULL)  # synchronous
 
         # take a photograph
-        self._video_pixbuf = None
-        if self._has_camera:
-            self._video_pixbuf = self._pixbuf
-            self.model.still_ready(self._video_pixbuf)
+        self._video_pixbuf = self._pixbuf
+        self.model.still_ready(self._video_pixbuf)
 
         # make a pipeline to record video and audio to file
         ogv = os.path.join(Instance.instancePath, "output.ogv")
