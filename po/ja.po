@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2016-05-21 23:54+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,7 @@ msgstr ""
 "X-POOTLE-MTIME: 1463874892.000000\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "Record"
 
@@ -37,24 +38,12 @@ msgstr "削除"
 msgid "Copy to clipboard"
 msgstr "クリップボードにコピー"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "写真"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "ビデオ"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "音声"
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
 msgstr "保存中..."
 
@@ -75,267 +64,64 @@ msgstr "日時:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "写真"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "ビデオ"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "音声"
+
+#: record.py:228
 msgid "Title:"
 msgstr "タイトル:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr ""
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
 msgstr "ダウンロード中..."
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
 msgstr "リクエスト中..."
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
 msgstr "タイマーを選択"
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
 msgstr ""
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
 msgstr ""
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
 msgstr "今すぐ"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s 秒"
 
-#: record.py:923
+#: record.py:933
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s 分"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 #, fuzzy
 msgid "%s quality"
 msgstr "%s 最高品質"
-
-#, fuzzy
-#~ msgid "Quality:"
-#~ msgstr "品質:"
-
-#~ msgid "Low"
-#~ msgstr "低"
-
-#~ msgid "High"
-#~ msgstr "高"
-
-#~ msgid "Preferences"
-#~ msgstr "設定"
-
-#~ msgid "Timer:"
-#~ msgstr "タイマー:"
-
-#~ msgid "Duration:"
-#~ msgstr "収録時間:"
-
-#~ msgid "Time Lapse"
-#~ msgstr "時間経過"
-
-#~ msgid "Animation"
-#~ msgstr "アニメーション"
-
-#~ msgid "Panorama"
-#~ msgstr "パノラマ"
-
-#~ msgid "Interview"
-#~ msgstr "インタビュー"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#, python-format
-#~ msgid "%(1)s by %(2)s"
-#~ msgstr "%(1)s　(記録: %(2)s)"
-
-#~ msgid "Recorder:"
-#~ msgstr "記録者:"
-
-#~ msgid "Saving"
-#~ msgstr "保存しています"
-
-#~ msgid "Finished recording"
-#~ msgstr "記録を終了しました"
-
-#~ msgid "Stopped recording"
-#~ msgstr "記録を中止しました"
-
-#~ msgid "Play"
-#~ msgstr "再生"
-
-#~ msgid "Pause"
-#~ msgstr "一時停止"
-
-#~ msgid "Add frame"
-#~ msgstr "フレームを追加"
-
-#~ msgid "Remove frame"
-#~ msgstr "フレームを削除"
-
-#, python-format
-#~ msgid "%(1)s frames per second"
-#~ msgstr "%(1)s フレーム/秒"
-
-#~ msgid "Default"
-#~ msgstr "デフォルト"
-
-#~ msgid "Best"
-#~ msgstr "最高"
-
-#~ msgid "Large file"
-#~ msgstr "大きなファイル"
-
-#~ msgid "Small file"
-#~ msgstr "小さなファイル"
-
-#~ msgid "Silent"
-#~ msgstr "無音"
-
-#~ msgid "Rotate"
-#~ msgstr "回転"
-
-#~ msgid "Width"
-#~ msgstr "幅"
-
-#~ msgid "Height"
-#~ msgstr "高さ"
-
-#~ msgid "Click to take picture"
-#~ msgstr "写真を撮るにはクリックしてください"
-
-#~ msgid "Click to add picture"
-#~ msgstr "写真を追加するにはクリックしてください"
-
-# TRANS: Downloading Photo from Mary
-#, python-format
-#~ msgid "Downloading %(1)s from %(2)s"
-#~ msgstr "%(2)s から %(1)s をダウンロードしています"
-
-# TRANS: Cannot download this Photo
-#, python-format
-#~ msgid "Cannot download this %(1)s"
-#~ msgstr "%(1)s をダウンロードできません"
-
-# TRANS: Save Photo to:
-#, python-format
-#~ msgid "Save %(1)s to:"
-#~ msgstr "%(1)s の保存先:"
-
-#, python-format
-#~ msgid "Your %(1)s is full"
-#~ msgstr "あなたの%(1)s が満杯です"
-
-#~ msgid "Journal"
-#~ msgstr "ジャーナル"
-
-#~ msgid "USB"
-#~ msgstr "USB"
-
-#~ msgid "SD Card"
-#~ msgstr "SDカード"
-
-#~ msgid "Free space:"
-#~ msgstr "空き容量:"
-
-#~ msgid "Bitrate"
-#~ msgstr "ビットレート"
-
-#~ msgid "Maximum Bitrate"
-#~ msgstr "最大ビットレート"
-
-#~ msgid "Minumum Bitrate"
-#~ msgstr "最小ビットレート"
-
-#~ msgid "Manage Bitrate"
-#~ msgstr "ビットレートの管理"
-
-#~ msgid "Border"
-#~ msgstr "境界線"
-
-#~ msgid "Center"
-#~ msgstr "中央"
-
-#~ msgid "Frames"
-#~ msgstr "フレーム"
-
-#~ msgid "Automatic keyframe detection"
-#~ msgstr "キーフレームの自動感知"
-
-#~ msgid "Force keyframe"
-#~ msgstr "キーフレームの強制"
-
-#~ msgid "Keyframe frequency"
-#~ msgstr "キーフレームの頻度"
-
-#~ msgid "Keyframe minimum distance"
-#~ msgstr "キーフレームの最小間隔"
-
-#~ msgid "Keyframe threshold"
-#~ msgstr "キーフレームのしきい値"
-
-#~ msgid "Noise Sensitivity"
-#~ msgstr "ノイズ感度"
-
-#~ msgid "Quick"
-#~ msgstr "高速"
-
-#~ msgid "Sharpness"
-#~ msgstr "シャープネス"
-
-#~ msgid "Capacity"
-#~ msgstr "容量"
-
-#, python-format
-#~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-#~ msgstr "残り %(1)s 時間, %(2)s 分, %(3)s 秒"
-
-#, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "残り %(1)s分, %(2)s秒"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "残り %(1)s 時間"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "残り %(1)s 分"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "残り %(1)s秒"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(1)s 時間"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(1)s 枚の写真"
-
-#, fuzzy
-#~ msgid "High quality"
-#~ msgstr "高品質"
-
-#, fuzzy
-#~ msgid "Low quality"
-#~ msgstr "低品質"
-
-#, fuzzy
-#~ msgid "Your disk is full"
-#~ msgstr "ディスクが満杯です。"

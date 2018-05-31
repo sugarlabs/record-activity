@@ -7,20 +7,21 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: 2013-06-07 11:04+0200\n"
-"Last-Translator: andika <andika@gmail.com>\n"
+"PO-Revision-Date: 2017-04-06 03:15+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: id\n"
+"Language: gug\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.0.5\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1491448536.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #: activity/activity.info:2
 msgid "Record"
-msgstr "Rekam"
+msgstr "Hai"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
@@ -28,102 +29,103 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
-"Bebaskan artis visual di dalam diri Anda! Ambil foto, buat film, dan gunakan "
-"mereka untuk membuat ulang dunia Anda. Batasnya hanya imajinasi Anda."
+"¡Ome'ẽ jokoha tembiapo porã apohape techa rehegua pype nde hyepýpe! Kóina "
+"nohê ta'anga, ejapopiremỹi ha eipuru mbohory haguá nde yvóra. Ha'e año "
+"tembe'y nde py'amongeta."
 
 #: button.py:26
 msgid "Remove"
-msgstr "Hapus"
+msgstr "Pe'a"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr "Salin ke papan klip"
+msgstr "Mbohesegua pe kuatia reruha"
 
 #: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr "%(type)s berdasarkan %(name)s"
+msgstr "%(type)s gui %(name)s"
 
 #: glive.py:551
 msgid "Saving..."
-msgstr "Menyimpan..."
+msgstr "Ñongatu..."
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr "Pengarang:"
+msgstr "Apoha:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr "Tag:"
+msgstr "Techaukaha:"
 
 #: mediaview.py:118
 msgid "Date:"
-msgstr "Tanggal:"
+msgstr "Ombo'ára:"
 
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr "%(mins)d:%(secs)02d tersisa"
+msgstr "Oñemomba'e %(mins)d:%(secs)02d"
 
 #: record.py:159 constants.py:25
 msgid "Photo"
-msgstr "Foto"
+msgstr "Ta'ànga"
 
 #: record.py:167 constants.py:32
 msgid "Video"
-msgstr "Video"
+msgstr "Mone'émbyre"
 
 #: record.py:178 constants.py:39
 msgid "Audio"
-msgstr "Audio"
+msgstr "Henduha"
 
 #: record.py:228
 msgid "Title:"
-msgstr "Judul:"
+msgstr "Téra:"
 
 #: record.py:561
 msgid "Download failed."
-msgstr "Pengunduhan gagal."
+msgstr "Mboguejy javypapyre."
 
 #: record.py:563
 msgid "Downloading..."
-msgstr "Mengunduh..."
+msgstr "Remboguejy..."
 
 #: record.py:565
 msgid "Requesting..."
-msgstr "Meminta..."
+msgstr "Ajerure..."
 
 #: record.py:872
 msgid "Select timer"
-msgstr "Pilih pewaktu"
+msgstr "Poravo mohenda"
 
 #: record.py:879
 msgid "Select duration"
-msgstr "Pilih durasi"
+msgstr "Poravo hi'are"
 
 #: record.py:886
 msgid "Select quality"
-msgstr "Pilih kualitas"
+msgstr "Poravo porãngue"
 
 #: record.py:906 record.py:931
 msgid "Immediate"
-msgstr "Seketika"
+msgstr "Ag̃uiva chugui."
 
 #: record.py:908
 #, python-format
-#, python-format,
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "%s detik"
+msgstr[0] "%s mokõiha.%s mokõiha."
+msgstr[1] ""
 
 #: record.py:933
 #, python-format
-#, python-format,
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "%s menit"
+msgstr[0] "%s aravo'i.%s aravo'i."
+msgstr[1] ""
 
 #: record.py:955
 #, python-format
 msgid "%s quality"
-msgstr "kualitas %s"
+msgstr "Porãngue %s"

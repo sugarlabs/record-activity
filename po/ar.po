@@ -6,19 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: record-activity\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
-"PO-Revision-Date: 2014-02-07 16:35+0200\n"
-"Last-Translator: elxrashedy <abdXelrhman@gmail.com>\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
+"PO-Revision-Date: 2017-03-27 07:29+0000\n"
+"Last-Translator: khaled <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1490599773.000000\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "التسجيل"
 
@@ -28,8 +30,8 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
-"حرر الفنان التشكيلى الذى بداخلك ، إستخدم الصور والمقاطع المرئيه فى إعاده "
-"تشكيل العالم !! فلا حِدودَ لِمُخَيلتك."
+"حرر الفنان التشكيلي الذي بداخلك، التقط الصور و المقاطع المرئية و استخدمهم "
+"لإعادة بناء عالمك. فلا حِدودَ لِمُخَيلتك."
 
 #: button.py:26
 msgid "Remove"
@@ -37,313 +39,101 @@ msgstr "أزل"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr "إنسخ إلى الحافظه"
+msgstr "انسخ إلى الحافظة"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "الصوره"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "المقطع المرئى"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "الصوت"
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "‏%(type)s من %(name)s"
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
-msgstr "جارٍ الحفظ..."
+msgstr "يحفظ..."
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr "المؤلف :"
+msgstr "المؤلف:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr "الوسوم :"
+msgstr "الوسوم:"
 
 #: mediaview.py:118
 msgid "Date:"
-msgstr "التاريخ :"
+msgstr "التاريخ:"
 
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "بقي %(mins)d:%(secs)02d"
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "صورة"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "مقطع مرئي"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "صوت"
+
+#: record.py:228
 msgid "Title:"
-msgstr "العنوان :"
+msgstr "العنوان:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr "فشل التنزيل."
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
-msgstr "جارٍ التنزيل..."
+msgstr "يُنزل..."
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
-msgstr "جارٍ إرسال الطلب..."
+msgstr "يُرسل الطلب..."
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
 msgstr "حدد المؤقت"
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
-msgstr "حدد المده"
+msgstr "حدد المدة"
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
-msgstr "حدد الجوده"
+msgstr "حدد الجودة"
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
-msgstr "حالاً"
+msgstr "حالًا"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] "لا ثوانى"
-msgstr[1] "ثانيه واحده"
-msgstr[2] "ثانيتان"
-msgstr[3] "%s ثوانى"
-msgstr[4] "%s ثانيتاً"
-msgstr[5] "%s ثانيه"
+msgstr[0] "حالًا"
+msgstr[1] "ثانيه واحدة"
+msgstr[2] "ثانيتين"
+msgstr[3] "%s ثوانِ"
+msgstr[4] "%s ثانية"
+msgstr[5] "%s ثانية"
 
-#: record.py:923
+#: record.py:933
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] "لا دقائق"
-msgstr[1] "دقيقه واحده"
-msgstr[2] "دقيقتان"
+msgstr[0] "أقل من دقيقة"
+msgstr[1] "دقيقه واحدة"
+msgstr[2] "دقيقتين"
 msgstr[3] "%s دقائق"
-msgstr[4] "%s دقيقتاً"
-msgstr[5] "%s دقيقه"
+msgstr[4] "%s دقيقة"
+msgstr[5] "%s دقيقة"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 msgid "%s quality"
-msgstr "%s جوده"
-
-#, fuzzy
-#~ msgid "Quality:"
-#~ msgstr "الجودة"
-
-#~ msgid "Low"
-#~ msgstr "منخفضة"
-
-#~ msgid "High"
-#~ msgstr "عالية"
-
-#~ msgid "Preferences"
-#~ msgstr "التفضيلات"
-
-#~ msgid "Timer:"
-#~ msgstr "المُؤقِّت:"
-
-#~ msgid "Duration:"
-#~ msgstr "المدّة:"
-
-#~ msgid "Time Lapse"
-#~ msgstr "الوقت المنقضي"
-
-#~ msgid "Animation"
-#~ msgstr "رسوم متحركة"
-
-#~ msgid "Panorama"
-#~ msgstr "بانوراما"
-
-#~ msgid "Interview"
-#~ msgstr "مقابلة"
-
-# TRANS: photo by photographer, e.g., "Photo by Mary"
-#, python-format
-#~ msgid "%(1)s by %(2)s"
-#~ msgstr "%(1)s من %(2)s"
-
-#~ msgid "Recorder:"
-#~ msgstr "المُسجِّل:"
-
-#~ msgid "Saving"
-#~ msgstr "يحفظ"
-
-#~ msgid "Finished recording"
-#~ msgstr "اكتمل التسجيل"
-
-#~ msgid "Stopped recording"
-#~ msgstr "توقّف التسجيل"
-
-#~ msgid "Play"
-#~ msgstr "شغّل"
-
-#~ msgid "Pause"
-#~ msgstr "قف مؤقتا"
-
-#~ msgid "Add frame"
-#~ msgstr "أضِف إطارًا"
-
-#~ msgid "Remove frame"
-#~ msgstr "أزِل إطارًا"
-
-#, python-format
-#~ msgid "%(1)s frames per second"
-#~ msgstr "%(1)s إطار في الثانية"
-
-#~ msgid "Default"
-#~ msgstr "المبدئي"
-
-#~ msgid "Best"
-#~ msgstr "الأفضل"
-
-#~ msgid "Large file"
-#~ msgstr "ملف كبير"
-
-#~ msgid "Small file"
-#~ msgstr "ملف صغير"
-
-#~ msgid "Silent"
-#~ msgstr "صامت"
-
-#~ msgid "Rotate"
-#~ msgstr "أدِر"
-
-#~ msgid "Width"
-#~ msgstr "العرض"
-
-#~ msgid "Height"
-#~ msgstr "الارتفاع"
-
-#~ msgid "Click to take picture"
-#~ msgstr "انقر لتأخذ صورة"
-
-#~ msgid "Click to add picture"
-#~ msgstr "انقر لتضيف صورة"
-
-# TRANS: Downloading Photo from Mary
-#, python-format
-#~ msgid "Downloading %(1)s from %(2)s"
-#~ msgstr "يُنزِّل %(1)s من %(2)s"
-
-# TRANS: Cannot download this Photo
-#, python-format
-#~ msgid "Cannot download this %(1)s"
-#~ msgstr "تعذّر تنزيل %(1)s"
-
-# TRANS: Save Photo to:
-#, python-format
-#~ msgid "Save %(1)s to:"
-#~ msgstr "احفظ %(1)s في:"
-
-#, python-format
-#~ msgid "Your %(1)s is full"
-#~ msgstr "ال%(1)s ممتلئ"
-
-#~ msgid "Journal"
-#~ msgstr "اليوميات"
-
-#~ msgid "USB"
-#~ msgstr "USB"
-
-#~ msgid "SD Card"
-#~ msgstr "بطاقة الذاكرة"
-
-#~ msgid "Free space:"
-#~ msgstr "المساحة الخالية:"
-
-#~ msgid "Bitrate"
-#~ msgstr "معدل البتات"
-
-#~ msgid "Maximum Bitrate"
-#~ msgstr "أقصى معدل بتات"
-
-#~ msgid "Minumum Bitrate"
-#~ msgstr "أدنى معدل بتات"
-
-#~ msgid "Manage Bitrate"
-#~ msgstr "أدِر معدّل البتات"
-
-#~ msgid "Border"
-#~ msgstr "الحد"
-
-#~ msgid "Center"
-#~ msgstr "المركز"
-
-#~ msgid "Frames"
-#~ msgstr "الإطارات"
-
-#~ msgid "Automatic keyframe detection"
-#~ msgstr "تعرف آلي على الإطار الأساسي"
-
-#~ msgid "Force keyframe"
-#~ msgstr "افرِض الإطار الأساسي"
-
-#~ msgid "Keyframe frequency"
-#~ msgstr "سرعة الإطار الأساسي"
-
-#~ msgid "Keyframe minimum distance"
-#~ msgstr "أقل فاصل بين الإطار الأساسي"
-
-#~ msgid "Keyframe threshold"
-#~ msgstr "عتبة الإطار الأساسي"
-
-#~ msgid "Noise Sensitivity"
-#~ msgstr "الحساسية للضوضاء"
-
-#~ msgid "Quick"
-#~ msgstr "سريع"
-
-#~ msgid "Sharpness"
-#~ msgstr "الوضوح"
-
-#~ msgid "Capacity"
-#~ msgstr "السِّعة"
-
-#, python-format
-#~ msgid "%(1)s hours, %(2)s minutes, %(3)s seconds remaining"
-#~ msgstr "بقي %(1)s ساعات، و %(2)s دقائق و %(3)s ثوان"
-
-#, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "بقي %(1)s دقائق و %(2)s ثوان"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "بقي %(1)s ساعات"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "بقي %(1)s دقائق"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "بقي %(1)s ثوان"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(1)s ساعات"
-
-# TRANS: 7 photos
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(1)s صور"
-
-#~ msgid "High quality"
-#~ msgstr "جودة عالية"
-
-#~ msgid "Low quality"
-#~ msgstr "جودة منخفضة"
-
-#~ msgid "Your disk is full"
-#~ msgstr "القرص ممتلئ"
+msgstr "جودة %s"

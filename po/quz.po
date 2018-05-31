@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2015-12-02 13:46+0000\n"
 "Last-Translator: Roger <contacto@somosazucar.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,6 +20,7 @@ msgstr ""
 
 #  [ES] "Grabar"
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "Waqaychana"
 
@@ -44,29 +45,14 @@ msgstr "Chinkachiy"
 msgid "Copy to clipboard"
 msgstr "Raphiwaqaychaqman kikinchay"
 
-#  [ES] "Foto"
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "Phutu"
-
-#  "Video"
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "Qhawarina"
-
-#  "Audio"
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "Uyarina"
-
 # TRAD. ANT.- Kay %(type)s nisqata %(name)s ruwarun
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr "Kay %(type)s nisqaman t'ikray %(name)s nisqaranti"
 
 #  [ES] "Guardando..."
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
 msgstr "Waqaychachkanmi..."
 
@@ -91,50 +77,65 @@ msgstr "Wakipu:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr "%(mins)d:%(secs)02d kachkhanraq"
 
+#  [ES] "Foto"
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "Phutu"
+
+#  "Video"
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "Qhawarina"
+
+#  "Audio"
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "Uyarina"
+
 #  [ES] "Título:"
-#: record.py:218
+#: record.py:228
 msgid "Title:"
 msgstr "Sutinchaynin:"
 
 #  [ES] "Descarga fallida."
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr "Urayachisqaqa pantarqunmi."
 
 #  "Descargando..."
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
 msgstr "Uraykachichkan..."
 
 #  [ES] "Solicitando..."
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
 msgstr "Mañakuchkanmi..."
 
 # Seleccionar temporizador
-# 
-#: record.py:862
+#
+#: record.py:872
 msgid "Select timer"
 msgstr "Pachatupuqta akllay"
 
 # Seleccionar duración
-# 
-#: record.py:869
+#
+#: record.py:879
 msgid "Select duration"
 msgstr "Kayk'a pacha kanqa chayta akllay"
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
 msgstr "Kusa kayninta akllay"
 
 #  [ES] "Inmediato"
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
 msgstr "Utqaylla"
 
 #  SYNTAX ERROR: msgstr[0] ""
 #  SYNTAX ERROR: msgstr[1] ""
-#: record.py:898
+#: record.py:908
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
@@ -142,7 +143,7 @@ msgstr[0] "%s ch'illmi"
 msgstr[1] "%s ch'illmikuna"
 
 # chinini = mejor para segundo... o parpadeo
-#: record.py:923
+#: record.py:933
 #, python-format
 #, python-format,
 msgid "%s minute"
@@ -150,23 +151,7 @@ msgid_plural "%s minutes"
 msgstr[0] "%s tullmi"
 msgstr[1] "%s tullmikuna"
 
-#: record.py:945
+#: record.py:955
 #, python-format
 msgid "%s quality"
 msgstr "%s kusa kaynin"
-
-#  [ES] "Calidad:"
-#~ msgid "Quality:"
-#~ msgstr "Chanin:"
-
-#  [ES] "Baja"
-#~ msgid "Low"
-#~ msgstr "Pisi"
-
-#  [ES] "Alta"
-#~ msgid "High"
-#~ msgstr "Achkha"
-
-#  [ES] "Preferencias"
-#~ msgid "Preferences"
-#~ msgstr "Akllanakuna"

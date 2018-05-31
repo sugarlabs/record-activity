@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-30 00:33-0400\n"
+"POT-Creation-Date: 2017-03-24 17:39+1100\n"
 "PO-Revision-Date: 2011-12-18 06:58+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,7 @@ msgstr ""
 "X-Generator: Pootle 2.0.5\n"
 
 #. TRANS: "name" option from activity.info file
+#: activity/activity.info:2
 msgid "Record"
 msgstr "Snemalnik"
 
@@ -37,24 +38,12 @@ msgstr "Odstrani"
 msgid "Copy to clipboard"
 msgstr "Kopiraj na namizje"
 
-#: constants.py:25 record.py:149
-msgid "Photo"
-msgstr "Fotografiraj"
-
-#: constants.py:32 record.py:157
-msgid "Video"
-msgstr "Snemaj video"
-
-#: constants.py:39 record.py:168
-msgid "Audio"
-msgstr "Snemaj zvok"
-
-#: glive.py:396 model.py:386
+#: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: glive.py:549
+#: glive.py:551
 msgid "Saving..."
 msgstr ""
 
@@ -75,39 +64,51 @@ msgstr "Datum:"
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
 
-#: record.py:218
+#: record.py:159 constants.py:25
+msgid "Photo"
+msgstr "Fotografiraj"
+
+#: record.py:167 constants.py:32
+msgid "Video"
+msgstr "Snemaj video"
+
+#: record.py:178 constants.py:39
+msgid "Audio"
+msgstr "Snemaj zvok"
+
+#: record.py:228
 msgid "Title:"
 msgstr "Naslov:"
 
-#: record.py:551
+#: record.py:561
 msgid "Download failed."
 msgstr ""
 
-#: record.py:553
+#: record.py:563
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:555
+#: record.py:565
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:862
+#: record.py:872
 msgid "Select timer"
 msgstr ""
 
-#: record.py:869
+#: record.py:879
 msgid "Select duration"
 msgstr ""
 
-#: record.py:876
+#: record.py:886
 msgid "Select quality"
 msgstr ""
 
-#: record.py:896 record.py:921
+#: record.py:906 record.py:931
 msgid "Immediate"
 msgstr "Takojšnje"
 
-#: record.py:898
+#: record.py:908
 #, python-format
 #, fuzzy
 msgid "%s second"
@@ -117,7 +118,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: record.py:923
+#: record.py:933
 #, python-format
 #, fuzzy
 msgid "%s minute"
@@ -127,206 +128,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: record.py:945
+#: record.py:955
 #, python-format
 msgid "%s quality"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Quality:"
-#~ msgstr "Kakovost"
-
-#~ msgid "Low"
-#~ msgstr "Nizka"
-
-#~ msgid "High"
-#~ msgstr "Visoka"
-
-# a obstaja kak boljši izraz?
-#~ msgid "Preferences"
-#~ msgstr "Preference"
-
-#~ msgid "Timer:"
-#~ msgstr "Štoparica:"
-
-#~ msgid "Duration:"
-#~ msgstr "Trajanje:"
-
-#~ msgid "Time Lapse"
-#~ msgstr "Časovni zamik"
-
-#~ msgid "Animation"
-#~ msgstr "Animacija"
-
-#~ msgid "Panorama"
-#~ msgstr "Panorama"
-
-#~ msgid "Interview"
-#~ msgstr "Intervju"
-
-#, python-format
-#~ msgid "%(1)s by %(2)s"
-#~ msgstr "%(1)s posnel %(2)s"
-
-#~ msgid "Recorder:"
-#~ msgstr "Snemalec:"
-
-#~ msgid "Saving"
-#~ msgstr "Shranjujem"
-
-#~ msgid "Finished recording"
-#~ msgstr "Končal snemanje"
-
-#~ msgid "Stopped recording"
-#~ msgstr "Snemanje ustavljeno"
-
-#~ msgid "Play"
-#~ msgstr "Predvajaj"
-
-#~ msgid "Pause"
-#~ msgstr "Premor"
-
-#~ msgid "Add frame"
-#~ msgstr "Dodaj sličico"
-
-#~ msgid "Remove frame"
-#~ msgstr "Odstrani sličico"
-
-#, python-format
-#~ msgid "%(1)s frames per second"
-#~ msgstr "%(1)s sličic na sekundo"
-
-#~ msgid "Default"
-#~ msgstr "Prednastavljena"
-
-#~ msgid "Best"
-#~ msgstr "Najboljša"
-
-#~ msgid "Large file"
-#~ msgstr "Velika datoteka"
-
-#~ msgid "Small file"
-#~ msgstr "Majhna datoteka"
-
-#~ msgid "Silent"
-#~ msgstr "Tiho"
-
-#~ msgid "Rotate"
-#~ msgstr "Zasuči"
-
-#~ msgid "Width"
-#~ msgstr "Širina"
-
-#~ msgid "Height"
-#~ msgstr "Višina"
-
-#~ msgid "Click to take picture"
-#~ msgstr "Pritisni za fotografiranje"
-
-#~ msgid "Click to add picture"
-#~ msgstr "Pritisni za dodajanje slike"
-
-#, python-format
-#~ msgid "Downloading %(1)s from %(2)s"
-#~ msgstr "Prenašam %(1)s od %(2)s"
-
-#, python-format
-#~ msgid "Cannot download this %(1)s"
-#~ msgstr "Ne morem prenesti %(1)s"
-
-#, python-format
-#, python-format, fuzzy
-#~ msgid "Save %(1)s to:"
-#~ msgstr "Shrani %(1) na:"
-
-#, python-format
-#~ msgid "Your %(1)s is full"
-#~ msgstr "Tvoj %(1) je poln:"
-
-#~ msgid "Journal"
-#~ msgstr "Beležka"
-
-#~ msgid "USB"
-#~ msgstr "USB"
-
-#~ msgid "SD Card"
-#~ msgstr "SD-kartica"
-
-#~ msgid "Free space:"
-#~ msgstr "Prost pomnilnik:"
-
-#~ msgid "Bitrate"
-#~ msgstr "Bitrate"
-
-#~ msgid "Maximum Bitrate"
-#~ msgstr "Največji bitrate"
-
-#~ msgid "Minumum Bitrate"
-#~ msgstr "Najmanjši bitrate"
-
-#~ msgid "Manage Bitrate"
-#~ msgstr "Upravljaj z bitrate"
-
-#~ msgid "Border"
-#~ msgstr "Rob"
-
-#~ msgid "Center"
-#~ msgstr "Sredina"
-
-#~ msgid "Frames"
-#~ msgstr "Slike"
-
-#~ msgid "Automatic keyframe detection"
-#~ msgstr "Samodejno zaznavanje ključnih slik"
-
-#~ msgid "Force keyframe"
-#~ msgstr "Nastavi ključno sliko"
-
-#~ msgid "Keyframe frequency"
-#~ msgstr "Pogostost ključnih slik"
-
-#~ msgid "Keyframe minimum distance"
-#~ msgstr "Najmanjša oddaljenost ključnih slik"
-
-#~ msgid "Keyframe threshold"
-#~ msgstr "Nivo ključnih slik"
-
-#~ msgid "Noise Sensitivity"
-#~ msgstr "Občutljivost na šum"
-
-#~ msgid "Quick"
-#~ msgstr "Hitro"
-
-#~ msgid "Sharpness"
-#~ msgstr "Ostrina"
-
-#~ msgid "Capacity"
-#~ msgstr "Kapaciteta"
-
-#, python-format
-#~ msgid "%(1)s hours, %(2)s minutes, %(1)s seconds remaining"
-#~ msgstr "Ostane še %(1)s ur, %(2)s minut, %(1)s sekund snemalnega časa"
-
-#, python-format
-#~ msgid "%(1)s minutes, %(2)s seconds remaining"
-#~ msgstr "Ostane še %(1)s minut, %(2)s sekund snemalnega časa"
-
-#, python-format
-#~ msgid "%(1)s hours remaining"
-#~ msgstr "Ostane še %(1)s ur snemalnega časa"
-
-#, python-format
-#~ msgid "%(1)s minutes remaining"
-#~ msgstr "Ostane še %(1)s minut snemalnega časa"
-
-#, python-format
-#~ msgid "%(1)s seconds remaining"
-#~ msgstr "Ostane še %(1) sekund snemalnega časa"
-
-#, python-format
-#~ msgid "%(1)s hours"
-#~ msgstr "%(1)s ur"
-
-#, python-format
-#~ msgid "%(1)s photos"
-#~ msgstr "%(1)s fotografij"
