@@ -523,6 +523,9 @@ class Record(activity.Activity):
         if self._active_recd:
             return
 
+        if self.model.get_state() == constants.STATE_RECORDING:
+            return
+
         # hack, reason unknown
         # problem: call to self.mode.glive.play() does not show live view
         # solution: defer until after VideoBox resize is complete
@@ -583,8 +586,6 @@ class Record(activity.Activity):
             self._shutter_button.show()
             self._media_view.show_live()
         elif state == constants.STATE_RECORDING:
-            if self._fullscreen:
-                self._toggle_fullscreen()
             self._shutter_button.set_recording()
             self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=Gtk.PackType.START)
             self._progress.show()
