@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: 2016-11-28 16:05+0000\n"
+"PO-Revision-Date: 2018-02-10 11:37+0000\n"
 "Last-Translator: Besnik_b <besnik@programeshqip.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sq\n"
@@ -15,12 +15,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1480349126.000000\n"
+"X-POOTLE-MTIME: 1518262631.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #: activity/activity.info:2
 msgid "Record"
-msgstr "Incizo"
+msgstr "Regjistroni"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file

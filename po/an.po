@@ -7,20 +7,21 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-24 17:39+1100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2017-05-21 04:38+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: lv\n"
+"Language: an\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1495341514.000000\n"
 
 #. TRANS: "name" option from activity.info file
 #: activity/activity.info:2
 msgid "Record"
-msgstr ""
+msgstr "Gravar"
 
 #. TRANS: "summary" option from activity.info file
 #. TRANS: "description" option from activity.info file
@@ -28,100 +29,102 @@ msgid ""
 "Unleash the visual artist inside you! Take pictures, make movies and use "
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
+"Deixa paso a l'artista visual que tiens adentro! Prene fotos, fes cintas y "
+"usa-las ta recrear o tuyo mundo. Lo solo limite ye la tuya imachinación."
 
 #: button.py:26
 msgid "Remove"
-msgstr ""
+msgstr "Eliminar"
 
 #: button.py:37
 msgid "Copy to clipboard"
-msgstr ""
+msgstr "Copiar en o portafuellas"
 
 #: glive.py:398 model.py:386
 #, python-format
 msgid "%(type)s by %(name)s"
-msgstr ""
+msgstr "%(type)s per %(name)s"
 
 #: glive.py:551
 msgid "Saving..."
-msgstr ""
+msgstr "Se ye alzando..."
 
 #: mediaview.py:54
 msgid "Author:"
-msgstr ""
+msgstr "Autor:"
 
 #: mediaview.py:70
 msgid "Tags:"
-msgstr ""
+msgstr "Etiquetas:"
 
 #: mediaview.py:118
 msgid "Date:"
-msgstr ""
+msgstr "Calendata:"
 
 #: model.py:183
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "queda %(mins)d:%(secs)02d"
 
 #: record.py:159 constants.py:25
 msgid "Photo"
-msgstr ""
+msgstr "Fotografía"
 
 #: record.py:167 constants.py:32
 msgid "Video"
-msgstr ""
+msgstr "Video"
 
 #: record.py:178 constants.py:39
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: record.py:228
 msgid "Title:"
-msgstr ""
+msgstr "Titol:"
 
 #: record.py:561
 msgid "Download failed."
-msgstr ""
+msgstr "Ha fallau la descarga."
 
 #: record.py:563
 msgid "Downloading..."
-msgstr ""
+msgstr "Se ye descargando..."
 
 #: record.py:565
 msgid "Requesting..."
-msgstr ""
+msgstr "Se ye demandando..."
 
 #: record.py:872
 msgid "Select timer"
-msgstr ""
+msgstr "Trigar lo cronometro"
 
 #: record.py:879
 msgid "Select duration"
-msgstr ""
+msgstr "Trigar la durada"
 
 #: record.py:886
 msgid "Select quality"
-msgstr ""
+msgstr "Trigar la calidat"
 
 #: record.py:906 record.py:931
 msgid "Immediate"
-msgstr ""
+msgstr "Immediato"
 
 #: record.py:908
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s segundo"
+msgstr[1] "%s segundos"
 
 #: record.py:933
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s minuto"
+msgstr[1] "%s minutos"
 
 #: record.py:955
 #, python-format
 msgid "%s quality"
-msgstr ""
+msgstr "qualitat %s"
