@@ -1,3 +1,19 @@
+200
+
+* new shortcut keys; ctrl+space to record, escape to live mode, ctrl+1
+  through to ctrl+3 for modes, ctrl+r for record, space for pause and
+  play,
+* avoid audio synchronisation loss during video mode by removing live
+  view, which saves much processing time,
+* use default resolution of camera for photo mode, and 640x480 for
+  video mode,
+* port to GTK+ 3 and GStreamer 1.0,
+* tested with GStreamer 1.14 on Ubuntu 18.04,
+
+102
+
+--
+
 * eliminate combo boxes for more friendly to touch UI
 
 76
