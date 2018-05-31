@@ -216,7 +216,6 @@ class Glive:
         # make a pipeline to record video and audio to file
         ogv = os.path.join(Instance.instancePath, "output.ogv")
         cmd = 'autovideosrc name=vsrc ! video/x-raw,width=640,height=480 ' \
-            '! timeoverlay ' \
             '! videoconvert ' \
             '! videorate max-rate=10 ' \
             '! queue max-size-time=30000000000 ' \
