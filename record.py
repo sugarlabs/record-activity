@@ -197,8 +197,8 @@ class Record(activity.Activity):
         self._active_toolbar_idx = 0
 
         toolbar_box = ToolbarBox()
-        activity_button = ActivityToolbarButton(self)
-        toolbar_box.toolbar.insert(activity_button, 0)
+        self._activity_toolbar_button = ActivityToolbarButton(self)
+        toolbar_box.toolbar.insert(self._activity_toolbar_button, 0)
         self.set_toolbar_box(toolbar_box)
         self._toolbar = self.get_toolbar_box().toolbar
 
@@ -336,6 +336,28 @@ class Record(activity.Activity):
     def _key_pressed(self, widget, event):
         key = event.keyval
         ctrl = event.state & Gdk.ModifierType.CONTROL_MASK
+
+        # while activity toolbar is visible, only escape key is taken
+        if self._activity_toolbar_button.is_expanded():
+            if key == Gdk.KEY_Escape:
+                self._activity_toolbar_button.set_expanded(False)
+                return True
+
+            return False
+
+        # while title is focused, only escape key is taken
+        if self._title_entry.is_focus():
+            if key == Gdk.KEY_Escape:
+                self.model.set_state(constants.STATE_READY)
+
+            return False
+
+        # while info tags are focused, only escape key is taken
+        if self._media_view.info_view.textview.is_focus():
+            if key == Gdk.KEY_Escape:
+                self.model.set_state(constants.STATE_READY)
+
+            return False
 
         if ctrl and key == Gdk.KEY_f:
             self._toggle_fullscreen()
