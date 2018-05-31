@@ -281,6 +281,9 @@ class ImageBox(Gtk.EventBox):
                                               self._pixbuf.get_height(),
                                               width, height)
 
+        if self.height == 0:
+            self.height = 1
+
         pixbuf = self._pixbuf.scale_simple(self.width, self.height,
                                            GdkPixbuf.InterpType.BILINEAR)
         self._image.set_from_pixbuf(pixbuf)
