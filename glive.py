@@ -64,8 +64,8 @@ class Glive:
         return self._has_camera
 
     def switch_camera(self):
-        cameras = get_cameras()
-        self._camera = cameras[(cameras.index(self._camera)) + 1 % len(cameras)]
+        eyes = get_cameras()
+        self._camera = eyes[(eyes.index(self._camera)) + 1 % len(eyes)]
         self.stop()
         self._pipeline = self._make_photo_pipeline()
         self.play()

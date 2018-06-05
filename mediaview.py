@@ -64,9 +64,12 @@ class InfoView(Gtk.EventBox):
     right and a secondary view area in the bottom left.
     """
     __gsignals__ = {
-        'primary-allocated': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT,)),
-        'secondary-allocated': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT,)),
-        'tags-changed': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_OBJECT,)),
+        'primary-allocated':
+        (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT,)),
+        'secondary-allocated':
+        (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_PYOBJECT,)),
+        'tags-changed':
+        (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_OBJECT,)),
     }
 
     def __init__(self):
@@ -123,7 +126,8 @@ class InfoView(Gtk.EventBox):
         alignment.add(self._view_bg)
         hbox.pack_start(alignment, False, True, 0)
 
-        # the secondary viewing widget will be painted exactly on top of this one
+        # the secondary viewing widget will be painted exactly on top
+        # of this one
         alignment = Gtk.Alignment.new(0.0, 1.0, 0.0, 0.0)
         self._live_bg = Gtk.EventBox()
         self._live_bg.modify_bg(Gtk.StateType.NORMAL, COLOR_BLACK)
@@ -190,7 +194,8 @@ class VideoBox(Gtk.DrawingArea):
             self._sink.expose()
         else:
             # logger.debug('%s _draw_cb without _sink' % self._name)
-            cr.rectangle(0, 0,
+            cr.rectangle(
+                0, 0,
                 widget.get_allocated_width(), widget.get_allocated_height())
             cr.set_source_rgb(0.0, 0.0, 0.0)
             cr.fill()
@@ -222,7 +227,8 @@ class FullscreenButton(Gtk.EventBox):
         self.height = self._enlarge_pixbuf.get_height()
 
         path = os.path.join(constants.GFX_PATH, 'max-enlarge.svg')
-        self._reduce_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(path, self.width, self.height)
+        self._reduce_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            path, self.width, self.height)
 
         self._image = Gtk.Image()
         self.set_enlarge()
@@ -289,6 +295,7 @@ class ImageBox(Gtk.EventBox):
         self._image.set_from_pixbuf(pixbuf)
         self._image.set_size_request(width, height)
 
+
 class MediaView(Gtk.EventBox):
     """
     A widget to show the main record UI with a video feed, but with some
@@ -307,7 +314,8 @@ class MediaView(Gtk.EventBox):
         'pip-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
         'fullscreen-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
         'info-clicked': (GObject.SignalFlags.RUN_LAST, None, ()),
-        'tags-changed': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_OBJECT,)),
+        'tags-changed': (GObject.SignalFlags.RUN_LAST, None,
+                         (GObject.TYPE_OBJECT,)),
     }
 
     MODE_LIVE = 0
@@ -333,8 +341,10 @@ class MediaView(Gtk.EventBox):
         self.add(self._fixed)
 
         self.info_view = InfoView()
-        self.info_view.connect('primary-allocated', self._info_view_primary_allocated)
-        self.info_view.connect('secondary-allocated', self._info_view_secondary_allocated)
+        self.info_view.connect('primary-allocated',
+                               self._info_view_primary_allocated)
+        self.info_view.connect('secondary-allocated',
+                               self._info_view_secondary_allocated)
         self.info_view.connect('tags-changed', self._info_view_tags_changed)
         self._fixed.put(self.info_view, 0, 0)
 
@@ -376,13 +386,13 @@ class MediaView(Gtk.EventBox):
         if not self._controls_shown:
             if self._show_controls_timer:
                 GObject.source_remove(self._show_controls_timer)
-            self._show_controls_timer = GObject.timeout_add(10,
-                                                            self._show_controls)
+            self._show_controls_timer = GObject.timeout_add(
+                10, self._show_controls)
 
         if self._hide_controls_timer:
             GObject.source_remove(self._hide_controls_timer)
-        self._hide_controls_timer = GObject.timeout_add(2000,
-                                                        self._hide_controls)
+        self._hide_controls_timer = GObject.timeout_add(
+            2000, self._hide_controls)
 
     def _show_controls(self):
         logger.debug('_show_controls')
@@ -403,7 +413,8 @@ class MediaView(Gtk.EventBox):
     def _hide_controls(self):
         logger.debug('_hide_controls')
         self._fullscreen_button.hide()
-        if self._mode not in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
+        if self._mode not in (MediaView.MODE_INFO_PHOTO,
+                              MediaView.MODE_INFO_VIDEO):
             self._info_button.hide()
 
         if self._mode in (MediaView.MODE_VIDEO, MediaView.MODE_PHOTO):
@@ -474,7 +485,8 @@ class MediaView(Gtk.EventBox):
             self._fixed.move(self._image_box, 0, 0)
             self._image_box.set_size(w, h)
             self._image_box.show()
-        elif self._mode in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
+        elif self._mode in (MediaView.MODE_INFO_PHOTO,
+                            MediaView.MODE_INFO_VIDEO):
             self._fullscreen_button.hide()
             self.info_view.set_size_request(w, h)
             self.info_view.fit_to_allocation(w, h)
@@ -492,7 +504,8 @@ class MediaView(Gtk.EventBox):
             self._video2.show()
 
     def _info_view_secondary_allocated(self, widget, allocation):
-        if self._mode in (MediaView.MODE_INFO_PHOTO, MediaView.MODE_INFO_VIDEO):
+        if self._mode in (MediaView.MODE_INFO_PHOTO,
+                          MediaView.MODE_INFO_VIDEO):
             self._fixed.move(self._video, allocation.x, allocation.y)
             self._video.set_size_request(allocation.width, allocation.height)
             self._video.show()
@@ -501,7 +514,8 @@ class MediaView(Gtk.EventBox):
         self.emit('tags-changed', tbuffer)
 
     def _switch_mode(self, new_mode):
-        if self._mode == MediaView.MODE_LIVE and new_mode == MediaView.MODE_LIVE:
+        if self._mode == MediaView.MODE_LIVE and \
+           new_mode == MediaView.MODE_LIVE:
             return
         self._mode = new_mode
 
@@ -535,10 +549,12 @@ class MediaView(Gtk.EventBox):
         self._switch_mode(mode)
 
     def show_info_photo(self, author, stroke, fill, date, tags):
-        self._show_info(MediaView.MODE_INFO_PHOTO, author, stroke, fill, date, tags)
+        self._show_info(MediaView.MODE_INFO_PHOTO, author, stroke, fill, date,
+                        tags)
 
     def show_info_video(self, author, stroke, fill, date, tags):
-        self._show_info(MediaView.MODE_INFO_VIDEO, author, stroke, fill, date, tags)
+        self._show_info(MediaView.MODE_INFO_VIDEO, author, stroke, fill, date,
+                        tags)
 
     def set_fullscreen(self, fullscreen):
         if self._controls_shown:
@@ -591,4 +607,3 @@ class MediaView(Gtk.EventBox):
     def hide(self):
         self._fixed.hide()
         Gtk.EventBox.hide(self)
-

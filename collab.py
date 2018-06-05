@@ -27,7 +27,6 @@ gi.require_version('TelepathyGLib', '0.12')
 from gi.repository import GObject
 from gi.repository import TelepathyGLib
 
-from sugar3.presence import presenceservice
 from sugar3.presence.tubeconn import TubeConnection
 from sugar3 import util
 
@@ -39,6 +38,7 @@ from recordtube import RecordTube
 from recorded import Recorded
 
 logger = logging.getLogger('collab')
+
 
 class RecordCollab(object):
     def __init__(self, activity_obj, model):
@@ -61,11 +61,13 @@ class RecordCollab(object):
         if not self.activity.get_shared_activity():
             return
         self._setup()
-        self._tubes_channel.ListTubes(reply_handler=self._list_tubes_reply_cb, error_handler=self._list_tubes_error_cb)
+        self._tubes_channel.ListTubes(reply_handler=self._list_tubes_reply_cb,
+                                      error_handler=self._list_tubes_error_cb)
 
     def request_download(self, recd):
         if recd.meshDownloading:
-            logger.debug("meshInitRoundRobin: we are in midst of downloading this file...")
+            logger.debug('meshInitRoundRobin: we are in midst of '
+                         'downloading this file...')
             return
 
         # start with who took the photo
@@ -100,15 +102,18 @@ class RecordCollab(object):
         self._tubes_channel.connect_to_signal('NewTube', self._new_tube_cb)
 
     def _new_tube_cb(self, id, initiator, type, service, params, state):
-        logger.debug('New tube: ID=%d initator=%d type=%d service=%s params=%r state=%d', id, initiator, type, service, params, state)
+        logger.debug('New tube: ID=%d initator=%d type=%d service=%s '
+                     'params=%r state=%d', id, initiator, type, service,
+                     params, state)
         if type != TelepathyGLib.TubeType.DBUS or \
-            service != constants.DBUS_SERVICE:
+           service != constants.DBUS_SERVICE:
 
             return
 
         if state == TelepathyGLib.TubeState.LOCAL_PENDING:
             self._tubes_channel.AcceptDBusTube(id)
-        tube_connection = TubeConnection(self._connection, self._tubes_channel, id, group_iface=self._text_channel)
+        tube_connection = TubeConnection(self._connection, self._tubes_channel,
+                                         id, group_iface=self._text_channel)
         self._tube = RecordTube(tube_connection)
         self._tube.connect("new-recd", self._new_recd_cb)
         self._tube.connect("recd-request", self._recd_request_cb)
@@ -144,8 +149,11 @@ class RecordCollab(object):
         recd.meshDownloading = True
         recd.meshDownlodingPercent = 0.0
         self.activity.update_download_progress(recd)
-        recd.meshReqCallbackId = GObject.timeout_add(self._collab_timeout, self._check_recd_request, recd)
-        self._tube.requestRecdBits(Instance.keyHashPrintable, sender, recd.mediaMd5)
+        recd.meshReqCallbackId = GObject.timeout_add(self._collab_timeout,
+                                                     self._check_recd_request,
+                                                     recd)
+        self._tube.requestRecdBits(Instance.keyHashPrintable, sender,
+                                   recd.mediaMd5)
 
     def _next_round_robin_buddy(self, recd):
         logger.debug('meshNextRoundRobinBuddy')
@@ -164,7 +172,8 @@ class RecordCollab(object):
             buddy = util.sha_data(buddy_obj.props.key)
             buddy = util.printable_hash(buddy)
             if recd.triedMeshBuddies.count(buddy) > 0:
-                logger.debug('mnrrb: weve already tried bud ' + buddy_obj.props.nick)
+                logger.debug('mnrrb: weve already tried bud ' +
+                             buddy_obj.props.nick)
             else:
                 logger.debug('mnrrb: ask next buddy: ' + buddy_obj.props.nick)
                 good_buddy_obj = buddy_obj
@@ -175,7 +184,8 @@ class RecordCollab(object):
             buddy = util.printable_hash(buddy)
             self._req_recd_from_buddy(recd, buddy, good_buddy_obj.props.nick)
         else:
-            logger.debug('weve tried all buddies here, and no one has this recd')
+            logger.debug('we\'ve tried all buddies here, '
+                         'and no one has this recd')
             recd.meshDownloading = False
             recd.triedMeshBuddies = []
             recd.triedMeshBuddies.append(Instance.keyHashPrintable)
@@ -184,22 +194,29 @@ class RecordCollab(object):
         return False
 
     def _recd_request_cb(self, remote_object, remote_person, md5sum):
-        #if we are here, it is because someone has been told we have what they want.
-        #we need to send them that thing, whatever that thing is
+        # if we are here, it is because someone has been told we have
+        # what they want.  we need to send them that thing, whatever
+        # that thing is
         recd = self.model.get_recd_by_md5(md5sum)
         if not recd:
-            logger.debug('_recdRequestCb: we dont have the recd they asked for')
-            self._tube.unavailableRecd(md5sum, Instance.keyHashPrintable, remote_person)
+            logger.debug('_recdRequestCb: we dont have the recd '
+                         'they asked for')
+            self._tube.unavailableRecd(md5sum, Instance.keyHashPrintable,
+                                       remote_person)
             return
 
         if recd.deleted:
-            logger.debug('_recdRequestCb: we have the recd, but it has been deleted, so we wont share')
-            self._tube.unavailableRecd(md5sum, Instance.keyHashPrintable, remote_person)
+            logger.debug('_recdRequestCb: we have the recd, '
+                         'but it has been deleted, so we won\'t share')
+            self._tube.unavailableRecd(md5sum, Instance.keyHashPrintable,
+                                       remote_person)
             return
 
         if recd.buddy and not recd.downloadedFromBuddy:
-            logger.debug('_recdRequestCb: we have an incomplete recd, so we wont share')
-            self._tube.unavailableRecd(md5sum, Instance.keyHashPrintable, remote_person)
+            logger.debug('_recdRequestCb: we have an incomplete recd, '
+                         'so we won\'t share')
+            self._tube.unavailableRecd(md5sum, Instance.keyHashPrintable,
+                                       remote_person)
             return
 
         recd.meshUploading = True
@@ -219,62 +236,75 @@ class RecordCollab(object):
 
         self._tube.broadcastRecd(recd.mediaMd5, path, remote_person)
         recd.meshUploading = False
-        #if you were deleted while uploading, now throw away those bits now
+        # if you were deleted while uploading, now throw away those bits now
         if recd.deleted:
             recd.doDeleteRecorded(recd)
 
     def _check_recd_request(self, recd):
-        #todo: add category for "not active activity, so go ahead and delete"
+        # todo: add category for "not active activity, so go ahead and delete"
 
         if recd.downloadedFromBuddy:
-            logger.debug('_meshCheckOnRecdRequest: recdRequesting.downloadedFromBuddy')
+            logger.debug('_meshCheckOnRecdRequest: '
+                         'recdRequesting.downloadedFromBuddy')
             if recd.meshReqCallbackId:
                 GObject.source_remove(recd.meshReqCallbackId)
                 recd.meshReqCallbackId = 0
             return False
         if recd.deleted:
-            logger.debug('_meshCheckOnRecdRequest: recdRequesting.deleted')
+            logger.debug('_meshCheckOnRecdRequest: '
+                         'recdRequesting.deleted')
             if recd.meshReqCallbackId:
                 GObject.source_remove(recd.meshReqCallbackId)
                 recd.meshReqCallbackId = 0
             return False
         if recd.meshDownloadingProgress:
-            logger.debug('_meshCheckOnRecdRequest: recdRequesting.meshDownloadingProgress')
-            #we've received some bits since last we checked, so keep waiting...  they'll all get here eventually!
+            logger.debug('_meshCheckOnRecdRequest: '
+                         'recdRequesting.meshDownloadingProgress')
+            # we've received some bits since last we checked, so keep
+            # waiting...  they'll all get here eventually!
             recd.meshDownloadingProgress = False
             return True
         else:
-            logger.debug('_meshCheckOnRecdRequest: ! recdRequesting.meshDownloadingProgress')
-            #that buddy we asked info from isn't responding; next buddy!
-            #self.meshNextRoundRobinBuddy( recdRequesting )
+            logger.debug('_meshCheckOnRecdRequest: '
+                         '! recdRequesting.meshDownloadingProgress')
+            # that buddy we asked info from isn't responding; next buddy!
+            # self.meshNextRoundRobinBuddy( recdRequesting )
             GObject.idle_add(self._next_round_robin_buddy, recd)
             return False
 
-    def _recd_bits_arrived_cb(self, remote_object, md5sum, part, num_parts, bytes, sender):
+    def _recd_bits_arrived_cb(self, remote_object, md5sum, part, num_parts,
+                              bytes, sender):
         recd = self.model.get_recd_by_md5(md5sum)
         if not recd:
-            logger.debug('_recdBitsArrivedCb: thx 4 yr bits, but we dont even have that photo')
+            logger.debug('_recdBitsArrivedCb: thx 4 yr bits, '
+                         'but we dont even have that photo')
             return
         if recd.deleted:
-            logger.debug('_recdBitsArrivedCb: thx 4 yr bits, but we deleted that photo')
+            logger.debug('_recdBitsArrivedCb: thx 4 yr bits, '
+                         'but we deleted that photo')
             return
         if recd.downloadedFromBuddy:
-            logger.debug('_recdBitsArrivedCb: weve already downloadedFromBuddy')
+            logger.debug('_recdBitsArrivedCb: we\'ve already '
+                         'downloadedFromBuddy')
             return
         if not recd.buddy:
-            logger.debug('_recdBitsArrivedCb: uh, we took this photo, so dont need your bits')
+            logger.debug('_recdBitsArrivedCb: uh, we took this photo, '
+                         'so dont need your bits')
             return
         if recd.meshDownloadingFrom != sender:
-            logger.debug('_recdBitsArrivedCb: wrong bits ' + str(sender) + ", exp:" + str(recd.meshDownloadingFrom))
+            logger.debug('_recdBitsArrivedCb: wrong bits ' + str(sender) +
+                         ', exp:' + str(recd.meshDownloadingFrom))
             return
 
-        #update that we've heard back about this, reset the timeout
+        # update that we've heard back about this, reset the timeout
         if recd.meshReqCallbackId:
             GObject.source_remove(recd.meshReqCallbackId)
-        recd.meshReqCallbackId = GObject.timeout_add(self._collab_timeout, self._check_recd_request, recd)
+        recd.meshReqCallbackId = GObject.timeout_add(self._collab_timeout,
+                                                     self._check_recd_request,
+                                                     recd)
 
-        #update the progress bar
-        recd.meshDownlodingPercent = (part+0.0)/(num_parts+0.0)
+        # update the progress bar
+        recd.meshDownlodingPercent = (part + 0.0) / (num_parts + 0.0)
         recd.meshDownloadingProgress = True
         self.activity.update_download_progress(recd)
         open(recd.getMediaFilepath(), 'a+').write(bytes)
@@ -298,18 +328,22 @@ class RecordCollab(object):
             # TODO: get videoBundle for recd.videoImageFilename
             # requires transmitting audioBundle size
 
-            cmd = "split -a 1 -b " + str(recd.mediaBytes) + " " + path + " " + bundle_path
+            cmd = "split -a 1 -b " + str(recd.mediaBytes) + " " + path + \
+                  " " + bundle_path
             logger.debug(cmd)
             os.system(cmd)
 
             bundle_name = os.path.basename(bundle_path)
             media_filename = bundle_name + "a"
             media_path = os.path.join(Instance.instancePath, media_filename)
-            media_path_ext = os.path.join(Instance.instancePath, media_filename+".ogg")
+            media_path_ext = os.path.join(Instance.instancePath,
+                                          media_filename + ".ogg")
             os.rename(media_path, media_path_ext)
             audio_image_name = bundle_name + "b"
-            audio_image_path = os.path.join(Instance.instancePath, audio_image_name)
-            audio_image_path_ext = os.path.join(Instance.instancePath, audio_image_name+".png")
+            audio_image_path = os.path.join(Instance.instancePath,
+                                            audio_image_name)
+            audio_image_path_ext = os.path.join(Instance.instancePath,
+                                                audio_image_name + ".png")
             os.rename(audio_image_path, audio_image_path_ext)
 
             recd.mediaFilename = os.path.basename(media_path_ext)
@@ -321,18 +355,22 @@ class RecordCollab(object):
         logger.debug('_recdUnavailableCb: sux, we want to see that photo')
         recd = self.model.get_recd_by_md5(md5sum)
         if not recd:
-            logger.debug('_recdUnavailableCb: actually, we dont even know about that one..')
+            logger.debug('_recdUnavailableCb: actually, we don\'t even know '
+                         'about that one..')
             return
         if recd.deleted:
-            logger.debug('_recdUnavailableCb: actually, since we asked, we deleted.')
+            logger.debug('_recdUnavailableCb: actually, since we asked, '
+                         'we deleted.')
             return
         if not recd.buddy:
-            logger.debug('_recdUnavailableCb: uh, odd, we took that photo and have it already.')
+            logger.debug('_recdUnavailableCb: uh, odd, '
+                         'we took that photo and have it already.')
             return
         if recd.downloadedFromBuddy:
-            logger.debug('_recdUnavailableCb: we already downloaded it...  you might have been slow responding.')
+            logger.debug('_recdUnavailableCb: we already downloaded it...  '
+                         'you might have been slow responding.')
             return
         if recd.meshDownloadingFrom != sender:
-            logger.debug('_recdUnavailableCb: we arent asking you for a copy now.  slow response, pbly.')
+            logger.debug('_recdUnavailableCb: we aren\'t asking you '
+                         'for a copy now.  slow response, pbly.')
             return
-
