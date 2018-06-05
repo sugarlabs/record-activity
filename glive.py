@@ -24,7 +24,7 @@ import glob
 from gettext import gettext as _
 import time
 
-from gi.repository import GLib, GObject, Gst
+from gi.repository import GLib, GObject, Gst, GstVideo
 
 import logging
 
@@ -55,6 +55,8 @@ class Glive:
         self._xid = None
         self._sink = None
 
+        self._mirror = False
+
         self._pipeline = self._make_photo_pipeline()
 
     def get_has_camera(self):
@@ -68,10 +70,22 @@ class Glive:
         self._pipeline = self._make_photo_pipeline()
         self.play()
 
+    def set_mirror(self, mirror):
+        if self._mirror != mirror:
+            self._mirror = mirror
+            self._set_video_direction(self._pipeline)
+
+    def _set_video_direction(self, pipeline):
+        if self._mirror:
+            om = GstVideo.VideoOrientationMethod.HORIZ
+        else:
+            om = GstVideo.VideoOrientationMethod.IDENTITY
+        pipeline.get_by_name('flip').props.video_direction = om
+
     def _make_photo_pipeline(self):
         """
         create a Gst.Pipeline for
-        - displaying camera video on display,
+        - displaying camera video on display, with optional mirroring,
         - capturing photographs,
         """
 
@@ -85,10 +99,14 @@ class Glive:
         cmd = '{src} name=src ! {cap} ' \
             '! videorate ' \
             '! tee name=tee ' \
-            'tee.! videoconvert ! queue leaky=2 ! autovideosink sync=false ' \
+            'tee.! videoconvert ! queue leaky=2 ' \
+            '! videoflip name=flip ' \
+            '! autovideosink sync=false ' \
             'tee.! videoconvert ! queue ! gdkpixbufsink name=photo'
 
         pipeline = Gst.parse_launch(cmd.format(**args))
+        self._set_video_direction(pipeline)
+
         bus = pipeline.get_bus()
         bus.add_signal_watch()
 

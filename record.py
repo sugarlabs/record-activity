@@ -45,6 +45,7 @@ from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbarbox import ToolbarButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.toggletoolbutton import ToggleToolButton
 from sugar3.graphics.palette import Palette
 from sugar3.activity.widgets import StopButton
 from sugar3.activity.widgets import ActivityToolbarButton
@@ -237,6 +238,13 @@ class Record(activity.Activity):
 
         self._toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
+        self._mirror_btn = ToggleToolButton('mirror-horizontal')
+        self._mirror_btn.set_tooltip(_('Mirror view\n\nSwap left for right, as if looking at a mirror.\nDoes not affect recording.'))
+        self._mirror_btn.props.accelerator = '<ctrl>m'
+        self._mirror_btn.show()
+        self._mirror_btn.connect('toggled', self.__mirror_toggled_cb)
+        self._toolbar.insert(self._mirror_btn, -1)
+
         self._toolbar_controls = RecordControl(self._toolbar)
 
         if os.path.exists('/dev/video1'):
@@ -325,6 +333,9 @@ class Record(activity.Activity):
 
     def __switch_camera_click_cb(self, btn):
         self.model.switch_camera()
+
+    def __mirror_toggled_cb(self, button):
+        self.model.set_mirror(button.props.active)
 
     def serialize(self):
         data = {}
@@ -574,6 +585,7 @@ class Record(activity.Activity):
             if self._state == constants.STATE_PROCESSING:
                 self.unbusy()
             self._active_recd = None
+            self._mirror_btn.props.sensitive = True
             self._title_entry.hide()
             self._title_label.hide()
             self.set_title_visible(False)
@@ -586,6 +598,7 @@ class Record(activity.Activity):
             self._shutter_button.show()
             self._media_view.show_live()
         elif state == constants.STATE_RECORDING:
+            self._mirror_btn.props.sensitive = False
             self._shutter_button.set_recording()
             self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=Gtk.PackType.START)
             self._progress.show()
@@ -610,6 +623,7 @@ class Record(activity.Activity):
 
         self.model.abort_countdown()
         self.model.glive.stop()
+        self._mirror_btn.props.sensitive = False
         self._active_recd = recd
         self._show_recd(recd)
 
