@@ -22,10 +22,10 @@
 import base64
 import re
 import os
-from gi.repository import Gtk, Rsvg, GdkPixbuf
 import time
-
 import constants
+
+from gi.repository import Rsvg, GdkPixbuf
 
 
 def getStringEncodedFromPixbuf(pixbuf):
@@ -40,7 +40,7 @@ def getStringFromPixbuf(pixbuf):
 
 def getPixbufFromString(str):
     pbl = GdkPixbuf.PixbufLoader()
-    data = base64.b64decode( str )
+    data = base64.b64decode(str)
     pbl.write(data)
     pbl.close()
     return pbl.get_pixbuf()
@@ -58,14 +58,17 @@ def load_colored_svg(filename, stroke, fill):
 
     return Rsvg.Handle.new_from_data(data).get_pixbuf()
 
-def getUniqueFilepath( path, i ):
-    pathOb = os.path.abspath( path )
-    newPath = os.path.join( os.path.dirname(pathOb), str( str(i) + os.path.basename(pathOb) ) )
+
+def getUniqueFilepath(path, i):
+    pathOb = os.path.abspath(path)
+    newPath = os.path.join(os.path.dirname(pathOb),
+                           str(str(i) + os.path.basename(pathOb)))
     if (os.path.exists(newPath)):
         i = i + 1
-        return getUniqueFilepath( pathOb, i )
+        return getUniqueFilepath(pathOb, i)
     else:
-        return os.path.abspath( newPath )
+        return os.path.abspath(newPath)
+
 
 def generate_thumbnail(pixbuf):
     w = pixbuf.get_width()
@@ -79,6 +82,6 @@ def generate_thumbnail(pixbuf):
         nh = 60
     return pixbuf.scale_simple(nw, nh, GdkPixbuf.InterpType.BILINEAR)
 
-def getDateString( when ):
-    return time.strftime( "%c", time.localtime(when) )
 
+def getDateString(when):
+    return time.strftime("%c", time.localtime(when))

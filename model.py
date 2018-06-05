@@ -45,6 +45,7 @@ from gplay import Gplay
 
 logger = logging.getLogger('model')
 
+
 class Model:
     def __init__(self, activity_obj):
         self.activity = activity_obj
@@ -52,7 +53,8 @@ class Model:
         self.collab = RecordCollab(self.activity, self)
         self.glive = Glive(self.activity, self)
         self.gplay = Gplay(self.activity)
-        self.gplay.connect('playback-status-changed', self._playback_status_changed)
+        self.gplay.connect('playback-status-changed',
+                           self._playback_status_changed)
 
         self._mode = None
         self._state = constants.STATE_INVISIBLE
@@ -128,7 +130,7 @@ class Model:
         self.set_state(constants.STATE_READY)
 
     def ui_frozen(self):
-        return not self._state == constants.STATE_READY 
+        return not self._state == constants.STATE_READY
 
     def set_visible(self, visible):
         if visible == self._visible:
@@ -181,8 +183,8 @@ class Model:
 
         mins = value / 60
         secs = value % 60
-        text = _('%(mins)d:%(secs)02d remaining') % {'mins': mins,
-                'secs': secs}
+        text = _('%(mins)d:%(secs)02d remaining') % \
+            {'mins': mins, 'secs': secs}
 
         self.set_progress(progress_value, text)
 
@@ -291,16 +293,18 @@ class Model:
         pixbuf = utils.generate_thumbnail(pixbuf)
         pixbuf.savev(recd.make_thumb_path(), "png", [], [])
 
-        #now that we've saved both the image and its pixbuf, we get their md5s
-        self.createNewRecordedMd5Sums( recd )
+        # now that we've saved both the image and its pixbuf, we get their md5s
+        self.createNewRecordedMd5Sums(recd)
 
         GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
-        GObject.idle_add(self.activity.set_shutter_sensitive, True, priority=GObject.PRIORITY_HIGH)
+        GObject.idle_add(self.activity.set_shutter_sensitive, True,
+                         priority=GObject.PRIORITY_HIGH)
 
     # called from GStreamer thread
     def save_video(self, path, still):
         recd = self.createNewRecorded(constants.TYPE_VIDEO)
-        os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
+        os.rename(path, os.path.join(Instance.instancePath,
+                                     recd.mediaFilename))
 
         image_path = os.path.join(Instance.instancePath, "videoPicture.png")
         image_path = utils.getUniqueFilepath(image_path, 0)
@@ -310,17 +314,19 @@ class Model:
         still = utils.generate_thumbnail(still)
         still.savev(recd.make_thumb_path(), "png", [], [])
 
-        self.createNewRecordedMd5Sums( recd )
+        self.createNewRecordedMd5Sums(recd)
 
         GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
         GObject.idle_add(self.set_state, constants.STATE_READY)
 
     def save_audio(self, path, still):
         recd = self.createNewRecorded(constants.TYPE_AUDIO)
-        os.rename(path, os.path.join(Instance.instancePath, recd.mediaFilename))
+        os.rename(path, os.path.join(Instance.instancePath,
+                                     recd.mediaFilename))
 
         if still:
-            image_path = os.path.join(Instance.instancePath, "audioPicture.png")
+            image_path = os.path.join(Instance.instancePath,
+                                      "audioPicture.png")
             image_path = utils.getUniqueFilepath(image_path, 0)
             still.savev(image_path, "png", [], [])
             recd.audioImageFilename = os.path.basename(image_path)
@@ -328,7 +334,7 @@ class Model:
             still = utils.generate_thumbnail(still)
             still.savev(recd.make_thumb_path(), "png", [], [])
 
-        self.createNewRecordedMd5Sums( recd )
+        self.createNewRecordedMd5Sums(recd)
 
         GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
         GObject.idle_add(self.set_state, constants.STATE_READY)
@@ -379,7 +385,8 @@ class Model:
         recd.recorderName = self.get_nickname()
         recd.recorderHash = Instance.keyHashPrintable
 
-        #to create a file, use the hardware_id+time *and* check if available or not
+        # to create a file, use the hardware_id+time *and* check if
+        # available or not
         nowtime = int(time.time())
         recd.time = nowtime
         recd.type = type
@@ -387,15 +394,16 @@ class Model:
         mediaThumbFilename = str(recd.recorderHash) + "_" + str(recd.time)
         mediaFilename = mediaThumbFilename
         mediaFilename = mediaFilename + "." + constants.MEDIA_INFO[type]['ext']
-        mediaFilepath = os.path.join( Instance.instancePath, mediaFilename )
-        mediaFilepath = utils.getUniqueFilepath( mediaFilepath, 0 )
-        recd.mediaFilename = os.path.basename( mediaFilepath )
+        mediaFilepath = os.path.join(Instance.instancePath,
+                                     mediaFilename)
+        mediaFilepath = utils.getUniqueFilepath(mediaFilepath, 0)
+        recd.mediaFilename = os.path.basename(mediaFilepath)
 
         stringType = constants.MEDIA_INFO[type]['istr']
 
         # Translators: photo by photographer, e.g. "Photo by Mary"
-        recd.title = _('%(type)s by %(name)s') % {'type': stringType,
-                'name': recd.recorderName}
+        recd.title = _('%(type)s by %(name)s') % \
+            {'type': stringType, 'name': recd.recorderName}
 
         color = sugar3.profile.get_color()
         recd.colorStroke = color.get_stroke_color()
@@ -404,17 +412,17 @@ class Model:
         logger.debug('createNewRecorded: ' + str(recd))
         return recd
 
-    def createNewRecordedMd5Sums( self, recd ):
+    def createNewRecordedMd5Sums(self, recd):
         recd.thumbMd5 = recd.mediaMd5 = str(uuid.uuid4())
 
-        #load the thumbfile
+        # load the thumbfile
         if recd.thumbFilename:
             thumbFile = os.path.join(Instance.instancePath, recd.thumbFilename)
             recd.thumbBytes = os.stat(thumbFile)[6]
 
         recd.tags = ""
 
-        #load the mediafile
+        # load the mediafile
         mediaFile = os.path.join(Instance.instancePath, recd.mediaFilename)
         mBytes = os.stat(mediaFile)[6]
         recd.mediaBytes = mBytes
@@ -426,8 +434,8 @@ class Model:
         if recd.meshUploading:
             return
 
-        #remove files from the filesystem if not on the datastore
-        if recd.datastoreId == None:
+        # remove files from the filesystem if not on the datastore
+        if recd.datastoreId is None:
             mediaFile = recd.getMediaFilepath()
             if os.path.exists(mediaFile):
                 os.remove(mediaFile)
@@ -436,7 +444,7 @@ class Model:
             if thumbFile and os.path.exists(thumbFile):
                 os.remove(thumbFile)
         else:
-            #remove from the datastore here, since once gone, it is gone...
+            # remove from the datastore here, since once gone, it is gone...
             serialize.removeMediaFromDatastore(recd)
 
     def request_download(self, recd):
@@ -444,4 +452,3 @@ class Model:
         self.set_state(constants.STATE_DOWNLOADING)
         self.collab.request_download(recd)
         self.activity.update_download_progress(recd)
-

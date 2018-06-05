@@ -20,9 +20,8 @@
 # THE SOFTWARE.
 
 import os
-import subprocess
 import logging
-import shutil
+import cairo
 from gettext import gettext as _
 from gettext import ngettext
 
@@ -32,27 +31,22 @@ vs = {'Gdk': '3.0', 'Gst': '1.0', 'Gtk': '3.0', 'SugarExt': '1.0',
 for api, ver in vs.iteritems():
     gi.require_version(api, ver)
 
-from gi.repository import GObject, Gdk, GdkPixbuf, Gtk, Pango, PangoCairo, Gst, GstVideo, SugarExt
-import cairo
+from gi.repository import GObject, Gdk, GdkX11, Gtk, Pango, PangoCairo, \
+    Gst, GstVideo
 
 Gst.init(None)
 
 from sugar3.activity import activity
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.icon import Icon
-from sugar3.graphics.toolcombobox import ToolComboBox
 from sugar3.graphics.toolbarbox import ToolbarBox
-from sugar3.graphics.toolbarbox import ToolbarButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.toggletoolbutton import ToggleToolButton
-from sugar3.graphics.palette import Palette
 from sugar3.activity.widgets import StopButton
 from sugar3.activity.widgets import ActivityToolbarButton
-from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics import style
 from sugar3.graphics.tray import HTray
 
@@ -85,14 +79,14 @@ class Record(activity.Activity):
         self._state = None
         Instance(self)
 
-        #the main classes
+        # the main classes
         self.model = Model(self)
         self.ui_init()
 
-        #CSCL
+        # CSCL
         self.connect("shared", self._shared_cb)
         if self.get_shared_activity():
-            #have you joined or shared this activity yourself?
+            # have you joined or shared this activity yourself?
             if self.get_shared():
                 self._joined_cb(self)
             else:
@@ -115,7 +109,8 @@ class Record(activity.Activity):
                 GObject.timeout_add(10, on_defer_cb)
                 self._media_view._video.disconnect_by_func(on_event_cb)
 
-        self._media_view._video.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
+        self._media_view._video.add_events(
+            Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self._media_view._video.connect('visibility-notify-event', on_event_cb)
 
         # testing restarter
@@ -208,7 +203,10 @@ class Record(activity.Activity):
             self._photo_button.props.icon_name = 'camera-external'
             self._photo_button.props.label = _('Photo')
             self._photo_button.props.accelerator = '<ctrl>1'
-            self._photo_button.props.tooltip = _('Picture camera mode\n\nWhen the record button is pressed,\ntake one picture from the camera.')
+            self._photo_button.props.tooltip = _(
+                'Picture camera mode\n\n'
+                'When the record button is pressed,\n'
+                'take one picture from the camera.')
             self._photo_button.mode = constants.MODE_PHOTO
             self._photo_button.connect('clicked', self._mode_button_clicked)
             self._toolbar.insert(self._photo_button, -1)
@@ -218,7 +216,12 @@ class Record(activity.Activity):
             self._video_button.props.icon_name = 'media-video'
             self._video_button.props.accelerator = '<ctrl>2'
             self._video_button.props.label = _('Video')
-            self._video_button.props.tooltip = _('Video camera mode\n\nWhen the record button is pressed,\ntake photographs many times a second,\nand record sound using the microphone,\nuntil the button is pressed again.')
+            self._video_button.props.tooltip = _(
+                'Video camera mode\n\n'
+                'When the record button is pressed,\n'
+                'take photographs many times a second,\n'
+                'and record sound using the microphone,\n'
+                'until the button is pressed again.')
             self._video_button.mode = constants.MODE_VIDEO
             self._video_button.connect('clicked', self._mode_button_clicked)
             self._toolbar.insert(self._video_button, -1)
@@ -231,7 +234,12 @@ class Record(activity.Activity):
         self._audio_button.props.icon_name = 'media-audio'
         self._audio_button.props.accelerator = '<ctrl>3'
         self._audio_button.props.label = _('Audio')
-        self._audio_button.props.tooltip = _('Audio recording mode\n\nWhen the record button is pressed,\ntake one photograph,\nand record sound using the microphone,\nuntil the button is pressed again.')
+        self._audio_button.props.tooltip = _(
+            'Audio recording mode\n\n'
+            'When the record button is pressed,\n'
+            'take one photograph,\n'
+            'and record sound using the microphone,\n'
+            'until the button is pressed again.')
         self._audio_button.mode = constants.MODE_AUDIO
         self._audio_button.connect('clicked', self._mode_button_clicked)
         self._toolbar.insert(self._audio_button, -1)
@@ -239,7 +247,10 @@ class Record(activity.Activity):
         self._toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
         self._mirror_btn = ToggleToolButton('mirror-horizontal')
-        self._mirror_btn.set_tooltip(_('Mirror view\n\nSwap left for right, as if looking at a mirror.\nDoes not affect recording.'))
+        self._mirror_btn.set_tooltip(_(
+            'Mirror view\n\n'
+            'Swap left for right, as if looking at a mirror.\n'
+            'Does not affect recording.'))
         self._mirror_btn.props.accelerator = '<ctrl>m'
         self._mirror_btn.show()
         self._mirror_btn.connect('toggled', self.__mirror_toggled_cb)
@@ -274,7 +285,7 @@ class Record(activity.Activity):
         self._controls_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         trim_height_shutter_button = 7
         self._controls_hbox.set_size_request(-1, style.GRID_CELL_SIZE +
-                                                 trim_height_shutter_button)
+                                             trim_height_shutter_button)
 
         self._shutter_button = ShutterButton()
         self._shutter_button.connect("clicked", self._shutter_clicked)
@@ -295,13 +306,15 @@ class Record(activity.Activity):
         self._controls_hbox.pack_start(self._progress, True, True, 0)
 
         self._title_label = Gtk.Label()
-        self._title_label.set_markup("<b><span foreground='white'>"+_('Title:')+'</span></b>')
+        self._title_label.set_markup("<b><span foreground='white'>" +
+                                     _('Title:') + '</span></b>')
         self._controls_hbox.pack_start(self._title_label, False, True, 0)
 
         self._title_entry = Gtk.Entry()
         self._title_entry.modify_bg(Gtk.StateType.INSENSITIVE, COLOR_BLACK)
         self._title_entry.connect('changed', self._title_changed)
-        self._controls_hbox.pack_start(self._title_entry, expand=True, fill=True, padding=10)
+        self._controls_hbox.pack_start(self._title_entry, expand=True,
+                                       fill=True, padding=10)
         self._controls_hbox.show()
 
         height_tray = 150  # height of tray
@@ -309,8 +322,9 @@ class Record(activity.Activity):
         self._thumb_tray = HTray(hexpand=True, height_request=height_tray)
         self._thumb_tray.show()
 
-        self._media_view.set_size_request(-1, Gdk.Screen.height() - \
-            style.GRID_CELL_SIZE * 2 - height_tray - trim_height_shutter_button)
+        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2 - \
+            height_tray - trim_height_shutter_button
+        self._media_view.set_size_request(-1, height)
 
         self._grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
         self._media_view.props.hexpand = True
@@ -326,10 +340,10 @@ class Record(activity.Activity):
 
         if visible:
             self._grid.attach_next_to(self._controls_hbox, self._media_view,
-                Gtk.PositionType.TOP, 1, 1)
+                                      Gtk.PositionType.TOP, 1, 1)
         else:
             self._grid.attach_next_to(self._controls_hbox, self._media_view,
-                Gtk.PositionType.BOTTOM, 1, 1)
+                                      Gtk.PositionType.BOTTOM, 1, 1)
 
     def __switch_camera_click_cb(self, btn):
         self.model.switch_camera()
@@ -390,8 +404,8 @@ class Record(activity.Activity):
             return True
 
         if (ctrl and key == Gdk.KEY_space) or \
-            (ctrl and key == Gdk.KEY_r) or \
-            key == Gdk.KEY_KP_Page_Up:  # game key O
+           (ctrl and key == Gdk.KEY_r) or \
+           key == Gdk.KEY_KP_Page_Up:  # game key O
 
             if self._shutter_button.props.visible:
                 if self._shutter_button.props.sensitive:
@@ -469,7 +483,8 @@ class Record(activity.Activity):
         self._active_recd.setTitle(self._title_entry.get_text())
 
     def _media_view_media_clicked(self, widget):
-        if self._play_button.props.visible and self._play_button.props.sensitive:
+        if self._play_button.props.visible and \
+           self._play_button.props.sensitive:
             self._play_button.clicked()
 
     def _media_view_pip_clicked(self, widget):
@@ -489,7 +504,8 @@ class Record(activity.Activity):
             return
 
         self._showing_info = True
-        if self.model.get_mode() in (constants.MODE_PHOTO, constants.MODE_AUDIO):
+        still_modes = (constants.MODE_PHOTO, constants.MODE_AUDIO)
+        if self.model.get_mode() in still_modes:
             func = self._media_view.show_info_photo
         else:
             func = self._media_view.show_info_video
@@ -502,14 +518,16 @@ class Record(activity.Activity):
         self._title_label.show()
         self.set_title_visible(True)
 
-        func(recd.recorderName, recd.colorStroke, recd.colorFill, utils.getDateString(recd.time), recd.tags)
+        func(recd.recorderName, recd.colorStroke, recd.colorFill,
+             utils.getDateString(recd.time), recd.tags)
 
     def _media_view_fullscreen_clicked(self, widget):
         # logger.debug('_media_view_fullscreen_clicked')
         self._toggle_fullscreen()
 
     def _media_view_tags_changed(self, widget, tbuffer):
-        text = tbuffer.get_text(tbuffer.get_start_iter(), tbuffer.get_end_iter(), True)
+        text = tbuffer.get_text(tbuffer.get_start_iter(),
+                                tbuffer.get_end_iter(), True)
         self._active_recd.setTags(text)
 
     def _toggle_fullscreen(self):
@@ -562,7 +580,8 @@ class Record(activity.Activity):
                 GObject.timeout_add(30, on_defer_cb)
                 self._media_view._video.disconnect_by_func(on_event_cb)
 
-        self._media_view._video.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
+        self._media_view._video.add_events(
+            Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self._media_view._video.connect('visibility-notify-event', on_event_cb)
 
     def _mode_button_clicked(self, button):
@@ -576,7 +595,9 @@ class Record(activity.Activity):
 
     def set_state(self, state):
         radio_state = (state == constants.STATE_READY)
-        for item in (self._photo_button, self._audio_button, self._video_button):
+        for item in (self._photo_button,
+                     self._audio_button,
+                     self._video_button):
             if item:
                 item.set_sensitive(radio_state)
 
@@ -592,7 +613,10 @@ class Record(activity.Activity):
             self._play_button.hide()
             self._playback_scale.hide()
             self._progress.hide()
-            self._controls_hbox.set_child_packing(self._shutter_button, expand=True, fill=False, padding=0, pack_type=Gtk.PackType.START)
+            self._controls_hbox.set_child_packing(self._shutter_button,
+                                                  expand=True, fill=False,
+                                                  padding=0,
+                                                  pack_type=Gtk.PackType.START)
             self._shutter_button.set_normal()
             self._shutter_button.set_sensitive(True)
             self._shutter_button.show()
@@ -600,7 +624,10 @@ class Record(activity.Activity):
         elif state == constants.STATE_RECORDING:
             self._mirror_btn.props.sensitive = False
             self._shutter_button.set_recording()
-            self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=Gtk.PackType.START)
+            self._controls_hbox.set_child_packing(self._shutter_button,
+                                                  expand=False, fill=False,
+                                                  padding=0,
+                                                  pack_type=Gtk.PackType.START)
             self._progress.show()
         elif state == constants.STATE_PROCESSING:
             self.busy()
@@ -629,10 +656,14 @@ class Record(activity.Activity):
 
     def add_thumbnail(self, recd):
         button = RecdButton(recd)
-        clicked_handler = button.connect("clicked", self._thumbnail_clicked, recd)
-        remove_handler = button.connect("remove-requested", self._remove_recd)
-        clipboard_handler = button.connect("copy-clipboard-requested", self._thumbnail_copy_clipboard)
-        button.handler_ids = (clicked_handler, remove_handler, clipboard_handler)
+        clicked_handler = button.connect("clicked",
+                                         self._thumbnail_clicked, recd)
+        remove_handler = button.connect("remove-requested",
+                                        self._remove_recd)
+        clipboard_handler = button.connect("copy-clipboard-requested",
+                                           self._thumbnail_copy_clipboard)
+        button.handler_ids = (clicked_handler, remove_handler,
+                              clipboard_handler)
         button.show()
         self._thumb_tray.add_item(button)
         self._thumb_tray.scroll_to_item(button)
@@ -640,7 +671,7 @@ class Record(activity.Activity):
         # only noticed when the tray is full
 
     def _copy_to_clipboard(self, recd):
-        if recd == None:
+        if recd is None:
             return
         if not recd.isClipboardCopyable():
             return
@@ -714,15 +745,15 @@ class Record(activity.Activity):
     def _get_photo_path(self, recd):
         # FIXME should live (partially) in recd?
 
-        #downloading = self.ca.requestMeshDownload(recd)
-        #self.MESHING = downloading
+        # downloading = self.ca.requestMeshDownload(recd)
+        # self.MESHING = downloading
 
-        if True: #not downloading:
-            #self.progressWindow.updateProgress(0, "")
+        if True:  # not downloading:
+            # self.progressWindow.updateProgress(0, "")
             return recd.getMediaFilepath()
 
-        #maybe it is not downloaded from the mesh yet...
-        #but we can show the low res thumb in the interim
+        # maybe it is not downloaded from the mesh yet...
+        # but we can show the low res thumb in the interim
         return recd.getThumbFilepath()
 
     def _show_recd(self, recd, play=True):
@@ -1016,7 +1047,7 @@ class RecordControl():
 
         for minutes in DURATION_VALUES:
             if minutes == 0:
-                text = gtk.Label(_('Immediate'))
+                text = Gtk.Label(_('Immediate'))
             else:
                 text = ngettext('%s minute', '%s minutes', minutes) % minutes
             menu_item = PaletteMenuItem(text,
@@ -1101,4 +1132,5 @@ class RecordControl():
     def set_quality(self, idx):
         self._quality_value = idx
         if hasattr(self, '_quality_button'):
-            self._quality_button.set_icon_name('%s-quality' % (QUALITY_VALUES[idx]))
+            name = '%s-quality' % (QUALITY_VALUES[idx])
+            self._quality_button.set_icon_name(name)

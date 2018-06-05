@@ -23,6 +23,7 @@ import os
 from sugar3 import profile
 from sugar3 import util
 
+
 class Instance:
     key = profile.get_pubkey()
     keyHash = util.sha_data(key)
@@ -32,11 +33,11 @@ class Instance:
     instancePath = None
 
     def __init__(self, ca):
-        self.__class__.instancePath = os.path.join(ca.get_activity_root(), "instance")
+        self.__class__.instancePath = os.path.join(
+            ca.get_activity_root(), "instance")
         recreateTmp()
 
 
 def recreateTmp():
     if (not os.path.exists(Instance.instancePath)):
         os.makedirs(Instance.instancePath)
-

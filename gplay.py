@@ -23,9 +23,12 @@ from gi.repository import GObject, Gst
 import logging
 logger = logging.getLogger('gplay')
 
+
 class Gplay(GObject.GObject):
     __gsignals__ = {
-        'playback-status-changed': (GObject.SignalFlags.RUN_LAST, None, (GObject.TYPE_INT, GObject.TYPE_FLOAT)),
+        'playback-status-changed':
+        (GObject.SignalFlags.RUN_LAST, None,
+         (GObject.TYPE_INT, GObject.TYPE_FLOAT)),
     }
 
     def __init__(self, activity_obj):
@@ -53,6 +56,7 @@ class Gplay(GObject.GObject):
         bus.connect('message::eos', on_eos_cb)
 
         bus.enable_sync_message_emission()
+
         def on_sync_message_cb(bus, msg):
             if msg.get_structure().get_name() == 'prepare-window-handle':
                 logger.debug('sync-message::element:prepare-window-handle')
@@ -82,16 +86,16 @@ class Gplay(GObject.GObject):
         logger.debug('seek %.2f%% of %.2f which is %d' %
                      (position, duration, location))
 
-        seek = self._player.seek_simple(Gst.Format.TIME,
-                                 Gst.SeekFlags.FLUSH | Gst.SeekFlags.ACCURATE,
-                                 location)
-        #self._player.get_state(1000000000)  # debugging; wait for seek
+        self._player.seek_simple(
+            Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.ACCURATE,
+            location)
+        # self._player.get_state(1000000000)  # debugging; wait for seek
 
     def play(self):
         logger.debug('play')
 
         self._player.set_state(Gst.State.PLAYING)
-        #self._player.get_state(1000000000)  # debugging; wait for play
+        # self._player.get_state(1000000000)  # debugging; wait for play
 
         self._playback_monitor()
         self._playback_monitor_handler = GObject.timeout_add(
@@ -120,7 +124,7 @@ class Gplay(GObject.GObject):
             return
 
         self._player.set_state(Gst.State.PAUSED)  # asynchronous
-        #self._player.get_state(1000000000)  # debugging; wait for pause
+        # self._player.get_state(1000000000)  # debugging; wait for pause
 
         self._playback_monitor()
 

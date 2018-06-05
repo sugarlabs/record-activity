@@ -29,6 +29,7 @@ from sugar3.graphics.tray import TrayButton
 import constants
 import utils
 
+
 class RecdButton(TrayButton):
     __gsignals__ = {
         'remove-requested': (GObject.SignalFlags.RUN_LAST, None, ()),
@@ -49,21 +50,23 @@ class RecdButton(TrayButton):
         palette.set_content(self._box)
         self._box.show()
 
-        self._rem_menu_item = PaletteMenuItem(_('Erase'),
-                                              icon_name='edit-delete')
-        self._rem_menu_item_handler = self._rem_menu_item.connect('activate', self._remove_clicked)
+        self._rem_menu_item = PaletteMenuItem(
+            _('Erase'), icon_name='edit-delete')
+        self._rem_menu_item_handler = self._rem_menu_item.connect(
+            'activate', self._remove_clicked)
         self._box.append_item(self._rem_menu_item)
         self._rem_menu_item.show()
 
         self._add_copy_menu_item()
 
-    def _add_copy_menu_item( self ):
+    def _add_copy_menu_item(self):
         if self._recd.buddy and not self._recd.downloadedFromBuddy:
             return
 
-        self._copy_menu_item = PaletteMenuItem(_('Copy to clipboard'),
-                                               icon_name='edit-copy')
-        self._copy_menu_item_handler = self._copy_menu_item.connect('activate', self._copy_clipboard_clicked)
+        self._copy_menu_item = PaletteMenuItem(
+            _('Copy to clipboard'), icon_name='edit-copy')
+        self._copy_menu_item_handler = self._copy_menu_item.connect(
+            'activate', self._copy_clipboard_clicked)
         self._box.append_item(self._copy_menu_item)
         self._copy_menu_item.show()
 
@@ -78,7 +81,7 @@ class RecdButton(TrayButton):
             h = ipb.get_height()
             a = float(w) / float(h)
         else:
-            a = 16./9
+            a = 16. / 9
 
         if a < 1.4:
             paths = {constants.TYPE_PHOTO: 'object-photo.svg',
@@ -107,7 +110,7 @@ class RecdButton(TrayButton):
 
     def cleanup(self):
         self._rem_menu_item.disconnect(self._rem_menu_item_handler)
-        if self._copy_menu_item_handler != None:
+        if self._copy_menu_item_handler is not None:
             self._copy_menu_item.disconnect(self._copy_menu_item_handler)
 
     def _remove_clicked(self, widget):
