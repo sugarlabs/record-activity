@@ -107,29 +107,38 @@ class Glive:
         pipeline = Gst.parse_launch(cmd.format(**args))
         self._set_video_direction(pipeline)
 
+        photo = pipeline.get_by_name('photo')
+
+        # catch photos
         bus = pipeline.get_bus()
         bus.add_signal_watch()
-
-        photo = pipeline.get_by_name('photo')
 
         def on_message_cb(bus, msg):
             if msg.get_structure() is not None:
                 if msg.get_structure().get_name() == 'pixbuf':
                     self._pixbuf = photo.get_property('last-pixbuf')
-            if msg.type == Gst.MessageType.ERROR:
-                err, debug = msg.parse_error()
-                logger.error('bus error=%s debug=%s' % (err, debug))
+                    return
+
+            return self._on_message_cb(bus, msg)
 
         bus.connect('message', on_message_cb)
 
+        self._catch_window(bus, self.activity.set_glive_sink)
+        return pipeline
+
+    def _catch_window(self, bus, cb):
         bus.enable_sync_message_emission()
 
         def on_sync_message_cb(bus, msg):
             if msg.get_structure().get_name() == 'prepare-window-handle':
-                self.activity.set_glive_sink(msg.src)
+                cb(msg.src)
 
         bus.connect('sync-message::element', on_sync_message_cb)
-        return pipeline
+
+    def _on_message_cb(self, bus, msg):
+        if msg.type == Gst.MessageType.ERROR:
+            err, debug = msg.parse_error()
+            logger.error('bus error=%s debug=%s' % (err, debug))
 
     def play(self):
         logger.debug('play')
@@ -185,7 +194,16 @@ class Glive:
         # detect end of stream
         bus = self._audio.get_bus()
         bus.add_signal_watch()
-        bus.connect('message', self._audio_on_message_cb, ogg)
+
+        def on_message_cb(bus, msg, ogg):
+            if msg.type == Gst.MessageType.EOS:
+                logger.debug('record_audio.on_message_cb Gst.MessageType.EOS')
+                GObject.idle_add(self._stop_recording_audio, ogg)
+                return
+
+            return self._on_message_cb(bus, msg)
+
+        bus.connect('message', on_message_cb, ogg)
 
         # stop the live view
         self._pipeline.set_state(Gst.State.NULL)  # synchronous
@@ -198,14 +216,6 @@ class Glive:
 
         # ask for stream to end
         self._audio.get_by_name('src').send_event(Gst.Event.new_eos())
-
-    def _audio_on_message_cb(self, bus, msg, ogg):
-        if msg.type != Gst.MessageType.EOS:
-            return True
-
-        logger.debug('_audio_on_message_cb Gst.MessageType.EOS')
-        GObject.idle_add(self._stop_recording_audio, ogg)
-        return False
 
     def _stop_recording_audio(self, ogg):
         logger.debug('_stop_recording_audio')
@@ -229,13 +239,19 @@ class Glive:
 
         # take a photograph
         self._video_pixbuf = self._pixbuf
-        self.model.still_ready(self._video_pixbuf)
 
         # make a pipeline to record video and audio to file
-        ogv = os.path.join(Instance.instancePath, "output.ogv")
-        cmd = 'autovideosrc name=vsrc ! video/x-raw,width=640,height=480 ' \
-            '! videoconvert ' \
-            '! videorate max-rate=10 ' \
+        args = {}
+        args['ogv'] = os.path.join(Instance.instancePath, "output.ogv")
+        args['camera'] = self._camera
+
+        cmd = 'v4l2src name=vsrc device={camera} ' \
+            '! video/x-raw,width=640,height=480 ' \
+            '! tee name=tee ' \
+            'tee.! videorate max-rate=2 ! videoconvert ' \
+            '! queue leaky=2 ' \
+            '! autovideosink sync=false ' \
+            'tee.! videorate max-rate=10 ! videoconvert ' \
             '! queue max-size-time=30000000000 ' \
             'max-size-bytes=0 max-size-buffers=0 ' \
             '! theoraenc name=theora ' \
@@ -246,8 +262,8 @@ class Glive:
             '! queue max-size-time=30000000000 ' \
             'max-size-bytes=0 max-size-buffers=0 ' \
             '! vorbisenc name=vorbis ! mux. ' \
-            'oggmux name=mux ! filesink location=%s' % ogv
-        self._video = Gst.parse_launch(cmd)
+            'oggmux name=mux ! filesink location={ogv}'
+        self._video = Gst.parse_launch(cmd.format(**args))
 
         # attach useful tags
         taglist = self._get_tags(constants.TYPE_VIDEO)
@@ -269,10 +285,21 @@ class Glive:
             theora.props.quality = 52
             vorbis.props.quality = 0.4
 
-        # detect end of stream
+        # catch end of stream
         bus = self._video.get_bus()
         bus.add_signal_watch()
-        bus.connect('message', self._video_on_message_cb, ogv)
+
+        def on_message_cb(bus, msg, ogv):
+            if msg.type == Gst.MessageType.EOS:
+                logger.debug('record_video.on_message_cb Gst.MessageType.EOS')
+                GObject.idle_add(self._stop_recording_video, ogv)
+                return
+
+            return self._on_message_cb(bus, msg)
+
+        bus.connect('message', on_message_cb, args['ogv'])
+
+        self._catch_window(bus, self.activity.set_glive_sink)
 
         # start video pipeline recording
         self._video.set_state(Gst.State.PLAYING)  # asynchronous
@@ -285,14 +312,6 @@ class Glive:
         # ask for stream to end
         self._video.get_by_name('vsrc').send_event(Gst.Event.new_eos())
         self._video.get_by_name('asrc').send_event(Gst.Event.new_eos())
-
-    def _video_on_message_cb(self, bus, msg, ogv):
-        if msg.type != Gst.MessageType.EOS:
-            return True
-
-        logger.debug('_video_on_message_cb Gst.MessageType.EOS')
-        GObject.idle_add(self._stop_recording_video, ogv)
-        return False
 
     def _stop_recording_video(self, ogv):
         logger.debug('_stop_recording_video')
