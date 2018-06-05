@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-31 13:46+1000\n"
+"POT-Creation-Date: 2018-06-05 19:25+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: activity/activity.info:2 record.py:890
+#: activity/activity.info:2 record.py:954
 msgid "Record"
 msgstr ""
 
@@ -28,11 +28,11 @@ msgid ""
 "them to recreate your world. The only limit is your imagination."
 msgstr ""
 
-#: button.py:46
-msgid "Remove"
+#: button.py:54
+msgid "Erase"
 msgstr ""
 
-#: button.py:57
+#: button.py:67
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -40,32 +40,32 @@ msgstr ""
 msgid "Photo"
 msgstr ""
 
-#: constants.py:53 record.py:215
+#: constants.py:53 record.py:218
 msgid "Video"
 msgstr ""
 
-#: constants.py:60 record.py:228
+#: constants.py:60 record.py:236
 msgid "Audio"
 msgstr ""
 
-#: glive.py:293 model.py:391
+#: glive.py:347 model.py:405
 #, python-format
 msgid "%(type)s by %(name)s"
 msgstr ""
 
-#: mediaview.py:93
+#: mediaview.py:96
 msgid "Author:"
 msgstr ""
 
-#: mediaview.py:109
+#: mediaview.py:112
 msgid "Tags:"
 msgstr ""
 
-#: mediaview.py:159
+#: mediaview.py:163
 msgid "Date:"
 msgstr ""
 
-#: model.py:178
+#: model.py:186
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
 msgstr ""
@@ -82,7 +82,7 @@ msgstr ""
 msgid "Uh oh, GStreamer is too old."
 msgstr ""
 
-#: record.py:206
+#: record.py:207
 msgid ""
 "Picture camera mode\n"
 "\n"
@@ -90,7 +90,7 @@ msgid ""
 "take one picture from the camera."
 msgstr ""
 
-#: record.py:216
+#: record.py:220
 msgid ""
 "Video camera mode\n"
 "\n"
@@ -100,7 +100,7 @@ msgid ""
 "until the button is pressed again."
 msgstr ""
 
-#: record.py:229
+#: record.py:238
 msgid ""
 "Audio recording mode\n"
 "\n"
@@ -110,65 +110,77 @@ msgid ""
 "until the button is pressed again."
 msgstr ""
 
-#: record.py:279
+#: record.py:251
+msgid ""
+"Mirror view\n"
+"\n"
+"Swap left for right, as if looking at a mirror.\n"
+"Does not affect recording."
+msgstr ""
+
+#: record.py:263
+msgid "Switch camera"
+msgstr ""
+
+#: record.py:310
 msgid "Title:"
 msgstr ""
 
-#: record.py:720
+#: record.py:784
 msgid "Download failed."
 msgstr ""
 
-#: record.py:722
+#: record.py:786
 msgid "Downloading..."
 msgstr ""
 
-#: record.py:724
+#: record.py:788
 msgid "Requesting..."
 msgstr ""
 
-#: record.py:894
+#: record.py:958
 msgid "Stop recording"
 msgstr ""
 
-#: record.py:914
+#: record.py:978
 msgid "Play"
 msgstr ""
 
-#: record.py:918
+#: record.py:982
 msgid "Pause"
 msgstr ""
 
-#: record.py:927
+#: record.py:991
 msgid "Select timer"
 msgstr ""
 
-#: record.py:934
+#: record.py:998
 msgid "Select duration"
 msgstr ""
 
-#: record.py:941
+#: record.py:1005
 msgid "Select quality"
 msgstr ""
 
-#: record.py:960 record.py:984
+#: record.py:1027 record.py:1054
 msgid "Immediate"
 msgstr ""
 
-#: record.py:962
+#: record.py:1029
 #, python-format
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: record.py:986
+#: record.py:1056
 #, python-format
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: record.py:1007
+#: record.py:1081
 #, python-format
 msgid "%s quality"
 msgstr ""
