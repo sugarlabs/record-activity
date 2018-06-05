@@ -139,6 +139,11 @@ class Glive:
         if msg.type == Gst.MessageType.ERROR:
             err, debug = msg.parse_error()
             logger.error('bus error=%s debug=%s' % (err, debug))
+            return
+
+        if msg.type == Gst.MessageType.WARNING:
+            err, debug = msg.parse_warning()
+            logging.error('bus warning=%s debug=%s' % (err, debug))
 
     def play(self):
         logger.debug('play')
