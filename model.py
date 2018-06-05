@@ -105,6 +105,9 @@ class Model:
     def switch_camera(self):
         self.glive.switch_camera()
 
+    def set_mirror(self, mirror):
+        self.glive.set_mirror(mirror)
+
     def get_nickname(self):
         return sugar3.profile.get_nick_name()
 
