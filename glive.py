@@ -44,9 +44,13 @@ class Glive:
         logger.debug('__init__')
         self.activity = activity_obj
         self.model = model
-        self._camera = get_cameras()[0]
 
-        self._has_camera = os.access(self._camera, os.F_OK)
+        eyes = get_cameras()
+        if len(eyes) != 0:
+            self._has_camera = True
+            self._camera = eyes[0]
+        else:
+            self._has_camera = False
 
         self._pixbuf = None
         self._audio_pixbuf = None
