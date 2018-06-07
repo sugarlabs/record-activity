@@ -95,13 +95,13 @@ class Glive:
 
         if self._has_camera:
             args = {'src': 'v4l2src device={0}'.format(self._camera),
-                    'cap': 'video/x-raw,framerate=10/1'}
+                    'cap': ''}
         else:
             args = {'src': 'videotestsrc pattern=black',
-                    'cap': 'video/x-raw,framerate=5/1,width=640,height=480'}
+                    'cap': '! video/x-raw,framerate=5/1,width=640,height=480 '}
 
-        cmd = '{src} name=src ! {cap} ' \
-            '! videorate ' \
+        cmd = '{src} name=src {cap}' \
+            '! videorate max-rate=10 ' \
             '! tee name=tee ' \
             'tee.! videoconvert ! queue leaky=2 ' \
             '! videoflip name=flip ' \
