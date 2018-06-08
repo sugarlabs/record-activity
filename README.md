@@ -1,7 +1,7 @@
 What is this?
 =============
 
-Record is a photograph, video, and audio capture activity for the Sugar desktop.
+Record is a photo camera, video camera, and audio recorder for the Sugar desktop.
 
 How to use?
 ===========
@@ -11,7 +11,7 @@ Record is part of the Sugar desktop and is often included.  Please refer to;
 * [How to Get Sugar on sugarlabs.org](https://sugarlabs.org/),
 * [How to use Sugar](https://help.sugarlabs.org/),
 * [Download Record using Browse](https://activities.sugarlabs.org/), search for `Record`, then download, and;
-* [How to use Record](https://help.sugarlabs.org/en/record.html).
+* [How to use Speak](https://help.sugarlabs.org/en/record.html).
 
 How to upgrade?
 ===============
@@ -23,7 +23,7 @@ On Sugar desktop systems;
 How to integrate?
 =================
 
-Record depends on Python, [Sugar Toolkit for GTK+ 3](https://github.com/sugarlabs/sugar-toolkit-gtk3), GStreamer 1, and GTK+ 3.
+Record depends on Python, [Sugar Toolkit for GTK+ 3](https://github.com/sugarlabs/sugar-toolkit-gtk3), and PyGObject bindings for GStreamer 1 and GTK+ 3.
 
 Record is started by [Sugar](https://github.com/sugarlabs/sugar).
 
@@ -33,8 +33,7 @@ Record is [packaged by Fedora](https://src.fedoraproject.org/rpms/sugar-record).
 dnf install sugar-record
 ```
 
-Record is not packaged by Debian and Ubuntu distributions.  On Debian
-and Ubuntu systems dependencies include `gir1.2-gstreamer-1.0`, and `gir1.2-telepathyglib-0.12`.
+Record is no longer packaged by Debian and Ubuntu distributions.  When it was packaged, it was called `sugar-record-activity`.  On Debian and Ubuntu systems dependencies include `gir1.2-gstreamer-1.0`, and `gir1.2-telepathyglib-0.12`.
 
 Branch master
 =============
