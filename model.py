@@ -98,8 +98,10 @@ class Model:
             for ui_el in i.childNodes:
                 self.activity.deserialize(json.loads(ui_el.data))
 
-        for recd in self.mediaHashs[self._mode]:
-            self.activity.add_thumbnail(recd)
+        for key, value in constants.MEDIA_INFO.items():
+            for recd in self.mediaHashs[key]:
+                self.activity.add_thumbnail(recd)
+        # FIXME: side-effect thumbnails sorted by type on resume
 
     def get_cameras(self):
         return self.glive.get_cameras()
@@ -121,10 +123,6 @@ class Model:
             return
 
         self._mode = mode
-
-        self.activity.remove_all_thumbnails()
-        for recd in self.mediaHashs[mode]:
-            self.activity.add_thumbnail(recd)
 
         self.activity.set_mode(mode)
         self.set_state(constants.STATE_READY)
@@ -277,8 +275,7 @@ class Model:
 
     def add_recd(self, recd):
         self.mediaHashs[recd.type].append(recd)
-        if self._mode == recd.type:
-            self.activity.add_thumbnail(recd)
+        self.activity.add_thumbnail(recd)
 
         if not recd.buddy:
             self.collab.share_recd(recd)
