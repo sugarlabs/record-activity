@@ -584,6 +584,10 @@ class Record(activity.Activity):
             Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self._media_view._video.connect('visibility-notify-event', on_event_cb)
 
+        # FIXME: fullscreen toggle during video recording gives black
+        # window, TODO: do the same as above for the video recording
+        # pipeline when it is active
+
     def _mode_button_clicked(self, button):
         self.model.change_mode(button.mode)
 
