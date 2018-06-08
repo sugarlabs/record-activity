@@ -35,22 +35,16 @@ import utils
 logger = logging.getLogger('glive')
 
 
-def get_cameras():
-    return sorted(glob.glob('/dev/video*'))
-
-
 class Glive:
     def __init__(self, activity_obj, model):
         logger.debug('__init__')
         self.activity = activity_obj
         self.model = model
 
-        eyes = get_cameras()
-        if len(eyes) != 0:
-            self._has_camera = True
-            self._camera = eyes[0]
-        else:
-            self._has_camera = False
+        self._cameras = sorted(glob.glob('/dev/v4l/by-id/*index0'))
+
+        if self._cameras:
+            self._camera = self._cameras[0]
 
         self._pixbuf = None
         self._audio_pixbuf = None
@@ -63,13 +57,12 @@ class Glive:
 
         self._pipeline = self._make_photo_pipeline()
 
-    def get_has_camera(self):
-        logger.debug('get_has_camera %r', self._has_camera)
-        return self._has_camera
+    def get_cameras(self):
+        return self._cameras
 
     def switch_camera(self):
-        eyes = get_cameras()
-        self._camera = eyes[(eyes.index(self._camera)) + 1 % len(eyes)]
+        which = ((self._cameras.index(self._camera)) + 1) % len(self._cameras)
+        self._camera = self._cameras[which]
         self.stop()
         self._pipeline = self._make_photo_pipeline()
         self.play()
@@ -93,7 +86,7 @@ class Glive:
         - capturing photographs,
         """
 
-        if self._has_camera:
+        if self._cameras:
             args = {'src': 'v4l2src device={0}'.format(self._camera),
                     'cap': ''}
         else:
@@ -169,7 +162,7 @@ class Glive:
 
     def take_photo(self):
         logger.debug('take_photo')
-        if self._has_camera:
+        if self._cameras:
             self.model.save_photo(self._pixbuf)
 
     def record_audio(self):
@@ -240,7 +233,7 @@ class Glive:
 
     def record_video(self, quality):
         logger.debug('record_video')
-        if not self._has_camera:
+        if not self._cameras:
             return
 
         # stop the live view
@@ -315,7 +308,7 @@ class Glive:
 
     def stop_recording_video(self):
         logger.debug('stop_recording_video')
-        if not self._has_camera:
+        if not self._cameras:
             return
 
         # ask for stream to end

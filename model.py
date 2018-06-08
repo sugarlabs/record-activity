@@ -101,8 +101,8 @@ class Model:
         for recd in self.mediaHashs[self._mode]:
             self.activity.add_thumbnail(recd)
 
-    def get_has_camera(self):
-        return self.glive.get_has_camera()
+    def get_cameras(self):
+        return self.glive.get_cameras()
 
     def switch_camera(self):
         self.glive.switch_camera()

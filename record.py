@@ -93,7 +93,7 @@ class Record(activity.Activity):
                 self.connect("joined", self._joined_cb)
 
         # Changing to the first toolbar kicks off the rest of the setup
-        if self.model.get_has_camera():
+        if self.model.get_cameras():
             self.model.change_mode(constants.MODE_PHOTO)
         else:
             self.model.change_mode(constants.MODE_AUDIO)
@@ -196,7 +196,7 @@ class Record(activity.Activity):
         self._toolbar = self.get_toolbar_box().toolbar
 
         tool_group = None
-        if self.model.get_has_camera():
+        if self.model.get_cameras():
             self._photo_button = RadioToolButton()
             self._photo_button.props.group = tool_group
             tool_group = self._photo_button
@@ -258,7 +258,7 @@ class Record(activity.Activity):
 
         self._toolbar_controls = RecordControl(self._toolbar)
 
-        if os.path.exists('/dev/video1'):
+        if self.model.get_cameras() and len(self.model.get_cameras()) > 1:
             switch_camera_btn = ToolButton('switch-camera')
             switch_camera_btn.set_tooltip(_('Switch camera'))
             switch_camera_btn.show()
