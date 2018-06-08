@@ -562,10 +562,6 @@ class Record(activity.Activity):
         self._thumb_tray.remove_item(recdbutton)
         recdbutton.cleanup()
 
-    def remove_all_thumbnails(self):
-        for child in self._thumb_tray.get_children():
-            self._remove_thumbnail(child)
-
     def show_still(self, pixbuf):
         self._media_view.show_still(pixbuf)
 
