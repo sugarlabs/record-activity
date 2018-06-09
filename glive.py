@@ -42,6 +42,8 @@ class Glive:
         self.model = model
 
         self._cameras = sorted(glob.glob('/dev/v4l/by-id/*index0'))
+        if os.getenv('RECORD_TEST'):
+            self._cameras.append('test')
 
         if self._cameras:
             self._camera = self._cameras[0]
@@ -87,8 +89,10 @@ class Glive:
         """
 
         if self._cameras:
-            args = {'src': 'v4l2src device={0}'.format(self._camera),
-                    'cap': ''}
+            args = {'src': 'v4l2src device={0}'.format(self._camera)}
+            if self._camera == 'test':
+                args = {'src': 'videotestsrc'}
+            args['cap'] = ''
         else:
             args = {'src': 'videotestsrc pattern=black',
                     'cap': '! video/x-raw,framerate=5/1,width=640,height=480 '}
@@ -245,9 +249,11 @@ class Glive:
         # make a pipeline to record video and audio to file
         args = {}
         args['ogv'] = os.path.join(Instance.instancePath, "output.ogv")
-        args['camera'] = self._camera
+        args['src'] = 'v4l2src device={0}'.format(self._camera)
+        if self._camera == 'test':
+            args['src'] = 'videotestsrc'
 
-        cmd = 'v4l2src name=vsrc device={camera} ' \
+        cmd = '{src} name=vsrc ' \
             '! video/x-raw,width=640,height=480 ' \
             '! tee name=tee ' \
             'tee.! videorate max-rate=2 ! videoconvert ' \

@@ -35,6 +35,12 @@ dnf install sugar-record
 
 Record is no longer packaged by Debian and Ubuntu distributions.  When it was packaged, it was called `sugar-record-activity`.  On Debian and Ubuntu systems dependencies include `gir1.2-gstreamer-1.0`, and `gir1.2-telepathyglib-0.12`.
 
+How to test without camera
+==========================
+
+For virtual machines, set the RECORD_TEST environment variable before
+starting the activity, and the GStreamer videotestsrc will be used.
+
 Branch master
 =============
 
