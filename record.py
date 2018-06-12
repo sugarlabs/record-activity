@@ -106,7 +106,7 @@ class Record(activity.Activity):
 
         def on_event_cb(widget, event):
             if event.state == Gdk.VisibilityState.UNOBSCURED:
-                GObject.timeout_add(10, on_defer_cb)
+                GObject.timeout_add(50, on_defer_cb)
                 self._media_view._video.disconnect_by_func(on_event_cb)
 
         self._media_view._video.add_events(
