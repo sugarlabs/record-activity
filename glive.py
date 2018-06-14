@@ -64,6 +64,7 @@ class Glive:
         self._video_transcode_handler = None
         self._thumb_handoff_handler = None
 
+        self._pixbuf = None
         self._audio_pixbuf = None
 
         self._detect_camera()
@@ -108,20 +109,16 @@ class Glive:
 
     def _create_photobin(self):
         queue = gst.element_factory_make("queue", "pbqueue")
-        queue.set_property("leaky", True)
+        queue.set_property("leaky", 2)
         queue.set_property("max-size-buffers", 1)
 
         colorspace = gst.element_factory_make("ffmpegcolorspace", "pbcolorspace")
-        jpeg = gst.element_factory_make("jpegenc", "pbjpeg")
-
-        sink = gst.element_factory_make("fakesink", "pbsink")
-        sink.connect("handoff", self._photo_handoff)
-        sink.set_property("signal-handoffs", True)
+        sink = gst.element_factory_make("gdkpixbufsink", "pbsink")
 
         self._photobin = gst.Bin("photobin")
-        self._photobin.add(queue, colorspace, jpeg, sink)
+        self._photobin.add(queue, colorspace, sink)
 
-        gst.element_link_many(queue, colorspace, jpeg, sink)
+        gst.element_link_many(queue, colorspace, sink)
 
         pad = queue.get_static_pad("sink")
         self._photobin.add_pad(gst.GhostPad("sink", pad))
@@ -404,33 +401,29 @@ class Glive:
         if self._pic_exposure_open:
             return
 
+        self._pixbuf = None
         self._photo_mode = photo_mode
-        self._pic_exposure_open = True
+
         pad = self._photobin.get_static_pad("sink")
         self._pipeline.add(self._photobin)
         self._photobin.set_state(gst.STATE_PLAYING)
         self._pipeline.get_by_name("tee").link(self._photobin)
 
+        self._pic_exposure_open = True
+
     def take_photo(self):
         if self._has_camera:
             self._take_photo(self.PHOTO_MODE_PHOTO)
 
-    def _photo_handoff(self, fsink, buffer, pad, user_data=None):
-        if not self._pic_exposure_open:
-            return
+    def _photo_handoff(self):
+        self._pic_exposure_open = False
 
         pad = self._photobin.get_static_pad("sink")
         self._pipeline.get_by_name("tee").unlink(self._photobin)
         self._pipeline.remove(self._photobin)
 
-        self._pic_exposure_open = False
-        pic = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
-        pic.write( buffer )
-        pic.close()
-        pixBuf = pic.get_pixbuf()
-        del pic
-
-        self.save_photo(pixBuf)
+        self.save_photo(self._pixbuf)
+        return False
 
     def save_photo(self, pixbuf):
         if self._photo_mode == self.PHOTO_MODE_AUDIO:
@@ -605,16 +598,28 @@ class Glive:
 
     def _bus_message_handler(self, bus, message):
         t = message.type
+
+        if t == gst.MESSAGE_ELEMENT:
+            if message.structure.get_name() != 'pixbuf':
+                return
+            if self._pixbuf == None:
+                self._pixbuf = message.structure['pixbuf']
+                gobject.idle_add(self._photo_handoff)
+            return
+
         if t == gst.MESSAGE_EOS:
             if self._eos_cb:
                 cb = self._eos_cb
                 self._eos_cb = None
                 cb()
-        elif t == gst.MESSAGE_ERROR:
+            return
+
+        if t == gst.MESSAGE_ERROR:
             #todo: if we come out of suspend/resume with errors, then get us back up and running...
             #todo: handle "No space left on the resource.gstfilesink.c"
-            #err, debug = message.parse_error()
-            pass
+            err, debug = message.parse_error()
+            logger.error('%s %s', err, debug)
+            return
 
     def abandonMedia(self):
         self.stop()
