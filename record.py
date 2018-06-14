@@ -474,14 +474,18 @@ class Record(activity.Activity):
         self._active_recd.setTags(text)
 
     def _toggle_fullscreen(self):
-        if not self._fullscreen:
+        self._fullscreen = not self._fullscreen
+
+        if self._fullscreen:
             self._toolbar_box.hide()
             self._thumb_tray.hide()
+            if self._active_recd:
+                self._controls_hbox.hide()
         else:
             self._toolbar_box.show()
             self._thumb_tray.show()
+            self._controls_hbox.show()
 
-        self._fullscreen = not self._fullscreen
         self._media_view.set_fullscreen(self._fullscreen)
 
     def _mode_button_clicked(self, button):
