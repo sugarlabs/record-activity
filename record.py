@@ -977,9 +977,11 @@ class ShutterButton(gtk.Button):
 
     def set_normal(self):
         self.set_image(self._rec_image)
+        self.set_tooltip_text(_("Record"))
 
     def set_recording(self):
         self.set_image(self._rec_red_image)
+        self.set_tooltip_text(_("Stop recording"))
 
 
 class PlayButton(gtk.Button):
@@ -999,9 +1001,11 @@ class PlayButton(gtk.Button):
 
     def set_play(self):
         self.set_image(self._play_image)
+        self.set_tooltip_text(_("Play"))
 
     def set_pause(self):
         self.set_image(self._pause_image)
+        self.set_tooltip_text(_("Pause"))
 
 
 class RecordControl():
