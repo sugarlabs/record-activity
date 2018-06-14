@@ -1,3 +1,18 @@
+103
+
+* fix playback seeking using mouse or touch on progress bar,
+* avoid double JPEG compression of photographs,
+* add tooltips to mode buttons, shutter button, and pause and play,
+* new shortcut keys; ctrl+space to record, escape to live mode, ctrl+1
+  through to ctrl+3 for modes, ctrl+r for record, space for pause and
+  play,
+* use an accurate countdown timer,
+* switch to external camera if available,
+* mirror mode for hairstyling, shortcut key ctrl-m,
+* show all recorded media in tray regardless of type.
+
+--
+
 * eliminate combo boxes for more friendly to touch UI
 
 76
