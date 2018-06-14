@@ -97,8 +97,11 @@ class Model:
                 self.activity.add_thumbnail(recd, True)
         # FIXME: side-effect thumbnails sorted by type on resume
 
-    def get_has_camera(self):
-        return self.glive.get_has_camera()
+    def get_cameras(self):
+        return self.glive.get_cameras()
+
+    def switch_camera(self):
+        self.glive.switch_camera()
 
     def get_nickname(self):
         return sugar.profile.get_nick_name()
@@ -155,7 +158,7 @@ class Model:
             # if we aren't using Xv (e.g. glive is playing as PIP in video
             # mode), then stop the pipeline so that we switch back to Xv
             # in the call that follows.
-            if self.glive.get_has_camera() and not self.glive.is_using_xv():
+            if self.get_cameras() is not None and not self.glive.is_using_xv():
                 self.glive.stop()
 
             self.glive.play()

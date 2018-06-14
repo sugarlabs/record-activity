@@ -99,7 +99,7 @@ class Record(activity.Activity):
         self._media_view.realize_video()
 
         # Changing to the first toolbar kicks off the rest of the setup
-        if self.model.get_has_camera():
+        if self.model.get_cameras():
             self.model.change_mode(constants.MODE_PHOTO)
         else:
             self.model.change_mode(constants.MODE_AUDIO)
@@ -166,7 +166,7 @@ class Record(activity.Activity):
         self._toolbar = self.get_toolbar_box().toolbar
 
         tool_group = None
-        if self.model.get_has_camera():
+        if self.model.get_cameras():
             self._photo_button = RadioToolButton()
             self._photo_button.props.group = tool_group
             tool_group = self._photo_button
@@ -213,6 +213,13 @@ class Record(activity.Activity):
         self._toolbar.insert(gtk.SeparatorToolItem(), -1)
 
         self._toolbar_controls = RecordControl(self._toolbar)
+
+        if self.model.get_cameras() and len(self.model.get_cameras()) > 1:
+            switch_camera_btn = ToolButton('switch-camera')
+            switch_camera_btn.set_tooltip(_('Switch camera'))
+            switch_camera_btn.show()
+            switch_camera_btn.connect('clicked', self.__switch_camera_click_cb)
+            self._toolbar.insert(switch_camera_btn, -1)
 
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -272,6 +279,9 @@ class Record(activity.Activity):
         self._thumb_tray.set_size_request(-1, 150)
         main_box.pack_end(self._thumb_tray, expand=False)
         self._thumb_tray.show_all()
+
+    def __switch_camera_click_cb(self, btn):
+        self.model.switch_camera()
 
     def serialize(self):
         data = {}

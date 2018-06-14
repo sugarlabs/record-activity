@@ -20,6 +20,7 @@
 #THE SOFTWARE.
 
 import os
+import glob
 from gettext import gettext as _
 import time
 
@@ -52,7 +53,13 @@ class Glive:
         self.model = model
         self._eos_cb = None
 
-        self._has_camera = False
+        self._cameras = sorted(glob.glob('/dev/v4l/by-path/*index0'))
+        if os.getenv('RECORD_TEST'):
+            self._cameras.append('test')
+
+        if self._cameras:
+            self._camera = self._cameras[0]
+
         self._can_limit_framerate = False
         self._playing = False
         self._pic_exposure_open = False
@@ -67,9 +74,6 @@ class Glive:
         self._pixbuf = None
         self._audio_pixbuf = None
 
-        self._detect_camera()
-
-        self._pipeline = gst.Pipeline("Record")
         self._create_photobin()
         self._create_audiobin()
         self._create_videobin()
@@ -79,33 +83,15 @@ class Glive:
         self._thumb_pipes = []
         self._mux_pipes = []
 
-        bus = self._pipeline.get_bus()
-        bus.add_signal_watch()
-        bus.connect('message', self._bus_message_handler)
+    def get_cameras(self):
+        return self._cameras
 
-    def _detect_camera(self):
-        v4l2src = gst.element_factory_make('v4l2src')
-        if v4l2src.props.device_name is None:
-            return
-
-        self._has_camera = True
-
-        # Figure out if we can place a framerate limit on the v4l2 element,
-        # which in theory will make it all the way down to the hardware.
-        # ideally, we should be able to do this by checking caps. However, I
-        # can't find a way to do this (at this time, XO-1 cafe camera driver
-        # doesn't support framerate changes, but gstreamer caps suggest
-        # otherwise)
-        pipeline = gst.Pipeline()
-        caps = gst.Caps('video/x-raw-yuv,framerate=10/1')
-        fsink = gst.element_factory_make('fakesink')
-        pipeline.add(v4l2src, fsink)
-        v4l2src.link(fsink, caps)
-        self._can_limit_framerate = pipeline.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
-        pipeline.set_state(gst.STATE_NULL)
-
-    def get_has_camera(self):
-        return self._has_camera
+    def switch_camera(self):
+        which = ((self._cameras.index(self._camera)) + 1) % len(self._cameras)
+        self._camera = self._cameras[which]
+        self.stop()
+        self._create_pipeline()
+        self.play()
 
     def _create_photobin(self):
         queue = gst.element_factory_make("queue", "pbqueue")
@@ -217,10 +203,17 @@ class Glive:
         scaps.set_property("caps", gst.Caps("video/x-raw-yuv,width=%d,height=%d" % (width, height)))
 
     def _create_pipeline(self):
-        if not self._has_camera:
+        if not self._cameras:
             return
 
-        src = gst.element_factory_make("v4l2src", "camsrc")
+        self._pipeline = gst.Pipeline("Record")
+
+        if self._camera == 'test':
+            src = gst.element_factory_make("videotestsrc", "camsrc")
+        else:
+            src = gst.element_factory_make("v4l2src", "camsrc")
+            src.set_property("device", self._camera)
+
         try:
             # old gst-plugins-good does not have this property
             src.set_property("queue-size", 2)
@@ -228,14 +221,14 @@ class Glive:
             pass
 
         # if possible, it is important to place the framerate limit directly
-        # on the v4l2src so that it gets communicated all the way down to the
+        # on the src so that it gets communicated all the way down to the
         # camera level
         if self._can_limit_framerate:
             srccaps = gst.Caps('video/x-raw-yuv,framerate=10/1')
         else:
             srccaps = gst.Caps('video/x-raw-yuv')
 
-        # we attempt to limit the framerate on the v4l2src directly, but we
+        # we attempt to limit the framerate on the src directly, but we
         # can't trust this: perhaps we are falling behind in our capture,
         # or maybe the kernel driver doesn't provide the exact framerate.
         # the videorate element guarantees a perfect framerate and is important
@@ -264,6 +257,10 @@ class Glive:
         self._xvsink.set_property("sync", False)
 
         self._xvsink.set_property("force-aspect-ratio", True)
+
+        bus = self._pipeline.get_bus()
+        bus.add_signal_watch()
+        bus.connect('message', self._bus_message_handler)
 
     def _log_queue_overrun(self, queue):
         cbuffers = queue.get_property("current-level-buffers")
@@ -314,7 +311,7 @@ class Glive:
         if self._get_state() == gst.STATE_PLAYING:
             return
 
-        if self._has_camera:
+        if self._cameras:
             if use_xv and self._xv_available:
                 xsink = self._configure_xv()
             else:
@@ -412,7 +409,7 @@ class Glive:
         self._pic_exposure_open = True
 
     def take_photo(self):
-        if self._has_camera:
+        if self._cameras:
             self._take_photo(self.PHOTO_MODE_PHOTO)
 
     def _photo_handoff(self):
@@ -432,7 +429,7 @@ class Glive:
             self.model.save_photo(pixbuf)
 
     def record_video(self, quality):
-        if not self._has_camera:
+        if not self._cameras:
             return
 
         self._ogg_quality = quality
@@ -452,7 +449,7 @@ class Glive:
         self.play()
 
     def record_audio(self):
-        if self._has_camera:
+        if self._cameras:
             self._audio_pixbuf = None
             self._take_photo(self.PHOTO_MODE_AUDIO)
 
@@ -465,7 +462,7 @@ class Glive:
         self.play()
 
     def stop_recording_video(self):
-        if not self._has_camera:
+        if not self._cameras:
             return
 
         # We stop the pipeline while we are adjusting the pipeline to stop
