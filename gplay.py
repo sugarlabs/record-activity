@@ -25,7 +25,7 @@ pygst.require('0.10')
 import gst
 
 import logging
-logger = logging.getLogger('record:gplay.py')
+logger = logging.getLogger('gplay')
 
 class Gplay(gobject.GObject):
     __gsignals__ = {

@@ -56,7 +56,7 @@ from mediaview import MediaView
 import hw
 from iconcombobox import IconComboBox
 
-logger = logging.getLogger('record.py')
+logger = logging.getLogger('record')
 COLOR_BLACK = gdk.color_parse('#000000')
 COLOR_WHITE = gdk.color_parse('#ffffff')
 
