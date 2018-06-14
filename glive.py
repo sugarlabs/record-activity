@@ -41,7 +41,7 @@ logger = logging.getLogger('glive')
 
 OGG_TRAITS = {
         0: { 'width': 160, 'height': 120, 'quality': 16 },
-        1: { 'width': 384, 'height': 288, 'quality': 16 } }
+        1: { 'width': 384, 'height': 288, 'quality': 32 } }
 
 class Glive:
     PHOTO_MODE_PHOTO = 0
@@ -212,7 +212,7 @@ class Glive:
 
     def _config_videobin(self, quality, width, height):
         vbenc = self._videobin.get_by_name("vbenc")
-        vbenc.set_property("quality", 16)
+        vbenc.set_property("quality", quality)
         scaps = self._videobin.get_by_name("scalecaps")
         scaps.set_property("caps", gst.Caps("video/x-raw-yuv,width=%d,height=%d" % (width, height)))
 
