@@ -803,30 +803,41 @@ class RecordContainer(gtk.Container):
 
 class PlaybackScale(gtk.HScale):
     def __init__(self, model):
+        logger.debug('PlaybackScale: __init__')
         self.model = model
         self._change_handler = None
-        self._playback_adjustment = gtk.Adjustment(0.0, 0.00, 100.0, 0.1, 1.0, 1.0)
-        super(PlaybackScale, self).__init__(self._playback_adjustment)
+        self._adjustment = gtk.Adjustment(0.0, 0.0, 100.0, 0.1, 1.0, 1.0)
+        gtk.HScale.__init__(self, self._adjustment)
 
         self.set_draw_value(False)
-        self.set_update_policy(gtk.UPDATE_CONTINUOUS)
         self.connect('button-press-event', self._button_press)
         self.connect('button-release-event', self._button_release)
 
     def set_value(self, value):
-        self._playback_adjustment.set_value(value)
+        logger.debug('PlaybackScale: set_value %.2f' % value)
+        if self._change_handler:
+            self.handler_block(self._change_handler)
+        self._adjustment.set_value(value)
+        if self._change_handler:
+            self.handler_unblock(self._change_handler)
 
     def _value_changed(self, scale):
-        self.model.do_seek(scale.get_value())
+        value = self._adjustment.get_value()
+        logger.debug('PlaybackScale: _value_changed %.2f' % value)
+        self.model.seek_do(value)
 
     def _button_press(self, widget, event):
-        self.model.start_seek()
-        self._change_handler = self.connect('value-changed', self._value_changed)
+        logger.debug('PlaybackScale: _button_press')
+        self.model.seek_start()
+        self._change_handler = self.connect('value-changed',
+                                            self._value_changed)
 
     def _button_release(self, widget, event):
-        self.disconnect(self._change_handler)
-        self._change_handler = None
-        self.model.end_seek()
+        logger.debug('PlaybackScale: _button_release')
+        if self._change_handler:
+            self.disconnect(self._change_handler)
+            self._change_handler = None
+        self.model.seek_end()
 
 
 class ProgressInfo(gtk.VBox):

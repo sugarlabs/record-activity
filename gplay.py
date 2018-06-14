@@ -33,24 +33,32 @@ class Gplay(gobject.GObject):
     }
 
     def __init__(self, activity_obj):
-        super(Gplay, self).__init__()
+        logger.debug('__init__')
+        gobject.GObject.__init__(self)
         self.activity = activity_obj
         self._playback_monitor_handler = None
         self._player = gst.element_factory_make('playbin')
 
         bus = self._player.get_bus()
         bus.add_signal_watch()
-        bus.connect('message::error', self._bus_error)
-        bus.connect('message::eos', self._bus_eos)
 
-    def _bus_error(self, bus, message):
-        err, debug = message.parse_error()
-        logger.error('bus error=%s debug=%s' % (err, debug))
+        def on_error_cb(bus, msg):
+            err, debug = msg.parse_error()
+            logger.error('bus error=%s debug=%s' % (err, debug))
 
-    def _bus_eos(self, bus, message):
-        self.stop()
+        bus.connect('message::error', on_error_cb)
+
+        def on_eos_cb(bus, msg):
+            logger.debug('message::eos')
+            self.stop()
+
+        bus.connect('message::eos', on_eos_cb)
+
+    def get_state(self):
+        return self._player.get_state()[1]
 
     def set_location(self, location):
+        logger.debug('set location %r', location)
         if self._player.get_property('uri') == location:
             self.seek(0)
             return
@@ -59,23 +67,24 @@ class Gplay(gobject.GObject):
         self._player.set_property('uri', location)
 
     def seek(self, position):
+        try:
+            duration = self._player.query_duration(gst.FORMAT_TIME, None)[0]
+        except gst.QueryError:
+            return
+
         if position == 0:
             location = 0
         else:
-            duration = self._player.query_duration(gst.FORMAT_TIME, None)[0]
-            location = duration * (position / 100)
+            location = int(duration * position / 100)
+
+        logger.debug('seek %.2f%% of %.2f which is %d' %
+                     (position, duration, location))
 
         event = gst.event_new_seek(1.0, gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_ACCURATE, gst.SEEK_TYPE_SET, location, gst.SEEK_TYPE_NONE, 0)
         res = self._player.send_event(event)
-        if res:
-            self._player.set_new_stream_time(0L)
-
-    def pause(self):
-        self._player.set_state(gst.STATE_PAUSED)
 
     def play(self):
-        if self.get_state() == gst.STATE_PLAYING:
-            return
+        logger.debug('play')
 
         if not self._player.props.video_sink:
             sink = gst.element_factory_make('xvimagesink')
@@ -83,10 +92,12 @@ class Gplay(gobject.GObject):
             self._player.props.video_sink = sink
 
         self.activity.set_gplay_sink(self._player.props.video_sink)
-        self._player.set_state(gst.STATE_PLAYING)
-        self._emit_playback_status(0)
 
-        self._playback_monitor_handler = gobject.timeout_add(500, self._playback_monitor)
+        self._player.set_state(gst.STATE_PLAYING)
+
+        self._playback_monitor()
+        self._playback_monitor_handler = gobject.timeout_add(
+            100, self._playback_monitor)
 
     def _playback_monitor(self):
         try:
@@ -95,22 +106,34 @@ class Gplay(gobject.GObject):
         except gst.QueryError:
             return True
 
-        value = (float(position) / float(duration)) * 100.0
+        if duration == 0:  # duration may not yet be known
+            return True
+
+        value = position * 100.0 / duration
         self._emit_playback_status(value)
         return True
 
     def _emit_playback_status(self, position):
-        state = self._player.get_state()[1]
-        self.emit('playback-status-changed', state, position)
+        self.emit('playback-status-changed', self.get_state(), position)
 
-    def get_state(self):
-        return self._player.get_state()[1]
+    def pause(self):
+        logger.debug('pause')
+        if self.get_state() == gst.STATE_PAUSED:
+            return
+
+        self._player.set_state(gst.STATE_PAUSED)
+
+        self._playback_monitor()
+
+        if self._playback_monitor_handler:
+            gobject.source_remove(self._playback_monitor_handler)
+            self._playback_monitor_handler = None
 
     def stop(self):
+        logger.debug('stop')
         if self._playback_monitor_handler:
             gobject.source_remove(self._playback_monitor_handler)
             self._playback_monitor_handler = None
 
         self._player.set_state(gst.STATE_NULL)
         self._emit_playback_status(0)
-
