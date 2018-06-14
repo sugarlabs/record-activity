@@ -74,6 +74,8 @@ class Glive:
         self._pixbuf = None
         self._audio_pixbuf = None
 
+        self._mirror = False
+
         self._create_photobin()
         self._create_audiobin()
         self._create_videobin()
@@ -92,6 +94,18 @@ class Glive:
         self.stop()
         self._create_pipeline()
         self.play()
+
+    def set_mirror(self, mirror):
+        if self._mirror != mirror:
+            self._mirror = mirror
+            self._set_video_direction(self._pipeline)
+
+    def _set_video_direction(self, pipeline):
+        flip = pipeline.get_by_name('flip')
+        if self._mirror:
+            flip.set_property("method", 4)
+        else:
+            flip.set_property("method", 0)
 
     def _create_photobin(self):
         queue = gst.element_factory_make("queue", "pbqueue")
@@ -244,10 +258,17 @@ class Glive:
         queue.set_property("leaky", True)
         queue.set_property("max-size-buffers", 2)
 
-        self._pipeline.add(src, rate, tee, queue)
+        flip = gst.element_factory_make("videoflip", "flip")
+        if self._mirror:
+            flip.set_property("method", 4)
+        else:
+            flip.set_property("method", 0)
+
+        self._pipeline.add(src, rate, tee, queue, flip)
         src.link(rate, srccaps)
         rate.link(tee, ratecaps)
         tee.link(queue)
+        queue.link(flip)
 
         self._xvsink = gst.element_factory_make("xvimagesink", "xsink")
         self._xv_available = self._xvsink.set_state(gst.STATE_PAUSED) != gst.STATE_CHANGE_FAILURE
@@ -280,14 +301,14 @@ class Glive:
             # nothing to do, Xv already configured
             return self._xvsink
 
-        queue = self._pipeline.get_by_name("dispqueue")
+        flip = self._pipeline.get_by_name("flip")
         if self._pipeline.get_by_name("xbin"):
             # X sink is configured, so remove it
-            queue.unlink(self._xbin)
+            flip.unlink(self._xbin)
             self._pipeline.remove(self._xbin)
 
         self._pipeline.add(self._xvsink)
-        queue.link(self._xvsink)
+        flip.link(self._xvsink)
         return self._xvsink
 
     def _configure_x(self):
@@ -295,16 +316,16 @@ class Glive:
             # nothing to do, X already configured
             return self._xbin.get_by_name("xsink")
 
-        queue = self._pipeline.get_by_name("dispqueue")
+        flip = self._pipeline.get_by_name("flip")
         xvsink = self._pipeline.get_by_name("xsink")
 
         if xvsink:
             # Xv sink is configured, so remove it
-            queue.unlink(xvsink)
+            flip.unlink(xvsink)
             self._pipeline.remove(xvsink)
 
         self._pipeline.add(self._xbin)
-        queue.link(self._xbin)
+        flip.link(self._xbin)
         return self._xbin.get_by_name("xsink")
 
     def play(self, use_xv=True):

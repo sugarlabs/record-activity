@@ -26,6 +26,7 @@ import shutil
 from gettext import gettext as _
 from gettext import ngettext
 
+import gobject
 import glib
 import gtk
 from gtk import gdk
@@ -42,6 +43,7 @@ from sugar.graphics.toolbarbox import ToolbarBox
 from sugar.graphics.toolbarbox import ToolbarButton
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar.graphics.toggletoolbutton import ToggleToolButton
 from sugar.activity.widgets import StopButton
 from sugar.activity.widgets import ActivityToolbarButton
 from sugar.graphics.menuitem import MenuItem
@@ -212,6 +214,16 @@ class Record(activity.Activity):
 
         self._toolbar.insert(gtk.SeparatorToolItem(), -1)
 
+        self._mirror_btn = MyToggleToolButton('mirror-horizontal')
+        self._mirror_btn.set_tooltip(_(
+            'Mirror view\n'
+            'Swap left for right, as if looking at a mirror.\n'
+            'Does not affect recording.'))
+        self._mirror_btn.set_accelerator('<ctrl>m')
+        self._mirror_btn.show()
+        self._mirror_btn.connect('toggled', self.__mirror_toggled_cb)
+        self._toolbar.insert(self._mirror_btn, -1)
+
         self._toolbar_controls = RecordControl(self._toolbar)
 
         if self.model.get_cameras() and len(self.model.get_cameras()) > 1:
@@ -282,6 +294,9 @@ class Record(activity.Activity):
 
     def __switch_camera_click_cb(self, btn):
         self.model.switch_camera()
+
+    def __mirror_toggled_cb(self, button):
+        self.model.set_mirror(button.props.active)
 
     def serialize(self):
         data = {}
@@ -488,6 +503,7 @@ class Record(activity.Activity):
         if state == constants.STATE_READY:
             self._set_cursor_default()
             self._active_recd = None
+            self._mirror_btn.props.sensitive = True
             self._title_entry.hide()
             self._title_label.hide()
             self._record_container.set_title_visible(False)
@@ -500,6 +516,7 @@ class Record(activity.Activity):
             self._shutter_button.show()
             self._media_view.show_live()
         elif state == constants.STATE_RECORDING:
+            self._mirror_btn.props.sensitive = False
             self._shutter_button.set_recording()
             self._controls_hbox.set_child_packing(self._shutter_button, expand=False, fill=False, padding=0, pack_type=gtk.PACK_START)
             self._progress.show()
@@ -521,6 +538,7 @@ class Record(activity.Activity):
         if self.model.ui_frozen():
             return
 
+        self._mirror_btn.props.sensitive = False
         self._active_recd = recd
         self._show_recd(recd)
 
@@ -1124,3 +1142,49 @@ class RecordControl():
         self._quality_value = idx
         if hasattr(self, '_quality_button'):
             self._quality_button.set_icon('%s-quality' % (QUALITY_VALUES[idx]))
+
+
+# [PATCH sugar-toolkit (gtk2)] props.accelerator available at ToggleToolButton SL#3774
+# by Daniel Francis <francis@sugarlabs.org>
+# 63d843f on 1st August 2012
+
+
+def _add_accelerator(tool_button):
+    if not tool_button.props.accelerator or not tool_button.get_toplevel() or \
+            not tool_button.child:
+        return
+
+    # TODO: should we remove the accelerator from the prev top level?
+
+    accel_group = tool_button.get_toplevel().get_data('sugar-accel-group')
+    if not accel_group:
+        logging.warning('No gtk.AccelGroup in the top level window.')
+        return
+
+    keyval, mask = gtk.accelerator_parse(tool_button.props.accelerator)
+    # the accelerator needs to be set at the child, so the gtk.AccelLabel
+    # in the palette can pick it up.
+    tool_button.child.add_accelerator('clicked', accel_group, keyval, mask,
+                                      gtk.ACCEL_LOCKED | gtk.ACCEL_VISIBLE)
+
+
+def _hierarchy_changed_cb(tool_button, previous_toplevel):
+    _add_accelerator(tool_button)
+
+
+def setup_accelerator(tool_button):
+    _add_accelerator(tool_button)
+    tool_button.connect('hierarchy-changed', _hierarchy_changed_cb)
+
+
+class MyToggleToolButton(ToggleToolButton):
+
+    def set_accelerator(self, accelerator):
+        self._accelerator = accelerator
+        setup_accelerator(self)
+
+    def get_accelerator(self):
+        return self._accelerator
+
+    accelerator = gobject.property(type=str, setter=set_accelerator,
+            getter=get_accelerator)
