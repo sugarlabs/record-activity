@@ -155,13 +155,13 @@ class Record(activity.Activity):
         # have to track which recd is active
         self._active_recd = None
 
-        self.connect_after('key-press-event', self._key_pressed)
+        self.connect('key-press-event', self._key_pressed)
 
         self._active_toolbar_idx = 0
 
         self._toolbar_box = ToolbarBox()
-        activity_button = ActivityToolbarButton(self)
-        self._toolbar_box.toolbar.insert(activity_button, 0)
+        self._activity_toolbar_button = ActivityToolbarButton(self)
+        self._toolbar_box.toolbar.insert(self._activity_toolbar_button, 0)
         self.set_toolbar_box(self._toolbar_box)
         self._toolbar = self.get_toolbar_box().toolbar
 
@@ -172,6 +172,11 @@ class Record(activity.Activity):
             tool_group = self._photo_button
             self._photo_button.props.icon_name = 'camera-external'
             self._photo_button.props.label = _('Photo')
+            self._photo_button.props.accelerator = '<ctrl>1'
+            self._photo_button.props.tooltip = _(
+                'Picture camera mode\n'
+                'When the record button is pressed,\n'
+                'take one picture from the camera.')
             self._photo_button.mode = constants.MODE_PHOTO
             self._photo_button.connect('clicked', self._mode_button_clicked)
             self._toolbar.insert(self._photo_button, -1)
@@ -179,7 +184,12 @@ class Record(activity.Activity):
             self._video_button = RadioToolButton()
             self._video_button.props.group = tool_group
             self._video_button.props.icon_name = 'media-video'
+            self._video_button.props.accelerator = '<ctrl>2'
             self._video_button.props.label = _('Video')
+            self._video_button.props.tooltip = _(
+                'Video camera mode\n'
+                'Take pictures many times a second and record sound\n'
+                'until the button is pressed again.')
             self._video_button.mode = constants.MODE_VIDEO
             self._video_button.connect('clicked', self._mode_button_clicked)
             self._toolbar.insert(self._video_button, -1)
@@ -190,7 +200,12 @@ class Record(activity.Activity):
         self._audio_button = RadioToolButton()
         self._audio_button.props.group = tool_group
         self._audio_button.props.icon_name = 'media-audio'
+        self._audio_button.props.accelerator = '<ctrl>3'
         self._audio_button.props.label = _('Audio')
+        self._audio_button.props.tooltip = _(
+            'Audio recording mode\n'
+            'Take one picture, and record sound\n'
+            'until the button is pressed again.')
         self._audio_button.mode = constants.MODE_AUDIO
         self._audio_button.connect('clicked', self._mode_button_clicked)
         self._toolbar.insert(self._audio_button, -1)
@@ -274,24 +289,78 @@ class Record(activity.Activity):
 
     def _key_pressed(self, widget, event):
         key = event.keyval
+        ctrl = event.state & gdk.CONTROL_MASK
 
-        if key == gtk.keysyms.KP_Page_Up: # game key O
+        # while activity toolbar is visible, only escape key is taken
+        if self._activity_toolbar_button.is_expanded():
+            if key == gtk.keysyms.Escape:
+                self._activity_toolbar_button.set_expanded(False)
+                return True
+
+            return False
+
+        # while title is focused, only escape key is taken
+        if self._title_entry.is_focus():
+            if key == gtk.keysyms.Escape:
+                self.model.set_state(constants.STATE_READY)
+
+            return False
+
+        # while info tags are focused, only escape key is taken
+        if self._media_view.info_view.textview.is_focus():
+            if key == gtk.keysyms.Escape:
+                self.model.set_state(constants.STATE_READY)
+
+            return False
+
+        if ctrl and key == gtk.keysyms.f:
+            self._toggle_fullscreen()
+            return True
+
+        if ctrl and key == gtk.keysyms.s:
+            self.model.glive.stop()
+            return True
+
+        if ctrl and key == gtk.keysyms.p:
+            self.model.glive.play()
+            return True
+
+        if (ctrl and key == gtk.keysyms.space) or \
+           (ctrl and key == gtk.keysyms.r) or \
+           key == gtk.keysyms.KP_Page_Up:  # game key O
+
             if self._shutter_button.props.visible:
                 if self._shutter_button.props.sensitive:
                     self._shutter_button.clicked()
-            else: # return to live mode
+            else:  # return to live mode
                 self.model.set_state(constants.STATE_READY)
+            return True
+
+        if key == gtk.keysyms.space and self._active_recd:
+            if self._active_recd.type in (constants.TYPE_VIDEO,
+                                          constants.TYPE_AUDIO):
+                self.model.play_pause()
+                return True
 
         if self.model.ui_frozen():
-            return False
+            return True
 
-        if key == gtk.keysyms.c and event.state == gdk.CONTROL_MASK:
+        if ctrl and key == gtk.keysyms.c:
             self._copy_to_clipboard(self._active_recd)
-        elif key == gtk.keysyms.i:
+            return True
+
+        if key == gtk.keysyms.i and self._active_recd:
             self._toggle_info()
-        elif key == gtk.keysyms.Escape:
-            if self._fullscreen:
-                self._toggle_fullscreen()
+            return True
+
+        if key == gtk.keysyms.Escape and self._fullscreen:
+            self._toggle_fullscreen()
+            return True
+
+        # if viewing media, return to live mode
+        if key == gtk.keysyms.Escape and self._active_recd:
+            self.model.set_state(constants.STATE_READY)
+            return True
 
         return False
 
