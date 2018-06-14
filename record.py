@@ -542,6 +542,8 @@ class Record(activity.Activity):
         if self.model.ui_frozen():
             return
 
+        self.model.abort_countdown()
+        self.model.glive.stop()
         self._mirror_btn.props.sensitive = False
         self._active_recd = recd
         self._show_recd(recd)
@@ -902,6 +904,7 @@ class CountdownImage(gtk.Image):
     def __init__(self):
         super(CountdownImage, self).__init__()
         self._countdown_images = {}
+        self._value = 0
 
     def _generate_image(self, num):
         w = 55
@@ -936,11 +939,15 @@ class CountdownImage(gtk.Image):
         pctx.show_layout(play)
         return pixmap
 
-    def set_value(self, num):
-        if num not in self._countdown_images:
-            self._countdown_images[num] = self._generate_image(num)
+    def set_value(self, value):
+        if self._value == value:
+            return
+        self._value = value
 
-        self.set_from_pixmap(self._countdown_images[num], None)
+        if value not in self._countdown_images:
+            self._countdown_images[value] = self._generate_image(value)
+
+        self.set_from_pixmap(self._countdown_images[value], None)
 
 
 class ShutterButton(gtk.Button):
