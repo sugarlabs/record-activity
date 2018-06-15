@@ -1,6 +1,6 @@
 103
 
-* fix playback seeking using mouse or touch on progress bar,
+* fix playback seeking on progress bar,
 * avoid double JPEG compression of photographs,
 * add tooltips to mode buttons, shutter button, and pause and play,
 * new shortcut keys; ctrl+space to record, escape to live mode, ctrl+1
