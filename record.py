@@ -579,9 +579,9 @@ class RecordContainer(gtk.Container):
     The controls hbox is given the first height that it requests, locked in
     for the duration of the widget.
     The media view is given the remainder of the space, but is constrained to
-    the aspect ratio of the display, therefore deducing its width.
+    a strict 4:3 ratio, therefore deducing its width.
     The controls hbox is given the same width, and both elements are centered
-    horizontally.
+    horizontall.y
     """
     __gtype_name__ = 'RecordContainer'
 
@@ -597,9 +597,6 @@ class RecordContainer(gtk.Container):
                 widget.set_parent_window(self.window)
 
             widget.set_parent(self)
-
-        ar = gdk.screen_width() * 100 / gdk.screen_height()
-        self._ar_legacy = ar < 134
 
     def do_realize(self):
         self.set_flags(gtk.REALIZED)
@@ -627,11 +624,8 @@ class RecordContainer(gtk.Container):
         pass
 
     def do_size_request(self, req):
-        # always request a minimum for video
-        if self._ar_legacy:
-            req.width = 320
-        else:
-            req.width = 427
+        # always request 320x240 (as a minimum for video)
+        req.width = 320
         req.height = 240
 
         self._media_view.size_request()
@@ -645,24 +639,19 @@ class RecordContainer(gtk.Container):
         req.height += self._controls_hbox_height
 
     @staticmethod
-    def _constrain(width, height, ar_legacy):
-        if ar_legacy:
-            ax, ay = 4, 3
-        else:
-            ax, ay = 16, 9
-
-        if (width % ax == 0) and (height % ay == 0) and ((width / ax) * ay) == height:
+    def _constrain_4_3(width, height):
+        if (width % 4 == 0) and (height % 3 == 0) and ((width / 4) * 3) == height:
             return width, height # nothing to do
 
-        ratio = float(ax) / float(ay)
+        ratio = 4.0 / 3.0
         if ratio * height > width:
-            width = (width / ax) * ax
+            width = (width / 4) * 4
             height = int(width / ratio)
         else:
-            height = (height / ay) * ay
+            height = (height / 3) * 3
             width = int(ratio * height)
 
-        return width, height
+        return width, height 
 
     @staticmethod
     def _center_in_plane(plane_size, size):
@@ -674,8 +663,8 @@ class RecordContainer(gtk.Container):
         # give the controls hbox the height that it requested
         remaining_height = self.allocation.height - self._controls_hbox_height
 
-        # give the mediaview the rest, constrained to aspect ratio and centered
-        media_view_width, media_view_height = self._constrain(self.allocation.width, remaining_height, self._ar_legacy)
+        # give the mediaview the rest, constrained to 4/3 and centered
+        media_view_width, media_view_height = self._constrain_4_3(self.allocation.width, remaining_height)
         media_view_x = self._center_in_plane(self.allocation.width, media_view_width)
         media_view_y = self._center_in_plane(remaining_height, media_view_height)
 
