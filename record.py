@@ -420,6 +420,11 @@ class Record(activity.Activity):
                 self.model.play_pause()
                 return True
 
+        # if viewing media, return to live mode
+        if key == Gdk.KEY_Escape and self._active_recd:
+            self.model.set_state(constants.STATE_READY)
+            return True
+
         if self.model.ui_frozen():
             return True
 
@@ -433,11 +438,6 @@ class Record(activity.Activity):
 
         if key == Gdk.KEY_Escape and self._fullscreen:
             self._toggle_fullscreen()
-            return True
-
-        # if viewing media, return to live mode
-        if key == Gdk.KEY_Escape and self._active_recd:
-            self.model.set_state(constants.STATE_READY)
             return True
 
         return False
@@ -769,6 +769,7 @@ class Record(activity.Activity):
             self._show_video(recd, play)
 
     def remote_recd_available(self, recd):
+        self.model.set_state(constants.STATE_INVISIBLE)
         if recd == self._active_recd:
             self._show_recd(recd)
 
