@@ -115,20 +115,6 @@ class Record(activity.Activity):
             except:
                 pass
 
-        # testing restarter
-        def restarter():
-            if os.stat('go').st_ctime != ct:
-                self.close()
-                os.execv('/usr/bin/sugar-activity', ['sugar-activity'])
-                logger.error('== restarted ==')
-                return False
-            return True
-        try:
-            ct = os.stat('go').st_ctime
-            glib.timeout_add(233, restarter)
-        except:
-            pass
-
     def read_file(self, path):
         self.model.read_file(path)
 
