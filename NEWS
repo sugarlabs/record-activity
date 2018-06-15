@@ -1,14 +1,20 @@
 200
 
+* port to GTK+ 3 and GStreamer 1.0,
+* tested with GStreamer 1.14 on Ubuntu 18.04,
+
+103
+
+* fix playback seeking on progress bar,
+* avoid double JPEG compression of photographs,
+* add tooltips to mode buttons, shutter button, and pause and play,
 * new shortcut keys; ctrl+space to record, escape to live mode, ctrl+1
   through to ctrl+3 for modes, ctrl+r for record, space for pause and
   play,
-* avoid audio synchronisation loss during video mode by removing live
-  view, which saves much processing time,
-* use default resolution of camera for photo mode, and 640x480 for
-  video mode,
-* port to GTK+ 3 and GStreamer 1.0,
-* tested with GStreamer 1.14 on Ubuntu 18.04,
+* use an accurate countdown timer,
+* switch to external camera if available,
+* mirror mode for hairstyling, shortcut key ctrl-m,
+* show all recorded media in tray regardless of type.
 
 102
 
