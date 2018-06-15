@@ -113,19 +113,6 @@ class Record(activity.Activity):
             Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self._media_view._video.connect('visibility-notify-event', on_event_cb)
 
-        # testing restarter
-        def restarter():
-            if os.stat('go').st_ctime != ct:
-                self.close()
-                os.execv('/usr/bin/sugar-activity', ['sugar-activity'])
-                return False
-            return True
-        try:
-            ct = os.stat('go').st_ctime
-            GObject.timeout_add(233, restarter)
-        except:
-            pass
-
     def _incompatible(self):
         ''' Display abbreviated activity user interface with alert '''
         toolbox = ToolbarBox()
