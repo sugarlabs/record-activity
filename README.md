@@ -33,7 +33,21 @@ Record is [packaged by Fedora](https://src.fedoraproject.org/rpms/sugar-record).
 dnf install sugar-record
 ```
 
-Record is no longer packaged by Debian and Ubuntu distributions.  When it was packaged, it was called `sugar-record-activity`.  On Debian and Ubuntu systems dependencies include `gir1.2-gstreamer-1.0`, and `gir1.2-telepathyglib-0.12`.
+Record is no longer packaged by Debian and Ubuntu distributions.  When it was packaged, it was called `sugar-record-activity`.  On Debian and Ubuntu systems dependencies include;
+
+* `python`
+* `python-gobject`
+* `python-cairo`
+* `python-sugar3`
+* `gir1.2-glib-2.0`
+* `gir1.2-gdkpixbuf-2.0`
+* `gir1.2-gtk-3.0`
+* `gir1.2-pango-1.0`
+* `gir1.2-telepathyglib-0.12`
+* `gir1.2-gstreamer-1.0`
+* `python-gst-1.0`
+* `gstreamer1.0-plugins-base`
+* `gstreamer1.0-plugins-good`
 
 How to test without camera
 ==========================
