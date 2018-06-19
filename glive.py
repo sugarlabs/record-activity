@@ -75,11 +75,12 @@ class Glive:
             self._set_video_direction(self._pipeline)
 
     def _set_video_direction(self, pipeline):
-        if self._mirror:
-            om = GstVideo.VideoOrientationMethod.HORIZ
-        else:
-            om = GstVideo.VideoOrientationMethod.IDENTITY
-        pipeline.get_by_name('flip').props.video_direction = om
+        flip = pipeline.get_by_name('flip')
+        value = 4 if self._mirror else 0
+        if hasattr(flip.props, 'method'):
+            flip.props.method = value
+        if hasattr(flip.props, 'video_direction'):
+            flip.props.video_direction = value
 
     def _make_photo_pipeline(self):
         """
