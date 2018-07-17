@@ -1,3 +1,9 @@
+200.1
+
+* Update Debian and Ubuntu dependencies,
+* Fix fullscreen toggle of live view on Ubuntu 16.04,
+* Fix fail to start on Ubuntu 16.04.
+
 200
 
 * port to GTK+ 3 and GStreamer 1.0,
