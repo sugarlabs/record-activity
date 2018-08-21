@@ -10,3 +10,4 @@ single_instance = yes
 summary = Unleash the visual artist inside you! Take pictures, make movies and use them to recreate your world. The only limit is your imagination.
 repository = https://github.com/sugarlabs/record-activity.git
 max_participants = 6
+tags = Media;Art;Music
