@@ -1,3 +1,12 @@
+200.2
+
+* Fix mistaken reference to logging,
+* Fix README reference to Speak,
+* Adjust license metadata,
+* Add tags metadata,
+* Port from GObject to GLib,
+* tested with GStreamer 1.14 on Ubuntu 18.04,
+
 200.1
 
 * Update Debian and Ubuntu dependencies,
