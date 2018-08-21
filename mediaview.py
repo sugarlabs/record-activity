@@ -22,7 +22,7 @@ import os
 import logging
 from gettext import gettext as _
 
-from gi.repository import GObject, Gdk, GdkX11, Gtk, GdkPixbuf, GstVideo
+from gi.repository import GLib, GObject, Gdk, GdkX11, Gtk, GdkPixbuf, GstVideo
 
 import constants
 import utils
@@ -379,19 +379,19 @@ class MediaView(Gtk.EventBox):
             self._place_widgets()
             return False
 
-        GObject.timeout_add(20, defer)  # prevent a delayed image symptom
+        GLib.timeout_add(20, defer)  # prevent a delayed image symptom
         self.disconnect_by_func(self._size_allocate)
 
     def _motion_notify(self, widget, event):
         if not self._controls_shown:
             if self._show_controls_timer:
-                GObject.source_remove(self._show_controls_timer)
-            self._show_controls_timer = GObject.timeout_add(
+                GLib.source_remove(self._show_controls_timer)
+            self._show_controls_timer = GLib.timeout_add(
                 10, self._show_controls)
 
         if self._hide_controls_timer:
-            GObject.source_remove(self._hide_controls_timer)
-        self._hide_controls_timer = GObject.timeout_add(
+            GLib.source_remove(self._hide_controls_timer)
+        self._hide_controls_timer = GLib.timeout_add(
             2000, self._hide_controls)
 
     def _show_controls(self):
@@ -521,7 +521,7 @@ class MediaView(Gtk.EventBox):
 
         if self._controls_shown:
             if self._hide_controls_timer:
-                GObject.source_remove(self._hide_controls_timer)
+                GLib.source_remove(self._hide_controls_timer)
             self._hide_controls()
 
         self._place_widgets()
@@ -559,7 +559,7 @@ class MediaView(Gtk.EventBox):
     def set_fullscreen(self, fullscreen):
         if self._controls_shown:
             if self._hide_controls_timer:
-                GObject.source_remove(self._hide_controls_timer)
+                GLib.source_remove(self._hide_controls_timer)
             self._hide_controls()
 
         if fullscreen:

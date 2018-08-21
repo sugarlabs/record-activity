@@ -31,7 +31,7 @@ vs = {'Gdk': '3.0', 'Gst': '1.0', 'Gtk': '3.0', 'SugarExt': '1.0',
 for api, ver in vs.iteritems():
     gi.require_version(api, ver)
 
-from gi.repository import GObject, Gdk, GdkX11, Gtk, Pango, PangoCairo, \
+from gi.repository import GLib, Gdk, GdkX11, Gtk, Pango, PangoCairo, \
     Gst, GstVideo
 
 Gst.init(None)
@@ -106,7 +106,7 @@ class Record(activity.Activity):
 
         def on_event_cb(widget, event):
             if event.state == Gdk.VisibilityState.UNOBSCURED:
-                GObject.timeout_add(50, on_defer_cb)
+                GLib.timeout_add(50, on_defer_cb)
                 self._media_view._video.disconnect_by_func(on_event_cb)
 
         self._media_view._video.add_events(
@@ -553,18 +553,18 @@ class Record(activity.Activity):
             self._timer_hid = None
             return False
 
-        self._timer_hid = GObject.timeout_add(1000, on_timer_cb)
+        self._timer_hid = GLib.timeout_add(1000, on_timer_cb)
 
         def on_defer_cb():
             self.model.glive.play()
             if self._timer_hid:
-                GObject.source_remove(self._timer_hid)
+                GLib.source_remove(self._timer_hid)
                 self._timer_hid = None
             return False
 
         def on_event_cb(widget, event):
             if event.state == Gdk.VisibilityState.UNOBSCURED:
-                GObject.timeout_add(30, on_defer_cb)
+                GLib.timeout_add(30, on_defer_cb)
                 self._media_view._video.disconnect_by_func(on_event_cb)
 
         self._media_view._video.add_events(

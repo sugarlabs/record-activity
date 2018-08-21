@@ -24,7 +24,7 @@ import os
 
 import gi
 gi.require_version('TelepathyGLib', '0.12')
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import TelepathyGLib
 
 from sugar3.presence.tubeconn import TubeConnection
@@ -149,16 +149,16 @@ class RecordCollab(object):
         recd.meshDownloading = True
         recd.meshDownlodingPercent = 0.0
         self.activity.update_download_progress(recd)
-        recd.meshReqCallbackId = GObject.timeout_add(self._collab_timeout,
-                                                     self._check_recd_request,
-                                                     recd)
+        recd.meshReqCallbackId = GLib.timeout_add(self._collab_timeout,
+                                                  self._check_recd_request,
+                                                  recd)
         self._tube.requestRecdBits(Instance.keyHashPrintable, sender,
                                    recd.mediaMd5)
 
     def _next_round_robin_buddy(self, recd):
         logger.debug('meshNextRoundRobinBuddy')
         if recd.meshReqCallbackId:
-            GObject.source_remove(recd.meshReqCallbackId)
+            GLib.source_remove(recd.meshReqCallbackId)
             recd.meshReqCallbackId = 0
 
         # delete any stub of a partially downloaded file
@@ -247,14 +247,14 @@ class RecordCollab(object):
             logger.debug('_meshCheckOnRecdRequest: '
                          'recdRequesting.downloadedFromBuddy')
             if recd.meshReqCallbackId:
-                GObject.source_remove(recd.meshReqCallbackId)
+                GLib.source_remove(recd.meshReqCallbackId)
                 recd.meshReqCallbackId = 0
             return False
         if recd.deleted:
             logger.debug('_meshCheckOnRecdRequest: '
                          'recdRequesting.deleted')
             if recd.meshReqCallbackId:
-                GObject.source_remove(recd.meshReqCallbackId)
+                GLib.source_remove(recd.meshReqCallbackId)
                 recd.meshReqCallbackId = 0
             return False
         if recd.meshDownloadingProgress:
@@ -269,7 +269,7 @@ class RecordCollab(object):
                          '! recdRequesting.meshDownloadingProgress')
             # that buddy we asked info from isn't responding; next buddy!
             # self.meshNextRoundRobinBuddy( recdRequesting )
-            GObject.idle_add(self._next_round_robin_buddy, recd)
+            GLib.idle_add(self._next_round_robin_buddy, recd)
             return False
 
     def _recd_bits_arrived_cb(self, remote_object, md5sum, part, num_parts,
@@ -298,10 +298,10 @@ class RecordCollab(object):
 
         # update that we've heard back about this, reset the timeout
         if recd.meshReqCallbackId:
-            GObject.source_remove(recd.meshReqCallbackId)
-        recd.meshReqCallbackId = GObject.timeout_add(self._collab_timeout,
-                                                     self._check_recd_request,
-                                                     recd)
+            GLib.source_remove(recd.meshReqCallbackId)
+        recd.meshReqCallbackId = GLib.timeout_add(self._collab_timeout,
+                                                  self._check_recd_request,
+                                                  recd)
 
         # update the progress bar
         recd.meshDownlodingPercent = (part + 0.0) / (num_parts + 0.0)
@@ -316,7 +316,7 @@ class RecordCollab(object):
             return
 
         logger.debug('Finished receiving %s' % recd.title)
-        GObject.source_remove(recd.meshReqCallbackId)
+        GLib.source_remove(recd.meshReqCallbackId)
         recd.meshReqCallbackId = 0
         recd.meshDownloading = False
         recd.meshDownlodingPercent = 1.0

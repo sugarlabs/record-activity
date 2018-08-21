@@ -24,7 +24,7 @@ import glob
 from gettext import gettext as _
 import time
 
-from gi.repository import GLib, GObject, Gst, GstVideo
+from gi.repository import GLib, Gst, GstVideo
 
 import logging
 
@@ -210,7 +210,7 @@ class Glive:
         def on_message_cb(bus, msg, ogg):
             if msg.type == Gst.MessageType.EOS:
                 logger.debug('record_audio.on_message_cb Gst.MessageType.EOS')
-                GObject.idle_add(self._stop_recording_audio, ogg)
+                GLib.idle_add(self._stop_recording_audio, ogg)
                 return
 
             return self._on_message_cb(bus, msg)
@@ -305,7 +305,7 @@ class Glive:
         def on_message_cb(bus, msg, ogv):
             if msg.type == Gst.MessageType.EOS:
                 logger.debug('record_video.on_message_cb Gst.MessageType.EOS')
-                GObject.idle_add(self._stop_recording_video, ogv)
+                GLib.idle_add(self._stop_recording_video, ogv)
                 return
 
             return self._on_message_cb(bus, msg)
