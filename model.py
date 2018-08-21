@@ -28,7 +28,7 @@ import os
 import time
 import json
 
-from gi.repository import GObject, Gst
+from gi.repository import GLib, Gst
 
 import sugar3.profile
 import sugar3.env
@@ -203,7 +203,7 @@ class Model:
         self.set_progress(0, '')
         self._timer_value = self.activity.get_selected_duration()
         self._timer_duration = self._timer_value
-        self._timer_handle = GObject.timeout_add(1000, self._timer_tick)
+        self._timer_handle = GLib.timeout_add(1000, self._timer_tick)
 
         self.activity.set_shutter_sensitive(True)
         self.set_state(constants.STATE_RECORDING)
@@ -216,7 +216,7 @@ class Model:
 
     def _stop_media_capture(self):
         if self._timer_handle:
-            GObject.source_remove(self._timer_handle)
+            GLib.source_remove(self._timer_handle)
             self._timer_handle = None
             self._timer_value = 0
 
@@ -256,7 +256,7 @@ class Model:
             value = self.activity.get_selected_timer()
             self.activity.set_countdown(value)
             self._countdown_ends = time.time() + value
-            self._countdown_handle = GObject.timeout_add(
+            self._countdown_handle = GLib.timeout_add(
                 100, self._countdown_tick)
             return
 
@@ -265,13 +265,13 @@ class Model:
 
     def abort_countdown(self):
         if self._countdown_handle:
-            GObject.source_remove(self._countdown_handle)
+            GLib.source_remove(self._countdown_handle)
             self._countdown_handle = None
             self.activity.set_countdown(0)
 
     # called from GStreamer thread
     def still_ready(self, pixbuf):
-        GObject.idle_add(self.activity.show_still, pixbuf)
+        GLib.idle_add(self.activity.show_still, pixbuf)
 
     def add_recd(self, recd):
         self.mediaHashs[recd.type].append(recd)
@@ -293,9 +293,9 @@ class Model:
         # now that we've saved both the image and its pixbuf, we get their md5s
         self.createNewRecordedMd5Sums(recd)
 
-        GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
-        GObject.idle_add(self.activity.set_shutter_sensitive, True,
-                         priority=GObject.PRIORITY_HIGH)
+        GLib.idle_add(self.add_recd, recd, priority=GLib.PRIORITY_HIGH)
+        GLib.idle_add(self.activity.set_shutter_sensitive, True,
+                      priority=GLib.PRIORITY_HIGH)
 
     # called from GStreamer thread
     def save_video(self, path, still):
@@ -313,8 +313,8 @@ class Model:
 
         self.createNewRecordedMd5Sums(recd)
 
-        GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
-        GObject.idle_add(self.set_state, constants.STATE_READY)
+        GLib.idle_add(self.add_recd, recd, priority=GLib.PRIORITY_HIGH)
+        GLib.idle_add(self.set_state, constants.STATE_READY)
 
     def save_audio(self, path, still):
         recd = self.createNewRecorded(constants.TYPE_AUDIO)
@@ -333,8 +333,8 @@ class Model:
 
         self.createNewRecordedMd5Sums(recd)
 
-        GObject.idle_add(self.add_recd, recd, priority=GObject.PRIORITY_HIGH)
-        GObject.idle_add(self.set_state, constants.STATE_READY)
+        GLib.idle_add(self.add_recd, recd, priority=GLib.PRIORITY_HIGH)
+        GLib.idle_add(self.set_state, constants.STATE_READY)
 
     def _playback_status_changed(self, widget, status, value):
         self.activity.set_playback_scale(value)

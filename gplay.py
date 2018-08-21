@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from gi.repository import GObject, Gst
+from gi.repository import GLib, GObject, Gst
 
 import logging
 logger = logging.getLogger('gplay')
@@ -98,7 +98,7 @@ class Gplay(GObject.GObject):
         # self._player.get_state(1000000000)  # debugging; wait for play
 
         self._playback_monitor()
-        self._playback_monitor_handler = GObject.timeout_add(
+        self._playback_monitor_handler = GLib.timeout_add(
             50, self._playback_monitor)
 
     def _playback_monitor(self):
@@ -129,13 +129,13 @@ class Gplay(GObject.GObject):
         self._playback_monitor()
 
         if self._playback_monitor_handler:
-            GObject.source_remove(self._playback_monitor_handler)
+            GLib.source_remove(self._playback_monitor_handler)
             self._playback_monitor_handler = None
 
     def stop(self):
         logger.debug('stop')
         if self._playback_monitor_handler:
-            GObject.source_remove(self._playback_monitor_handler)
+            GLib.source_remove(self._playback_monitor_handler)
             self._playback_monitor_handler = None
 
         self._player.set_state(Gst.State.NULL)
