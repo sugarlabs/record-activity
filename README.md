@@ -11,7 +11,7 @@ Record is part of the Sugar desktop and is often included.  Please refer to;
 * [How to Get Sugar on sugarlabs.org](https://sugarlabs.org/),
 * [How to use Sugar](https://help.sugarlabs.org/),
 * [Download Record using Browse](https://activities.sugarlabs.org/), search for `Record`, then download, and;
-* [How to use Speak](https://help.sugarlabs.org/en/record.html).
+* [How to use Record](https://help.sugarlabs.org/en/record.html).
 
 How to upgrade?
 ===============
