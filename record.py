@@ -828,7 +828,7 @@ class ProgressInfo(Gtk.VBox):
                 border-color: @button_grey;
             }"""
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(theme)
+        css_provider.load_from_data(bytes(theme,'utf-8'))
         style_context = self._progress_bar.get_style_context()
         style_context.add_provider(css_provider,
                                    Gtk.STYLE_PROVIDER_PRIORITY_USER)

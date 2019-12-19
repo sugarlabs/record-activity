@@ -198,7 +198,7 @@ class Glive:
             pixbuf_b64 = utils.getStringEncodedFromPixbuf(self._audio_pixbuf)
             taglist.add_value(Gst.TagMergeMode.APPEND,
                               Gst.TAG_EXTENDED_COMMENT,
-                              "coverart=" + pixbuf_b64)
+                              "coverart=" + str(pixbuf_b64))
 
         vorbis = self._audio.get_by_name('vorbis')
         vorbis.merge_tags(taglist, Gst.TagMergeMode.REPLACE_ALL)
@@ -284,7 +284,7 @@ class Glive:
             pixbuf_b64 = utils.getStringEncodedFromPixbuf(self._video_pixbuf)
             taglist.add_value(Gst.TagMergeMode.APPEND,
                               Gst.TAG_EXTENDED_COMMENT,
-                              "coverart=" + pixbuf_b64)
+                              "coverart=" + str(pixbuf_b64))
 
         theora = self._video.get_by_name('theora')
         vorbis = self._video.get_by_name('vorbis')

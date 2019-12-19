@@ -56,7 +56,7 @@ def load_colored_svg(filename, stroke, fill):
     entity = '<!ENTITY stroke_color "%s">' % str(stroke)
     data = re.sub('<!ENTITY stroke_color .*>', entity, data)
 
-    return Rsvg.Handle.new_from_data(data).get_pixbuf()
+    return Rsvg.Handle.new_from_data(bytes(data,'utf-8')).get_pixbuf()
 
 
 def getUniqueFilepath(path, i):
