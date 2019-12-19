@@ -23,7 +23,7 @@ import logging
 
 from gi.repository import GObject
 from dbus.service import signal
-from dbus.gobject_service import ExportedGObject
+from dbus.gi_service import ExportedGObject
 
 import constants
 from instance import Instance

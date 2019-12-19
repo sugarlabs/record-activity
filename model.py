@@ -66,7 +66,7 @@ class Model:
         self._visible = False
 
         self.mediaHashs = {}
-        for key, value in constants.MEDIA_INFO.items():
+        for key, value in list(constants.MEDIA_INFO.items()):
             self.mediaHashs[key] = []
 
     def close(self):
@@ -89,7 +89,7 @@ class Model:
     def read_file(self, path):
         try:
             dom = parse(path)
-        except Exception, e:
+        except Exception as e:
             logger.error('read_file: %s' % e)
             return
 
@@ -98,7 +98,7 @@ class Model:
             for ui_el in i.childNodes:
                 self.activity.deserialize(json.loads(ui_el.data))
 
-        for key, value in constants.MEDIA_INFO.items():
+        for key, value in list(constants.MEDIA_INFO.items()):
             for recd in self.mediaHashs[key]:
                 self.activity.add_thumbnail(recd)
         # FIXME: side-effect thumbnails sorted by type on resume
@@ -369,7 +369,7 @@ class Model:
         self.gplay.play()
 
     def get_recd_by_md5(self, md5):
-        for mh in self.mediaHashs.values():
+        for mh in list(self.mediaHashs.values()):
             for recd in mh:
                 if recd.thumbMd5 == md5 or recd.mediaMd5 == md5:
                     return recd
