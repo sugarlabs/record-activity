@@ -38,9 +38,10 @@ def getStringFromPixbuf(pixbuf):
     return data
 
 
-def getPixbufFromString(str):
+def getPixbufFromString(string):
     pbl = GdkPixbuf.PixbufLoader()
-    data = base64.b64decode(str)
+    string = eval(string)
+    data = base64.b64decode(string)
     pbl.write(data)
     pbl.close()
     return pbl.get_pixbuf()
