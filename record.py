@@ -28,7 +28,7 @@ from gettext import ngettext
 import gi
 vs = {'Gdk': '3.0', 'Gst': '1.0', 'Gtk': '3.0', 'SugarExt': '1.0',
       'PangoCairo': '1.0', 'GstVideo': '1.0'}
-for api, ver in vs.iteritems():
+for api, ver in vs.items():
     gi.require_version(api, ver)
 
 from gi.repository import GLib, Gdk, GdkX11, Gtk, Pango, PangoCairo, \
@@ -70,7 +70,7 @@ class Record(activity.Activity):
     def __init__(self, handle):
         activity.Activity.__init__(self, handle)
 
-        if Gst.version() == (1L, 0L, 10L, 0L):
+        if Gst.version() == (1, 0, 10, 0):
             return self._incompatible()
 
         # for fullscreen feature, use local rather than toolkit
@@ -828,7 +828,7 @@ class ProgressInfo(Gtk.VBox):
                 border-color: @button_grey;
             }"""
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_data(theme)
+        css_provider.load_from_data(bytes(theme,'utf-8'))
         style_context = self._progress_bar.get_style_context()
         style_context.add_provider(css_provider,
                                    Gtk.STYLE_PROVIDER_PRIORITY_USER)

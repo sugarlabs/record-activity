@@ -21,7 +21,7 @@
 
 from gi.repository import GdkPixbuf
 from xml.dom.minidom import getDOMImplementation
-import cStringIO
+import io
 import os
 import logging
 import dbus
@@ -37,7 +37,7 @@ logger = logging.getLogger('serialize')
 
 
 def fillMediaHash(doc, mediaHashs):
-    for key, value in constants.MEDIA_INFO.items():
+    for key, value in list(constants.MEDIA_INFO.items()):
         recdElements = doc.documentElement.getElementsByTagName(value['name'])
         for el in recdElements:
             _loadMediaIntoHash(el, mediaHashs[key])
@@ -181,7 +181,7 @@ def getRecdXmlMeshString(recd):
     root = recdXml.documentElement
     _addRecdXmlAttrs(root, recd, True)
 
-    writer = cStringIO.StringIO()
+    writer = io.StringIO()
     recdXml.writexml(writer)
     return writer.getvalue()
 
@@ -235,7 +235,7 @@ def saveMediaHash(mediaHashs, activity):
 
     # flag everything for saving...
     atLeastOne = False
-    for type, value in constants.MEDIA_INFO.items():
+    for type, value in list(constants.MEDIA_INFO.items()):
         typeName = value['name']
         for recd in mediaHashs[type]:
             recd.savedXml = False
@@ -244,7 +244,7 @@ def saveMediaHash(mediaHashs, activity):
 
     # and if there is anything to save, save it
     if atLeastOne:
-        for type, value in constants.MEDIA_INFO.items():
+        for type, value in list(constants.MEDIA_INFO.items()):
             typeName = value['name']
             for recd in mediaHashs[type]:
                 mediaEl = album.createElement(typeName)
