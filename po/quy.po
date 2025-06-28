@@ -1,0 +1,185 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-15 14:01+1000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: quy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: activity/activity.info:2 record.py:938
+msgid "Record"
+msgstr ""
+
+#: activity/activity.info:3
+msgid ""
+"Unleash the visual artist inside you! Take pictures, make movies and use "
+"them to recreate your world. The only limit is your imagination."
+msgstr ""
+
+#: button.py:54
+msgid "Erase"
+msgstr ""
+
+#: button.py:67
+msgid "Copy to clipboard"
+msgstr ""
+
+#: constants.py:46 record.py:191
+msgid "Photo"
+msgstr ""
+
+#: constants.py:53 record.py:205
+msgid "Video"
+msgstr ""
+
+#: constants.py:60 record.py:223
+msgid "Audio"
+msgstr ""
+
+#: glive.py:350 model.py:402
+#, python-format
+msgid "%(type)s by %(name)s"
+msgstr ""
+
+#: mediaview.py:96
+msgid "Author:"
+msgstr ""
+
+#: mediaview.py:112
+msgid "Tags:"
+msgstr ""
+
+#: mediaview.py:163
+msgid "Date:"
+msgstr ""
+
+#: model.py:184
+#, python-format
+msgid "%(mins)d:%(secs)02d remaining"
+msgstr ""
+
+#: record.py:123
+msgid "Activity not compatible with this system."
+msgstr ""
+
+#: record.py:124
+msgid "Please downgrade activity and try again."
+msgstr ""
+
+#: record.py:129
+msgid "Uh oh, GStreamer is too old."
+msgstr ""
+
+#: record.py:194
+msgid ""
+"Picture camera mode\n"
+"\n"
+"When the record button is pressed,\n"
+"take one picture from the camera."
+msgstr ""
+
+#: record.py:207
+msgid ""
+"Video camera mode\n"
+"\n"
+"When the record button is pressed,\n"
+"take photographs many times a second,\n"
+"and record sound using the microphone,\n"
+"until the button is pressed again."
+msgstr ""
+
+#: record.py:225
+msgid ""
+"Audio recording mode\n"
+"\n"
+"When the record button is pressed,\n"
+"take one photograph,\n"
+"and record sound using the microphone,\n"
+"until the button is pressed again."
+msgstr ""
+
+#: record.py:238
+msgid ""
+"Mirror view\n"
+"\n"
+"Swap left for right, as if looking at a mirror.\n"
+"Does not affect recording."
+msgstr ""
+
+#: record.py:250
+msgid "Switch camera"
+msgstr ""
+
+#: record.py:297
+msgid "Title:"
+msgstr ""
+
+#: record.py:768
+msgid "Download failed."
+msgstr ""
+
+#: record.py:770
+msgid "Downloading..."
+msgstr ""
+
+#: record.py:772
+msgid "Requesting..."
+msgstr ""
+
+#: record.py:942
+msgid "Stop recording"
+msgstr ""
+
+#: record.py:962
+msgid "Play"
+msgstr ""
+
+#: record.py:966
+msgid "Pause"
+msgstr ""
+
+#: record.py:975
+msgid "Select timer"
+msgstr ""
+
+#: record.py:982
+msgid "Select duration"
+msgstr ""
+
+#: record.py:989
+msgid "Select quality"
+msgstr ""
+
+#: record.py:1011 record.py:1038
+msgid "Immediate"
+msgstr ""
+
+#: record.py:1013
+#, python-format
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: record.py:1040
+#, python-format
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: record.py:1065
+#, python-format
+msgid "%s quality"
+msgstr ""
