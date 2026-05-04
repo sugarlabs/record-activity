@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-15 14:01+1000\n"
-"PO-Revision-Date: 2025-08-07 10:32+0000\n"
+"PO-Revision-Date: 2026-05-04 07:03+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
 "sugar-activities/record/ka/>\n"
@@ -39,15 +39,15 @@ msgstr ""
 
 #: constants.py:46 record.py:191
 msgid "Photo"
-msgstr ""
+msgstr "ფოტო"
 
 #: constants.py:53 record.py:205
 msgid "Video"
-msgstr ""
+msgstr "ვიდეო"
 
 #: constants.py:60 record.py:223
 msgid "Audio"
-msgstr ""
+msgstr "აუდიო"
 
 #: glive.py:350 model.py:402
 #, python-format
@@ -56,15 +56,15 @@ msgstr ""
 
 #: mediaview.py:96
 msgid "Author:"
-msgstr ""
+msgstr "ავტორი:"
 
 #: mediaview.py:112
 msgid "Tags:"
-msgstr ""
+msgstr "ჭდეები:"
 
 #: mediaview.py:163
 msgid "Date:"
-msgstr ""
+msgstr "თარიღი:"
 
 #: model.py:184
 #, python-format
@@ -125,7 +125,7 @@ msgstr ""
 
 #: record.py:297
 msgid "Title:"
-msgstr ""
+msgstr "სათაური:"
 
 #: record.py:768
 msgid "Download failed."
@@ -133,11 +133,11 @@ msgstr ""
 
 #: record.py:770
 msgid "Downloading..."
-msgstr ""
+msgstr "გადმოწერა..."
 
 #: record.py:772
 msgid "Requesting..."
-msgstr ""
+msgstr "მოთხოვნა..."
 
 #: record.py:942
 msgid "Stop recording"
@@ -165,7 +165,7 @@ msgstr ""
 
 #: record.py:1011 record.py:1038
 msgid "Immediate"
-msgstr ""
+msgstr "დაუყოვნებლივი"
 
 #: record.py:1013
 #, python-format
@@ -189,3 +189,7 @@ msgstr ""
 #: button.py:26
 msgid "Remove"
 msgstr "წაშლა"
+
+#: glive.py:551
+msgid "Saving..."
+msgstr "შენახვა..."
