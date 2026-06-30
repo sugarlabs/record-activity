@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-15 14:01+1000\n"
-"PO-Revision-Date: 2026-05-04 07:03+0000\n"
+"PO-Revision-Date: 2026-06-30 00:37+0000\n"
 "Last-Translator: NF <rkavt@smartprojects.ge>\n"
 "Language-Team: Georgian <http://weblate.sugarlabs.org/projects/"
 "sugar-activities/record/ka/>\n"
@@ -69,7 +69,7 @@ msgstr "თარიღი:"
 #: model.py:184
 #, python-format
 msgid "%(mins)d:%(secs)02d remaining"
-msgstr ""
+msgstr "დარჩენილია %(mins)d:%(secs)02d"
 
 #: record.py:123
 msgid "Activity not compatible with this system."
@@ -129,7 +129,7 @@ msgstr "სათაური:"
 
 #: record.py:768
 msgid "Download failed."
-msgstr ""
+msgstr "გადმოწერა ჩავარდა."
 
 #: record.py:770
 msgid "Downloading..."
@@ -153,15 +153,15 @@ msgstr ""
 
 #: record.py:975
 msgid "Select timer"
-msgstr ""
+msgstr "ტაიმერის არჩევა"
 
 #: record.py:982
 msgid "Select duration"
-msgstr ""
+msgstr "ხანგრძლივობის არჩევა"
 
 #: record.py:989
 msgid "Select quality"
-msgstr ""
+msgstr "აირჩიეთ ხარისხი"
 
 #: record.py:1011 record.py:1038
 msgid "Immediate"
@@ -184,7 +184,7 @@ msgstr[1] ""
 #: record.py:1065
 #, python-format
 msgid "%s quality"
-msgstr ""
+msgstr "%s ხარისხი"
 
 #: button.py:26
 msgid "Remove"
